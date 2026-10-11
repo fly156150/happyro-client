@@ -17,7 +17,7 @@
 }
 :host([data-menu-density='spacious']) .chat-preview:not(.collapsed) {
 	display: grid;
-	grid-template-columns: minmax(0, max-content) 28px minmax(0, 1fr);
+	grid-template-columns: 44px minmax(0, max-content) minmax(0, 1fr);
 	width: min(420px, calc(100% - 410px));
 	padding: 0;
 }
@@ -31,7 +31,7 @@
 }
 .chat-preview:not(.collapsed) {
 	display: grid;
-	grid-template-columns: minmax(0, max-content) 28px minmax(0, 1fr);
+	grid-template-columns: 44px minmax(0, max-content) minmax(0, 1fr);
 	height: auto;
 	min-height: 0;
 	max-height: none;
@@ -60,7 +60,7 @@
 	overflow-x: auto;
 	scrollbar-width: none;
 	padding-right: 0;
-	grid-column: 1;
+	grid-column: 2;
 	grid-row: 1;
 	min-width: 0;
 	margin-bottom: -1px;
@@ -86,7 +86,10 @@
 	border-radius: 0;
 }
 .chat-preview-tabs button:first-child {
-	border-top-left-radius: 6px;
+	border-left: 0;
+}
+.chat-preview-tabs button:last-child {
+	border-top-right-radius: 6px;
 }
 .chat-preview-tabs button + button {
 	border-left: 0;
@@ -124,36 +127,27 @@
 }
 
 .chat-preview [data-chat-collapse] {
-	position: absolute;
+	position: relative;
+	grid-column: 1;
+	grid-row: 1;
 	top: 0;
 	right: 0;
-	width: 28px;
+	width: 44px;
 	line-height: 1;
-}
-.chat-preview:has(.chat-preview-tabs[hidden]) .chat-preview-open {
-	padding-right: 38px;
-}
-
-.chat-preview:has(.chat-preview-tabs:not([hidden])) .chat-preview-open {
-	border-top-left-radius: 0;
-}
-.chat-preview:has(.chat-preview-tabs:not([hidden])) [data-chat-collapse] {
-	position: relative;
-	grid-column: 2;
-	grid-row: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 0;
 	margin-bottom: -1px;
-	border-left: 0;
-	border-radius: 0 6px 0 0;
+	border-left: 1px solid #65717b;
+	border-radius: 6px 0 0 0;
 	z-index: 1;
 }
-.chat-preview [data-chat-collapse] svg {
-	width: 14px;
-	height: 14px;
-	display: block;
+.chat-preview .chat-preview-open {
+	border-top-left-radius: 0;
+}
+.chat-preview.without-tabs [data-chat-collapse] {
+	border-radius: 6px 6px 0 0;
 }
 
 :host([data-menu-density='spacious']) .chat-preview-tabs button {

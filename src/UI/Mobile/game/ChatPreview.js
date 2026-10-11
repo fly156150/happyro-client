@@ -92,6 +92,7 @@ export function createChatPreview(root) {
 			if (settings[key]) container.style.setProperty(`--chat-preview-${scene}-lines`, settings[key]);
 			else container.style.removeProperty(`--chat-preview-${scene}-lines`);
 		}
+		container.classList.toggle('without-tabs', !settings.chatPreviewTabs);
 		tabs.hidden = !settings.chatPreviewTabs;
 		if (!settings.chatPreviewTabs) {
 			category = 'all';

@@ -46,3 +46,13 @@ it('keeps following the latest message when resizing changes the visible number 
  let height=80;Object.defineProperties(log,{scrollHeight:{value:320},clientHeight:{get:()=>height}});resized();
  log.scrollTop=240;log.dispatchEvent(new Event('scroll'));height=48;log.dispatchEvent(new Event('scroll'));resized();expect(log.scrollTop).toBe(320);
 });
+
+it('updates tab layout state immediately on each settings event',()=>{
+ const container=root.querySelector('.chat-preview');
+ for(const enabled of [false,true,false,true]) {
+  Interface.chatPreviewTabs=enabled;
+  window.dispatchEvent(new Event('interface-settings-change'));
+  expect(container.classList.contains('without-tabs')).toBe(!enabled);
+  expect(root.querySelector('nav').hidden).toBe(!enabled);
+ }
+});
