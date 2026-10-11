@@ -810,7 +810,10 @@ class GUIComponent {
 			const target = e.target;
 			if (target.closest && target.closest(CLICKABLE_SELECTOR)) {
 				if (!_hovering) {
-					_savedType = _Cursor?.getActualType() ?? 0;
+					_savedType =
+						this.mouseMode === GUIComponent.MouseMode.CROSS
+							? (_Cursor?.getActualType() ?? 0)
+							: (_Cursor?.ACTION?.DEFAULT ?? 0);
 					_hovering = true;
 				}
 				if ((_Cursor?.getActualType() ?? 0) !== (_Cursor?.ACTION?.CLICK ?? 0)) {
@@ -836,7 +839,10 @@ class GUIComponent {
 			const target = e.target;
 			if (target.closest && target.closest(CLICKABLE_SELECTOR)) {
 				if (!_hovering) {
-					_savedType = _Cursor?.getActualType() ?? 0;
+					_savedType =
+						this.mouseMode === GUIComponent.MouseMode.CROSS
+							? (_Cursor?.getActualType() ?? 0)
+							: (_Cursor?.ACTION?.DEFAULT ?? 0);
 					_hovering = true;
 				}
 				_Cursor?.setType(_Cursor?.ACTION?.CLICK ?? 0, true, 1);
