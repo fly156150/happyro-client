@@ -1,3 +1,4 @@
+import { createScreenWakeLock } from './ScreenWakeLock.js';
 import { hasVisiblePixels, createAltitudeFallback } from 'UI/Components/MiniMap/MiniMapImage.js';
 import { createMobileInputEditor } from './MobileInputEditor.js';
 import { loadCatalogMapImage } from 'UI/Components/GameTools/WorldAssetService.js';
@@ -116,9 +117,11 @@ function snapshot() {
 }
 let updateViewport;
 let disposeInputEditor;
+let releaseScreenWakeLock;
 HUD.onAppend = function () {
 	// Repeated map mounting must not duplicate subscriptions or timers.
 	HUD.onRemove(false);
+	releaseScreenWakeLock = createScreenWakeLock();
 	updateViewport = createMobileViewport(HUD._host);
 	disposeInputEditor = createMobileInputEditor(HUD._host);
 	abort = new AbortController();
@@ -329,6 +332,8 @@ HUD.onAppend = function () {
 	updateViewport();
 };
 HUD.onRemove = function (resetInteraction = true) {
+	releaseScreenWakeLock?.();
+	releaseScreenWakeLock = null;
 	disposeInputEditor?.();
 	disposeInputEditor = null;
 	updateViewport?.destroy();
