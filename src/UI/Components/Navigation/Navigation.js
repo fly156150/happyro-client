@@ -583,6 +583,24 @@ Navigation.onAppend = function onAppend() {
 	}
 };
 
+// Mobile prepares the navigation model without mounting its desktop window.
+// Resume from the map-load lifecycle as well, after the player position is restored.
+Navigation.resumeMapTransition = function resumeMapTransition() {
+	if (!_resumeAutoWalkAfterMapLoad || !_finalTargetData) return;
+	_resumeAutoWalkAfterMapLoad = false;
+	const position = getPlayerPosition();
+	this.navigateTo({
+		startMap: getCurrentMap(),
+		startX: position.x,
+		startY: position.y,
+		endMap: _finalTargetData.map,
+		endX: _finalTargetData.x,
+		endY: _finalTargetData.y,
+		displayName: _finalTargetData.displayName,
+		autoWalk: true
+	});
+};
+
 Navigation.prepareMapTransition = function prepareMapTransition() {
 	const resume = Boolean(_finalTargetData && (_autoWalkActive || _autoWalkRequested));
 	_resumeAutoWalkAfterMapLoad = resume;
@@ -1075,6 +1093,7 @@ Navigation.startAutoWalk = function startAutoWalk() {
 };
 
 Navigation.stopAutoWalk = function stopAutoWalk() {
+	_resumeAutoWalkAfterMapLoad = false;
 	_dialogueWarp = null;
 	const changed = _autoWalkRequested || _autoWalkActive;
 	_autoWalkRequested = false;

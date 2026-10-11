@@ -3,7 +3,7 @@ vi.mock('Engine/SessionStorage.js', () => ({ default: { Playing: true, Entity: {
 vi.mock('Network/NetworkManager.js', () => ({ default: { sendPacket: vi.fn() } }));
 vi.mock('Network/PacketStructure.js', () => ({ default: { CZ: { HAPPYRO_STOP_MOVE: class StopMove {} } } }));
 import Network from 'Network/NetworkManager.js';
-const mock = vi.hoisted(() => ({ listener: null, state: null }));
+const mock = vi.hoisted(() => ({ listener: null, state: null, map: 'prontera', position: { x: 10, y: 10 } }));
 vi.mock('UI/Components/Navigation/Navigation.js', () => ({ default: {
  getRouteState: () => mock.state,
  subscribeRouteState: listener => { mock.listener = listener; },
@@ -14,12 +14,13 @@ vi.mock('UI/Components/Navigation/Navigation.js', () => ({ default: {
  })
 } }));
 vi.mock('../../src/UI/Components/GameTools/AdventureActionService.js', () => ({
- getCurrentAdventureMap: () => 'prontera', getCurrentAdventurePosition: () => ({ x: 10, y: 10 }), normalizeAdventureMap: map => map
+ getCurrentAdventureMap: () => mock.map, getCurrentAdventurePosition: () => mock.position, normalizeAdventureMap: map => map
 }));
 let service, navigation, state;
 const target = { mapName: 'prontera', x: 30, y: 30 };
 beforeEach(async () => {
  vi.resetModules(); vi.clearAllMocks(); vi.useFakeTimers();
+ mock.map = 'prontera'; mock.position = { x: 10, y: 10 };
  mock.state = { active: false, pending: false, unavailable: false, path: [], target: null };
  service = await import('../../src/UI/Components/GameTools/AdventureRouteService.js');
  navigation = (await import('UI/Components/Navigation/Navigation.js')).default;
@@ -83,4 +84,29 @@ it('clears calculation feedback when a preview completes without movement', () =
  mock.listener({ ...mock.state, pending: false, path: [] });
  expect(state.pending).toBe(false);
  expect(state.message).toBe('');
+});
+
+it('keeps the route during an intermediate map and checks arrival only on the destination map', () => {
+ service.startAdventureRoute(target);
+ mock.listener({ ...mock.state, pending: false, active: true });
+ mock.map = 'prt_in'; mock.position = {x:30,y:30};
+ mock.listener({ ...mock.state, pending: true, active: false });
+ navigation.stopAutoWalk.mockClear();
+ vi.advanceTimersByTime(1500);
+ expect(state.active).toBe(true);
+ expect(navigation.stopAutoWalk).not.toHaveBeenCalled();
+ mock.listener({ ...mock.state, pending: false, active: true });
+ vi.advanceTimersByTime(500); expect(state.active).toBe(true);
+ mock.map = 'prontera';
+ vi.advanceTimersByTime(500);
+ expect(state.active).toBe(false); expect(state.message).toBe('已到达目的地');
+});
+
+it('does not report arrival when walking stops at matching coordinates on another map', () => {
+ service.startAdventureRoute(target);
+ mock.listener({ ...mock.state, pending: false, active: true });
+ mock.map = 'prt_in'; mock.position = {x:30,y:30};
+ mock.listener({ ...mock.state, pending: false, active: false });
+ expect(state.active).toBe(false);expect(state.message).toBe('寻路已停止');
+ expect(navigation.clear).not.toHaveBeenCalled();
 });

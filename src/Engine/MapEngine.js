@@ -799,6 +799,7 @@ function onMapChange(pkt) {
 		appendGameComponent(MobileUI);
 		appendGameComponent(JoystickUI);
 		appendGameComponent(Navigation);
+		Navigation.resumeMapTransition();
 		if (!Platform.isMobile) GameTools.restoreAfterMapLoad();
 		appendGameComponent(Roulette);
 		if (Configs.get('enableAchievements') && PACKETVER.value >= 20150513) {

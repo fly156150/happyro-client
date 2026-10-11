@@ -51,10 +51,8 @@ function update(active, message) {
 
 function monitorArrival() {
 	if (!target || !status.active) return;
-	if (getCurrentAdventureMap() !== normalizeAdventureMap(target.mapName)) {
-		stopAdventureRoute('地图已切换，寻路已停止');
-		return;
-	}
+	// Intermediate maps are part of a route; Navigation resumes after loading.
+	if (getCurrentAdventureMap() !== normalizeAdventureMap(target.mapName)) return;
 	const position = getCurrentAdventurePosition();
 	if (Math.abs(position.x - target.x) <= 1 && Math.abs(position.y - target.y) <= 1) {
 		stopAdventureRoute('已到达目的地');
@@ -91,9 +89,14 @@ export function previewAdventureRoute(nextTarget) {
 }
 
 export function startAdventureRoute(nextTarget) {
-	if ((getStatus().pending || getStatus().unavailable || status.active) && target &&
+	if (
+		(getStatus().pending || getStatus().unavailable || status.active) &&
+		target &&
 		normalizeAdventureMap(target.mapName) === normalizeAdventureMap(nextTarget?.mapName) &&
-		target.x === nextTarget?.x && target.y === nextTarget?.y) return false;
+		target.x === nextTarget?.x &&
+		target.y === nextTarget?.y
+	)
+		return false;
 	if (
 		!nextTarget?.mapName ||
 		!Number.isFinite(nextTarget.x) ||
@@ -171,7 +174,10 @@ Navigation.subscribeRouteState(nextState => {
 	}
 	if (status.active && navigationStarted && !nextState.active && !nextState.pending) {
 		const position = getCurrentAdventurePosition();
-		const arrived = Math.abs(position.x - target.x) <= 1 && Math.abs(position.y - target.y) <= 1;
+		const arrived =
+			getCurrentAdventureMap() === normalizeAdventureMap(target.mapName) &&
+			Math.abs(position.x - target.x) <= 1 &&
+			Math.abs(position.y - target.y) <= 1;
 		stopAdventureRoute(arrived ? '已到达目的地' : '寻路已停止');
 		return;
 	}
