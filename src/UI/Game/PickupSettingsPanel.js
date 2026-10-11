@@ -1,10 +1,50 @@
 import { pickupCategories, savePickupSettings, validPickupSettings } from './PickupSettings.js';
-import { searchAdventureItems } from 'UI/Components/GameTools/AdventureControlService.js';
+import { loadAdventureAsset, searchAdventureItems } from 'UI/Components/GameTools/AdventureControlService.js';
 
 /** Shared pickup editor with immediate switches and debounced numeric persistence. */
 export function createPickupSettingsPanel(section, draft, persist = savePickupSettings) {
 	section.classList.add('pickup-section');
 	let timer;
+	let destroyed = false;
+	const imageUrls = new Set();
+	const excludedImageUrls = new Set();
+	const placeholder =
+		'data:image/svg+xml,' +
+		encodeURIComponent(
+			'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect x="1" y="1" width="22" height="22" rx="4" fill="#253442" stroke="#65717b"/><path d="m6 8 6-3 6 3v8l-6 3-6-3zm0 0 6 3 6-3m-6 3v8" fill="none" stroke="#bac4cd" stroke-linejoin="round"/></svg>'
+		);
+	function clearImages(urls = imageUrls) {
+		urls.forEach(url => URL.revokeObjectURL(url));
+		urls.clear();
+	}
+	function itemImage(path, urls) {
+		const image = document.createElement('img');
+		image.className = 'pickup-item-icon';
+		image.width = image.height = 24;
+		image.src = placeholder;
+		image.alt = '暂无图片';
+		image.onerror = () => {
+			image.onerror = null;
+			image.src = placeholder;
+			image.alt = '暂无图片';
+		};
+		if (path) {
+			loadAdventureAsset(path.replace('/api/adventure-tools', ''))
+				.then(url => {
+					if (destroyed || !image.isConnected) {
+						URL.revokeObjectURL(url);
+						return;
+					}
+					urls.add(url);
+					image.alt = '';
+					image.src = url;
+				})
+				.catch(() => {
+					/* Keep the placeholder when the asset is unavailable. */
+				});
+		}
+		return image;
+	}
 	const status = document.createElement('span');
 	status.className = 'pickup-save-status';
 	status.setAttribute('role', 'status');
@@ -65,7 +105,9 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	enabled.type = 'checkbox';
 	enabled.checked = draft.enabled;
 	enabled.dataset.pickup = 'enabled';
-	section.append(label('自动拾取', enabled));
+	const enabledRow = label('自动拾取', enabled);
+	enabledRow.classList.add('pickup-enabled');
+	section.append(enabledRow);
 	const controls = document.createElement('fieldset');
 	controls.className = 'pickup-controls';
 	controls.disabled = !draft.enabled;
@@ -154,6 +196,7 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 		return b;
 	}
 	function renderExcluded() {
+		clearImages(excludedImageUrls);
 		excluded.replaceChildren();
 		excludedTitle.textContent = `已排除物品（${draft.excluded.length}）`;
 		for (const item of draft.excluded) {
@@ -162,6 +205,7 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 			const name = document.createElement('span');
 			name.textContent = `${item.name} · ${item.id}`;
 			row.append(
+				itemImage(`/items/${item.id}/icon`, excludedImageUrls),
 				name,
 				button('移除', () => {
 					draft.excluded = draft.excluded.filter(entry => entry.id !== item.id);
@@ -188,17 +232,32 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	results.className = 'pickup-results';
 	results.setAttribute('aria-live', 'polite');
 	results.textContent = '输入名称或 ID 搜索，将物品加入右侧排除列表。';
+	const pagination = document.createElement('nav');
+	pagination.className = 'pickup-pagination';
+	pagination.setAttribute('aria-label', '物品搜索分页');
+	const searchStatus = document.createElement('div');
+	searchStatus.className = 'pickup-search-status';
+	searchStatus.setAttribute('role', 'status');
+	let currentPage = 1;
+	let total = 0;
+	const previousPage = button('上一页', () => search(currentPage - 1));
+	const nextPage = button('下一页', () => search(currentPage + 1));
+	pagination.append(previousPage, nextPage);
+	pagination.hidden = true;
 	let requestId = 0;
 	async function search(page = 1) {
 		const query = input.value.trim(),
 			token = ++requestId;
-		results.replaceChildren();
 		if (!query) return;
-		results.textContent = '搜索中…';
+		previousPage.disabled = nextPage.disabled = true;
+		results.setAttribute('aria-busy', 'true');
+		searchStatus.textContent = '搜索中…';
 		try {
 			const response = await searchAdventureItems({ query, page, perPage: 20 });
-			if (token !== requestId || !section.isConnected) return;
+			if (destroyed || token !== requestId || !section.isConnected) return;
+			clearImages();
 			results.replaceChildren();
+			results.scrollTop = 0;
 			for (const item of response.data) {
 				const name = item.names?.['zh-CN'] || item.AegisName;
 				const row = document.createElement('div');
@@ -213,19 +272,31 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 				});
 				add.dataset.excludeId = String(item.Id);
 				add.disabled = draft.excluded.some(entry => entry.id === item.Id);
-				row.append(title, add);
+				row.append(itemImage(item.icon, imageUrls), title, add);
 				results.append(row);
 			}
 			if (!response.data.length) results.textContent = '没有找到物品';
-			if (page > 1) results.append(button('上一页', () => search(page - 1)));
-			if (response.total > page * 20) results.append(button('下一页', () => search(page + 1)));
+			currentPage = page;
+			total = response.total;
+			pagination.hidden = page === 1 && total <= 20;
+			searchStatus.textContent = '';
 		} catch {
-			if (token === requestId) results.textContent = '搜索失败，请重试';
+			if (token === requestId) searchStatus.textContent = '搜索失败，请重试';
+		} finally {
+			if (token === requestId) {
+				results.removeAttribute('aria-busy');
+				previousPage.disabled = currentPage <= 1;
+				nextPage.disabled = total <= currentPage * 20;
+			}
 		}
 	}
 	input.oninput = () => {
 		requestId++;
 		results.replaceChildren();
+		pagination.hidden = true;
+		searchStatus.textContent = '';
+		results.removeAttribute('aria-busy');
+		clearImages();
 	};
 	input.onkeydown = event => {
 		if (event.key === 'Enter') {
@@ -237,7 +308,7 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 		input,
 		button('搜索', () => search())
 	);
-	searchColumn.append(searchRow, results);
+	searchColumn.append(searchRow, searchStatus, results, pagination);
 	const note = document.createElement('p');
 	note.className = 'pickup-note';
 	note.textContent =
@@ -252,6 +323,9 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 			if (timer) save();
 		},
 		destroy: () => {
+			destroyed = true;
+			clearImages(excludedImageUrls);
+			clearImages();
 			clearTimeout(timer);
 			requestId++;
 		}
