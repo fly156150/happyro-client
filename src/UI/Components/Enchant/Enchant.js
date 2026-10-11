@@ -1017,6 +1017,7 @@ function updateActionSections() {
 }
 
 function updateActionButton(enabled) {
+	enabled = enabled && !EnchantState.pendingLock;
 	const root = _root();
 	if (!root) {
 		return;
@@ -1029,6 +1030,7 @@ function updateActionButton(enabled) {
 	button.textContent = label;
 	button.title = label;
 	button.classList.toggle('disabled', !enabled);
+	button.disabled = !enabled;
 	updateActionButtonSkin(button, enabled);
 }
 
@@ -1372,6 +1374,7 @@ function onIconInfo(event) {
 }
 
 function onActionSelect(event) {
+	if (EnchantState.pendingLock) return;
 	const action = event.currentTarget.dataset.action;
 	if (event.currentTarget.classList.contains('disabled')) {
 		return;
@@ -1381,16 +1384,19 @@ function onActionSelect(event) {
 }
 
 function onPerfectChange(event) {
+	if (EnchantState.pendingLock) return;
 	EnchantState.selectedPerfect = event.currentTarget.value;
 	refreshUI();
 }
 
 function onUpgradeChange(event) {
+	if (EnchantState.pendingLock) return;
 	EnchantState.selectedUpgradeSlot = parseInt(event.currentTarget.value, 10);
 	refreshUI();
 }
 
 function onEnchantListSelect(event) {
+	if (EnchantState.pendingLock) return;
 	const entry = event.target.closest('.enchant_entry');
 	if (!entry) {
 		return;
@@ -1431,16 +1437,26 @@ function onItemSelect(event) {
 }
 
 function onRequestAction() {
+	if (EnchantState.pendingLock) return;
 	const root = _root();
 	if (!root) {
 		return;
 	}
-	const actionBtn = root.querySelector('.action_btn');
-	if (actionBtn && actionBtn.classList.contains('disabled')) {
+	if (!EnchantState.group || !EnchantState.item) {
+		setStatus('请先选择装备。', true);
 		return;
 	}
-	if (!EnchantState.group || !EnchantState.item) {
-		setStatus('Select an item first.', true);
+	const liveItem = Inventory.getUI().getItemByIndex(EnchantState.itemIndex);
+	if (liveItem !== EnchantState.item || !validateItem(liveItem).ok) {
+		refreshUI();
+		setStatus('装备已变化，请重新选择。', true);
+		return;
+	}
+	// The server silently rejects invalid costs; do not lock the window on a stale selection.
+	refreshActionContent();
+	const actionBtn = root.querySelector('.action_btn');
+	if (actionBtn && actionBtn.classList.contains('disabled')) {
+		setStatus('当前附魔条件未满足，请检查材料、Zeny 和附魔选项。', true);
 		return;
 	}
 	let pkt;
@@ -1449,7 +1465,7 @@ function onRequestAction() {
 
 	if (EnchantState.action === 'random') {
 		if (slotNum === null) {
-			setStatus('No available enchant slot.', true);
+			setStatus('没有可用的附魔槽位。', true);
 			return;
 		}
 		pkt = new PACKET.CZ.REQUEST_RANDOM_ENCHANT();
@@ -1457,14 +1473,14 @@ function onRequestAction() {
 		pkt.index = itemIndex;
 	} else if (EnchantState.action === 'perfect') {
 		if (slotNum === null || !EnchantState.selectedPerfect) {
-			setStatus('Select a perfect enchant.', true);
+			setStatus('请选择指定附魔。', true);
 			return;
 		}
 		const slotData = EnchantState.group.slots[slotNum];
 		const perfectEntry = slotData ? slotData.perfect[EnchantState.selectedPerfect] : null;
 		const perfectId = perfectEntry ? perfectEntry.id || DB.getItemIdfromBase(perfectEntry.base) : 0;
 		if (!perfectEntry || !perfectId) {
-			setStatus('Invalid perfect enchant selection.', true);
+			setStatus('指定附魔选项无效。', true);
 			return;
 		}
 		pkt = new PACKET.CZ.REQUEST_PERFECT_ENCHANT();
@@ -1473,7 +1489,7 @@ function onRequestAction() {
 		pkt.ITID = perfectId;
 	} else if (EnchantState.action === 'upgrade') {
 		if (slotNum === null) {
-			setStatus('Select an upgrade slot.', true);
+			setStatus('请选择要升级的附魔槽位。', true);
 			return;
 		}
 		pkt = new PACKET.CZ.REQUEST_UPGRADE_ENCHANT();
@@ -1500,11 +1516,12 @@ function onRequestAction() {
 	};
 
 	EnchantState.pendingLock = true;
-	root.querySelectorAll('.close, .close_btn').forEach(btn => {
-		btn.disabled = true;
+	root.querySelectorAll('button, select').forEach(control => {
+		control.disabled = true;
 	});
+	updateActionButton(false);
 	Network.sendPacket(pkt);
-	setStatus('Request sent...', false);
+	setStatus('正在等待附魔结果……', false);
 }
 
 function applyEnchantResult(item, action, slotNum, itid) {
@@ -1537,7 +1554,7 @@ function onEnchantResult(pkt) {
 	if (!EnchantState.pending) {
 		return;
 	}
-	const message = DB.getMessage(pkt.msgId) || 'Enchant result: ' + pkt.msgId;
+	const message = DB.getMessage(pkt.msgId) || '附魔结果：' + pkt.msgId;
 	const isSuccess = pkt.msgId === 3857;
 	ChatBox.addText(message, ChatBox.TYPE.BLUE, ChatBox.FILTER.PUBLIC_LOG);
 	playResultEffect(EnchantState.pending.action, isSuccess);
@@ -1552,7 +1569,7 @@ function onEnchantResult(pkt) {
 
 function onRequestClose() {
 	if (EnchantState.pendingLock) {
-		setStatus('Request in progress...', false);
+		setStatus('附魔请求正在处理中……', false);
 		return;
 	}
 	if (PACKETVER.value >= 20211103) {
@@ -1782,7 +1799,7 @@ Enchant.onRemove = function onRemove() {
 	const root = _root();
 	clearState();
 	if (root) {
-		root.querySelectorAll('.close, .close_btn').forEach(btn => {
+		root.querySelectorAll('button, select').forEach(btn => {
 			btn.disabled = false;
 		});
 		root.querySelectorAll('.slot_entry').forEach(entry => {
@@ -1849,6 +1866,7 @@ Enchant.onOpenEnchantUI = function onOpenEnchantUI(groupId) {
 };
 
 Enchant.onRequestItemEnchant = function onRequestItemEnchant(item) {
+	if (EnchantState.pendingLock) return;
 	const result = validateItem(item);
 	if (!result.ok) {
 		setStatus(result.message, true);
