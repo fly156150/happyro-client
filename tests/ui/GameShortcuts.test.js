@@ -101,3 +101,17 @@ it.each([[8044,31,'homSkills'],[8201,32,'mercSkills']])('uses companion SP and i
  actor.life.sp=20;s.companions.delete(gid);service.use(0);expect(s.selection.onUseSkillToId).not.toHaveBeenCalled();
  expect(service.snapshot().slots[0].reason).toBe('施法者不可用');expect(service.candidates().some(c=>c.ID===id)).toBe(false);s.skill=old;
 });
+
+it('includes original skill tiers and item types in shortcut candidates', () => {
+ const previousSkill = s.skill;
+ s.session.Entity._job = 7;
+ s.skill = { SKID: 5, level: 1, type: 4, spcost: 0 };
+ s.items = [{ ITID: 1201, type: 5, IsIdentified: true }];
+ const service = createGameShortcuts();
+ expect(service.candidates().find(entry => entry.ID === 5)).toMatchObject({ tier: '一转', isSkill: true });
+ expect(service.candidates().find(entry => entry.ID === 1201)).toMatchObject({ type: 5, isSkill: false });
+ s.skill = { ...s.skill, SKID: 56 };
+ expect(service.candidates().find(entry => entry.ID === 56)).toMatchObject({ tier: '二转' });
+ s.skill = previousSkill;
+ delete s.session.Entity._job;
+});

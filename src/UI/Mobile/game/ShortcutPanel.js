@@ -1,3 +1,5 @@
+import ItemType from 'DB/Items/ItemType.js';
+import { consumables, equipment } from 'UI/Game/InventoryItems.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
@@ -8,7 +10,13 @@ export function createShortcutPanel(body, actions) {
 	body.innerHTML = `
 		<div class="shortcut-pages"><button type="button" data-page-step="-1" aria-label="上一组快捷键">‹</button><div class="slot-picker" role="group" aria-label="选择快捷键"></div><button type="button" data-page-step="1" aria-label="下一组快捷键">›</button></div>
 		<div class="shortcut-layout">
-			<section class="shortcut-browser"><div class="shortcut-choices"></div></section>
+			<section class="shortcut-browser">
+				<div class="shortcut-filters">
+					<select aria-label="技能类型" data-skill-filter><option value="all">技能类型</option><option value="skills">全部技能</option></select>
+					<select aria-label="物品类型" data-item-filter><option value="all">物品类型</option></select>
+				</div>
+				<div class="shortcut-choices"></div><p data-filter-empty hidden>没有符合条件的技能或物品</p>
+			</section>
 			<section class="shortcut-editor" aria-label="编辑快捷键">
 				<div class="shortcut-current"><strong data-slot-title></strong><span data-current></span></div>
 				<p data-choice-hint>从左侧选择技能或道具，再保存到当前位置。</p>
@@ -103,7 +111,43 @@ export function createShortcutPanel(body, actions) {
 			chooseSlot(slots()[0]?.index ?? 0);
 		};
 	}
-	for (const entry of actions.candidates()) {
+	const candidates = actions.candidates();
+	const skillFilter = $('[data-skill-filter]'),
+		itemFilter = $('[data-item-filter]');
+	for (const tier of ['初心者', '一转', '二转', '三转', '四转', '其它']) {
+		if (candidates.some(entry => entry.isSkill && (entry.tier || '其它') === tier))
+			skillFilter.add(new Option(tier, tier));
+	}
+	const itemCategories = [
+		['items', '全部物品', null],
+		['consumables', '消耗品', consumables],
+		['equipment', '装备', equipment],
+		['weapon', '武器', [ItemType.WEAPON]],
+		['armor', '防具', [ItemType.ARMOR]],
+		['ammo', '弹药', [ItemType.AMMO]],
+		['pet', '宠物装备', [ItemType.PETARMOR]],
+		['shadow', '影子装备', [ItemType.SHADOWGEAR]]
+	];
+	for (const [value, label] of itemCategories) itemFilter.add(new Option(label, value));
+	function applyFilters(changed) {
+		if (changed.value !== 'all') (changed === skillFilter ? itemFilter : skillFilter).value = 'all';
+		const types = itemCategories.find(([value]) => value === itemFilter.value)?.[2];
+		const visible = candidates.filter(
+			entry =>
+				(skillFilter.value === 'all' ||
+					(entry.isSkill &&
+						(skillFilter.value === 'skills' || (entry.tier || '其它') === skillFilter.value))) &&
+				(itemFilter.value === 'all' || (!entry.isSkill && (!types || types.includes(entry.type))))
+		);
+		const keys = new Set(visible.map(entry => `${entry.isSkill}:${entry.ID}`));
+		for (const button of choices.children) button.hidden = !keys.has(button.dataset.key);
+		if (selected && !keys.has(`${selected.isSkill}:${selected.ID}`)) cancelChoice();
+		$('[data-filter-empty]').hidden = visible.length > 0;
+		choices.scrollTop = 0;
+	}
+	skillFilter.onchange = () => applyFilters(skillFilter);
+	itemFilter.onchange = () => applyFilters(itemFilter);
+	for (const entry of candidates) {
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.className = 'shortcut-choice';
@@ -125,7 +169,7 @@ export function createShortcutPanel(body, actions) {
 			$('[data-choice-icon]').hidden = !entry.icon;
 			if (entry.icon) $('[data-choice-icon]').src = entry.icon;
 			$('.shortcut-level').hidden = !entry.isSkill;
-			const select = $('select');
+			const select = $('.shortcut-level select');
 			select.replaceChildren();
 			if (entry.isSkill)
 				for (let level = 1; level <= entry.level; level++) select.add(new Option(`Lv.${level}`, String(level)));
@@ -141,10 +185,10 @@ export function createShortcutPanel(body, actions) {
 		};
 		choices.append(button);
 	}
-	if (!choices.children.length) choices.textContent = '暂无可配置的技能或道具';
+	applyFilters(skillFilter);
 	form.onsubmit = event => {
 		event.preventDefault();
-		if (selected && actions.configure(index, selected, Number($('select').value))) {
+		if (selected && actions.configure(index, selected, Number($('.shortcut-level select').value))) {
 			updateSlotLabels();
 			status(`已保存到位置 ${index + 1}`, 'success');
 		} else {

@@ -1,8 +1,7 @@
 import { pointResetState, resetCharacterPoints } from './GamePointReset.js';
 import SkillWindow from 'UI/Components/SkillList/SkillList.js';
 import SkillInfo from 'DB/Skills/SkillInfo.generated.js';
-import SkillTree from 'DB/Skills/SkillTreeView.generated.js';
-import JobPropertyTable from 'DB/Jobs/JobPropertyTable.js';
+import { skillTiers } from './SkillTiers.js';
 import { canExecuteSkill } from 'UI/Components/SkillList/SkillUse.js';
 import DB from 'DB/DBManager.js';
 import Client from 'Core/Client.js';
@@ -25,29 +24,8 @@ export function createGameSkills(canOperate, shortcuts) {
 		const ui = SkillWindow.getUI();
 		const learned = new Map(ui.getSkills().map(skill => [skill.SKID, skill]));
 		const ids = new Set(learned.keys());
-		const tiers = new Map();
-		let job = Session.Entity?._job ?? Session.Entity?.job;
-		while (job !== null && SkillTree[job]) {
-			const tree = SkillTree[job];
-			const properties = JobPropertyTable[job];
-			const tier = properties?.isFourthClass
-				? '四转'
-				: properties?.isThirdClass
-					? '三转'
-					: properties?.isSecondClass
-						? '二转'
-						: properties?.isFirstClass
-							? '一转'
-							: properties?.isNoviceClass
-								? '初心者'
-								: '其它';
-			for (const key of Object.keys(tree)) {
-				if (!/^\d+$/.test(key)) continue;
-				ids.add(Number(key));
-				tiers.set(Number(key), tier);
-			}
-			job = tree.beforeJob;
-		}
+		const tiers = skillTiers(Session.Entity?._job ?? Session.Entity?.job);
+		for (const id of tiers.keys()) ids.add(id);
 		if (pending && pending.revision !== ui.getSkillRevision()) pending = null;
 		const points = ui.getSkillPoints();
 		const allowed = Boolean(

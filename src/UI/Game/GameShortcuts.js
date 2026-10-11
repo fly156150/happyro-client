@@ -1,3 +1,4 @@
+import { skillTiers } from './SkillTiers.js';
 import Guild from 'UI/Components/Guild/Guild.js';
 import ShortCut from 'UI/Components/ShortCut/ShortCut.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
@@ -107,25 +108,34 @@ export function createGameShortcuts(moving = () => false) {
 			return Boolean(itemQuantity(item) && usable.includes(item.type));
 		},
 		configure: (...args) => ShortCut.configure(...args),
-		candidates: () => [
-			...[
-				...SkillWindow.getUI().getSkills(),
-				...(EntityManager.get(Session.homunId) ? SkillListMH.homunculus.getSkills() : []),
-				...(EntityManager.get(Session.mercId) ? SkillListMH.mercenary.getSkills() : []),
-				...(Session.hasGuild && Session.isGuildMaster ? Guild.getSocialSnapshot().skills : [])
-			]
-				.filter(canExecuteSkill)
-				.map(skill => ({
-					isSkill: true,
-					ID: skill.SKID,
-					level: skill.level,
-					...describe({ isSkill: true, ID: skill.SKID, count: skill.level })
-				})),
-			...Inventory.getUI()
-				.list.filter(item => itemQuantity(item) && usable.includes(item.type))
-				.filter((item, i, list) => list.findIndex(other => other.ITID === item.ITID) === i)
-				.map(item => ({ isSkill: false, ID: item.ITID, ...describe({ isSkill: false, ID: item.ITID }) }))
-		],
+		candidates: () => {
+			const tiers = skillTiers(Session.Entity?._job ?? Session.Entity?.job);
+			return [
+				...[
+					...SkillWindow.getUI().getSkills(),
+					...(EntityManager.get(Session.homunId) ? SkillListMH.homunculus.getSkills() : []),
+					...(EntityManager.get(Session.mercId) ? SkillListMH.mercenary.getSkills() : []),
+					...(Session.hasGuild && Session.isGuildMaster ? Guild.getSocialSnapshot().skills : [])
+				]
+					.filter(canExecuteSkill)
+					.map(skill => ({
+						isSkill: true,
+						ID: skill.SKID,
+						tier: tiers.get(skill.SKID) || '其它',
+						level: skill.level,
+						...describe({ isSkill: true, ID: skill.SKID, count: skill.level })
+					})),
+				...Inventory.getUI()
+					.list.filter(item => itemQuantity(item) && usable.includes(item.type))
+					.filter((item, i, list) => list.findIndex(other => other.ITID === item.ITID) === i)
+					.map(item => ({
+						isSkill: false,
+						ID: item.ITID,
+						type: item.type,
+						...describe({ isSkill: false, ID: item.ITID })
+					}))
+			];
+		},
 		pick: (x, y) => {
 			Mouse.screen.x = x;
 			Mouse.screen.y = y;
