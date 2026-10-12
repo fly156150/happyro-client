@@ -1,4 +1,3 @@
-import { cityArrivalPoints } from './CityArrivalPoints.js';
 import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
 import MiniMapTable from 'DB/Map/MiniMapTable.js';
@@ -129,10 +128,4 @@ export function findNearestWalkableCoordinate(gat, target, maxRadius = 12) {
 		}
 	}
 	return target;
-}
-
-export function findDefaultMapCoordinate(gat, mapName) {
-	const arrival = cityArrivalPoints[mapName];
-	if (arrival) return findNearestWalkableCoordinate(gat, { x: arrival.x, y: arrival.y });
-	return { x: 0, y: 0, automatic: true };
 }

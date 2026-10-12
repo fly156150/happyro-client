@@ -1,3 +1,4 @@
+vi.mock('../../src/UI/Components/GameTools/ArrivalPreviewService.js', () => ({requestArrivalPreview:vi.fn(async()=>({x:10,y:10}))}));
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const state = vi.hoisted(() => ({ map: 'payon', loading: false }));
@@ -34,7 +35,6 @@ vi.mock('../../src/UI/Components/GameTools/WorldAssetService.js', () => ({
 	loadCatalogMapImage: vi.fn(async () => null),
 	loadCatalogMap: async () => null,
 	canvasToMapCoordinate: vi.fn(),
-	findDefaultMapCoordinate: vi.fn(),
 	findNearestWalkableCoordinate: vi.fn()
 }));
 vi.mock('../../src/UI/Components/GameTools/WorldMapPreview.js', () => ({ drawWorldMapPreview: vi.fn() }));

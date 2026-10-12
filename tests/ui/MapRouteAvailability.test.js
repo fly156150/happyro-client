@@ -1,3 +1,4 @@
+vi.mock('../../src/UI/Components/GameTools/ArrivalPreviewService.js', () => ({requestArrivalPreview:vi.fn(async()=>({x:10,y:10}))}));
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({ listener: null, point: { x: 30, y: 30 } }));
 vi.mock('DB/DBManager.js', () => ({ default: { getMapInfo: () => ({displayName:'普隆德拉'}) } }));
@@ -20,7 +21,7 @@ vi.mock('../../src/UI/Components/GameTools/NpcAvailabilityService.js', () => ({n
 vi.mock('../../src/UI/Components/GameTools/WorldAssetService.js', () => ({
  loadNpcAssets:async()=>({mapImages:[]}), loadCatalogMapImage:async()=>null,
  loadCatalogMap:async()=>({gat:{width:100,height:100}}), canvasToMapCoordinate:()=>state.point,
- findNearestWalkableCoordinate:(_gat,point)=>point,findDefaultMapCoordinate:()=>({x:10,y:10})
+ findNearestWalkableCoordinate:(_gat,point)=>point
 }));
 vi.mock('../../src/UI/Components/GameTools/WorldMapPreview.js', () => ({drawWorldMapPreview:vi.fn()}));
 vi.mock('UI/Components/Navigation/NavigationAutoWalk.js', () => ({remainingPathFromPosition:()=>[]}));
@@ -41,4 +42,11 @@ it.each([false,true])('disables only walking for an unreachable selection (mobil
  // Failure for another target must not disable this selection.
  state.listener({target:{mapName:'prontera',x:60,y:60},unavailable:true,pending:false,path:[]});
  expect(container.querySelector('.catalog-route').disabled).toBe(false);
+});
+
+it.each([false,true])('requires an explicit walking target when opening the map (mobile=%s)',async mobile=>{
+ cleanup=mapCatalog.mount(container,{mobile});await vi.advanceTimersByTimeAsync(0);
+ expect(container.querySelector('.catalog-route').disabled).toBe(true);
+ expect(container.querySelector('.catalog-route').title).toBe('请先选择目标位置');
+ expect(container.querySelector('.catalog-teleport').disabled).toBe(false);
 });

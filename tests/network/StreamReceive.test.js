@@ -149,3 +149,24 @@ it('requests a foreground heartbeat only on the current live session', () => {
 	Network.close();
 	expect(Network.requestPing()).toBe(false);
 });
+
+it('receives arrival previews through the real framing table across every split', () => {
+ const preview = vi.fn();
+ Network.hookPacket(PACKET.ZC.HAPPYRO_ARRIVAL_PREVIEW, preview);
+ const buffer = new ArrayBuffer(28);
+ const view = new DataView(buffer);
+ view.setUint16(0, 0xd07, true);
+ view.setUint32(2, 123, true);
+ new Uint8Array(buffer, 8, 16).set(new TextEncoder().encode('prt_fild08'));
+ view.setUint16(24, 168, true);
+ view.setUint16(26, 373, true);
+ for (let split = 1; split < buffer.byteLength; split++) {
+  preview.mockClear();
+  socket.onMessage(buffer.slice(0, split));
+  expect(preview).not.toHaveBeenCalled();
+  socket.onMessage(buffer.slice(split));
+  expect(preview).toHaveBeenCalledTimes(1);
+  expect(preview.mock.calls[0][0]).toMatchObject({requestId:123, result:0, mapName:'prt_fild08', x:168, y:373});
+ }
+ expect(disconnected).not.toHaveBeenCalled();
+});

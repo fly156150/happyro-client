@@ -1,3 +1,4 @@
+import { requestArrivalPreview } from './ArrivalPreviewService.js';
 import DB from 'DB/DBManager.js';
 import { getMapChannel } from 'DB/Map/MapChannels.js';
 import MiniMapTable from 'DB/Map/MiniMapTable.js';
@@ -25,7 +26,6 @@ import { remainingPathFromPosition } from 'UI/Components/Navigation/NavigationAu
 import MapRenderer from 'Renderer/MapRenderer.js';
 import {
 	canvasToMapCoordinate,
-	findDefaultMapCoordinate,
 	findNearestWalkableCoordinate,
 	loadCatalogMap,
 	loadCatalogMapImage,
@@ -46,6 +46,10 @@ function mount(container, context = {}) {
 	let actionState = {};
 	let routeState = {};
 	let selectedCoordinate = null;
+	let routeSelected = false;
+	let arrivalPreview = null;
+	let arrivalMessage = '';
+	let arrivalAbort = null;
 	let loadedMap = null;
 	let loadingMapName = '';
 	let loadToken = 0;
@@ -186,7 +190,29 @@ function mount(container, context = {}) {
 					Number.isFinite(context.initialMap.x) &&
 					Number.isFinite(context.initialMap.y)
 						? { x: context.initialMap.x, y: context.initialMap.y }
-						: findDefaultMapCoordinate(null, normalizeAdventureMap(map.mapName));
+						: { x: 0, y: 0, automatic: true };
+				routeSelected = Boolean(
+					context.initialMap?.id === map.id &&
+					Number.isFinite(context.initialMap.x) &&
+					Number.isFinite(context.initialMap.y)
+				);
+				arrivalAbort?.abort();
+				arrivalAbort = new AbortController();
+				const signal = arrivalAbort.signal;
+				arrivalPreview = null;
+				arrivalMessage = '正在查询预计落点…';
+				requestArrivalPreview(map.mapName, signal)
+					.then(point => {
+						if (signal.aborted) return;
+						arrivalPreview = point;
+						arrivalMessage = `预计传送位置：${point.x}, ${point.y}（传送时重新校验）`;
+						api.refreshDetail();
+					})
+					.catch(error => {
+						if (signal.aborted) return;
+						arrivalMessage = error.message;
+						api.refreshDetail();
+					});
 				loadedMap = null;
 				selectedNpcKey = '';
 				npcAvailability = {};
@@ -217,7 +243,7 @@ function mount(container, context = {}) {
 				selectedCoordinate = { x: selectedNpc.x, y: selectedNpc.y };
 			}
 			const target = selectedCoordinate ? { ...map, ...selectedCoordinate } : null;
-			const routeTarget = target && !target.automatic ? target : null;
+			const routeTarget = routeSelected && target && !target.automatic ? target : null;
 			const currentMap = getCurrentAdventureMap();
 			const sameMap = normalizeAdventureMap(map.mapName) === currentMap;
 			const currentPosition = getCurrentAdventurePosition();
@@ -277,6 +303,7 @@ function mount(container, context = {}) {
 						}
 					</section>
 					</div>
+					<p class="map-arrival-preview" role="status" ${selectedCoordinate?.automatic ? '' : 'hidden'}>${escapeCatalogHtml(arrivalMessage)}</p>
 					<div class="catalog-action-panel">
 						<button class="catalog-route${routeActive ? ' is-active' : ''}" aria-busy="${Boolean(routePending)}" title="${!sameMap ? '寻路仅支持角色当前所在地图' : !routeTarget ? '请先选择目标位置' : routeUnavailable ? '无法寻路到所选位置' : ''}" type="button" ${routeTarget && sameMap && !routePending && !routeUnavailable ? '' : 'disabled'}>${routePending ? '计算中…' : routeActive ? '停止寻路' : '开始寻路'}</button>
 					<button class="catalog-teleport" type="button" ${canTeleportHere ? '' : 'disabled'}>${actionState.npcPending && selectedNpc ? '正在传送...' : '传送到这里'}</button>
@@ -301,7 +328,7 @@ function mount(container, context = {}) {
 				drawWorldMapPreview(
 					canvas,
 					loadedMap?.image,
-					selectedNpc || selectedCoordinate?.automatic ? null : selectedCoordinate,
+					selectedNpc ? null : selectedCoordinate?.automatic ? arrivalPreview : selectedCoordinate,
 					loadedMap?.gat,
 					{
 						path: sameMap && routeMatches ? remainingPathFromPosition(routeState.path, position) : [],
@@ -321,6 +348,11 @@ function mount(container, context = {}) {
 				const raw = canvasToMapCoordinate(canvas, event, loadedMap?.gat);
 				selectedNpcKey = '';
 				selectedCoordinate = findNearestWalkableCoordinate(loadedMap?.gat, raw);
+				routeSelected = Boolean(selectedCoordinate);
+				if (!selectedCoordinate) {
+					api.refreshDetail();
+					return;
+				}
 				const nextTarget = { ...map, ...selectedCoordinate };
 				if (!sameMap || !previewAdventureRoute(nextTarget)) api.refreshDetail();
 			});
@@ -341,6 +373,7 @@ function mount(container, context = {}) {
 				row.addEventListener('click', () => {
 					if (selectedNpcKey === row.dataset.npcKey) return;
 					selectedNpcKey = row.dataset.npcKey;
+					routeSelected = true;
 					const npc = mapNpcs.find(entry => npcCatalogKey(entry) === selectedNpcKey);
 					selectedCoordinate = { x: npc.x, y: npc.y };
 					if (!sameMap || !previewAdventureRoute({ ...map, ...selectedCoordinate })) api.refreshDetail();
@@ -353,8 +386,9 @@ function mount(container, context = {}) {
 	});
 
 	const clearMapMarker = () => {
+		routeSelected = false;
 		selectedNpcKey = '';
-		selectedCoordinate = findDefaultMapCoordinate(null, normalizeAdventureMap(loadingMapName));
+		selectedCoordinate = { x: 0, y: 0, automatic: true };
 		pendingSelectionClear = '';
 	};
 	const unsubscribeActions = subscribeAdventureActions(state => {
@@ -388,6 +422,7 @@ function mount(container, context = {}) {
 	}, 500);
 
 	return () => {
+		arrivalAbort?.abort();
 		loadToken += 1;
 		mapNpcsToken += 1;
 		npcAvailabilityToken += 1;

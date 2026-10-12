@@ -15441,6 +15441,26 @@ PACKET.ZC.HAPPYRO_NPC_TELEPORT_RESULT = function PACKET_ZC_HAPPYRO_NPC_TELEPORT_
 };
 PACKET.ZC.HAPPYRO_NPC_TELEPORT_RESULT.size = 32;
 
+PACKET.CZ.HAPPYRO_ARRIVAL_PREVIEW = function PACKET_CZ_HAPPYRO_ARRIVAL_PREVIEW() {
+	this.requestId = 0;
+	this.mapName = '';
+};
+PACKET.CZ.HAPPYRO_ARRIVAL_PREVIEW.prototype.build = function () {
+	const writer = new BinaryWriter(22);
+	writer.writeShort(0xd06);
+	writer.writeULong(this.requestId);
+	writer.writeBinaryString(this.mapName, 16);
+	return writer;
+};
+PACKET.ZC.HAPPYRO_ARRIVAL_PREVIEW = function PACKET_ZC_HAPPYRO_ARRIVAL_PREVIEW(fp) {
+	this.requestId = fp.readULong();
+	this.result = fp.readUShort();
+	this.mapName = fp.readBinaryString(16).replace(/\0.*$/, '');
+	this.x = fp.readUShort();
+	this.y = fp.readUShort();
+};
+PACKET.ZC.HAPPYRO_ARRIVAL_PREVIEW.size = 28;
+
 // 0xd00 - HappyRO server-authoritative map teleport request
 PACKET.CZ.HAPPYRO_MAP_TELEPORT = function PACKET_CZ_HAPPYRO_MAP_TELEPORT() {
 	this.requestId = 0;

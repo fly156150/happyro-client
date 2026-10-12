@@ -1,3 +1,4 @@
+import { handleArrivalPreview } from 'UI/Components/GameTools/ArrivalPreviewService.js';
 import recovery, { gameRecoveryReady } from './Recovery/GameRecovery.js';
 import { prepareAutoCombatTeleportMap, completeAutoCombatTeleportMap } from 'UI/Game/AutoCombatTeleport.js';
 import { startAutoPickup, stopAutoPickup } from 'UI/Game/GameAutoPickup.js';
@@ -303,6 +304,7 @@ class MapEngine {
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_AVAILABILITY_RESULT, onNpcAvailabilityResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_TELEPORT_RESULT, onNpcTeleportResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_TELEPORT_RESULT, onMapTeleportResult);
+			Network.hookPacket(PACKET.ZC.HAPPYRO_ARRIVAL_PREVIEW, handleArrivalPreview);
 			Network.hookPacket(PACKET.ZC.REFUSE_ENTER, onConnectionRefused);
 
 			// hook reassembly packets and map the responses
