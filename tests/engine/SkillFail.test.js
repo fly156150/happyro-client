@@ -62,3 +62,14 @@ describe('skill failure explanations', () => {
 		}
 	});
 });
+
+it('explains emotion prerequisites without mislabeling cooldown or blocked state', () => {
+ const emotion = cause => skillFailMessage({ result: 0, SKID: 1, NUM: 1, cause });
+ expect(emotion(0)).toContain('「基础技能」Lv.2');
+ expect(emotion(0)).toContain('「新基础技能」Lv.1');
+ expect(emotion(4)).toBe('表情发送太快了，请稍后再试。');
+ expect(emotion(11)).toContain('不能主动发送');
+ expect(emotion(23)).toContain('当前状态不能发送表情');
+ expect(skillFailMessage({ result: 0, SKID: 1, NUM: 2, cause: 0 })).not.toContain('发送表情');
+ expect(skillFailMessage({ result: 1, SKID: 1, NUM: 1, cause: 0 })).toBe('');
+});

@@ -40,7 +40,8 @@ import Announce from 'UI/Components/Announce/Announce.js';
 import Renderer from 'Renderer/Renderer.js';
 import SkillWindow from 'UI/Components/SkillList/SkillList.js';
 import CartDecoration from 'UI/Components/CartDecoration/CartDecoration.js';
-import { skillFailMessage } from './SkillFail.js';
+import { showToast } from 'UI/Components/Toast.js';
+import { isEmotionFailure, skillFailMessage } from './SkillFail.js';
 import { cancelCompanionSkill, queueCompanionSkill } from './CompanionSkillAction.js';
 
 import SnowWeatherEffect from 'Renderer/Effects/SnowWeather.js';
@@ -163,6 +164,7 @@ function onSkillResult(pkt) {
 		itemName: id => DB.getItemInfo(id)?.identifiedDisplayName
 	});
 	ChatBox.addText(text, ChatBox.TYPE.ERROR, ChatBox.FILTER.SKILL_FAIL);
+	if (isEmotionFailure(pkt)) showToast(document.body, text, 'error');
 }
 
 /**
