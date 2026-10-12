@@ -8,11 +8,8 @@ HappyRO 的浏览器客户端，基于 [roBrowserLegacy](https://github.com/MrAn
 
 ## 文档
 
-- [架构](docs/architecture.md)
-- [开发](docs/development.md)
-- [构建与测试](docs/build-and-test.md)
-- [HappyRO 运行时](docs/happyro-runtime.md)
-- 上游 roBrowser 文档：[docs/upstream/](docs/upstream/README.md) 与 [doc/](doc/README.md)
+- [文档索引](docs/README.md)：架构、开发、构建、UI、移动端及协议。
+- [构建与测试](docs/build-and-test.md)：日常检查与评审约束。
 
 ## 本机入口
 

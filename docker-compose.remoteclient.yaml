@@ -19,8 +19,8 @@ services:
     #
     # Game URL: http://localhost:3338/
     #
-    # See DOCKER.md for full documentation including Kubernetes and
-    # non-host-network deployments (macOS/Windows Docker Desktop).
+    # See https://github.com/happyro/happyro/blob/main/docs/operations/docker-release.md for HappyRO releases.
+    # This upstream example is not the HappyRO deployment entry point.
     # ─────────────────────────────────────────────────────────────────────────────
     robrowser:
         image: ghcr.io/<your-github-user>/robrowserlegacy:${ROBROWSER_TAG:?Set ROBROWSER_TAG to a version e.g. 1.0.0}

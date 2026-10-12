@@ -24,7 +24,7 @@ To use a non-default skin (like the **ChatBox** skin), add the `data-scrollbar-s
 
 ## 3. Adding a New Skin
 
-To add a new skin, modify [ScrollBar.js](../src/UI/Scrollbar.js).
+To add a new skin, modify [ScrollBar.js](../../src/UI/Scrollbar.js).
 
 ### Step 1: Update `skinsToLoad`
 

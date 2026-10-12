@@ -7,7 +7,7 @@
  *
  * Docker / containerised deployments: mount this file at runtime:
  *   docker run -v /path/to/Config.local.js:/robrowser/Config.local.js:ro ...
- * See DOCKER.md for a complete deployment guide.
+ * See https://github.com/happyro/happyro/blob/main/docs/operations/docker-release.md for HappyRO releases; this file is an upstream override example.
  */
 window.ROConfigLocal = {
 	// Example: Override server settings

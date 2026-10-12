@@ -28,3 +28,11 @@ The character preview is not a single image. Body, head, accessories, weapons, a
 ## Maintenance
 
 New character-preview layers must receive the same `renderTick` captured by `renderEntity()`. Do not call `Date.now()` again inside an individual layer to select its animation frame, and do not reintroduce 32-bit pixel-layout assumptions into the iPad 2D Canvas path.
+
+## 装备与角色列表
+
+Lua 的 `AccNameTable`、`RobeNameTable`、`JobNameTable` 用于资源文件名查找，保留资源路径字节；玩家可见文字才走显示解码。具体边界见[编码](../encoding.md)。
+
+装备预览使用实际装备部位 `equipped`，不以可装备部位 `location` 代替。外观不变时复用实体，角色列表按槽位更新，重复分包不追加重复角色；避免逐帧创建实体或因循环依赖过早读取角色类。
+
+验收覆盖换装、返回选角、多部位装备、重复角色分包与不同精灵尺寸。页面内注入外观只能验证显示，不能当作服务端背包装备流程通过。
