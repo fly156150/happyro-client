@@ -186,7 +186,7 @@ function mount(container, context = {}) {
 					Number.isFinite(context.initialMap.x) &&
 					Number.isFinite(context.initialMap.y)
 						? { x: context.initialMap.x, y: context.initialMap.y }
-						: { x: 0, y: 0, random: true };
+						: findDefaultMapCoordinate(null, normalizeAdventureMap(map.mapName));
 				loadedMap = null;
 				selectedNpcKey = '';
 				npcAvailability = {};
@@ -194,9 +194,7 @@ function mount(container, context = {}) {
 				loadCatalogMap(map.mapName).then(resource => {
 					if (token !== loadToken) return;
 					loadedMap = resource;
-					if (selectedCoordinate?.random && normalizeAdventureMap(map.mapName) !== getCurrentAdventureMap()) {
-						selectedCoordinate = findDefaultMapCoordinate(resource?.gat) || selectedCoordinate;
-					}
+
 					api.refreshDetail();
 				});
 				mapNpcs = [];
@@ -219,7 +217,7 @@ function mount(container, context = {}) {
 				selectedCoordinate = { x: selectedNpc.x, y: selectedNpc.y };
 			}
 			const target = selectedCoordinate ? { ...map, ...selectedCoordinate } : null;
-			const routeTarget = target && !target.random ? target : null;
+			const routeTarget = target && !target.automatic ? target : null;
 			const currentMap = getCurrentAdventureMap();
 			const sameMap = normalizeAdventureMap(map.mapName) === currentMap;
 			const currentPosition = getCurrentAdventurePosition();
@@ -236,7 +234,6 @@ function mount(container, context = {}) {
 			const targetActionState = getAdventureActionState(target);
 			const canTeleport =
 				target &&
-				(!target.random || sameMap) &&
 				loadedMap &&
 				Number.isFinite(target.x) &&
 				Number.isFinite(target.y) &&
@@ -255,8 +252,8 @@ function mount(container, context = {}) {
 			const mapStatus = !Session.NavigationTeleportAllowed ? '当前账号没有传送权限' : '';
 			const selectionLabel = selectedNpc
 				? `${selectedNpc.name} · ${selectedNpc.x}, ${selectedNpc.y}`
-				: selectedCoordinate?.random
-					? '随机位置'
+				: selectedCoordinate?.automatic
+					? '自动选择安全落点'
 					: selectedCoordinate
 						? `${selectedCoordinate.x}, ${selectedCoordinate.y}`
 						: '点击地图选择位置';
@@ -304,7 +301,7 @@ function mount(container, context = {}) {
 				drawWorldMapPreview(
 					canvas,
 					loadedMap?.image,
-					selectedNpc || selectedCoordinate?.random ? null : selectedCoordinate,
+					selectedNpc || selectedCoordinate?.automatic ? null : selectedCoordinate,
 					loadedMap?.gat,
 					{
 						path: sameMap && routeMatches ? remainingPathFromPosition(routeState.path, position) : [],
@@ -357,7 +354,7 @@ function mount(container, context = {}) {
 
 	const clearMapMarker = () => {
 		selectedNpcKey = '';
-		selectedCoordinate = { x: 0, y: 0, random: true };
+		selectedCoordinate = findDefaultMapCoordinate(null, normalizeAdventureMap(loadingMapName));
 		pendingSelectionClear = '';
 	};
 	const unsubscribeActions = subscribeAdventureActions(state => {

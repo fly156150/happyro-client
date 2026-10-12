@@ -1,3 +1,4 @@
+import { cityArrivalPoints } from './CityArrivalPoints.js';
 import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
 import MiniMapTable from 'DB/Map/MiniMapTable.js';
@@ -33,7 +34,13 @@ export function npcAtlasStyle(manifest, npcClass, displaySize) {
 }
 
 function loadClientFile(path) {
-	return new Promise(resolve => Client.loadFile(path, data => resolve(data || null), () => resolve(null)));
+	return new Promise(resolve =>
+		Client.loadFile(
+			path,
+			data => resolve(data || null),
+			() => resolve(null)
+		)
+	);
 }
 
 function getMapPaths(mapName) {
@@ -124,8 +131,8 @@ export function findNearestWalkableCoordinate(gat, target, maxRadius = 12) {
 	return target;
 }
 
-export function findDefaultMapCoordinate(gat) {
-	if (!gat?.width || !gat?.height) return null;
-	const center = { x: Math.floor(gat.width / 2), y: Math.floor(gat.height / 2) };
-	return findNearestWalkableCoordinate(gat, center, Math.max(gat.width, gat.height));
+export function findDefaultMapCoordinate(gat, mapName) {
+	const arrival = cityArrivalPoints[mapName];
+	if (arrival) return findNearestWalkableCoordinate(gat, { x: arrival.x, y: arrival.y });
+	return { x: 0, y: 0, automatic: true };
 }

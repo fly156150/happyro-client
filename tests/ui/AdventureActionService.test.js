@@ -9,7 +9,7 @@ import { teleportToCoordinate, handleMapTeleportResult, getAdventureActionState 
 import { endConnection } from '../../src/Network/ConnectionLifecycle.js';
 beforeEach(() => { vi.useFakeTimers(); endConnection(); vi.clearAllMocks(); });
 afterEach(() => { endConnection(); vi.useRealTimers(); });
-it('correlates random teleport completion and retains the server cooldown', () => {
+it('correlates automatic teleport completion and retains the server cooldown', () => {
  const complete = vi.fn(); teleportToCoordinate({ mapName: 'izlude', x: 0, y: 0 }, complete);
  const packet = state.send.mock.calls[0][0]; expect(packet).toMatchObject({ mapName: 'izlude', x: 0, y: 0 });
  expect(handleMapTeleportResult({ requestId: packet.requestId - 1, result: 0 })).toBe(false); expect(complete).not.toHaveBeenCalled();
