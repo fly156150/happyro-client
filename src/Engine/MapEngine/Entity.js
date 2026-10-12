@@ -2851,6 +2851,10 @@ export default function EntityEngine() {
 	Network.hookPacket(PACKET.ZC.NOTIFY_CHAT, onEntityTalk);
 	Network.hookPacket(PACKET.ZC.SHOWSCRIPT, onEntityTalk);
 	Network.hookPacket(PACKET.ZC.NPC_CHAT, onEntityTalkColor);
+	Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_NAME, pkt => {
+		const entity = EntityManager.get(pkt.AID);
+		if (entity) localizeEntityName(entity, pkt.CName);
+	});
 	Network.hookPacket(PACKET.ZC.ACK_REQNAME, onEntityIdentity);
 	Network.hookPacket(PACKET.ZC.ACK_REQNAMEALL, onEntityIdentity);
 	Network.hookPacket(PACKET.ZC.ACK_REQNAMEALL2, onEntityIdentity);

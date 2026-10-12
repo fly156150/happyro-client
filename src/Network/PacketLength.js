@@ -96,6 +96,7 @@ function init(packetver) {
 		packets_len[0x0cfd] = 32;
 		packets_len[0x0d01] = 32;
 		packets_len[0x0cff] = 8;
+		packets_len[0x0d04] = -1;
 		console.log('%c[Network] Packet Length initialized ', 'color:#007000', packetver);
 	} else {
 		console.error(`[Network] Failed to load packet lengths for year ${selectedYear} (path: ${modulePath})`);

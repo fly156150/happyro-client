@@ -15917,6 +15917,14 @@ PACKET.ZC.SELECTCART = function PACKET_ZC_SELECTCART(fp, end) {
 };
 PACKET.ZC.SELECTCART.size = -1;
 
+// 0x0d04 - ZC_HAPPYRO_NPC_NAME: UTF-8 name including its internal suffix.
+PACKET.ZC.HAPPYRO_NPC_NAME = function PACKET_ZC_HAPPYRO_NPC_NAME(fp, end) {
+	if (end - fp.tell() < 5) throw new Error('Truncated NPC name packet');
+	this.AID = fp.readULong();
+	this.CName = fp.readString(end - fp.tell());
+};
+PACKET.ZC.HAPPYRO_NPC_NAME.size = -1;
+
 // 0x0980 - CZ_SELECTCART
 PACKET.CZ.SELECTCART = function PACKET_CZ_SELECTCART() {
 	this.identity = 0;
