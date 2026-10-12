@@ -295,7 +295,7 @@ it('preserves server dialogs across browser suspension while closing local menus
 
 it('opens standalone camera controls next to status and clears transparent styling on other panels', () => {
  actions.camera=vi.fn();
- expect(root.querySelector('[data-panel=status]').nextElementSibling.dataset.panel).toBe('camera');
+ expect([...root.querySelectorAll('.profile-actions [data-panel]')].map(node => node.dataset.panel)).toEqual(['menu', 'status', 'chat', 'camera']);
  click('[data-panel=camera]');
  expect(root.querySelector('h2').textContent).toBe('镜头');
  expect(root.querySelector('.backdrop').classList.contains('camera-backdrop')).toBe(true);
@@ -307,4 +307,15 @@ it('opens standalone camera controls next to status and clears transparent styli
  click('[data-close]');expect(actions.setModal).toHaveBeenLastCalledWith(false);
  click('[data-panel=status]');expect(root.querySelector('.backdrop').classList.contains('camera-backdrop')).toBe(false);
  expect(root.querySelector('.camera-section')).toBeNull();
+});
+
+it('remembers dismissal of the optional orientation suggestion across HUD mounts', () => {
+ expect(root.querySelector('[data-orientation-hint]').hidden).toBe(false);
+ click('[data-dismiss-orientation]');
+ expect(root.querySelector('[data-orientation-hint]').hidden).toBe(true);
+ expect(actions.setModal).not.toHaveBeenCalled();
+ view.destroy();
+ view = createGameHUDView(root, actions);
+ expect(root.querySelector('[data-orientation-hint]').hidden).toBe(true);
+ localStorage.removeItem('OrientationHint');
 });

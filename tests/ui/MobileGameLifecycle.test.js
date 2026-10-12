@@ -18,7 +18,7 @@ vi.mock('UI/Game/GameInventory.js', () => ({ createGameInventory: canOperate => 
 vi.mock('UI/Game/GameShortcuts.js', () => ({ createGameShortcuts: () => ({ snapshot: () => ({}), cancel: vi.fn() }) }));
 vi.mock('Renderer/Renderer.js', () => ({ default: { canvas: document.createElement('canvas') } }));
 vi.mock('UI/Game/GameCommands.js', () => ({ adjustCamera: vi.fn(), targetSnapshot: () => ({}), moveDirection: vi.fn(), stopDirectionalMovement: vi.fn(), stopAttack: vi.fn(), attackSelected: vi.fn(), tapScene: vi.fn(), interactSelected: vi.fn() }));
-vi.mock('../../src/UI/Mobile/game/PointerControls.js', () => ({ bindPointerControls: () => ({ isMoving: () => false, cancel: vi.fn(), destroy: vi.fn() }) }));
+vi.mock('../../src/UI/Mobile/game/PointerControls.js', () => ({ bindPointerControls: (_root, _scene, actions) => { state.controlsEnabled = actions.enabled; return ({ isMoving: () => false, cancel: vi.fn(), destroy: vi.fn() }); } }));
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({
 	Session: { FreezeUI: false, Entity: { ACTION: {WALK: 1}, action: 0, display: { name: '角色' }, job: 0, clevel: 1, joblevel: 1, money: 0, life: { hp: 10, hp_max: 10, sp: 2, sp_max: 3 }, position: [1, 2] } },
@@ -90,4 +90,17 @@ it('preserves a server window received before mounting and clears it when leavin
  expect(state.view.showInteraction).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'npc', id: 42 }));
  HUD.onRemove();
  expect(interactionSnapshot()).toBeNull();
+});
+
+it('allows portrait controls and preserves an open panel when rotating', () => {
+ state.Session.Playing = true;
+ HUD.onAppend();
+ expect(state.controlsEnabled()).toBe(true);
+ state.actions.setModal(true);
+ for (const fn of state.orientation) fn('portrait');
+ expect(state.view.suspend).not.toHaveBeenCalled();
+ expect(state.Session.FreezeUI).toBe(true);
+ expect(state.controlsEnabled()).toBe(false);
+ state.actions.setModal(false);
+ expect(state.controlsEnabled()).toBe(true);
 });

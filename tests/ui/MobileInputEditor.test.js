@@ -126,3 +126,23 @@ it('updates editor density for small split-view width changes across the breakpo
  vi.stubGlobal('innerWidth',800);window.dispatchEvent(new Event('resize'));
  expect(overlay.dataset.menuDensity).toBe('spacious');
 });
+
+it('keeps a phone portrait draft in a bounded dialog through keyboard resizing and rotation', () => {
+ vi.stubGlobal('innerWidth',390); vi.stubGlobal('innerHeight',844);
+ const visual=new EventTarget();Object.assign(visual,{height:844,offsetTop:0});vi.stubGlobal('visualViewport',visual);
+ const {overlay,editor,field}=setup();
+ expect(overlay.dataset.editorLayout).toBe('dialog');
+ field.value='竖屏草稿';
+ visual.height=300;visual.offsetTop=12;visual.dispatchEvent(new Event('resize'));
+ expect(overlay.dataset.editorLayout).toBe('dialog');
+ expect(editor.querySelector('section').style.height).toBe('');
+ expect(editor.querySelector('dialog').style.height).toBe('');
+ vi.stubGlobal('innerWidth',844);vi.stubGlobal('innerHeight',390);visual.height=170;window.dispatchEvent(new Event('resize'));
+ expect(overlay.dataset.editorLayout).toBe('strip');
+ expect(editor.querySelector('section').style.height).toBe('170px');
+ expect(field.value).toBe('竖屏草稿');
+ vi.stubGlobal('innerWidth',390);vi.stubGlobal('innerHeight',844);visual.height=300;window.dispatchEvent(new Event('resize'));
+ expect(overlay.dataset.editorLayout).toBe('dialog');
+ expect(editor.querySelector('section').style.height).toBe('');
+ expect(field.value).toBe('竖屏草稿');
+});

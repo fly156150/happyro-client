@@ -11,7 +11,7 @@
 import KEYS from 'Controls/KeyEventHandler.js';
 import Mouse from 'Controls/MouseEventHandler.js';
 import Events from 'Core/Events.js';
-import Preferences, { DEFAULT_CAMERA_ZOOM } from 'Preferences/Camera.js';
+import Preferences, { DEFAULT_CAMERA_ZOOM, viewportCameraZoom } from 'Preferences/Camera.js';
 import Session from 'Engine/SessionStorage.js';
 import glMatrix from 'Utils/gl-matrix.js';
 import Configs from 'Core/Configs.js';
@@ -506,7 +506,11 @@ class Camera {
 		}
 
 		// Zoom
-		this.zoom += (this.zoomFinal - this.zoom) * lerp * 2.0;
+		const maximum =
+			Math.abs(this.altitudeRange) * (DB.isIndoor(this.currentMap) ? this.MAX_ZOOM_INDOOR : this.MAX_ZOOM);
+		const zoom = viewportCameraZoom(this.zoomFinal, this.zoomStep * this.zoomStepMult, maximum);
+		// Rotation or a slow frame must not move the camera beyond its target.
+		this.zoom += (zoom - this.zoom) * Math.min(lerp * 2.0, 1.0);
 
 		let zOffset = 0;
 		if (this.state == this.states.first_person) {

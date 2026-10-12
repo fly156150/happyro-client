@@ -5,4 +5,5 @@ export function menuDensity(width, height) {
 }
 export function updateMenuLayout(host, width, height) {
 	host.dataset.menuDensity = menuDensity(width, height);
+	host.dataset.orientation = width < height ? 'portrait' : 'landscape';
 }

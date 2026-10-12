@@ -559,7 +559,7 @@ dd {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 6px;
-	margin-bottom: 6px;
+	margin-bottom: 0;
 	flex-shrink: 0;
 }
 .shortcut-filters select {

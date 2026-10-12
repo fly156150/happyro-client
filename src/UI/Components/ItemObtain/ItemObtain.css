@@ -1,5 +1,5 @@
 :host {
-	top: 50px;
+	top: var(--mobile-item-notification-top, 50px);
 	left: 0px;
 	pointer-events: none;
 }

@@ -54,3 +54,13 @@ it('recomputes density for small split-view changes even while a field is focuse
  const update=createMobileViewport(host);update();root.querySelector('input').focus();visual.height=320;update();
  vi.stubGlobal('innerWidth',760);update();expect(host.dataset.menuDensity).toBe('compact');update.destroy();
 });
+
+it('shares portrait direction with every menu host without reacting to the software keyboard', () => {
+ const host=document.createElement('div'),root=host.attachShadow({mode:'open'});root.innerHTML='<input>';document.body.append(host);
+ vi.stubGlobal('innerWidth',390);vi.stubGlobal('innerHeight',844);
+ const visual={height:844,offsetTop:0};vi.stubGlobal('visualViewport',visual);
+ const update=createMobileViewport(host);update();expect(host.dataset.orientation).toBe('portrait');
+ root.querySelector('input').focus();visual.height=300;update();expect(host.dataset.orientation).toBe('portrait');
+ vi.stubGlobal('innerWidth',844);vi.stubGlobal('innerHeight',390);visual.height=390;update();expect(host.dataset.orientation).toBe('landscape');
+ update.destroy();
+});

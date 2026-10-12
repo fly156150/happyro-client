@@ -58,7 +58,10 @@ export function createShortcutPanel(body, actions) {
 				button.type = 'button';
 				button.dataset.index = slot.index;
 				const title = document.createElement('strong');
-				title.textContent = `位置 ${slot.index + 1}`;
+				const prefix = document.createElement('span');
+				prefix.className = 'shortcut-slot-prefix';
+				prefix.textContent = '位置 ';
+				title.append(prefix, String(slot.index + 1));
 				button.append(title, document.createElement('span'));
 				button.onclick = () => chooseSlot(slot.index);
 				picker.append(button);
@@ -71,7 +74,8 @@ export function createShortcutPanel(body, actions) {
 		for (const slot of visible) {
 			const button = picker.querySelector(`[data-index="${slot.index}"]`);
 			if (button) {
-				button.querySelector('span').textContent =
+				button.setAttribute('aria-label', `位置 ${slot.index + 1}：${slot.name}`);
+				button.querySelector(':scope > span').textContent =
 					`${slot.name}${slot.binding?.isSkill ? ` · Lv.${slot.binding.count}` : ''}`;
 				button.setAttribute('aria-pressed', String(slot.index === index));
 			}

@@ -1,3 +1,4 @@
+import menuPortraitCSS from './MenuPortrait.css?raw';
 import menuLayoutCSS from './MenuLayout.css?raw';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { subscribeAdventureActions } from 'UI/Components/GameTools/AdventureActionService.js';
@@ -7,7 +8,6 @@ import mobileSelectCSS from './MobileSelect.css?raw';
 import { createMobileViewport } from './MobileViewport.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import UIManager from 'UI/UIManager.js';
-import RotationGuard from 'UI/RotationGuard.js';
 import Session from 'Engine/SessionStorage.js';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 import { availableGameToolsTabs } from 'UI/Components/GameTools/GameToolsTabs.js';
@@ -21,7 +21,7 @@ import mobileCSS from './AdventureTools.css?raw';
 
 const Tools = new GUIComponent(
 	'MobileAdventureTools',
-	baseCSS + itemCSS + selectCSS + mobileCSS + mobileSelectCSS + menuLayoutCSS
+	baseCSS + itemCSS + selectCSS + mobileCSS + mobileSelectCSS + menuLayoutCSS + menuPortraitCSS
 );
 Tools.render = () => '<div class="adventure-mount mobile-menu-viewport"></div>';
 Tools.needFocus = false;
@@ -52,7 +52,6 @@ Tools.onAppend = async function () {
 	previousFreeze = Session.FreezeUI;
 	inputOwned = true;
 	Session.FreezeUI = true;
-	disposers.push(RotationGuard.allowPortraitPanel(this._host));
 	abort = new AbortController();
 	const mount = this.getRoot().querySelector('.adventure-mount');
 	const context = { capabilities: {}, mobile: true, initialMap };
@@ -81,8 +80,7 @@ Tools.onAppend = async function () {
 			actionMessage = state.message;
 		}),
 		subscribeAdventureRoute(state => {
-			if (state.message && state.message !== routeMessage)
-				feedback(state.message, 'info');
+			if (state.message && state.message !== routeMessage) feedback(state.message, 'info');
 			routeMessage = state.message;
 		})
 	);

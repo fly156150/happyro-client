@@ -130,7 +130,6 @@ HUD.onAppend = function () {
 			!Session.FreezeUI &&
 			Session.Playing &&
 			!document.hidden &&
-			Platform.orientation === 'landscape' &&
 			Session.Entity &&
 			Session.Entity.action !== Session.Entity.ACTION.DIE
 		);
@@ -322,7 +321,7 @@ HUD.onAppend = function () {
 		},
 		{ signal: abort.signal }
 	);
-	unsubscribeOrientation = Platform.onOrientationChange(() => cancel());
+	unsubscribeOrientation = Platform.onOrientationChange(cancelSceneInput);
 	for (const type of ['resize', 'scroll'])
 		window.visualViewport?.addEventListener(type, updateViewport, { signal: abort.signal });
 	window.addEventListener('resize', updateViewport, { signal: abort.signal });

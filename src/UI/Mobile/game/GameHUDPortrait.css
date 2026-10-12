@@ -1,0 +1,93 @@
+.orientation-hint {
+	display: none;
+}
+
+/* Width-based rules remain stable when the software keyboard opens. */
+@media (max-width: 600px) {
+	.top-left {
+		width: min(188px, calc(100% - 132px));
+	}
+	.battle-dock {
+		width: min(270px, calc(100% - 32px));
+	}
+	.orientation-hint:not([hidden]) {
+		position: absolute;
+		top: max(200px, calc(env(safe-area-inset-top) + 184px));
+		left: max(12px, env(safe-area-inset-left));
+		right: max(12px, env(safe-area-inset-right));
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 6px 10px;
+		pointer-events: auto;
+	}
+	.orientation-hint button {
+		flex-shrink: 0;
+		min-height: 36px;
+		border: 0;
+		background: transparent;
+		color: #ffe1ae;
+	}
+}
+
+.portrait-chat-button {
+	display: none;
+}
+:host([data-orientation='portrait']) .profile-actions {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 4px;
+}
+:host([data-orientation='portrait']) .portrait-chat-button {
+	display: block;
+}
+:host([data-orientation='portrait']) .chat-preview,
+:host([data-orientation='portrait']) .chat-preview:not(.collapsed) {
+	display: none;
+}
+:host([data-orientation='portrait']) .profile meter {
+	height: 14px;
+}
+:host([data-orientation='portrait']) .profile meter::-webkit-meter-inner-element {
+	position: relative;
+	display: block;
+	height: 100%;
+}
+:host([data-orientation='portrait']) .profile meter::-webkit-meter-bar {
+	top: 0;
+}
+:host([data-orientation='portrait']) .profile label > span {
+	font-size: 10px;
+	line-height: 14px;
+}
+
+:host([data-orientation='portrait']) .profile-actions button {
+	min-width: 0;
+	padding: 4px 2px;
+	white-space: nowrap;
+}
+:host([data-orientation='portrait']) .profile-actions [data-status-icons] {
+	display: none;
+}
+
+:host([data-orientation='portrait']) {
+	--portrait-map-width: 115.2px;
+	--portrait-map-canvas: 105.6px;
+	--portrait-profile-width: 188px;
+}
+:host([data-orientation='portrait'][data-menu-density='spacious']) {
+	--portrait-map-width: 172.8px;
+	--portrait-map-canvas: 153.6px;
+	--portrait-profile-width: 320px;
+}
+:host([data-orientation='portrait']) .map {
+	width: var(--portrait-map-width);
+}
+:host([data-orientation='portrait']) .map canvas {
+	width: var(--portrait-map-canvas);
+	height: var(--portrait-map-canvas);
+}
+:host([data-orientation='portrait']) .top-left {
+	width: min(var(--portrait-profile-width), calc(100% - var(--portrait-map-width) - 36px));
+}

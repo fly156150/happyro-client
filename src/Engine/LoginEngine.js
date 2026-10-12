@@ -10,7 +10,6 @@
  */
 
 // Load dependencies
-import RotationGuard from 'UI/RotationGuard.js';
 import TextEncoding from 'Utils/CodepageManager.js';
 import DB from 'DB/DBManager.js';
 import BGM from 'Audio/BGM.js';
@@ -55,7 +54,6 @@ class LoginEngine {
 	 * Init Game
 	 */
 	static init(server) {
-		RotationGuard.release();
 		const q = new Queue();
 		const old_server = _server;
 
@@ -192,7 +190,6 @@ class LoginEngine {
 	 * Reload WinLogin
 	 */
 	static reload() {
-		RotationGuard.release();
 		UIManager.removeComponents();
 		WinLogin.getUI().onConnectionRequest = onConnectionRequest;
 		WinLogin.getUI().onExitRequest = onExitRequest;

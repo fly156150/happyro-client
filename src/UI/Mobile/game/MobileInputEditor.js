@@ -56,7 +56,9 @@ export function createMobileInputEditor(host) {
 			}
 			overlay.style.setProperty('--mobile-visible-height', `${visual?.height || window.innerHeight}px`);
 			overlay.style.setProperty('--mobile-visual-top', `${visual?.offsetTop || 0}px`);
-			if (overlay.dataset.menuDensity === 'spacious') {
+			overlay.dataset.editorLayout =
+				overlay.dataset.menuDensity === 'spacious' || layoutHeight > layoutWidth ? 'dialog' : 'strip';
+			if (overlay.dataset.editorLayout === 'dialog') {
 				content.style.removeProperty('top');
 				content.style.removeProperty('height');
 				dialog.style.removeProperty('height');

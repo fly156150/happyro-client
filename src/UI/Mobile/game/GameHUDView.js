@@ -1,3 +1,6 @@
+import { bindHUDNotificationInset } from './HUDNotificationInset.js';
+import menuPortraitCSS from './MenuPortrait.css?raw';
+import portraitCSS from './GameHUDPortrait.css?raw';
 import interactionCSS from './InteractionPanel.css?raw';
 import interactionPhoneCSS from './InteractionPhone.css?raw';
 import interactionTabletCSS from './InteractionTablet.css?raw';
@@ -66,10 +69,24 @@ ${interactionCSS}
 ${interactionPhoneCSS}
 ${interactionTabletCSS}
 ${chatPreviewCSS}
-${switchCSS}</style>${html}`;
+${switchCSS}
+${portraitCSS}
+${menuPortraitCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
+	const orientationHint = Preferences.get('OrientationHint', { dismissed: false }, 1.0);
+	$('[data-orientation-hint]').hidden = orientationHint.dismissed;
+	$('[data-dismiss-orientation]').addEventListener(
+		'click',
+		() => {
+			orientationHint.dismissed = true;
+			orientationHint.save();
+			$('[data-orientation-hint]').hidden = true;
+		},
+		{ signal: abort.signal }
+	);
 	const chatPreview = createChatPreview(root);
+	const releaseNotificationInset = bindHUDNotificationInset(root);
 	let settingsCleanup;
 	let combatSettingsCleanup;
 	const chatDisplay = Preferences.get('ChatPreview', { collapsed: false }, 1.0);
@@ -843,6 +860,7 @@ ${switchCSS}</style>${html}`;
 		close,
 		destroy() {
 			chatPreview.destroy();
+			releaseNotificationInset();
 			menuSelects.destroy();
 			close(false);
 			abort.abort();

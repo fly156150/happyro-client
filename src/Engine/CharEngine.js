@@ -9,7 +9,6 @@
  * @author Vincent Thibault
  */
 
-import RotationGuard from 'UI/RotationGuard.js';
 import DB from 'DB/DBManager.js';
 import Configs from 'Core/Configs.js';
 import Events from 'Core/Events.js';
@@ -66,7 +65,6 @@ class CharEngine {
 	 * Connect to char server
 	 */
 	static init(server) {
-		RotationGuard.release();
 		BGM.play('01.mp3');
 
 		//Notify MapEngine if it needs UI update
@@ -132,7 +130,6 @@ class CharEngine {
 	 * Reload Char-Select
 	 */
 	static reload() {
-		RotationGuard.release();
 		Network.close();
 		Background.setLoginBackground(() => {
 			UIManager.removeComponents();
@@ -233,7 +230,6 @@ function onConnectionAccepted(pkt) {
  */
 function onSelectionRefused(pkt) {
 	UIManager.getComponent('WinLoading').remove();
-	RotationGuard.release();
 	let msg_id;
 
 	switch (pkt.ErrorCode) {
@@ -299,7 +295,6 @@ function onConnectionRefused(pkt) {
  * @param {object} pkt - PACKET.HC.NOTIFY_ACCESSIBLE_MAPNAME
  */
 function onMapUnavailable(pkt) {
-	RotationGuard.release();
 	UIManager.getComponent('WinLoading').remove();
 	// no map server avaiable
 	UIManager.showMessageBox(
@@ -797,7 +792,7 @@ function onPincodeCheckSuccess(pkt) {
  * @param {object} entity to connect with
  */
 function onConnectRequest(entity) {
-	RotationGuard.requireLandscape(() => enterGame(entity));
+	enterGame(entity);
 }
 
 function enterGame(entity) {

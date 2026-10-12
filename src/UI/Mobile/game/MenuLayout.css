@@ -190,8 +190,8 @@
 .mobile-menu-dialog .btns {
 	flex-shrink: 0;
 }
-/* The editor remains full-screen on phones; tablets get a bounded nested dialog. */
-:host([data-menu-density='spacious']) .mobile-menu-editor {
+/* Portrait phones and tablets use a bounded editor; short landscape phones use a strip. */
+:host([data-editor-layout='dialog']) .mobile-menu-editor {
 	inset: var(--mobile-visual-top, 0px) 0 auto;
 	width: min(var(--menu-dialog-width), calc(100% - var(--menu-dialog-inset)));
 	height: min(var(--menu-editor-height), calc(var(--mobile-visible-height, 100dvh) - var(--menu-dialog-inset)));
@@ -199,13 +199,13 @@
 	border: 1px solid #657584;
 	border-radius: 10px;
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor::backdrop {
+:host([data-editor-layout='dialog']) .mobile-menu-editor::backdrop {
 	background: #0006;
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor:has(textarea) {
+:host([data-editor-layout='dialog']) .mobile-menu-editor:has(textarea) {
 	--menu-editor-height: 320px;
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor section {
+:host([data-editor-layout='dialog']) .mobile-menu-editor section {
 	position: static;
 	height: 100%;
 	display: grid;
@@ -213,7 +213,7 @@
 	grid-template-rows: auto minmax(0, 1fr) auto;
 	padding: 12px;
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor #editor-title {
+:host([data-editor-layout='dialog']) .mobile-menu-editor #editor-title {
 	position: static;
 	width: auto;
 	height: auto;
@@ -221,17 +221,17 @@
 	grid-column: 1 / -1;
 	grid-row: 1;
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor main {
+:host([data-editor-layout='dialog']) .mobile-menu-editor main {
 	grid-column: 1 / -1;
 	grid-row: 2;
 	min-height: 0;
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor button {
+:host([data-editor-layout='dialog']) .mobile-menu-editor button {
 	grid-row: 3;
 	min-height: var(--panel-control);
 	font-size: var(--panel-text);
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor [data-done] {
+:host([data-editor-layout='dialog']) .mobile-menu-editor [data-done] {
 	grid-column: 2;
 }
 :host([data-menu-density='spacious']) .panel .auto-range-stepper button {
@@ -323,15 +323,15 @@
 	max-height: var(--npc-max-height);
 }
 
-:host([data-menu-density='spacious']) .mobile-menu-editor input {
+:host([data-editor-layout='dialog']) .mobile-menu-editor input {
 	height: var(--panel-control);
 	min-height: var(--panel-control);
 	font-size: var(--panel-text);
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor textarea {
+:host([data-editor-layout='dialog']) .mobile-menu-editor textarea {
 	font-size: var(--panel-text);
 }
-:host([data-menu-density='spacious']) .mobile-menu-editor #editor-title {
+:host([data-editor-layout='dialog']) .mobile-menu-editor #editor-title {
 	font-size: var(--panel-title);
 }
 
@@ -356,4 +356,40 @@
 }
 .panel[data-view='camera'] button:active {
 	background: rgb(67 92 110 / 95%);
+}
+
+/* Skills and shortcut candidates share one two-column card layout in every orientation. */
+:host([data-menu-density]) .panel :is(.skills-browser > .inventory-list, .shortcut-choices) {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-auto-rows: min-content;
+	align-content: start;
+	gap: 6px;
+}
+:host([data-menu-density]) .panel :is(.skills-browser .inventory-item, .shortcut-choice) {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	min-width: 0;
+	min-height: var(--panel-control);
+	padding: var(--panel-control-padding);
+	gap: 5px;
+	text-align: left;
+}
+:host([data-menu-density]) .panel :is(.skills-browser .inventory-item, .shortcut-choice) img {
+	position: static;
+	flex: 0 0 24px;
+	width: 24px;
+	height: 24px;
+	object-fit: contain;
+}
+:host([data-menu-density]) .panel :is(.skills-browser .inventory-item, .shortcut-choice) span {
+	min-width: 0;
+	font-size: var(--panel-label);
+}
+
+:host([data-menu-density]) .panel .slot-picker .shortcut-slot-prefix {
+	display: inline;
+	font: inherit;
+	color: inherit;
 }

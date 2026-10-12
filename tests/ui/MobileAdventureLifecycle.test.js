@@ -8,7 +8,6 @@ vi.mock('UI/GUIComponent.js', () => ({ default: class {
  getRoot() { return this.root; }
  remove() { this.onRemove(); this._host.remove(); }
 } }));
-vi.mock('UI/RotationGuard.js', () => ({ default: {allowPortraitPanel: () => () => {}} }));
 vi.mock('UI/UIManager.js', () => ({ default: { addComponent: component => component } }));
 vi.mock('Engine/SessionStorage.js', () => ({ default: state.session }));
 vi.mock('UI/Components/GameTools/GameToolsTabs.js', () => ({ availableGameToolsTabs: () => [] }));
