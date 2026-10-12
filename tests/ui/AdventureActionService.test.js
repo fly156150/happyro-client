@@ -5,7 +5,7 @@ vi.mock('Network/NetworkManager.js', () => ({ default: { sendPacket: state.send 
 vi.mock('Network/PacketStructure.js', () => ({ default: { CZ: { HAPPYRO_MAP_TELEPORT: class {} } } }));
 vi.mock('Renderer/MapRenderer.js', () => ({ default: { currentMap: 'izlude' } }));
 vi.mock('DB/Map/SupportedMapTable.js', () => ({ isSupportedMapResource: () => true }));
-import { teleportToCoordinate, handleMapTeleportResult, getAdventureActionState } from '../../src/UI/Components/GameTools/AdventureActionService.js';
+import { teleportToRandomCell, teleportToCoordinate, handleMapTeleportResult, getAdventureActionState } from '../../src/UI/Components/GameTools/AdventureActionService.js';
 import { endConnection } from '../../src/Network/ConnectionLifecycle.js';
 beforeEach(() => { vi.useFakeTimers(); endConnection(); vi.clearAllMocks(); });
 afterEach(() => { endConnection(); vi.useRealTimers(); });
@@ -26,4 +26,16 @@ it.each(['timeout', 'disconnect', 'rejected'])('completes on %s without later ac
  if (reason === 'rejected') handleMapTeleportResult({ requestId, result: 5 });
  expect(complete).toHaveBeenCalledOnce(); expect(complete.mock.calls[0][0].result).not.toBe(0);
  expect(handleMapTeleportResult({ requestId, result: 0 })).toBe(false);
+});
+
+it('distinguishes random safe cells from default map arrivals and keeps completion handling', () => {
+ const complete = vi.fn();
+ expect(teleportToRandomCell('izlude', complete)).toBe(true);
+ const packet = state.send.mock.calls[0][0];
+ expect(packet).toMatchObject({ mapName: 'izlude', x: 65535, y: 65535 });
+ const reply = { requestId: packet.requestId, result: 0, cooldownRemaining: 0 };
+ handleMapTeleportResult(reply);
+ expect(complete).toHaveBeenCalledExactlyOnceWith(reply);
+ teleportToCoordinate({mapName: 'izlude', x: 0, y: 0});
+ expect(state.send.mock.calls[1][0]).toMatchObject({x: 0, y: 0});
 });

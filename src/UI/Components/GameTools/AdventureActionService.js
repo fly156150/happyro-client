@@ -98,6 +98,11 @@ export function subscribeAdventureActions(listener) {
 	return () => listeners.delete(listener);
 }
 
+/** Reserved uint16 pair requests a random safe cell, distinct from the (0,0) default arrival. */
+export function teleportToRandomCell(mapName, onComplete = null) {
+	return teleportToCoordinate({ mapName, x: 0xffff, y: 0xffff }, onComplete);
+}
+
 export function teleportToCoordinate(target, onComplete = null) {
 	const state = getAdventureActionState(target);
 	if (!state.canTeleport || !target?.mapName || !Number.isFinite(target.x) || !Number.isFinite(target.y))

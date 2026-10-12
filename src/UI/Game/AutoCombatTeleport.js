@@ -5,7 +5,7 @@ import {
 	getCurrentAdventureMap,
 	normalizeAdventureMap,
 	getAdventureActionState,
-	teleportToCoordinate
+	teleportToRandomCell
 } from 'UI/Components/GameTools/AdventureActionService.js';
 
 // This short-lived ticket survives UI destruction during our own same-map warp only.
@@ -36,7 +36,7 @@ export function requestAutoCombatTeleport(intervalSeconds) {
 		success: false
 	};
 	ticket = attempt;
-	const sent = teleportToCoordinate({ mapName: attempt.map, x: 0, y: 0 }, packet => {
+	const sent = teleportToRandomCell(attempt.map, packet => {
 		if (ticket !== attempt) return;
 		if (packet.result !== 0) {
 			ticket = null;

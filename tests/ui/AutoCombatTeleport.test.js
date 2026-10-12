@@ -5,7 +5,7 @@ vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({
  getCurrentAdventureMap: () => state.map,
  normalizeAdventureMap: map => map.replace(/\.gat$/, ''),
  getAdventureActionState: () => state.action,
- teleportToCoordinate: (target, complete) => { state.complete = complete; state.send(target); return true; }
+ teleportToRandomCell: (target, complete) => { state.complete = complete; state.send(target); return true; }
 }));
 import { requestAutoCombatTeleport, prepareAutoCombatTeleportMap, completeAutoCombatTeleportMap, consumeAutoCombatTeleport, isAutoCombatTeleportPending } from '../../src/UI/Game/AutoCombatTeleport.js';
 import { notifyGameInput } from '../../src/Controls/GameInputIntent.js';
@@ -13,7 +13,7 @@ import { endConnection } from '../../src/Network/ConnectionLifecycle.js';
 beforeEach(() => { vi.useFakeTimers(); vi.setSystemTime(0); endConnection(); vi.clearAllMocks(); state.map = 'izlude'; state.session.GID = 1; state.action = { allowed: true, canTeleport: true }; });
 afterEach(() => { endConnection(); vi.useRealTimers(); });
 it.each([true, false])('resumes exactly once after both same-map arrival and success, ackFirst=%s', ackFirst => {
- requestAutoCombatTeleport(10); expect(state.send).toHaveBeenCalledWith({ mapName: 'izlude', x: 0, y: 0 });
+ requestAutoCombatTeleport(10); expect(state.send).toHaveBeenCalledWith('izlude');
  if (ackFirst) state.complete({ result: 0 });
  expect(consumeAutoCombatTeleport()).toBe(false);
  prepareAutoCombatTeleportMap('izlude.gat'); completeAutoCombatTeleportMap();
