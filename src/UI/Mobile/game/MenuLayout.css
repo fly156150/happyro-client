@@ -160,9 +160,7 @@
 :host([data-menu-density='spacious']) .panel :is(.auto-range-settings, .auto-teleport-settings) {
 	font-size: var(--panel-label);
 }
-:host([data-menu-density='spacious'])
-	.panel
-	:is(.auto-skill-card strong, .auto-help, [data-skill-count], [data-auto-summary]) {
+:host([data-menu-density='spacious']) .panel :is(.auto-skill-card strong, .auto-help, [data-skill-count]) {
 	font-size: var(--panel-label);
 }
 :host([data-menu-density='spacious']) .mobile-adventure button {

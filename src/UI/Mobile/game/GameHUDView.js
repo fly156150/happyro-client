@@ -15,7 +15,7 @@ import { createMenuSelects } from './MenuSelects.js';
 import selectCSS from 'UI/Components/GameTools/GameSelect.css?raw';
 import { drawPlayerArrow } from 'UI/Components/GameTools/WorldMapPreview.js';
 import { fittedMapRect, mapImageSourceRect, mapPointToCanvas } from 'UI/Components/GameTools/MapPreviewLayout.js';
-import { createAutoCombatPanel } from 'UI/Game/AutoCombatPanel.js';
+import { createCombatSettingsPanel } from './CombatSettingsPanel.js';
 import autoCombatCSS from 'UI/Game/AutoCombatPanel.css?raw';
 import switchCSS from 'UI/Components/GameSwitch.css?raw';
 import { createCompanionsPanel } from './CompanionsPanel.js';
@@ -71,6 +71,7 @@ ${switchCSS}</style>${html}`;
 	const abort = new AbortController();
 	const chatPreview = createChatPreview(root);
 	let settingsCleanup;
+	let combatSettingsCleanup;
 	const chatDisplay = Preferences.get('ChatPreview', { collapsed: false }, 1.0);
 	let currentPanel = null;
 	let statusPanel = null;
@@ -177,7 +178,11 @@ ${switchCSS}</style>${html}`;
 		const fit = fittedMapRect(canvas.width, canvas.height, mapImage.width, mapImage.height);
 		if (mapImage.image) {
 			const image = mapImage.image;
-			const source = mapImageSourceRect(image.naturalWidth || image.width, image.naturalHeight || image.height, mapImage);
+			const source = mapImageSourceRect(
+				image.naturalWidth || image.width,
+				image.naturalHeight || image.height,
+				mapImage
+			);
 			ctx.drawImage(image, source.x, source.y, source.width, source.height, fit.x, fit.y, fit.width, fit.height);
 		} else {
 			ctx.fillStyle = '#c6d0db';
@@ -192,6 +197,8 @@ ${switchCSS}</style>${html}`;
 	function close(notify = true) {
 		menuSelects.close();
 		if (!currentPanel || (notify && serverState?.canClose === false)) return;
+		combatSettingsCleanup?.();
+		combatSettingsCleanup = null;
 		settingsCleanup?.();
 		settingsCleanup = null;
 		clearToast(body);
@@ -258,6 +265,8 @@ ${switchCSS}</style>${html}`;
 		if (currentPanel === 'status') statusPanel?.update(snapshot.statuses || []);
 	}
 	function open(panel, slotIndex) {
+		combatSettingsCleanup?.();
+		combatSettingsCleanup = null;
 		settingsCleanup?.();
 		settingsCleanup = null;
 		clearToast(body);
@@ -325,7 +334,8 @@ ${switchCSS}</style>${html}`;
 		$('[data-close]').hidden = serverState?.canClose === false;
 		$('[data-close]').disabled = serverState?.canClose === false;
 		$('[data-close]').title = panel === 'npc' && serverState?.canClose === false ? '请先完成当前对话步骤' : '关闭';
-		$('[data-back]').hidden = Boolean(serverState) || panel === 'menu' || panel === 'chat' || panel === 'camera' || panel === 'npc';
+		$('[data-back]').hidden =
+			Boolean(serverState) || panel === 'menu' || panel === 'chat' || panel === 'camera' || panel === 'npc';
 		$('[data-back]').disabled = serverState?.canClose === false;
 		body.replaceChildren();
 		statusPanel = null;
@@ -398,7 +408,8 @@ ${switchCSS}</style>${html}`;
 			}
 			body.append(list);
 		}
-		if (panel === 'autoCombat') createAutoCombatPanel(body, { ...actions.autoCombat, close });
+		if (panel === 'autoCombat')
+			combatSettingsCleanup = createCombatSettingsPanel(body, actions.autoCombat, $('.panel > header'));
 		if (panel === 'settings')
 			settingsCleanup = createSettingsPanel(body, {
 				...actions.settings,

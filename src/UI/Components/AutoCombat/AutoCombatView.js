@@ -17,7 +17,7 @@ export function createAutoCombatView(root, actions, pickup) {
 				<button type="button" data-close aria-label="关闭战斗辅助">关闭</button>
 				</header>
 				<div id="combat-panel" role="tabpanel" aria-labelledby="combat-tab" class="desktop-combat-panel">
-				<div class="combat-runtime"><div><strong>自动战斗</strong><span class="combat-status" role="status" data-status></span></div><button type="button" class="game-switch" role="switch" aria-label="自动战斗" data-toggle aria-checked="false"></button></div>
+				<div class="combat-runtime"><strong>自动战斗</strong><button type="button" class="game-switch" role="switch" aria-label="自动战斗" data-toggle aria-checked="false"></button></div>
 					<div class="auto-config-body"></div>
 				</div>
 				<div id="pickup-panel" role="tabpanel" aria-labelledby="pickup-tab" class="desktop-pickup-panel" hidden>
@@ -33,7 +33,6 @@ export function createAutoCombatView(root, actions, pickup) {
 	function finishClose() {
 		pickupEditor?.flush();
 		pickupEditor?.destroy();
-		pickupEditor?.footer.remove();
 		backdrop.hidden = true;
 		root.getRootNode().host?.removeAttribute('data-settings-open');
 
@@ -62,7 +61,6 @@ export function createAutoCombatView(root, actions, pickup) {
 			structuredClone(pickup.load()),
 			pickup.save
 		);
-		$('#pickup-panel').append(pickupEditor.footer);
 		selectTab('combat');
 		backdrop.hidden = false;
 		root.getRootNode().host?.setAttribute('data-settings-open', '');
@@ -138,7 +136,6 @@ export function createAutoCombatView(root, actions, pickup) {
 	);
 	function update(state) {
 		$('[data-toggle]').setAttribute('aria-checked', String(state.active));
-		$('[data-status]').textContent = state.status;
 		const picking = pickup.load().enabled;
 		$('[data-settings]').title =
 			`战斗辅助 · 战斗${state.active ? '开启' : '关闭'} · 拾取${picking ? '开启' : '关闭'}`;
@@ -151,7 +148,6 @@ export function createAutoCombatView(root, actions, pickup) {
 		destroy() {
 			root.getRootNode().host?.removeAttribute('data-settings-open');
 			pickupEditor?.destroy();
-			pickupEditor?.footer.remove();
 			abort.abort();
 			root.replaceChildren();
 		}

@@ -1406,8 +1406,58 @@
 	line-height: 1.5;
 }
 
-.inventory-sockets { margin-top: 1em; }
-.inventory-sockets h4 { margin: 0 0 6px; font: inherit; font-weight: 700; }
-.inventory-sockets details { margin-top: 4px; border: 1px solid var(--panel-border, #a99b87); border-radius: 4px; }
-.inventory-sockets summary { padding: 8px; cursor: pointer; overflow-wrap: anywhere; }
-.inventory-sockets .item-description { padding: 0 8px 8px; margin: 0; white-space: pre-wrap; }
+.inventory-sockets {
+	margin-top: 1em;
+}
+.inventory-sockets h4 {
+	margin: 0 0 6px;
+	font: inherit;
+	font-weight: 700;
+}
+.inventory-sockets details {
+	margin-top: 4px;
+	border: 1px solid var(--panel-border, #a99b87);
+	border-radius: 4px;
+}
+.inventory-sockets summary {
+	padding: 8px;
+	cursor: pointer;
+	overflow-wrap: anywhere;
+}
+.inventory-sockets .item-description {
+	padding: 0 8px 8px;
+	margin: 0;
+	white-space: pre-wrap;
+}
+
+/* Touch feedback must not look like a checked state during scrolling. */
+.panel :is(label, input[type='checkbox'], [role='checkbox'], [role='switch']) {
+	-webkit-tap-highlight-color: transparent;
+}
+.panel input[type='checkbox']:not(.game-switch):not(.settings-field input):not(.pickup-item input) {
+	appearance: none;
+	-webkit-appearance: none;
+	box-sizing: border-box;
+	position: relative;
+	width: 18px;
+	height: 18px;
+	padding: 0;
+	border: 1px solid #7f8b97;
+	border-radius: 3px;
+	background: #253442;
+}
+.panel input[type='checkbox']:not(.game-switch):not(.settings-field input):not(.pickup-item input):checked {
+	background: #a7803b;
+	border-color: #e6c17d;
+}
+.panel input[type='checkbox']:not(.game-switch):not(.settings-field input):not(.pickup-item input):checked::after {
+	content: '';
+	position: absolute;
+	left: 5px;
+	top: 2px;
+	width: 4px;
+	height: 8px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}

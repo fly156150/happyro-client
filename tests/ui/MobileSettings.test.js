@@ -58,7 +58,7 @@ it('removes the camera tab while retaining graphics drafts across settings tabs'
  const body=document.createElement('div');
  createSettingsPanel(body,{fields:graphicsFields,snapshot:settingsSnapshot,save:saveGameSettings});
  const click=text=>[...body.querySelectorAll('button')].find(b=>b.textContent===text).click();
- expect([...body.querySelectorAll('.settings-tabs button')].map(b=>b.textContent)).toEqual(['画面','特效','声音','拾取']);
+ expect([...body.querySelectorAll('.settings-tabs button')].map(b=>b.textContent)).toEqual(['画面','特效','声音']);
  expect(body.querySelector('.camera-section')).toBeNull();
  const input=body.querySelector('[data-setting=quality]');input.value=100;input.dispatchEvent(new Event('input'));
  click('声音');click('画面');expect(input.value).toBe('100');
@@ -124,13 +124,14 @@ it('keeps layout drafts independent and follows the host scene while settings ar
  dispose();
 });
 
-it('auto-saves pickup without applying graphics drafts and flushes pending numbers when closing', () => {
+it('keeps pickup configuration when restoring general settings defaults', () => {
  const body=document.body.appendChild(document.createElement('div'));
- const dispose=createSettingsPanel(body,{fields:graphicsFields,snapshot:settingsSnapshot,save:saveGameSettings},'拾取');
- expect(body.querySelector('.settings-footer').hidden).toBe(true);
- const quality=body.querySelector('[data-setting=quality]');quality.value='100';quality.dispatchEvent(new Event('input'));
- const toggle=body.querySelector('[data-pickup=enabled]');toggle.checked=true;toggle.dispatchEvent(new Event('input'));
- expect(settingsSnapshot().pickup.enabled).toBe(true);expect(s.graphics.quality).toBe(25);expect(s.graphics.save).not.toHaveBeenCalled();
- const range=body.querySelector('[data-pickup=range]');range.value='12';range.dispatchEvent(new Event('input'));
- dispose();expect(settingsSnapshot().pickup.range).toBe(12);expect(s.graphics.save).not.toHaveBeenCalled();
+ const snapshot=()=>({...settingsSnapshot(),pickup:{enabled:true,range:12,batchSeconds:5,categories:[],excluded:[]}});
+ const save=vi.fn(()=> '已保存');
+ const dispose=createSettingsPanel(body,{fields:graphicsFields,snapshot,save});
+ expect(body.querySelector('[data-pickup]')).toBeNull();
+ [...body.querySelectorAll('button')].find(b=>b.textContent==='恢复默认').click();
+ body.querySelector('[data-confirm]').click();
+ expect(save).toHaveBeenCalledWith(expect.objectContaining({pickup:expect.objectContaining({enabled:true,range:12})}));
+ dispose();
 });

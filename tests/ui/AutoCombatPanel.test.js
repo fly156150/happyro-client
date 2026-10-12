@@ -41,3 +41,14 @@ it('keeps teleport timing disabled until enabled and saves preferences without s
  wait.click();
  expect(actions.configure).toHaveBeenLastCalledWith([], [], { search: 20, activity: 30 }, { enabled: true, waitSeconds: 6, intervalSeconds: 2 });
 });
+
+it('shows a skill icon when its shortcut resource finishes loading without changing selection', () => {
+ const body=document.body.appendChild(document.createElement('div'));
+ let loaded;
+ const configure=vi.fn();
+ createAutoCombatPanel(body,{snapshot:()=>({species:[],skills:[5],ranges:{search:20,activity:30}}),targets:()=>[],skills:()=>[{id:5,name:'狂击',level:3,loadIcon:callback=>{loaded=callback;}}],configure});
+ const card=body.querySelector('[data-skill="5"]');
+ loaded('blob:skill-icon');
+ expect(card.querySelector('img').getAttribute('src')).toBe('blob:skill-icon');
+ expect(card.getAttribute('aria-checked')).toBe('true');expect(configure).not.toHaveBeenCalled();
+});

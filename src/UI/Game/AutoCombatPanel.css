@@ -146,25 +146,10 @@
 	color: #bac4cd;
 	font-size: 10px;
 }
-.auto-config-footer {
+.auto-save-error:not([hidden]) {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
 	gap: 12px;
-	flex-shrink: 0;
-	border-top: 1px solid #65717b;
-	padding-top: 10px;
-}
-.auto-config-footer > div {
-	display: grid;
-	gap: 3px;
-	min-width: 0;
-}
-[data-auto-summary] {
-	font-size: 11px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 [data-auto-feedback] {
 	font-size: 10px;
@@ -271,4 +256,20 @@
 }
 .auto-teleport-settings .auto-help {
 	margin-bottom: 0;
+}
+
+.auto-skill-card .auto-skill-icon {
+	flex: 0 0 24px;
+	width: 24px;
+	height: 24px;
+	object-fit: contain;
+	image-rendering: pixelated;
+}
+.auto-skill-icon:not([src]) {
+	visibility: hidden;
+}
+.auto-skill-card,
+.auto-species-card,
+.auto-teleport-toggle {
+	-webkit-tap-highlight-color: transparent;
 }

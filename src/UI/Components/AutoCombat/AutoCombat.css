@@ -39,13 +39,6 @@ button:disabled {
 	border-color: #ceaa70;
 	background: #493c26;
 }
-.combat-status {
-	display: block;
-	margin-top: 8px;
-	color: #ceaa70;
-	overflow-wrap: anywhere;
-	font-size: 12px;
-}
 .combat-backdrop {
 	position: fixed;
 	inset: 0;
@@ -136,7 +129,8 @@ button:disabled {
 	font-size: 12px;
 	color: #bac4cd;
 }
-.combat-runtime {
+.combat-runtime,
+.combat-dialog .pickup-section > .pickup-enabled {
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -146,9 +140,6 @@ button:disabled {
 	border: 1px solid var(--assist-border);
 	border-radius: 8px;
 	background: #111a23;
-}
-.combat-status {
-	margin-top: 4px;
 }
 .combat-runtime button {
 	flex-shrink: 0;
@@ -231,8 +222,7 @@ button:disabled {
 }
 .combat-dialog .auto-help,
 .combat-dialog .auto-skill-card small,
-.combat-dialog [data-skill-count],
-.combat-dialog [data-auto-summary] {
+.combat-dialog [data-skill-count] {
 	font-size: 12px;
 }
 .combat-dialog .auto-range-stepper button {
@@ -241,20 +231,14 @@ button:disabled {
 .combat-dialog .auto-target-section {
 	padding-right: 8px;
 }
-.combat-dialog .auto-config-footer {
-	min-height: 48px;
-	font-size: 12px;
-}
 
 :host([data-settings-open]) {
 	z-index: 1000 !important;
 }
-.combat-dialog .pickup-section > .settings-field:first-child {
-	margin-bottom: 12px;
-	display: flex;
-	justify-content: flex-start;
-	gap: 16px;
+.combat-dialog .pickup-section > .pickup-enabled {
+	width: 100%;
+	margin: 0 0 12px;
 }
-.combat-dialog .pickup-section > .settings-field:first-child > span {
-	flex: none;
+.combat-dialog .pickup-enabled > span {
+	font-weight: bold;
 }

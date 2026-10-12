@@ -1,0 +1,20 @@
+import {afterEach,expect,it,vi} from 'vitest';
+vi.mock('UI/Game/PickupSettings.js',async importOriginal=>({...await importOriginal(),loadPickupSettings:()=>({enabled:true,range:5,batchSeconds:5,categories:[],excluded:[]}),savePickupSettings:vi.fn(()=>true)}));
+import {savePickupSettings} from '../../src/UI/Game/PickupSettings.js';
+import {createCombatSettingsPanel} from '../../src/UI/Mobile/game/CombatSettingsPanel.js';
+afterEach(()=>{document.body.replaceChildren();vi.clearAllMocks();});
+it('switches tabs without resetting combat or pickup edits and flushes on close',()=>{
+ const body=document.body.appendChild(document.createElement('div'));
+ const actions={snapshot:()=>({species:[],skills:[],ranges:{search:20,activity:30}}),targets:()=>[],skills:()=>[],configure:vi.fn(()=>true)};
+ const header=document.body.appendChild(document.createElement('header'));
+ const dispose=createCombatSettingsPanel(body,actions,header);
+ expect(body.querySelector('[role=tablist]')).toBeNull();
+ expect(header.querySelector('[role=tablist]')).not.toBeNull();
+ const combat=body.querySelector('#mobile-combat-settings'),pickup=body.querySelector('#mobile-pickup-settings');
+ expect(combat.hidden).toBe(false);expect(pickup.hidden).toBe(true);
+ header.querySelector('[data-assist-tab=pickup]').click();
+ const range=body.querySelector('[data-pickup=range]');range.value='12';range.dispatchEvent(new Event('input'));
+ header.querySelector('[data-assist-tab=combat]').click();header.querySelector('[data-assist-tab=pickup]').click();
+ expect(body.querySelector('[data-pickup=range]')).toBe(range);expect(range.value).toBe('12');
+ expect(actions.configure).not.toHaveBeenCalled();dispose();expect(savePickupSettings).toHaveBeenCalledWith(expect.objectContaining({range:12}));
+});

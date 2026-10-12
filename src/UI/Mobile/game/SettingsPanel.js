@@ -1,11 +1,9 @@
-import { createPickupSettingsPanel } from 'UI/Game/PickupSettingsPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { menuDensity } from './MenuLayout.js';
 import { showToast } from 'UI/Components/Toast.js';
 
-/** Graphics/audio use a draft; pickup settings save automatically. */
+/** Graphics and audio settings use a draft until saved. */
 export function createSettingsPanel(body, service, initialSection = '画面') {
-	let pickupEditor;
 	let draft = service.snapshot();
 	let activeSection = initialSection;
 	const host = body.getRootNode().host;
@@ -17,7 +15,6 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 	if (!host) window.addEventListener('resize', resize);
 	const notify = message => showToast(body, message);
 	function render() {
-		pickupEditor?.destroy();
 		body.replaceChildren();
 		const form = document.createElement('form');
 		form.className = 'settings-form';
@@ -29,7 +26,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		const content = document.createElement('div');
 		content.className = 'settings-content';
 		const sections = new Map();
-		for (const name of ['画面', '特效', '声音', '拾取']) {
+		for (const name of ['画面', '特效', '声音']) {
 			const section = document.createElement('section');
 			section.className = 'settings-section';
 			section.setAttribute('aria-label', name);
@@ -45,8 +42,6 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 					entry.button.setAttribute('aria-pressed', String(label === name));
 				}
 				content.scrollTop = 0;
-				footer.hidden = name === '拾取';
-				pickupEditor.footer.hidden = name !== '拾取';
 			};
 			sections.set(name, { section, button });
 			tabs.append(button);
@@ -171,11 +166,8 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			section.append(...values, ...switches);
 		}
 
-		pickupEditor = createPickupSettingsPanel(sections.get('拾取').section, draft.pickup);
-
 		const footer = document.createElement('div');
 		footer.className = 'settings-footer';
-		footer.hidden = activeSection === '拾取';
 		const buttons = document.createElement('div');
 		buttons.className = 'settings-actions';
 		for (const [label, action] of [
@@ -190,9 +182,12 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 				() => {
 					confirmAction(
 						body,
-						'确认恢复全部画面、特效、声音和拾取设置为默认值？',
+						'确认恢复全部画面、特效和声音设置为默认值？',
 						() => {
-							const message = service.save(service.snapshot(true));
+							const message = service.save({
+								...service.snapshot(true),
+								pickup: service.snapshot().pickup
+							});
 							draft = service.snapshot();
 							render();
 							notify(message);
@@ -213,14 +208,11 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			buttons.append(button);
 		}
 		footer.append(buttons);
-		pickupEditor.footer.hidden = activeSection !== '拾取';
-		form.append(footer, pickupEditor.footer);
+		form.append(footer);
 		body.append(form);
 	}
 	render();
 	return () => {
-		pickupEditor.flush();
-		pickupEditor.destroy();
 		observer.disconnect();
 		window.removeEventListener('resize', resize);
 		service.preview?.(service.snapshot().interface);

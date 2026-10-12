@@ -33,7 +33,7 @@ export function createAutoCombatPanel(body, actions) {
 				<div class="auto-skill-list" data-auto-skills></div>
 			</section>
 		</div>
-		<div class="auto-config-footer"><div><strong data-auto-summary></strong></div><span data-auto-save-status role="status">修改后自动保存</span></div>`;
+		<div class="auto-save-error" hidden><span data-auto-save-status role="status"></span></div>`;
 	const $ = selector => body.querySelector(selector);
 	const limits = AUTO_COMBAT_RANGE_LIMITS;
 	for (const [key, title, maximum] of [
@@ -213,7 +213,14 @@ export function createAutoCombatPanel(body, actions) {
 			reason.textContent = skill.reason;
 			detail.append(reason);
 		}
-		label.append(input, detail);
+		const icon = document.createElement('img');
+		icon.className = 'auto-skill-icon';
+		icon.alt = '';
+		icon.width = icon.height = 24;
+		label.append(input, icon, detail);
+		skill.loadIcon?.(url => {
+			if (url) icon.src = url;
+		});
 		const scroller = $('[data-auto-skills]');
 		let press,
 			cancelled = false;
@@ -263,11 +270,9 @@ export function createAutoCombatPanel(body, actions) {
 		const targets = selectedSpecies();
 		for (const button of body.querySelectorAll('[data-species]'))
 			button.setAttribute('aria-checked', String(chosenSpecies.has(Number(button.dataset.species))));
-		const targetLabel = targets.length > 1 ? `${targets.length} 种魔物` : targets[0]?.name || '全部魔物';
 		$('[data-all-species]').setAttribute('aria-pressed', String(!targets.length));
 		$('[data-normal-attack]').setAttribute('aria-pressed', String(count === 0));
 		$('[data-skill-count]').textContent = count ? `已选 ${count} 项` : '未选技能';
-		$('[data-auto-summary]').textContent = `${targetLabel} · ${count ? `${count} 个技能` : '普通攻击'}`;
 	}
 	$('[data-all-species]').onclick = () => {
 		chosenSpecies.clear();
@@ -279,17 +284,16 @@ export function createAutoCombatPanel(body, actions) {
 	};
 	function save() {
 		const ok = actions.configure(selectedSpecies(), selectedSkills(), { ...ranges }, { ...teleport }) !== false;
-		$('[data-auto-save-status]').textContent = ok ? '已保存' : '保存失败，请重试';
+		$('[data-auto-save-status]').textContent = ok ? '' : '保存失败，请重试';
 		$('[data-auto-save-status]').dataset.error = String(!ok);
-		$('[data-auto-retry]').hidden = ok;
+		$('.auto-save-error').hidden = ok;
 	}
 	const retry = document.createElement('button');
 	retry.type = 'button';
 	retry.dataset.autoRetry = '';
 	retry.textContent = '重试';
-	retry.hidden = true;
 	retry.onclick = save;
-	$('.auto-config-footer').append(retry);
+	$('.auto-save-error').append(retry);
 	updateSummary();
 	ready = true;
 }

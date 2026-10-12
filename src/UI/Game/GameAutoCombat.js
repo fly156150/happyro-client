@@ -12,6 +12,8 @@ import Altitude from 'Renderer/Map/Altitude.js';
 import SkillWindow from 'UI/Components/SkillList/SkillList.js';
 import SkillTargetSelection from 'UI/Components/SkillTargetSelection/SkillTargetSelection.js';
 import { canExecuteSkill, SKILL_INF } from 'UI/Components/SkillList/SkillUse.js';
+import Client from 'Core/Client.js';
+import DB from 'DB/DBManager.js';
 import SkillInfo from 'DB/Skills/SkillInfo.generated.js';
 import { remainingCooldown } from 'Network/SkillCooldowns.js';
 import * as Commands from './GameCommands.js';
@@ -52,6 +54,10 @@ export function createGameAutoCombat(enabled) {
 				return {
 					id: skill.SKID,
 					name: SkillInfo[skill.SKID]?.SkillName || `技能 ${skill.SKID}`,
+					loadIcon: callback => {
+						const name = SkillInfo[skill.SKID]?.Name;
+						if (name) Client.loadFile(`${DB.INTERFACE_PATH}item/${name}.bmp`, callback);
+					},
 					level: skill.level,
 					type: skill.type,
 					available: !reason,

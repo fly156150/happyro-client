@@ -1,116 +1,87 @@
-import { afterEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 vi.mock('UI/Components/GameTools/AdventureControlService.js', () => ({ searchAdventureItems: vi.fn(), loadAdventureAsset: vi.fn() }));
-import { loadAdventureAsset, searchAdventureItems } from '../../src/UI/Components/GameTools/AdventureControlService.js';
+import { searchAdventureItems, loadAdventureAsset } from '../../src/UI/Components/GameTools/AdventureControlService.js';
 import { createPickupSettingsPanel } from '../../src/UI/Game/PickupSettingsPanel.js';
 import { pickupDefaults } from '../../src/UI/Game/PickupSettings.js';
-loadAdventureAsset.mockResolvedValue('blob:item');
-afterEach(() => { document.body.replaceChildren(); vi.clearAllMocks(); });
-it('disables filters while off, preserves them and searches/adds/removes exclusions', async () => {
- const section = document.createElement('section'); document.body.append(section); const draft = pickupDefaults();
- createPickupSettingsPanel(section, draft);
- expect(section.querySelector('fieldset').disabled).toBe(true);
- const toggle = section.querySelector('[data-pickup=enabled]'); toggle.checked = true; toggle.dispatchEvent(new Event('input'));
- expect(draft.enabled).toBe(true); expect(section.querySelector('fieldset').disabled).toBe(false);
- const range = section.querySelector('[data-pickup=range]'); range.value = '8'; range.dispatchEvent(new Event('input')); expect(draft.range).toBe(8);
- const card = section.querySelector('[data-category=card]'); card.checked = false; card.dispatchEvent(new Event('input')); expect(draft.categories).not.toContain('card');
- searchAdventureItems.mockResolvedValue({ data: [{ Id: 501, names: { 'zh-CN': '红色药水' } }], total: 1 });
- section.querySelector('input[type=search]').value = '药水';
- const click = text => [...section.querySelectorAll('button')].find(button => button.textContent === text).click();
- click('搜索'); await vi.waitFor(() => expect(section.textContent).toContain('红色药水'));
- click('排除'); expect(draft.excluded).toEqual([{ id: 501, name: '红色药水' }]);
- await vi.waitFor(()=>expect(section.querySelector('.pickup-excluded img').getAttribute('src')).toBe('blob:item'));
- toggle.checked = false; toggle.dispatchEvent(new Event('input')); expect(draft.range).toBe(8); expect(draft.excluded).toHaveLength(1);
- toggle.checked = true; toggle.dispatchEvent(new Event('input')); click('移除'); expect(draft.excluded).toEqual([]);
+let section, draft, editor, persist;
+beforeEach(() => {
+ vi.spyOn(HTMLDialogElement.prototype,'showModal').mockImplementation(function(){this.open=true;});
+ vi.spyOn(HTMLDialogElement.prototype,'close').mockImplementation(function(){this.open=false;});
+ loadAdventureAsset.mockResolvedValue('blob:item');
+ section=document.body.appendChild(document.createElement('section'));
+ draft={...pickupDefaults(),enabled:true}; persist=vi.fn(()=>true);
 });
-
-it('debounces valid numbers, ignores invalid values, retries failures and cancels timers on destroy', () => {
- vi.useFakeTimers();
- try {
- const section=document.body.appendChild(document.createElement('section'));
- const save=vi.fn(() => true);
- const editor=createPickupSettingsPanel(section,{...pickupDefaults(),enabled:true},save);
- const range=section.querySelector('[data-pickup=range]');
- const input=value=>{range.value=value;range.dispatchEvent(new Event('input'));};
- input('8'); vi.advanceTimersByTime(200); input('9'); vi.advanceTimersByTime(399); expect(save).not.toHaveBeenCalled();
- vi.advanceTimersByTime(1); expect(save).toHaveBeenLastCalledWith(expect.objectContaining({range:9}));
- input('99'); vi.advanceTimersByTime(500); expect(save).toHaveBeenCalledOnce();
- input('10'); save.mockReturnValue(false); range.dispatchEvent(new Event('blur'));
- expect(section.querySelector('.pickup-save-status').textContent).toContain('保存失败');
- save.mockReturnValue(true); [...section.querySelectorAll('button')].find(x=>x.textContent==='重试').click();
- expect(section.querySelector('.pickup-save-status').textContent).toBe('已保存');
- const count=save.mock.calls.length; input('11'); editor.destroy(); vi.advanceTimersByTime(500); expect(save).toHaveBeenCalledTimes(count);
- } finally {vi.useRealTimers();}
+afterEach(()=>{editor?.destroy();document.body.replaceChildren();vi.restoreAllMocks();vi.clearAllMocks();});
+function mount(){editor=createPickupSettingsPanel(section,draft,persist);}
+function click(text,root=section){[...root.querySelectorAll('button')].find(b=>b.textContent===text).click();}
+function choose(selector){const input=section.querySelector(selector);input.checked=!input.checked;input.dispatchEvent(new Event('change'));}
+async function search(data,total=1){
+ searchAdventureItems.mockResolvedValueOnce({data,total});
+ section.querySelector('input[type=search]').value='药水';click('搜索');
+ await vi.waitFor(()=>expect(section.querySelector('.pickup-picker .pickup-item')).not.toBeNull());
+}
+it('allows editing and saving while pickup is off',()=>{
+ draft.enabled=false;mount();expect(section.querySelector('fieldset').disabled).toBe(false);
+ const range=section.querySelector('[data-pickup=range]');range.value='8';range.dispatchEvent(new Event('input'));editor.flush();
+ expect(persist).toHaveBeenLastCalledWith(expect.objectContaining({enabled:false,range:8}));
+ expect(section.querySelector('.pickup-save-error').hidden).toBe(true);
+ const toggle=section.querySelector('[data-pickup=enabled]');toggle.checked=true;toggle.dispatchEvent(new Event('input'));
+ expect(section.querySelector('fieldset').disabled).toBe(false);expect(draft.enabled).toBe(true);
 });
-
-it('loads authenticated item icons, pages results and releases image URLs', async () => {
- const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
- const section = document.body.appendChild(document.createElement('section'));
- const editor = createPickupSettingsPanel(section, {...pickupDefaults(), enabled:true}, () => true);
- loadAdventureAsset.mockResolvedValueOnce('blob:first').mockResolvedValueOnce('blob:second');
- searchAdventureItems.mockResolvedValue({data:[{Id:501, names:{'zh-CN':'红色药水'}, icon:'/api/adventure-tools/assets/items/501.png'}],total:60});
- section.querySelector('input[type=search]').value='药水';
- [...section.querySelectorAll('button')].find(b=>b.textContent==='搜索').click();
- await vi.waitFor(()=>expect(section.querySelector('.pickup-item-icon')?.getAttribute('src')).toBe('blob:first'));
- expect(loadAdventureAsset).toHaveBeenCalledWith('/assets/items/501.png');
- section.querySelector('.pickup-pagination button:last-child').click();
- await vi.waitFor(()=>expect(section.querySelector('.pickup-item-icon')?.getAttribute('src')).toBe('blob:second'));
- expect(searchAdventureItems).toHaveBeenLastCalledWith({query:'药水',page:2,perPage:20});
- expect([...section.querySelectorAll('.pickup-pagination button')].map(b=>b.textContent)).toEqual(['上一页','下一页']);
- expect(revoke).toHaveBeenCalledWith('blob:first');
- editor.destroy();
- expect(revoke).toHaveBeenCalledWith('blob:second');
- revoke.mockRestore();
+it('keeps multi-page selections pending until confirmation and avoids duplicates',async()=>{
+ mount();click('添加');await search([{Id:501,names:{'zh-CN':'红色药水'}}],41);
+ choose('[data-item-id="501"]');expect(draft.excluded).toEqual([]);expect(persist).not.toHaveBeenCalled();
+ searchAdventureItems.mockResolvedValueOnce({data:[{Id:502,names:{'zh-CN':'橙色药水'}}],total:41});click('下一页');
+ await vi.waitFor(()=>expect(section.querySelector('[data-item-id="502"]')).not.toBeNull());choose('[data-item-id="502"]');
+ searchAdventureItems.mockResolvedValueOnce({data:[{Id:501,names:{'zh-CN':'红色药水'}}],total:41});click('上一页');
+ await vi.waitFor(()=>expect(section.querySelector('[data-item-id="501"]')?.checked).toBe(true));
+ expect(section.querySelector('[data-selected]').textContent).toBe('已选 2 件');click('确认添加');
+ expect(draft.excluded.map(i=>i.id)).toEqual([501,502]);expect(persist).toHaveBeenCalledOnce();expect(section.querySelector('dialog')).toBeNull();
+ click('添加');await search([{Id:501,names:{'zh-CN':'红色药水'}}]);
+ expect(section.querySelector('[data-item-id="501"]').disabled).toBe(true);expect(section.querySelector('[data-confirm]').disabled).toBe(true);
 });
-
-it('releases icons that finish loading after the panel closes', async () => {
- const revoke = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
- let resolveImage;
- loadAdventureAsset.mockReturnValue(new Promise(resolve => {resolveImage=resolve;}));
- searchAdventureItems.mockResolvedValue({data:[{Id:501,icon:'/api/adventure-tools/assets/items/501.png'}],total:1});
- const section=document.body.appendChild(document.createElement('section'));
- const editor=createPickupSettingsPanel(section,{...pickupDefaults(),enabled:true},()=>true);
- section.querySelector('input[type=search]').value='501';
- [...section.querySelectorAll('button')].find(b=>b.textContent==='搜索').click();
- await vi.waitFor(()=>expect(resolveImage).toBeTypeOf('function'));
- editor.destroy(); resolveImage('blob:late');
- await vi.waitFor(()=>expect(revoke).toHaveBeenCalledWith('blob:late'));
- expect(section.querySelector('.pickup-item-icon').getAttribute('src')).toMatch(/^data:image\/svg\+xml,/);
- revoke.mockRestore();
+it('cancels without saving and deletes only selected entries',async()=>{
+ draft.excluded=[{id:501,name:'红色药水'},{id:502,name:'橙色药水'}];mount();click('添加');
+ await search([{Id:503,names:{'zh-CN':'黄色药水'}}]);choose('[data-item-id="503"]');click('取消');
+ expect(draft.excluded).toHaveLength(2);expect(persist).not.toHaveBeenCalled();
+ choose('[data-excluded-id="501"]');click('删除');expect(draft.excluded).toEqual([{id:502,name:'橙色药水'}]);expect(persist).toHaveBeenCalledOnce();
 });
-
-it('shows placeholders for missing, failed and corrupt icons in both lists', async () => {
- loadAdventureAsset.mockRejectedValue(new Error('missing asset'));
- const section=document.body.appendChild(document.createElement('section'));
- const editor=createPickupSettingsPanel(section,{...pickupDefaults(),enabled:true,excluded:[{id:501,name:'红色药水'}]},()=>true);
- searchAdventureItems.mockResolvedValue({data:[{Id:502},{Id:503,icon:'/items/503/icon'}],total:2});
- section.querySelector('input[type=search]').value='药水';
- [...section.querySelectorAll('button')].find(b=>b.textContent==='搜索').click();
- await vi.waitFor(()=>expect(section.querySelectorAll('.pickup-item-icon')).toHaveLength(3));
+it('requires confirmation to clear the exclusion list',()=>{
+ draft.excluded=[{id:501,name:'红色药水'}];mount();click('清空');click('取消');expect(draft.excluded).toHaveLength(1);
+ click('清空');click('确认');expect(draft.excluded).toEqual([]);expect(persist).toHaveBeenCalledOnce();
+});
+it('keeps results and pagination mounted during loading and after a failed request',async()=>{
+ mount();click('添加');await search([{Id:501,names:{'zh-CN':'红色药水'}}],41);
+ const row=section.querySelector('.pickup-results .pickup-item'),next=section.querySelector('[data-next]');
+ let reject;searchAdventureItems.mockReturnValueOnce(new Promise((_,fail)=>{reject=fail;}));click('下一页');
+ expect(row.isConnected).toBe(true);expect(next.isConnected).toBe(true);expect(next.disabled).toBe(true);
+ reject(new Error('offline'));await vi.waitFor(()=>expect(section.querySelector('.pickup-search-status').textContent).toContain('搜索失败'));
+ expect(row.isConnected).toBe(true);expect(next.disabled).toBe(false);
+});
+it('shows placeholders and releases late images after closing the picker',async()=>{
+ const revoke=vi.spyOn(URL,'revokeObjectURL').mockImplementation(()=>{});
+ let resolve;loadAdventureAsset.mockReturnValueOnce(new Promise(done=>{resolve=done;}));
+ mount();click('添加');await search([{Id:501,icon:'/api/adventure-tools/items/501/icon'},{Id:502}],2);
  expect(loadAdventureAsset).toHaveBeenCalledWith('/items/501/icon');
- for(const image of section.querySelectorAll('.pickup-item-icon')) {
-  expect(image.src).toMatch(/^data:image\/svg\+xml,/);
-  expect(image.hidden).toBe(false);
- }
- const image=section.querySelector('.pickup-excluded img');
- image.src='blob:corrupt'; image.dispatchEvent(new Event('error'));
- expect(image.src).toMatch(/^data:image\/svg\+xml,/);
- editor.destroy();
+ expect(section.querySelectorAll('.pickup-item-icon')).toHaveLength(2);
+ for(const image of section.querySelectorAll('.pickup-item-icon'))expect(image.src).toMatch(/^data:image\/svg\+xml,/);
+ click('取消');resolve('blob:late');await vi.waitFor(()=>expect(revoke).toHaveBeenCalledWith('blob:late'));
 });
-
-it('keeps results and pagination mounted while the next page loads', async () => {
- const section=document.body.appendChild(document.createElement('section'));
- const editor=createPickupSettingsPanel(section,{...pickupDefaults(),enabled:true},()=>true);
- searchAdventureItems.mockResolvedValueOnce({data:[{Id:501,names:{'zh-CN':'第一页'}}],total:60});
- section.querySelector('input[type=search]').value='药水';
- [...section.querySelectorAll('button')].find(b=>b.textContent==='搜索').click();
- await vi.waitFor(()=>expect(section.querySelector('.pickup-results').textContent).toContain('第一页'));
- const row=section.querySelector('.pickup-item'),next=section.querySelector('.pickup-pagination button:last-child');
- let resolve;
- searchAdventureItems.mockReturnValueOnce(new Promise(done=>{resolve=done;}));
- next.click();
- expect(row.isConnected).toBe(true);
- expect(next.isConnected).toBe(true);
- resolve({data:[{Id:502,names:{'zh-CN':'第二页'}}],total:60});
- await vi.waitFor(()=>expect(section.querySelector('.pickup-results').textContent).toContain('第二页'));
- editor.destroy();
+it('loads icons for saved exclusions and falls back when an image is unavailable',async()=>{
+ draft.excluded=[{id:501,name:'红色药水'},{id:502,name:'橙色药水'}];
+ loadAdventureAsset.mockResolvedValueOnce('blob:501').mockRejectedValueOnce(new Error('missing'));mount();
+ await vi.waitFor(()=>expect(section.querySelector('.pickup-excluded img').src).toBe('blob:501'));
+ const images=section.querySelectorAll('.pickup-excluded img');expect(images[1].src).toMatch(/^data:image\/svg\+xml,/);
+ images[0].dispatchEvent(new Event('error'));expect(images[0].src).toMatch(/^data:image\/svg\+xml,/);
+});
+it('ignores pending search responses after the editor is destroyed',async()=>{
+ mount();click('添加');let resolve;searchAdventureItems.mockReturnValueOnce(new Promise(done=>{resolve=done;}));
+ section.querySelector('input[type=search]').value='501';click('搜索');editor.destroy();
+ resolve({data:[{Id:501}],total:1});await Promise.resolve();expect(section.querySelector('dialog')).toBeNull();expect(persist).not.toHaveBeenCalled();
+});
+it('debounces valid numbers and retains the last valid setting',()=>{
+ vi.useFakeTimers();try{mount();const range=section.querySelector('[data-pickup=range]');
+ range.value='8';range.dispatchEvent(new Event('input'));vi.advanceTimersByTime(400);expect(persist).toHaveBeenCalledOnce();expect(draft.range).toBe(8);
+ range.value='99';range.dispatchEvent(new Event('input'));vi.advanceTimersByTime(400);expect(persist).toHaveBeenCalledOnce();expect(draft.range).toBe(8);
+ }finally{vi.useRealTimers();}
 });

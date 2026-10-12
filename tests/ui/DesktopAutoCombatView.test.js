@@ -20,10 +20,10 @@ beforeEach(() => {
 });
 afterEach(() => { view.destroy(); document.body.replaceChildren(); });
 const click = selector => root.querySelector(selector).click();
-it('offers a visible start/stop control with live status and accessible state', () => {
+it('offers a visible start/stop control with accessible state', () => {
 	click('[data-settings]'); click('[data-toggle]'); expect(actions.start).toHaveBeenCalledOnce();
 	expect(root.querySelector('[data-toggle]').getAttribute('aria-checked')).toBe('true');
-	expect(root.querySelector('[data-status]').textContent).toBe('寻找附近目标');
+	expect(root.querySelector('[data-status]')).toBeNull();
 	click('[data-toggle]'); expect(actions.stop).toHaveBeenCalledOnce();
 	expect(root.querySelector('[data-toggle]').getAttribute('aria-checked')).toBe('false');
 });
@@ -44,9 +44,10 @@ it('cancels unsaved settings with Escape and keeps keyboard focus inside the dia
 	root.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 	expect(view.isOpen()).toBe(false); expect(actions.configure).not.toHaveBeenCalled();
 });
-it('reports a rejected start and retains unsaved settings after persistence failure', () => {
+it('stops after a rejected start and retains unsaved settings after persistence failure', () => {
 	actions.start.mockReturnValue(false); click('[data-settings]'); click('[data-toggle]');
-	expect(root.querySelector('[data-status]').textContent).toBe('当前不能开始自动战斗');
+	expect(actions.stop).toHaveBeenCalledWith('当前不能开始自动战斗');
+ expect(root.querySelector('[data-toggle]').getAttribute('aria-checked')).toBe('false');
 	click('[data-settings]'); actions.configure.mockReturnValue(false); click('[data-range="search"][data-delta="1"]');
 	expect(view.isOpen()).toBe(true); expect(root.querySelector('[data-auto-save-status]').textContent).toContain('保存失败');
 });
