@@ -293,7 +293,7 @@ ${menuContentComponentsCSS}</style>${html}`;
 		clearToast(body);
 		if (panel === 'map') {
 			close();
-			actions.openAdventureMap(slotIndex);
+			actions.openAdventureMap(slotIndex, () => open('menu'));
 			return;
 		}
 		if (!currentPanel) lastTrigger = root.activeElement;
@@ -356,7 +356,11 @@ ${menuContentComponentsCSS}</style>${html}`;
 		$('[data-close]').disabled = serverState?.canClose === false;
 		$('[data-close]').title = panel === 'npc' && serverState?.canClose === false ? '请先完成当前对话步骤' : '关闭';
 		$('[data-back]').hidden =
-			Boolean(serverState) || panel === 'menu' || panel === 'chat' || panel === 'camera' || panel === 'npc';
+			(Boolean(serverState) && !['pet', 'companions', 'mail', 'bank', 'vending'].includes(panel)) ||
+			panel === 'menu' ||
+			panel === 'chat' ||
+			panel === 'camera' ||
+			panel === 'npc';
 		$('[data-back]').disabled = serverState?.canClose === false;
 		body.replaceChildren();
 		statusPanel = null;

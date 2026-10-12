@@ -157,7 +157,7 @@ HUD.onAppend = function () {
 	view = createGameHUDView(HUD.getRoot(), {
 		cancelSceneInput,
 		openAdventureTools: back => AdventureTools.openFromMenu(back),
-		openAdventureMap: target => AdventureTools.openMap(target),
+		openAdventureMap: (target, back) => AdventureTools.openMap(target, back),
 		setModal,
 		interact: () => {
 			autoCombat.stop();

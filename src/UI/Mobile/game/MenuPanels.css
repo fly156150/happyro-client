@@ -1420,3 +1420,9 @@
 	border-width: 0 2px 2px 0;
 	transform: rotate(45deg);
 }
+
+/* The mobile pickup switch owns a full-width row in both orientations. */
+.panel .pickup-section > .pickup-enabled {
+	width: 100%;
+	justify-content: space-between;
+}

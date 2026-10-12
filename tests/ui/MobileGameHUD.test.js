@@ -319,3 +319,20 @@ it('remembers dismissal of the optional orientation suggestion across HUD mounts
  expect(root.querySelector('[data-orientation-hint]').hidden).toBe(true);
  localStorage.removeItem('OrientationHint');
 });
+
+it('returns from the menu map through its supplied back action', () => {
+ click('[data-panel="menu"]');
+ [...root.querySelectorAll('.menu-grid button')].find(button=>button.textContent==='地图').click();
+ const back=actions.openAdventureMap.mock.lastCall[1];
+ expect(back).toBeTypeOf('function');back();
+ expect(root.querySelector('.panel').dataset.view).toBe('menu');
+ expect(root.querySelector('.backdrop').hidden).toBe(false);
+});
+it('closes a menu bank interaction before returning to the menu', () => {
+ const close=vi.fn();
+ const service={setOperationGuard:vi.fn(),snapshot:()=>({allowed:true,wallet:10,bank:20,depositMax:10,withdrawMax:20})};
+ view.showInteraction({kind:'bank',token:{},service,close,canClose:true});
+ expect(root.querySelector('[data-back]').hidden).toBe(false);
+ click('[data-back]');expect(close).toHaveBeenCalledOnce();
+ expect(root.querySelector('.panel').dataset.view).toBe('menu');
+});

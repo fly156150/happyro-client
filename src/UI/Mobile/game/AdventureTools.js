@@ -47,7 +47,8 @@ Tools.openFromMenu = function (back) {
 	this.backToMenu = back;
 	this.append();
 };
-Tools.openMap = function (target) {
+Tools.openMap = function (target, back) {
+	this.backToMenu = back;
 	this.initialMap = target;
 	this.append();
 };
