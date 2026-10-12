@@ -1,3 +1,6 @@
+import { showToast } from 'UI/Components/Toast.js';
+import gameSession from './Auth/GameSession.js';
+import recovery, { recoverLogin } from './Recovery/GameRecovery.js';
 /**
  * Engine/LoginEngine.js
  *
@@ -49,11 +52,36 @@ let _charServers = [];
  */
 let _loginID = '';
 
+let authGeneration = 0;
+let sessionTicketLogin = false;
+let keepLogin = false;
+let suppressAutoLogin = false;
+let resumeRetries = 0;
+
+async function resumeSession() {
+	const generation = ++authGeneration;
+	WinLoading.append();
+	try {
+		const credentials = await gameSession.resume();
+		if (generation !== authGeneration) return;
+		if (credentials) {
+			onConnectionRequest(credentials.username, '', credentials.persistent, credentials.ticket);
+			return;
+		}
+	} catch { /* Keep ordinary login available if the session service is offline. */ }
+	if (generation !== authGeneration) return;
+	WinLoading.remove();
+	WinLogin.getUI().append();
+}
+
 class LoginEngine {
 	/**
 	 * Init Game
 	 */
 	static init(server) {
+		++authGeneration;
+		resumeRetries = 0;
+		recovery.cancel();
 		const q = new Queue();
 		const old_server = _server;
 
@@ -155,7 +183,10 @@ class LoginEngine {
 			Configs.set('autoLogin', null);
 		} else {
 			q.add(function () {
-				WinLogin.getUI().append();
+				if (suppressAutoLogin) {
+					suppressAutoLogin = false;
+					WinLogin.getUI().append();
+				} else resumeSession();
 			});
 		}
 
@@ -189,13 +220,24 @@ class LoginEngine {
 	/**
 	 * Reload WinLogin
 	 */
-	static reload() {
+	static async logout() {
+		++authGeneration;
+		suppressAutoLogin = true;
+		try { await gameSession.revoke(); }
+		catch { UIManager.showErrorBox('退出登录未完成，请恢复网络后重试。'); return false; }
+		return true;
+	}
+
+	static reload(preserveRecovery = false) {
+		++authGeneration;
+		if (!preserveRecovery) recovery.cancel();
+		resumeRetries = 0;
 		UIManager.removeComponents();
 		WinLogin.getUI().onConnectionRequest = onConnectionRequest;
 		WinLogin.getUI().onExitRequest = onExitRequest;
-		WinLogin.getUI().append();
-
 		Network.close();
+		if (preserveRecovery && gameSession.available) resumeSession();
+		else WinLogin.getUI().append();
 	}
 
 	/**
@@ -215,7 +257,10 @@ class LoginEngine {
  * @param {string} username
  * @param {string} password
  */
-function onConnectionRequest(username, password) {
+function onConnectionRequest(username, password, persistent = false, ticket = null) {
+	++authGeneration;
+	sessionTicketLogin = !!ticket;
+	keepLogin = persistent;
 	// Play "¹öÆ°¼Ò¸®.wav" (possible problem with charset)
 	Sound.play('\xB9\xF6\xC6\xB0\xBC\xD2\xB8\xAE.wav');
 
@@ -296,7 +341,13 @@ function onConnectionRequest(username, password) {
 				Network.sendPacket(pkt);
 			}
 
-			if (Configs.get('loginMode') == 'han') {
+			if (ticket) {
+				pkt = new PACKET.CA.SESSION_LOGIN();
+				pkt.ID = username;
+				pkt.Ticket = ticket;
+				pkt.clienttype = parseInt(_server.langtype, 10);
+				Network.sendPacket(pkt);
+			} else if (Configs.get('loginMode') == 'han') {
 				// password is encrypted with rijndael
 				const paddedPassword = new Uint8Array(24);
 				for (let i = 0; i < password.length; i++) {
@@ -340,7 +391,9 @@ function onConnectionRequest(username, password) {
 /**
  * Go back to intro window
  */
-function onExitRequest() {
+async function onExitRequest() {
+	if (!(await LoginEngine.logout())) return;
+	recovery.cancel();
 	import('Engine/GameEngine.js').then(GameEngine => {
 		GameEngine.default.reload();
 	});
@@ -368,7 +421,16 @@ function onCharServerSelected(index) {
  *
  * @param {object} pkt - PACKET.AC.ACCEPT_LOGIN
  */
-function onConnectionAccepted(pkt) {
+async function onConnectionAccepted(pkt) {
+	const generation = authGeneration;
+	const connectionId = Network.connectionId;
+	if (!sessionTicketLogin && pkt.webAuthToken) {
+		try { if (!(await gameSession.create(pkt.AID, pkt.webAuthToken, keepLogin))) throw new Error('Session creation refused'); }
+		catch { showToast(document.body, '登录成功，但未能保存登录状态。此次断线后需重新登录。', 'error'); }
+	}
+	if (generation !== authGeneration || connectionId !== Network.connectionId) return;
+	sessionTicketLogin = false;
+	if (Session.AID && Session.AID !== pkt.AID) UIManager.getComponent('ChatBox')?.clean();
 	UIManager.removeComponents();
 
 	Session.AuthCode = pkt.AuthCode;
@@ -381,6 +443,7 @@ function onConnectionAccepted(pkt) {
 	}
 
 	_charServers = pkt.ServerList;
+	const recoveryServer = recoverLogin(pkt.AID, _charServers);
 
 	// Build list of servers
 	let i;
@@ -395,18 +458,20 @@ function onConnectionAccepted(pkt) {
 	}
 
 	// No choice, connect directly to the server
-	if (count === 1 && Configs.get('skipServerList')) {
+	if (recoveryServer || (count === 1 && Configs.get('skipServerList'))) {
 		WinLoading.append();
-		Session.ServerName = _charServers[0].name; // Save server name
+		const selectedServer = recoveryServer || _charServers[0];
+		Session.ServerName = selectedServer.name; // Save server name
 		Network.onDisconnect = null; // Let CharEngine handle its own disconnects
-		CharEngine.init(_charServers[0]);
+		CharEngine.init(selectedServer);
 	}
 
 	// Have to select server in the list
 	else {
 		// Show window
 		WinList.onIndexSelected = onCharServerSelected;
-		WinList.onExitRequest = () => {
+		WinList.onExitRequest = async () => {
+			if (!(await LoginEngine.logout())) return;
 			Network.close();
 			WinList.remove();
 			WinLogin.getUI().append();
@@ -614,7 +679,18 @@ function onInternationalConnectionRefused(pkt) {
  *
  * @param {object} pkt - PACKET.AC.REFUSE_LOGIN
  */
+function retryPendingSession(code) {
+	if (!sessionTicketLogin || code !== 8 || resumeRetries >= 3) return false;
+	resumeRetries++;
+	Network.close();
+	const generation = authGeneration;
+	setTimeout(() => { if (generation === authGeneration) resumeSession(); }, 1500);
+	return true;
+}
+
 function onConnectionRefused(pkt) {
+	if (retryPendingSession(pkt.ErrorCode)) return;
+	sessionTicketLogin = false;
 	WinLoading.remove();
 	let error = 9;
 	switch (pkt.ErrorCode) {
@@ -826,6 +902,10 @@ function onConnectionRefused(pkt) {
  * @param {object} pkt - PACKET.SC.NOTIFY_BAN
  */
 function onServerClosed(pkt) {
+	if (retryPendingSession(pkt.ErrorCode)) return;
+	if (!sessionTicketLogin) LoginEngine.logout();
+	sessionTicketLogin = false;
+	recovery.cancel();
 	WinLoading.remove();
 	let msg_id;
 

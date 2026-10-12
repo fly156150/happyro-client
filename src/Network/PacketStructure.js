@@ -57,6 +57,21 @@ PACKET.CA.LOGIN.prototype.build = function () {
 	return pkt_buf;
 };
 
+// 0x0d05: HappyRO one-use session login ticket.
+PACKET.CA.SESSION_LOGIN = function () {
+	this.ID = '';
+	this.Ticket = '';
+	this.clienttype = 0;
+};
+PACKET.CA.SESSION_LOGIN.prototype.build = function () {
+	const pkt = new BinaryWriter(91);
+	pkt.writeShort(0x0d05);
+	pkt.writeString(this.ID, 24);
+	pkt.writeString(this.Ticket, 64);
+	pkt.writeUChar(this.clienttype);
+	return pkt;
+};
+
 // 0x65
 PACKET.CH.ENTER = function PACKET_CH_ENTER() {
 	this.AID = 0;

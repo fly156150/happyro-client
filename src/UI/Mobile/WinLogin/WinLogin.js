@@ -26,7 +26,7 @@ MobileWinLogin.render = () => htmlText;
 // which is required for the soft keyboard to appear on mobile.
 MobileWinLogin.mouseMode = GUIComponent.MouseMode.FREEZE;
 
-const _preferences = Preferences.get('WinLogin', { saveID: true, ID: '' }, 1.0);
+const _preferences = Preferences.get('WinLogin', { keepLogin: false, ID: '' }, 1.0);
 
 let _inputUser;
 let _inputPass;
@@ -57,19 +57,19 @@ MobileWinLogin.init = function init() {
 };
 
 MobileWinLogin.onAppend = function onAppend() {
-	_inputUser.value = _preferences.saveID ? normalizeRememberedAccount(_preferences.ID) : '';
+	_inputUser.value = normalizeRememberedAccount(_preferences.ID);
 	_inputPass.value = '';
 	_updateSave();
 
 };
 
 function _toggleSave() {
-	_preferences.saveID = !_preferences.saveID;
+	_preferences.keepLogin = !_preferences.keepLogin;
 	_updateSave();
 }
 
 function _updateSave() {
-	_btnSave.setAttribute('aria-checked', String(_preferences.saveID));
+	_btnSave.setAttribute('aria-checked', String(_preferences.keepLogin));
 }
 
 MobileWinLogin.onRemove = function onRemove() {
@@ -81,16 +81,12 @@ function _connect() {
 	const user = _inputUser.value.trim();
 	const pass = _inputPass.value;
 
-	if (_preferences.saveID) {
-		_preferences.ID = normalizeRememberedAccount(user);
-	} else {
-		_preferences.ID = '';
-	}
+	_preferences.ID = normalizeRememberedAccount(user);
 	_preferences.save();
 
 	_inputUser.blur();
 	_inputPass.blur();
-	MobileWinLogin.onConnectionRequest(user, pass);
+	MobileWinLogin.onConnectionRequest(user, pass, !!_preferences.keepLogin);
 }
 
 function _signup() {

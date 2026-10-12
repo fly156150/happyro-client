@@ -1,3 +1,4 @@
+import recovery, { rememberCharServer } from './Recovery/GameRecovery.js';
 /**
  * Engine/CharEngine.js
  *
@@ -44,6 +45,7 @@ let _creationSlot = 0;
  * @type {number} times attempted to provide pin code.
  */
 let _pincodeAttempts = 0;
+let remainingCharacterPages = 0;
 
 /**
  * @type {boolean} are we currently attempting to authenticate a pin code reset?
@@ -65,6 +67,8 @@ class CharEngine {
 	 * Connect to char server
 	 */
 	static init(server) {
+		rememberCharServer(server);
+		remainingCharacterPages = 0;
 		BGM.play('01.mp3');
 
 		//Notify MapEngine if it needs UI update
@@ -130,6 +134,7 @@ class CharEngine {
 	 * Reload Char-Select
 	 */
 	static reload() {
+	recovery.cancel();
 		Network.close();
 		Background.setLoginBackground(() => {
 			UIManager.removeComponents();
@@ -141,7 +146,7 @@ class CharEngine {
  * Request to go back to Login Window
  */
 function onExitRequest() {
-	import('Engine/LoginEngine.js').then(m => m.default.reload());
+	import('Engine/LoginEngine.js').then(async m => { if (await m.default.logout()) m.default.reload(); });
 }
 
 /**
@@ -155,6 +160,8 @@ function onCharacterListChunk(pkt) {
 	pkt.charInfo.forEach(charInfo => {
 		ChSel.addCharacter(charInfo);
 	});
+	recovery.characterList(pkt.charInfo, enterGame);
+	if (remainingCharacterPages > 0 && --remainingCharacterPages === 0) recovery.charactersComplete();
 }
 
 /**
@@ -204,6 +211,8 @@ function onConnectionAccepted(pkt) {
 	ChSel.onCancelDeleteRequest = onCancelDeleteRequest;
 	ChSel.append();
 	ChSel.setInfo(pkt);
+	recovery.characterList(pkt.charInfo || [], enterGame);
+	if (pkt.charInfo) recovery.charactersComplete();
 
 	/**
 	 * In PACKETVERs < 20180124 that support pincode auth, we're supposed to
@@ -229,6 +238,7 @@ function onConnectionAccepted(pkt) {
  * @param {object} pkt - PACKET.HC.REFUSE_SELECTCHAR
  */
 function onSelectionRefused(pkt) {
+	recovery.cancel();
 	UIManager.getComponent('WinLoading').remove();
 	let msg_id;
 
@@ -265,6 +275,7 @@ function onSelectionRefused(pkt) {
  * @param {object} pkt - PACKET.HC.REFUSE_ENTER
  */
 function onConnectionRefused(pkt) {
+	recovery.cancel();
 	UIManager.getComponent('WinLoading').remove();
 	let msg_id;
 
@@ -295,6 +306,7 @@ function onConnectionRefused(pkt) {
  * @param {object} pkt - PACKET.HC.NOTIFY_ACCESSIBLE_MAPNAME
  */
 function onMapUnavailable(pkt) {
+	recovery.cancel();
 	UIManager.getComponent('WinLoading').remove();
 	// no map server avaiable
 	UIManager.showMessageBox(
@@ -656,6 +668,7 @@ function onUserPincodeResetReq() {
 }
 
 function onPincodeCheckSuccess(pkt) {
+	queueMicrotask(() => recovery.pin(pkt.State));
 	if (!PincodeWindow.__active && pkt.State == 0) {
 		console.log('Pincode is disabled.');
 		return;
@@ -792,6 +805,7 @@ function onPincodeCheckSuccess(pkt) {
  * @param {object} entity to connect with
  */
 function onConnectRequest(entity) {
+	recovery.cancel();
 	enterGame(entity);
 }
 
@@ -817,6 +831,7 @@ function enterGame(entity) {
  */
 function onCharListNotify(charListInfo) {
 	const total = Math.max(charListInfo.TotalCnt, 1);
+	remainingCharacterPages = total;
 	for (let i = 0; i < total; i++) {
 		const pkt = new PACKET.CH.CHARLIST_REQ();
 		Network.sendPacket(pkt);
@@ -829,7 +844,8 @@ function onCharListNotify(charListInfo) {
  * @param {object} pkt - PACKET.HC.NOTIFY_ZONESVR
  */
 let retryCount = 0;
-function onReceiveMapInfo(pkt) {
+function onReceiveMapInfo(pkt, connectionId = Network.connectionId) {
+	if (!connectionId || connectionId !== Network.connectionId) return;
 	if (!DB.isLoaded) {
 		if (!DB.startedLazyInit) {
 			DB.lazyInit();
@@ -844,7 +860,7 @@ function onReceiveMapInfo(pkt) {
 			DB.startedLazyInit = false;
 			return;
 		}
-		setTimeout(() => onReceiveMapInfo(pkt), 100);
+		setTimeout(() => onReceiveMapInfo(pkt, connectionId), 100);
 		return;
 	}
 	DB.startedLazyInit = false;

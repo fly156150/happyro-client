@@ -1,3 +1,4 @@
+import recovery, { gameRecoveryReady } from './Recovery/GameRecovery.js';
 import { prepareAutoCombatTeleportMap, completeAutoCombatTeleportMap } from 'UI/Game/AutoCombatTeleport.js';
 import { startAutoPickup, stopAutoPickup } from 'UI/Game/GameAutoPickup.js';
 import { resetGameCompanions, updateGameCompanionAutoFeed } from 'UI/Game/GameCompanions.js';
@@ -138,6 +139,7 @@ import AchievementEngine from './MapEngine/Achievement.js';
  * @type {string} mapname
  */
 let _mapName = '';
+let mapLoadGeneration = 0;
 
 /**
  * @type {boolean} is initialized
@@ -165,6 +167,9 @@ class MapEngine {
 	 * @param {string} mapName
 	 */
 	static init(ip, port, mapName) {
+		Network.onDisconnect = () => {
+			if (!recovery.disconnected()) UIManager.showErrorBox(DB.getMessage(1));
+		};
 		_mapName = mapName;
 
 		// Connect to char server
@@ -181,7 +186,7 @@ class MapEngine {
 				// Fail to connect...
 				if (!success) {
 					UIManager.getComponent('WinLoading').remove();
-					UIManager.showErrorBox(DB.getMessage(1));
+					if (!recovery.disconnected()) UIManager.showErrorBox(DB.getMessage(1));
 					return;
 				}
 
@@ -482,6 +487,7 @@ class MapEngine {
  * TODO: check the time ?
  */
 function onPong(pkt) {
+	recovery.pong();
 	const SP = Session.ping;
 
 	SP.returned = true;
@@ -682,6 +688,7 @@ function onConnectionAccepted(pkt) {
  * @param {object} pkt - PACKET.ZC.REFUSE_ENTER
  */
 function onConnectionRefused(pkt) {
+	recovery.cancel();
 	UIManager.getComponent('WinLoading').remove();
 	UIManager.showErrorBox(DB.getMessage(9)); // MSI_ACCESS_DENIED = Rejected from Server.
 }
@@ -692,11 +699,16 @@ function onConnectionRefused(pkt) {
  * @param {object} pkt - PACKET.ZC.NPCACK_MAPMOVE
  */
 function onMapChange(pkt) {
+	const generation = ++mapLoadGeneration;
+	const connectionId = Network.connectionId;
+	const isCurrentLoad = () => generation === mapLoadGeneration && connectionId === Network.connectionId && Session.Playing;
+	recovery.transition();
 	prepareAutoCombatTeleportMap(pkt.mapName);
 	stopAutoPickup();
 	GameTools.prepareMapTransition();
 	Navigation.prepareMapTransition();
 	MapRenderer.onLoad = () => {
+		if (!isCurrentLoad()) return;
 		Session.Entity.set({
 			PosDir: [pkt.xPos, pkt.yPos, 0],
 			// Use Session.AID rather than Session.Entity.GID here:
@@ -762,7 +774,7 @@ function onMapChange(pkt) {
 
 		// Initialize camera
 		Camera.setTarget(Session.Entity);
-		Camera.init();
+		const cameraReady = Camera.init();
 
 		// Add Game UI
 		appendGameComponent(MiniMap.getUI());
@@ -853,6 +865,10 @@ function onMapChange(pkt) {
 			Session.requestCashShop = false;
 		}
 
+		cameraReady.then(() => {
+			if (isCurrentLoad()) gameRecoveryReady(prepareRecoveryLogin);
+		});
+
 		// send request blocking play cancel
 		if (PACKETVER.value >= 20130320) {
 			Network.sendPacket(new PACKET.CZ.BLOCKING_PLAY_CANCEL());
@@ -868,13 +884,17 @@ function onMapChange(pkt) {
  * @param {object} pkt - PACKET.ZC.NPCACK_SERVERMOVE
  */
 function onServerChange(pkt) {
+	recovery.transition();
 	MapEngine.init(pkt.addr.ip, pkt.addr.port, pkt.mapName);
 }
 
 /**
  * Ask the server to disconnect
  */
-function onExitRequest() {
+async function onExitRequest() {
+	const { default: login } = await import('Engine/LoginEngine.js');
+	if (!(await login.logout())) return;
+	recovery.cancel();
 	const pkt = new PACKET.CZ.REQUEST_QUIT();
 	Network.sendPacket(pkt);
 
@@ -899,6 +919,7 @@ function onExitFail(pkt) {
  * @param {object} pkt - PACKET.ZC.REFUSE_QUIT
  */
 function onExitSuccess() {
+	recovery.cancel();
 	if (PACKETVER.value >= 20170315 && Session.WebToken) {
 		ShortCut.saveToServer();
 	}
@@ -950,6 +971,7 @@ function onRestartAnswer(pkt) {
 		// Have to wait 10sec
 		ChatBox.addText(DB.getMessage(502), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 	} else {
+		recovery.cancel();
 		stopAutoPickup();
 		WhisperBox.clearAll();
 		GuildEngine.guild_id = 0;
@@ -1368,6 +1390,30 @@ function onConfigUpdate(type, val) {
 /**
  * Go back from map-server to char-server
  */
+function prepareRecoveryLogin() {
+	mapLoadGeneration++;
+	Network.close();
+	Navigation.clear();
+	stopAutoPickup();
+	UIManager.removeComponents();
+	WhisperBox.clearAll();
+	GuildEngine.guild_id = 0;
+	StatusIcons.clean();
+	ShortCut.clean();
+	Quest.getUI().clean();
+	PartyFriends.getUI().clean();
+	CashShop.clean();
+	Session.Achievement = null;
+	Session.moveAction = null;
+	Session.autoFollow = false;
+	Session.autoFollowTarget = null;
+	Mouse.intersect = false;
+	Renderer.stop();
+	MapRenderer.free();
+	Session.Entity = null;
+	Session.Playing = false;
+}
+
 function onRestart() {
 	import('Engine/CharEngine.js').then(m => m.default.reload());
 }

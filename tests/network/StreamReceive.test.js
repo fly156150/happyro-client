@@ -113,3 +113,39 @@ it('rejects a count that crosses the packet boundary', () => {
 	expect(disconnected).toHaveBeenCalledTimes(1);
 	expect(received).not.toHaveBeenCalled();
 });
+
+it('ignores a superseded connection attempt that finishes after the newer socket', () => {
+	const completions = vi.fn();
+	Network.connect('localhost', 5121, completions, true);
+	const slow = socket;
+	Network.connect('localhost', 5121, completions, true);
+	const latest = socket;
+	latest.onComplete(true);
+	const id = Network.connectionId;
+	slow.onComplete(true);
+	expect(Network.connectionId).toBe(id);
+	expect(completions).toHaveBeenCalledTimes(1);
+	expect(slow.close).toHaveBeenCalledTimes(1);
+	Network.send(new ArrayBuffer(2));
+	expect(latest.send).toHaveBeenCalled();
+});
+
+it('cancels a pending connection when leaving recovery or logging out', () => {
+	const completion = vi.fn();
+	Network.connect('localhost', 5121, completion, true);
+	const pending = socket;
+	Network.close();
+	pending.onComplete(true);
+	expect(completion).not.toHaveBeenCalled();
+	expect(Network.connectionId).toBeUndefined();
+	expect(pending.close).toHaveBeenCalledTimes(1);
+});
+
+it('requests a foreground heartbeat only on the current live session', () => {
+	const ping = vi.fn();
+	Network.setPing(ping);
+	expect(Network.requestPing()).toBe(true);
+	expect(ping).toHaveBeenCalledTimes(1);
+	Network.close();
+	expect(Network.requestPing()).toBe(false);
+});

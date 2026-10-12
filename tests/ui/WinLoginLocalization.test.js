@@ -5,8 +5,8 @@ import loginCommonSource from '../../src/UI/Components/WinLogin/WinLoginCommon.j
 import { normalizeRememberedAccount } from '../../src/UI/Components/WinLogin/RememberedAccount.js';
 
 describe('WinLogin localization', () => {
-	it.each([defaultLoginHtml, loginV2Html])('uses a Chinese remember-account control', html => {
-		expect(html).toContain('记住账号');
+	it.each([defaultLoginHtml, loginV2Html])('uses a Chinese keep-login control', html => {
+		expect(html).toContain('保持登录');
 		expect(html).toContain('role="checkbox"');
 		expect(html).not.toContain('chk_save');
 	});

@@ -20,7 +20,7 @@ export function createWinLogin({ name, htmlText, cssText }) {
 	Component.render = () => htmlText;
 	Component.needFocus = false;
 
-	const _preferences = Preferences.get('WinLogin', { saveID: true, ID: '' }, 1.0);
+	const _preferences = Preferences.get('WinLogin', { keepLogin: false, ID: '' }, 1.0);
 
 	let _inputUsername;
 	let _inputPassword;
@@ -57,7 +57,7 @@ export function createWinLogin({ name, htmlText, cssText }) {
 	};
 
 	Component.onAppend = function onAppend() {
-		_inputUsername.value = _preferences.saveID ? normalizeRememberedAccount(_preferences.ID) : '';
+		_inputUsername.value = normalizeRememberedAccount(_preferences.ID);
 		_inputPassword.value = '';
 
 		updateSaveButton();
@@ -96,13 +96,13 @@ export function createWinLogin({ name, htmlText, cssText }) {
 	};
 
 	function toggleSaveButton() {
-		_preferences.saveID = !_preferences.saveID;
+		_preferences.keepLogin = !_preferences.keepLogin;
 		updateSaveButton();
 	}
 
 	function updateSaveButton() {
-		_buttonSave.classList.toggle('is-checked', _preferences.saveID);
-		_buttonSave.setAttribute('aria-checked', String(_preferences.saveID));
+		_buttonSave.classList.toggle('is-checked', _preferences.keepLogin);
+		_buttonSave.setAttribute('aria-checked', String(_preferences.keepLogin));
 	}
 
 	function exit() {
@@ -113,15 +113,9 @@ export function createWinLogin({ name, htmlText, cssText }) {
 	function connect() {
 		const user = _inputUsername.value;
 		const pass = _inputPassword.value;
-		if (_preferences.saveID) {
-			_preferences.saveID = true;
-			_preferences.ID = normalizeRememberedAccount(user);
-		} else {
-			_preferences.saveID = false;
-			_preferences.ID = '';
-		}
+		_preferences.ID = normalizeRememberedAccount(user);
 		_preferences.save();
-		Component.onConnectionRequest(user, pass);
+		Component.onConnectionRequest(user, pass, !!_preferences.keepLogin);
 		return false;
 	}
 

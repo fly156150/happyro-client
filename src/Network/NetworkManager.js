@@ -32,6 +32,7 @@ const _sockets = [];
  * @type {function}
  */
 let _socketFactory = null;
+let connectionAttempt = 0;
 
 /**
  * Default socket factory - creates NodeSocket or WebSocket based on environment.
@@ -115,11 +116,19 @@ Packets.list = [];
  * @param {boolean} is zone server ?
  */
 function connect(host, port, callback, isZone) {
+	const attempt = ++connectionAttempt;
+	let completed = false;
 	const socket = _socketFactory ? _socketFactory(host, port) : defaultSocketFactory(host, port);
 
+	socket.connectionId = attempt;
 	socket.isZone = !!isZone;
 	socket.onClose = onClose;
 	socket.onComplete = function onComplete(success) {
+		if (attempt !== connectionAttempt || completed) {
+			if (attempt !== connectionAttempt) socket.close();
+			return;
+		}
+		completed = true;
 		let msg = 'Fail';
 		let color = 'red';
 
@@ -159,7 +168,7 @@ function connect(host, port, callback, isZone) {
 function sendPacket(Packet) {
 	const pkt = Packet.build();
 
-	if (packetDump) {
+	if (packetDump && new DataView(pkt.buffer).getUint16(0, true) !== 0x0d05) {
 		const fp = new BinaryReader(pkt.buffer);
 		const id = fp.readUShort();
 		console.log(
@@ -432,6 +441,7 @@ function onClose() {
  * Is this needed ?
  */
 function close() {
+	connectionAttempt++;
 	let idx;
 
 	if (_socket) {
@@ -468,6 +478,7 @@ function setPing(callback) {
 		if (_socket.ping) {
 			clearInterval(_socket.ping);
 		}
+		_socket.pingCallback = callback;
 		_socket.ping = setInterval(callback, 10000);
 
 		while (_sockets.length > 1) {
@@ -538,9 +549,15 @@ const Network = (function network() {
 	}
 
 	return {
-		sendPacket: sendPacket,
+		get connectionId() { return _socket?.connectionId; },
+	sendPacket: sendPacket,
 		send: send,
 		setPing: setPing,
+		requestPing() {
+			if (!_socket?.pingCallback) return false;
+			_socket.pingCallback();
+			return true;
+		},
 		connect: connect,
 		hookPacket: hookPacket,
 		close: close,

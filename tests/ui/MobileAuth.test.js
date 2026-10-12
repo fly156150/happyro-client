@@ -254,7 +254,7 @@ describe('mobile authentication', () => {
 		Login.onKeyDown({ which: 13, isComposing: true });
 		expect(Login.onConnectionRequest).not.toHaveBeenCalled();
 		root.querySelector('.m-login__connect').click();
-		expect(Login.onConnectionRequest).toHaveBeenCalledExactlyOnceWith('test_M', 'secret');
+		expect(Login.onConnectionRequest).toHaveBeenCalledExactlyOnceWith('test_M', 'secret', false);
 		unmount(Login);
 		mount(Login);
 		expect(root.querySelector('#m-login-user').value).toBe('test');

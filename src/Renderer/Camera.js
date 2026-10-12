@@ -288,7 +288,7 @@ class Camera {
 
 		// This may cause circular dependency if treated synchronously in ESM.
 		// But since this is a method, we assume dependencies are ready later.
-		import('Renderer/MapRenderer.js').then(MapRenderer => {
+		return import('Renderer/MapRenderer.js').then(MapRenderer => {
 			this.currentMap = MapRenderer.default.currentMap;
 			if (DB.isIndoor(this.currentMap)) {
 				this.zoomFinal = Preferences.indoorZoom ?? DEFAULT_CAMERA_ZOOM;

@@ -40,6 +40,7 @@ describe('mobile loading lifecycle', () => {
 		const fn = source.match(/function onConnectionRequest\([^]*?\n\}/)[0];
 		let waiting = false;
 		const request = vm.runInNewContext(`(${fn})`, {
+			authGeneration: 0, sessionTicketLogin: false, keepLogin: false,
 			Sound: { play() {} }, _server: { address: 'test', port: 6900 }, _loginID: '',
 			WinLogin: { getUI: () => ({ remove() {} }) },
 			WinLoading: { append: () => { waiting = true; }, remove: () => { waiting = false; } },
