@@ -59,6 +59,8 @@ export function inputDraft(fields, changed = () => {}) {
 export function interactionColumns(body, columns) {
 	const layout = document.createElement('div');
 	layout.className = 'interaction-columns';
+	layout.dataset.menuLayout = 'columns';
+	layout.dataset.menuColumns = String(columns.length);
 	for (const { title, className, content } of columns) {
 		const column = document.createElement('section');
 		column.className = 'interaction-column';

@@ -177,7 +177,7 @@ function mount(container, context = {}) {
 				]
 			})}
 		</div>
-		<div class="monster-layout">
+		<div class="monster-layout" data-menu-layout="split">
 			<section class="monster-browser">
 				<div class="monster-summary">正在加载魔物资料...</div>
 				<div class="monster-list"></div>

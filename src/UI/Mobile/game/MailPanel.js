@@ -23,6 +23,7 @@ export function createMailPanel(body, service) {
 	body.replaceChildren();
 	const toolbar = node(body, 'div', 'mail-toolbar');
 	const layout = node(body, 'div', 'mail-layout');
+	layout.dataset.menuLayout = 'split';
 	const list = node(layout, 'section', 'mail-browser');
 	const pane = node(layout, 'section', 'mail-pane');
 	const detail = node(pane, 'div', 'mail-detail');

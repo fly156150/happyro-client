@@ -7,7 +7,7 @@ export function createAutoCombatPanel(body, actions) {
 	const ranges = { ...state.ranges };
 	const teleport = { ...AUTO_COMBAT_TELEPORT_DEFAULTS, ...state.teleport };
 	body.innerHTML = `
-		<div class="auto-layout">
+		<div class="auto-layout" data-menu-layout="form">
 			<section class="auto-target-section" aria-labelledby="auto-target-title">
 				<h3 id="auto-target-title">攻击目标</h3>
 				<button type="button" data-all-species>全部魔物</button>

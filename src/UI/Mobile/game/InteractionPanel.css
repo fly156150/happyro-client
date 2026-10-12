@@ -376,7 +376,7 @@
 	padding-bottom: 0;
 }
 
-.interaction-panel .interaction-columns.interaction-columns-two {
+.interaction-panel .interaction-columns[data-menu-columns='2'] {
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
 }
 
@@ -408,7 +408,7 @@
 	margin-top: 0;
 }
 
-:host([data-menu-density]) .panel .warehouse-body:has(.interaction-columns-two) .container-toolbar {
+:host([data-menu-density]) .panel .warehouse-body:has([data-menu-columns='2']) .container-toolbar {
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
 	gap: var(--panel-gap);
 }

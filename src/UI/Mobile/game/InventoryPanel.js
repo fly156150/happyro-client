@@ -15,7 +15,7 @@ const itemTypes = {
 /** Touch-only inventory presentation. Actions receive inventory indices, never DOM-derived item data. */
 export function createInventoryPanel(body, actions) {
 	body.innerHTML =
-		'<div class="inventory-toolbar"></div><div class="inventory-layout"><div class="inventory-list" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
+		'<div class="inventory-toolbar"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
 	const $ = selector => body.querySelector(selector);
 	const list = $('.inventory-list'),
 		detail = $('.inventory-detail');
@@ -146,9 +146,9 @@ export function createInventoryPanel(body, actions) {
 			if (!entries.length) continue;
 			const section = document.createElement('section');
 			section.className = 'inventory-sockets';
-			const heading = document.createElement('h4');
-			heading.textContent = label;
-			section.append(heading);
+			const socketHeading = document.createElement('h4');
+			socketHeading.textContent = label;
+			section.append(socketHeading);
 			for (const entry of entries) {
 				const details = document.createElement('details');
 				const name = document.createElement('summary');

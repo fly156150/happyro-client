@@ -1,0 +1,187 @@
+/* Component-specific responsive details; shared column behavior lives in MenuContentLayout.css. */
+
+.mobile-adventure {
+	container-name: menu-window menu-content;
+}
+.panel :is(.inventory-detail, .equipment-detail),
+.mobile-adventure :is(.catalog-detail, .monster-detail, .character-detail) {
+	container: menu-detail / inline-size;
+}
+.panel .slot-picker button {
+	container: shortcut-slot / inline-size;
+}
+@container shortcut-slot (width < 64px) {
+	:host([data-menu-density]) .panel .slot-picker :is(.shortcut-slot-prefix, button > span) {
+		display: none;
+	}
+	:host([data-menu-density]) .panel .slot-picker strong {
+		text-align: center;
+	}
+}
+@container menu-window (width < 640px) {
+	:host([data-menu-density]) .panel :is(.shop-transfer, .bank-transfer) {
+		flex-direction: row;
+	}
+	:host([data-menu-density]) .panel :is(.shop-transfer, .bank-transfer) button {
+		transform: rotate(90deg);
+	}
+	:host([data-menu-density]) .panel .bank-layout {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .panel .bank-account {
+		padding: 8px;
+	}
+	:host([data-menu-density]) .panel .warehouse-body:has([data-menu-columns='2']) .container-toolbar {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .panel :is(.container-toolbar, .skills-toolbar, .shop-footer) {
+		flex-wrap: wrap;
+	}
+	:host([data-menu-density])
+		.mobile-adventure
+		:is(
+			.catalog-browser,
+			.monster-browser,
+			.character-job-browser,
+			.catalog-detail,
+			.monster-detail,
+			.character-detail
+		) {
+		display: flex;
+		flex-direction: column;
+		width: auto;
+		min-width: 0;
+		min-height: 0;
+		border-right: 0;
+		overflow: auto;
+	}
+	:host([data-menu-density]) .mobile-adventure :is(.catalog-detail, .monster-detail, .character-detail) {
+		padding: 6px;
+		gap: 6px;
+		border-top: 1px solid #65717b;
+	}
+	:host([data-menu-density]) .mobile-adventure :is(.catalog-toolbar, .monster-toolbar) {
+		display: flex;
+	}
+	:host([data-menu-density]) .mobile-adventure .monster-toolbar {
+		flex-wrap: nowrap;
+	}
+	:host([data-menu-density]) .mobile-adventure .monster-search {
+		flex: 1 1 0;
+		min-width: 0;
+	}
+	:host([data-menu-density]) .mobile-adventure .monster-toolbar > .game-select {
+		flex: 0 0 64px;
+		width: 64px;
+	}
+	:host([data-menu-density]) .mobile-adventure [data-back] {
+		display: none;
+	}
+	:host([data-menu-density]) .mobile-adventure :is(.catalog-list, .monster-list, .character-job-list) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .mobile-adventure .settings-rate-columns {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .panel .chat-conversation {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: auto minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .panel .chat-filters {
+		flex-direction: row;
+		overflow-x: auto;
+		border-right: 0;
+	}
+	:host([data-menu-density]) .panel .chat-filters button {
+		width: auto;
+		flex-shrink: 0;
+	}
+	:host([data-menu-density]) .panel .chat-form {
+		grid-template-columns: minmax(0, 1fr) auto auto;
+	}
+	:host([data-menu-density]) .panel .chat-form > input[aria-label='聊天内容'] {
+		grid-column: 1 / -1;
+		grid-row: 1;
+	}
+	:host([data-menu-density]) .mobile-adventure .settings-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density])
+		.panel
+		.chat-form:has(input[aria-label='私聊对象']:not([hidden]))
+		> input[aria-label='聊天内容'] {
+		grid-row: 2;
+	}
+	:host([data-menu-density]) .panel :is(.pickup-categories, .pickup-limits) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .panel .skills-layout > section {
+		grid-column: auto;
+		grid-row: auto;
+		grid-template-rows: minmax(0, 1fr) auto;
+	}
+}
+@container menu-window (width < 800px) {
+	:host([data-menu-density='spacious']) .panel .attribute-results {
+		border-left: 0;
+		border-right: 0;
+	}
+	:host([data-menu-density='spacious']) .panel .attribute-results {
+		border-top: 1px solid #52606d;
+		padding: var(--panel-gap) 0 0;
+	}
+	:host([data-menu-density='spacious']) .panel .attribute-footer {
+		flex-wrap: wrap;
+		gap: var(--panel-gap);
+	}
+	:host([data-menu-density='spacious']) .panel .attribute-plan-actions {
+		flex-wrap: wrap;
+	}
+}
+@container menu-detail (width < 360px) {
+	:host([data-menu-density])
+		:is(.panel, .mobile-adventure)
+		:is(.inventory-item-overview, .monster-overview, .item-overview) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	:host([data-menu-density]) .mobile-adventure .monster-stats {
+		grid-column: 1;
+		grid-row: auto;
+	}
+	:host([data-menu-density]) .mobile-adventure .item-portrait {
+		height: 96px;
+	}
+}
+@container menu-detail (width < 460px) {
+	:host([data-menu-density]) .mobile-adventure .character-detail-scroll .management-form {
+		--character-form-columns: 1;
+	}
+}
+@container menu-detail (width < 540px) {
+	:host([data-menu-density]) .mobile-adventure :is(.map-detail-body, .npc-detail-body) {
+		flex: 0 0 auto;
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: auto auto;
+		min-height: 0;
+	}
+	:host([data-menu-density]) .mobile-adventure :is(.catalog-map-picker, .npc-map-picker) {
+		height: clamp(160px, 25dvh, 280px);
+		min-height: 160px;
+	}
+	:host([data-menu-density]) .mobile-adventure :is(.npc-detail-info, .map-npc-list) {
+		height: auto;
+		min-height: 0;
+		overflow: visible;
+	}
+	:host([data-menu-density]) .mobile-adventure .map-npc-scroll {
+		max-height: 240px;
+	}
+	:host([data-menu-density]) .mobile-adventure .monster-resources {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+@container menu-window (640px <= width < 900px) {
+	:host([data-menu-density='spacious']) .panel [data-menu-layout='shop'] > .inventory-detail {
+		grid-column: 1 / -1;
+	}
+}

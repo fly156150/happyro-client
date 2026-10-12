@@ -1,3 +1,5 @@
+import menuContentComponentsCSS from './MenuContentComponents.css?raw';
+import menuContentLayoutCSS from './MenuContentLayout.css?raw';
 import { bindHUDNotificationInset } from './HUDNotificationInset.js';
 import menuPortraitCSS from './MenuPortrait.css?raw';
 import portraitCSS from './GameHUDPortrait.css?raw';
@@ -71,7 +73,9 @@ ${interactionTabletCSS}
 ${chatPreviewCSS}
 ${switchCSS}
 ${portraitCSS}
-${menuPortraitCSS}</style>${html}`;
+${menuPortraitCSS}
+${menuContentLayoutCSS}
+${menuContentComponentsCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const orientationHint = Preferences.get('OrientationHint', { dismissed: false }, 1.0);

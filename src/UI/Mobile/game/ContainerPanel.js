@@ -15,7 +15,7 @@ const itemTypes = {
 const labels = { inventory: '背包', storage: '仓库', cart: '手推车' };
 export function createContainerPanel(body, actions, initialSource) {
 	body.innerHTML =
-		'<div class="container-toolbar"></div><div class="inventory-layout"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
+		'<div class="container-toolbar"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
 	const primary = initialSource;
 	const isCart = primary === 'cart';
 	if (isCart) {
@@ -23,7 +23,6 @@ export function createContainerPanel(body, actions, initialSource) {
 			{ title: '物品列表', className: 'inventory-list' },
 			{ title: '物品说明', className: 'inventory-detail' }
 		]);
-		body.querySelector('.interaction-columns').classList.add('interaction-columns-two');
 		const toolbar = document.createElement('div');
 		toolbar.className = 'container-toolbar';
 		body.prepend(toolbar);

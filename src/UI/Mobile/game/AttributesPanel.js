@@ -3,7 +3,7 @@ import { allocationCost } from 'UI/Game/AttributeAllocation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 export function createAttributesPanel(body, actions) {
 	body.innerHTML =
-		'<div class="attribute-toolbar"><div class="attribute-tabs" role="group" aria-label="素质分类"></div></div><div class="attribute-layout"><section class="attribute-editor"><div class="attribute-allocation" aria-label="素质加点"></div></section><section class="attribute-results" aria-label="相关数值"><dl></dl></section></div><div class="attribute-footer"><strong data-attribute-points></strong><div class="attribute-plan-actions"><button type="button" class="point-reset-button" data-reset-points>重置素质点</button><button type="button" data-clear-plan>清除预加点</button><button type="button" data-apply-plan>确认</button></div></div>';
+		'<div class="attribute-toolbar"><div class="attribute-tabs" role="group" aria-label="素质分类"></div></div><div class="attribute-layout" data-menu-layout="form"><section class="attribute-editor"><div class="attribute-allocation" aria-label="素质加点"></div></section><section class="attribute-results" aria-label="相关数值"><dl></dl></section></div><div class="attribute-footer"><strong data-attribute-points></strong><div class="attribute-plan-actions"><button type="button" class="point-reset-button" data-reset-points>重置素质点</button><button type="button" data-clear-plan>清除预加点</button><button type="button" data-apply-plan>确认</button></div></div>';
 	const $ = selector => body.querySelector(selector);
 	const toolbar = $('.attribute-toolbar');
 	const feedback = createFeedback(body);
