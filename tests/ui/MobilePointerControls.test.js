@@ -86,10 +86,10 @@ it.each(['pointerup', 'pointercancel', 'lostpointercapture'])('requests one imme
  expect(vi.getTimerCount()).toBe(0);
 });
 
-it('retains the pressed NPC across small finger drift without starting movement', () => {
- const {scene,actions,fire}=setup();const npc={GID:7};actions.pickTapTarget=()=>npc;
+it.each(['NPC', 'ground item'])('retains the pressed %s across small finger drift without starting movement', kind => {
+ const {scene,actions,fire}=setup();const target={GID:7,kind};actions.pickTapTarget=()=>target;
  fire(scene,'pointerdown',1,100,200);fire(scene,'pointermove',1,110,200);fire(scene,'pointerup',1,110,200);
- expect(actions.move).not.toHaveBeenCalled();expect(actions.tap).toHaveBeenCalledExactlyOnceWith(110,200,npc);
+ expect(actions.move).not.toHaveBeenCalled();expect(actions.tap).toHaveBeenCalledExactlyOnceWith(110,200,target);
 });
 it('still allows intentional dragging after pressing an NPC', () => {
  const {scene,actions,fire}=setup();actions.pickTapTarget=()=>({GID:7});

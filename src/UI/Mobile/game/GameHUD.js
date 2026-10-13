@@ -251,11 +251,11 @@ HUD.onAppend = function () {
 		},
 		pickTapTarget: (x, y) => {
 			const hit = Commands.pickSceneEntity(x, y);
-			return hit && [hit.constructor.TYPE_NPC, hit.constructor.TYPE_NPC2].includes(hit.objecttype) ? hit : null;
+			return hit && [hit.constructor.TYPE_ITEM, hit.constructor.TYPE_NPC, hit.constructor.TYPE_NPC2].includes(hit.objecttype) ? hit : null;
 		},
-		tap: (x, y, pressedNPC) => {
-			if (pressedNPC && EntityManager.get(pressedNPC.GID) !== pressedNPC) return;
-			const hit = pressedNPC || Commands.pickSceneEntity(x, y);
+		tap: (x, y, pressedTarget) => {
+			if (pressedTarget && EntityManager.get(pressedTarget.GID) !== pressedTarget) return;
+			const hit = pressedTarget || Commands.pickSceneEntity(x, y);
 			if (
 				hit &&
 				[hit.constructor.TYPE_ITEM, hit.constructor.TYPE_NPC, hit.constructor.TYPE_NPC2].includes(
