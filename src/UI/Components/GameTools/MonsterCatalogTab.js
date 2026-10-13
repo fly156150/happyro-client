@@ -341,6 +341,7 @@ function mount(container, context = {}) {
 				? '后台未开放 Mini / MVP 召唤'
 				: '';
 		detail.innerHTML = `
+			${context.mobile ? '<div class="monster-information">' : ''}
 			<div class="monster-overview"><div class="monster-heading">
 				<span class="monster-portrait${monster.atlas === null ? ' no-image' : ''}" style="${atlasStyle(state.catalog, monster, 96)}"></span>
 				${context.mobile ? '' : `<div><h3>${escapeHtml(monster.name)}</h3><p>${escapeHtml(monster.nameEn)} · ${monster.id}</p><span class="monster-badge">${monster.kind === 'mvp' ? 'MVP' : monster.kind === 'mini' ? 'Mini' : '普通'}</span></div>`}
@@ -378,6 +379,7 @@ function mount(container, context = {}) {
 					}</div>
 				</section>
 			</div>
+			${context.mobile ? '</div>' : ''}
 			<div class="summon-panel">
 				<button class="summon-button" type="button" ${disabled ? 'disabled' : ''}>${state.pending ? '召唤中...' : '召唤'}</button>
 				<button class="monster-map-teleport" type="button" ${teleportTarget && teleportState.canTeleport ? '' : 'disabled'}>传送到地图</button>
