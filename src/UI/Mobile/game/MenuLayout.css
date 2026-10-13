@@ -393,3 +393,24 @@
 	font: inherit;
 	color: inherit;
 }
+
+/* Single-line phone editors size to their content instead of stretching the input row. */
+:host([data-phone-screen][data-orientation='portrait'][data-editor-layout='dialog']) .mobile-menu-editor:not(:has(textarea)) {
+	inset:var(--mobile-visual-top, 0px) 0 max(0px, calc(100vh - var(--mobile-visible-height, 100vh) - var(--mobile-visual-top, 0px)));
+	height:fit-content;
+	max-height:calc(var(--mobile-visible-height, 100dvh) - 24px);
+	margin:auto;
+	overflow:auto;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-editor-layout='dialog']) .mobile-menu-editor:not(:has(textarea)) section {
+	height:auto;
+	grid-template-rows:auto auto auto;
+	gap:10px;
+	padding:12px;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-editor-layout='dialog']) .mobile-menu-editor:not(:has(textarea)) main {
+	height:auto;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-editor-layout='dialog']) .mobile-menu-editor input {
+	font-size:16px;
+}

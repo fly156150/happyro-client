@@ -19,6 +19,7 @@ export function createMobileInputEditor(host) {
 		focusEvent.stopImmediatePropagation();
 		const overlay = document.createElement('div');
 		overlay.dataset.mobileInputEditor = '';
+		overlay.toggleAttribute('data-phone-screen', Math.min(screen.width, screen.height) < 600);
 		const editor = overlay.attachShadow({ mode: 'open' });
 		editor.innerHTML = `<style>${css}${menuLayoutCSS}</style><dialog class="mobile-menu-editor" aria-labelledby="editor-title"><section><span id="editor-title"></span><button type="button" data-cancel>取消</button><main></main><button type="button" data-done>完成</button></section></dialog>`;
 		const dialog = editor.querySelector('dialog');
