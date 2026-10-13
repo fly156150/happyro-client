@@ -1726,7 +1726,6 @@
 }
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-action-panel {
 	grid-area:actions;
-	border-top:0;
 	position:static;
 	margin:0;
 }
