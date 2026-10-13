@@ -247,7 +247,14 @@ function mount(container, context = {}) {
 				loadImage(image, item?.icon, assetUrls);
 			});
 		},
+		onSelectionChange(item) {
+			if (!item && context.mobile) {
+				const button = container.querySelector('.zeny-grant-open');
+				if (button) container.querySelector('.catalog-toolbar').append(button);
+			}
+		},
 		renderDetail(detail, item, api) {
+			const zenyButton = context.mobile ? container.querySelector('.zeny-grant-open') : null;
 			const name = item.names?.['zh-CN'] || item.names?.['en-US'] || item.AegisName;
 			const canGrant = context.capabilities?.itemGrantAllowed && item.grantable;
 			const type = typeNames[item.Type] || item.Type || '其他';
@@ -272,7 +279,8 @@ function mount(container, context = {}) {
 			detail.innerHTML = `<div class="item-detail-content"><div class="item-overview"><div class="catalog-heading item-heading"><span class="catalog-portrait item-portrait"><img alt="${escapeCatalogHtml(name)}"></span>${context.mobile ? '' : `<div><h3>${escapeCatalogHtml(name)}</h3><p>${escapeCatalogHtml(item.AegisName)} · ID ${item.Id}</p></div>`}</div>
 			<div class="catalog-metadata">${metadata.map(([label, value]) => `<div><span>${label}</span><strong>${escapeCatalogHtml(value)}</strong></div>`).join('')}</div>
 			</div><div class="item-description">${renderDescription(item.description)}</div></div>
-			<div class="catalog-action-panel item-grant-panel"><label>数量 <input class="item-grant-amount" type="number" min="1" max="30000" value="1"></label><button class="item-grant" type="button" ${pending || !canGrant ? 'disabled' : ''}>${pending ? '发放中...' : '发放到背包'}</button><span class="catalog-status error" role="status" aria-live="polite">${escapeCatalogHtml(!item.grantable ? '该特殊物品暂不支持直接发放' : !context.capabilities?.itemGrantAllowed ? '当前账号没有发放权限' : '')}</span></div>`;
+			<div class="catalog-action-panel item-grant-panel"><label><input aria-label="数量" class="item-grant-amount" type="number" min="1" max="30000" value="1"></label><button class="item-grant" type="button" ${pending || !canGrant ? 'disabled' : ''}>${pending ? '发放中...' : '发放到背包'}</button><span class="catalog-status error" role="status" aria-live="polite">${escapeCatalogHtml(!item.grantable ? '该特殊物品暂不支持直接发放' : !context.capabilities?.itemGrantAllowed ? '当前账号没有发放权限' : '')}</span></div>`;
+			if (zenyButton) detail.querySelector('.item-grant').after(zenyButton);
 			loadImage(detail.querySelector('.item-portrait img'), item.illustration || item.icon, assetUrls);
 			detail.querySelector('.item-grant').addEventListener('click', async () => {
 				const amount = Number(detail.querySelector('.item-grant-amount').value);
