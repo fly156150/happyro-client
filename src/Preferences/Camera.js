@@ -19,10 +19,10 @@ const spacious =
 // Two normal zoom-out steps (15 each) beyond the phone default.
 export const DEFAULT_CAMERA_ZOOM = Platform.isMobile ? (spacious ? 140 : 110) : 125;
 
-/** Apply the phone portrait framing without changing the saved zoom. */
+/** Apply mobile portrait framing without changing the saved zoom. */
 export function viewportCameraZoom(zoom, step, maximum) {
-	return Platform.isMobile && !spacious && Platform.orientation === 'portrait'
-		? Math.min(zoom + 3 * step, maximum)
+	return Platform.isMobile && Platform.orientation === 'portrait'
+		? Math.min(zoom + (spacious ? 2 : 5) * step, maximum)
 		: zoom;
 }
 
