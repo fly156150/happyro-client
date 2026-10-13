@@ -29,8 +29,8 @@ it.each([false, true])('renders drop categories and saves Mini independently (mo
 	document.body.replaceChildren(container);
 	GameSettingsTab.mount(container, { mobile });
 	await vi.waitFor(() => expect(container.querySelectorAll('.settings-drop-table input')).toHaveLength(15));
-	if (mobile) expect([...container.querySelectorAll('.settings-drop-table thead th')].map(node => node.textContent)).toEqual(['物品类型', '普通', 'Mini', 'MVP']);
-	else expect(container.querySelector('.settings-drop-table thead')).toBeNull();
+	expect([...container.querySelectorAll('.settings-drop-table thead th')].map(node => node.textContent)).toEqual(['物品类型', '普通（倍）', 'Mini（倍）', 'MVP（倍）']);
+	expect(container.querySelector('.settings-drop-table em')).toBeNull();
 	container.querySelector('[name=item_rate_card_boss]').value = '10000';
 	container.querySelector('[name=item_rate_heal_boss]').value = '2.5';
 	container.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true }));

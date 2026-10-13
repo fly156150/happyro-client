@@ -109,7 +109,6 @@ function mount(container, context = {}) {
 		placeholder: '搜索地图名称或代码',
 		searchLabel: '搜索地图',
 		initialQuery: context.initialMap?.id,
-		summarize: context.mobile ? state => `共 ${state.total} 张地图` : undefined,
 		emptyDetail: '选择一个地图查看详情',
 		pageSize: 35,
 		key: map => map.id,

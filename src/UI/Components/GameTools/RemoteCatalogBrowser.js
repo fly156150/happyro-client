@@ -51,7 +51,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 		const pageCount = Math.max(1, Math.ceil(state.total / options.pageSize));
 		container.querySelector('.catalog-summary').textContent = state.loading
 			? '正在加载资料...'
-			: state.error || (options.summarize ? options.summarize(state) : `共 ${state.total} 条资料`);
+			: state.error;
 		container.querySelector('.catalog-page').textContent = `${state.page} / ${pageCount}`;
 		container.querySelector('.catalog-prev').disabled = state.loading || state.page <= 1;
 		container.querySelector('.catalog-next').disabled = state.loading || state.page >= pageCount;

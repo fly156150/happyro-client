@@ -1,8 +1,9 @@
+import preferences from 'Preferences/AdventureTools.js';
 import { renderCatalogEmptyState } from './CatalogEmptyState.js';
 import MapRenderer from 'Renderer/MapRenderer.js';
 import Session from 'Engine/SessionStorage.js';
 import { mountRemoteCatalogBrowser } from './RemoteCatalogBrowser.js';
-import { escapeCatalogHtml, formatCatalogCount, renderCatalogScopeFilter } from './CatalogData.js';
+import { escapeCatalogHtml, renderCatalogScopeFilter } from './CatalogData.js';
 import { searchAdventureNpcs } from './AdventureControlService.js';
 import {
 	getAdventureActionState,
@@ -28,16 +29,21 @@ function mount(container, context = {}) {
 	let loadedNpcMap = null;
 	let loadingNpcMapName = '';
 	let mapLoadToken = 0;
+	let previewResizeObserver = null;
 	let scopeFilter = null;
 	let browserApi = null;
 	let catalogMap = getCurrentAdventureMap();
+	function changeScope() {
+		preferences.npcCurrentMap = scopeFilter.checked;
+		preferences.save();
+		browserApi.reload();
+	}
 	const refreshDetail = () => browserApi?.refreshDetail();
 	const destroyBrowser = mountRemoteCatalogBrowser(container, {
 		placeholder: '搜索 NPC、地图或编号',
 		searchLabel: '搜索 NPC',
-		filterHtml: renderCatalogScopeFilter({ name: 'npc-scope', ariaLabel: '当前地图', value: 'current' }),
+		filterHtml: renderCatalogScopeFilter({ name: 'npc-scope', ariaLabel: '当前地图', value: preferences.npcCurrentMap ? 'current' : 'all' }),
 		emptyDetail: '选择一个 NPC 查看详情',
-		summarize: state => formatCatalogCount(state.total, '个 NPC', Boolean(scopeFilter?.checked)),
 		pageSize: 32,
 		key,
 		async load(query) {
@@ -60,7 +66,7 @@ function mount(container, context = {}) {
 				scopeFilter.checked
 					? () => {
 							scopeFilter.checked = false;
-							browserApi.reload();
+							changeScope();
 						}
 					: null
 			);
@@ -73,6 +79,7 @@ function mount(container, context = {}) {
 			</button>`;
 		},
 		renderDetail(detail, npc, api) {
+			previewResizeObserver?.disconnect();
 			if (loadingNpcMapName !== npc.mapName) {
 				loadingNpcMapName = npc.mapName;
 				loadedNpcMap = null;
@@ -103,7 +110,8 @@ function mount(container, context = {}) {
 			const paintNpcMap = () =>
 				drawWorldMapPreview(canvas, loadedNpcMap?.image, null, loadedNpcMap?.gat, { selectedNpc: npc });
 			paintNpcMap();
-			requestAnimationFrame(paintNpcMap);
+			previewResizeObserver = new ResizeObserver(paintNpcMap);
+			previewResizeObserver.observe(canvas);
 			detail.querySelector('.catalog-teleport').addEventListener('click', () => teleportToNpc(npc));
 
 			const token = selectionToken;
@@ -125,6 +133,7 @@ function mount(container, context = {}) {
 			}
 		},
 		onSelectionChange() {
+			previewResizeObserver?.disconnect();
 			selectionToken += 1;
 			available = null;
 			checking = false;
@@ -132,7 +141,7 @@ function mount(container, context = {}) {
 		onReady(api) {
 			browserApi = api;
 			scopeFilter = api.container.querySelector('.catalog-scope-filter');
-			scopeFilter?.addEventListener('change', api.reload);
+			scopeFilter?.addEventListener('change', changeScope);
 		}
 	});
 
@@ -150,6 +159,7 @@ function mount(container, context = {}) {
 
 	return () => {
 		clearInterval(mapTimer);
+		previewResizeObserver?.disconnect();
 		selectionToken += 1;
 		mapLoadToken += 1;
 		unsubscribeActions();

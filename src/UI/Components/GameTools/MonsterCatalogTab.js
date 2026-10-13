@@ -1,3 +1,4 @@
+import preferences from 'Preferences/AdventureTools.js';
 import { renderCatalogEmptyState } from './CatalogEmptyState.js';
 import { resetTabScroll } from './TabViewState.js';
 import { showToast } from 'UI/Components/Toast.js';
@@ -19,7 +20,7 @@ import {
 	paginateMonsters
 } from './MonsterCatalogData.js';
 import escapeHtml from './escapeHtml.js';
-import { formatCatalogCount, renderCatalogScopeFilter } from './CatalogData.js';
+import { renderCatalogScopeFilter } from './CatalogData.js';
 import { mountGameSelects, renderGameSelect } from './GameSelect.js';
 
 const pageSize = 40;
@@ -164,7 +165,6 @@ function mount(container, context = {}) {
 	container.innerHTML = `
 		<div class="monster-toolbar">
 			<input class="monster-search" type="search" placeholder="搜索名称、英文名或 ID" aria-label="搜索魔物">
-			${renderCatalogScopeFilter({ name: 'monster-scope', ariaLabel: '当前地图', value: 'current' })}
 			${renderGameSelect({
 				className: 'monster-filter',
 				ariaLabel: '魔物类型',
@@ -176,6 +176,7 @@ function mount(container, context = {}) {
 					{ value: 'mvp', label: 'MVP' }
 				]
 			})}
+			${renderCatalogScopeFilter({ name: 'monster-scope', ariaLabel: '当前地图', value: preferences.monsterCurrentMap ? 'current' : 'all' })}
 		</div>
 		<div class="monster-layout" data-menu-layout="split">
 			<section class="monster-browser">
@@ -187,7 +188,7 @@ function mount(container, context = {}) {
 					<button class="page-next" type="button" aria-label="下一页"><span aria-hidden="true">›</span></button>
 				</div>
 			</section>
-			<section class="monster-detail"><div class="empty-detail">选择一个魔物查看详情</div></section>
+			<section class="monster-detail"><div class="empty-detail">选择一个魔物查看详情</div>${renderActionPanel()}</section>
 		</div>`;
 
 	const search = container.querySelector('.monster-search');
@@ -228,7 +229,7 @@ function mount(container, context = {}) {
 		if (!state.catalog) return;
 		const page = paginateMonsters(state.filtered, state.page, pageSize);
 		state.page = page.page;
-		summary.textContent = formatCatalogCount(state.filtered.length, '个魔物', getScope() === 'current');
+		summary.textContent = '';
 		pageLabel.textContent = `${page.page} / ${page.pageCount}`;
 		container.querySelector('.page-prev').disabled = page.page <= 1;
 		container.querySelector('.page-next').disabled = page.page >= page.pageCount;
@@ -252,7 +253,7 @@ function mount(container, context = {}) {
 				scopeFilter.checked
 					? () => {
 							scopeFilter.checked = false;
-							applyFilter();
+							changeScope();
 						}
 					: null
 			);
@@ -289,6 +290,14 @@ function mount(container, context = {}) {
 		return `<div class="drop-group"><h4>${title}</h4>${drops.map(drop => `<div><span title="${escapeHtml(drop.nameEn || drop.Item)}">${escapeHtml(drop.name || drop.Item)}</span><em>${formatRate(drop.Rate)}</em></div>`).join('')}</div>`;
 	}
 
+	function renderActionPanel(summonDisabled = true, teleportEnabled = false, status = '') {
+		return `<div class="summon-panel">
+			<button class="summon-button" type="button" ${summonDisabled ? 'disabled' : ''}>${state.pending ? '召唤中...' : '召唤'}</button>
+			<button class="monster-map-teleport" type="button" ${teleportEnabled ? '' : 'disabled'}>传送到地图</button>
+			<span class="summon-status error" role="status" aria-live="polite">${escapeHtml(status)}</span>
+		</div>`;
+	}
+
 	let detailMonsterId;
 	function renderDetail() {
 		const detail = container.querySelector('.monster-detail');
@@ -301,7 +310,7 @@ function mount(container, context = {}) {
 		if (previousLocations) state.locationScrollTop = previousLocations.scrollTop;
 		const monster = state.selected;
 		if (!state.catalog || !monster) {
-			detail.innerHTML = '<div class="empty-detail">选择一个魔物查看详情</div>';
+			detail.innerHTML = `<div class="empty-detail">选择一个魔物查看详情</div>${renderActionPanel()}`;
 			return;
 		}
 		if (!state.drops && !state.dropsLoading && !state.dropsError) {
@@ -380,11 +389,7 @@ function mount(container, context = {}) {
 				</section>
 			</div>
 			${context.mobile ? '</div>' : ''}
-			<div class="summon-panel">
-				<button class="summon-button" type="button" ${disabled ? 'disabled' : ''}>${state.pending ? '召唤中...' : '召唤'}</button>
-				<button class="monster-map-teleport" type="button" ${teleportTarget && teleportState.canTeleport ? '' : 'disabled'}>传送到地图</button>
-				<span class="summon-status error" role="status" aria-live="polite">${escapeHtml(summonConstraintText || (!teleportState.allowed ? '当前账号没有传送权限' : ''))}</span>
-			</div>`;
+			${renderActionPanel(disabled, Boolean(teleportTarget && teleportState.canTeleport), summonConstraintText || (!teleportState.allowed ? '当前账号没有传送权限' : ''))}`;
 		const summonButton = detail.querySelector('.summon-button');
 		const locations = detail.querySelector('.monster-locations');
 		locations.scrollTop = state.locationScrollTop;
@@ -423,7 +428,13 @@ function mount(container, context = {}) {
 
 	search.addEventListener('input', applyFilter);
 	filter.addEventListener('change', applyFilter);
-	scopeFilter?.addEventListener('change', applyFilter);
+	scopeFilter?.addEventListener('change', changeScope);
+
+	function changeScope() {
+		preferences.monsterCurrentMap = scopeFilter.checked;
+		preferences.save();
+		applyFilter();
+	}
 	container.querySelector('.page-prev').addEventListener('click', () => changePage(-1));
 	container.querySelector('.page-next').addEventListener('click', () => changePage(1));
 

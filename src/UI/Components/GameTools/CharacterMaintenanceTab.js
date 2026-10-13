@@ -138,7 +138,6 @@ function mount(container, context = {}) {
 
 	function renderJobs() {
 		const filtered = filteredJobs();
-		container.querySelector('.character-job-summary').textContent = `共 ${filtered.length} 个职业`;
 		container.querySelector('.character-job-list').innerHTML =
 			filtered
 				.map(
@@ -178,7 +177,7 @@ function mount(container, context = {}) {
 			</header>`
 			}
 			<div class="character-detail-scroll">
-				<section><h4>职业</h4><div class="selected-job"><div><strong>${escapeHtml(displayedJobName)}</strong><small>ID ${displayedJobId}</small></div><span class="management-form-actions"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${context.mobile && selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
+				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${context.mobile && selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
 				</section>
 				<section><h4>等级与点数</h4><form data-form="progression" class="management-form progression-form">
 					<label><span>基础等级</span><input name="base_level" type="number" min="1" max="${snapshot.max_base_level}" value="${snapshot.base_level}" required></label>
@@ -271,7 +270,7 @@ function mount(container, context = {}) {
 			}
 		)}</div>
 			<div class="character-layout" data-menu-layout="split"><section class="character-job-browser">
-			<div class="character-job-summary"></div><div class="character-job-list"></div>
+			<div class="character-job-list"></div>
 		</section><section class="character-detail"></section></div>`;
 		const searchInput = container.querySelector('.character-job-toolbar .catalog-search');
 		const { input: groupInput } = mountGameSelect(container.querySelector('[data-game-select]'));

@@ -1,3 +1,5 @@
+import Preferences from '../../src/Core/Preferences.js';
+import preferences from '../../src/Preferences/AdventureTools.js';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 const world = vi.hoisted(() => ({ map: 'prontera', loading: false }));
 vi.mock('Renderer/MapRenderer.js', () => ({
@@ -25,10 +27,18 @@ vi.mock('../../src/UI/Components/GameTools/NpcAvailabilityService.js', () => ({ 
 import tab from '../../src/UI/Components/GameTools/NpcCatalogTab.js';
 import { searchAdventureNpcs } from '../../src/UI/Components/GameTools/AdventureControlService.js';
 import { requestNpcAvailability } from '../../src/UI/Components/GameTools/NpcAvailabilityService.js';
+import { drawWorldMapPreview } from '../../src/UI/Components/GameTools/WorldMapPreview.js';
 let root, cleanup;
+let observers;
 const row = (map) => ({ id: map, map, x: 1, y: 1, display_name: map, navigation: { class: 687 } });
 beforeEach(async () => {
+	preferences.monsterCurrentMap = true; preferences.npcCurrentMap = true;
 	vi.useFakeTimers();
+	observers = [];
+	vi.stubGlobal('ResizeObserver', class {
+		constructor(callback) { this.callback = callback; this.disconnect = vi.fn(); observers.push(this); }
+		observe(target) { this.target = target; }
+	});
 	vi.clearAllMocks();
 	world.map = 'prontera';
 	world.loading = false;
@@ -46,8 +56,17 @@ afterEach(() => {
 	cleanup();
 	root.remove();
 	vi.useRealTimers();
+	vi.unstubAllGlobals();
 });
 describe('NPC catalog refresh', () => {
+	it('redraws the selected map after its displayed size changes and disconnects on cleanup', () => {
+		const observer = observers.at(-1);
+		drawWorldMapPreview.mockClear();
+		observer.callback();
+		expect(drawWorldMapPreview).toHaveBeenCalledWith(observer.target, undefined, null, undefined, expect.any(Object));
+		cleanup(); cleanup = () => {};
+		expect(observer.disconnect).toHaveBeenCalled();
+	});
 	it('follows current-map scope after loading and rechecks the new NPC', async () => {
 		world.map = 'geffen';
 		world.loading = true;
@@ -100,6 +119,7 @@ it('preserves empty scope across map changes until the user views all', async ()
  root.querySelector('.catalog-empty-state button').click();
  await vi.advanceTimersByTimeAsync(0);
  expect(scope.checked).toBe(false);
+ expect(JSON.parse(localStorage.getItem('AdventureTools')).npcCurrentMap).toBe(false);
  expect(root.querySelectorAll('.catalog-row')).toHaveLength(1);
  scope.checked = true; scope.dispatchEvent(new Event('change'));
  await vi.advanceTimersByTimeAsync(0);
@@ -120,4 +140,20 @@ it('keeps current-map scope on initial empty load', async () => {
  await vi.advanceTimersByTimeAsync(0);
  expect(root.querySelector('.catalog-scope-filter').checked).toBe(true);
  expect(root.querySelectorAll('.catalog-row')).toHaveLength(0);
+});
+
+it('remembers explicit scope after remount without changing the other catalog', async () => {
+ vi.useFakeTimers();
+ const scope=root.querySelector('.catalog-scope-filter');
+ scope.checked=false;scope.dispatchEvent(new Event('change'));
+ await vi.advanceTimersByTimeAsync(0);
+ const saved=JSON.parse(localStorage.getItem('AdventureTools'));
+ expect(saved.npcCurrentMap).toBe(false);
+ expect(Preferences.get('AdventureTools', { monsterCurrentMap: true, npcCurrentMap: true }, 1.0).npcCurrentMap).toBe(false);
+ expect(saved.monsterCurrentMap).toBe(true);
+ cleanup();cleanup=tab.mount(root);
+ await vi.advanceTimersByTimeAsync(0);
+ expect(root.querySelector('.catalog-scope-filter').checked).toBe(false);
+ world.map='empty_map';await vi.advanceTimersByTimeAsync(500);
+ expect(root.querySelector('.catalog-scope-filter').checked).toBe(false);
 });

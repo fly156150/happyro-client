@@ -18,9 +18,10 @@ it.each([false, true])('keeps character actions working with mobile layout %s', 
 	const close = vi.fn();
 	tab.mount(root.firstElementChild, { close, mobile });
 	await vi.waitFor(() => expect(root.querySelector('[data-job-id="1"]')).not.toBeNull());
+	expect(root.querySelector('.character-job-summary')).toBeNull();
 	root.querySelector('[data-job-id="1"]').click();
 	if (mobile) {
-		expect(root.querySelector('.selected-job strong').textContent).toBe('初心者');
+		expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('初心者 ID 0');
 		expect(root.querySelector('[data-action="apply-job"]').textContent).toBe('转换为剑士');
 	}
 	root.querySelector('[data-action="apply-job"]').click();
@@ -29,8 +30,8 @@ it.each([false, true])('keeps character actions working with mobile layout %s', 
 	if (mobile) {
 		expect(root.querySelector('.character-summary')).toBeNull();
 		expect(root.querySelector('.character-current-job')).toBeNull();
-		expect(root.querySelector('.selected-job strong').textContent).toBe('剑士');
-		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['职业', '等级与点数', '基础属性', '四转属性']);
+		expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');
+		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['剑士', '等级与点数', '基础属性', '四转属性']);
 	} else expect(root.querySelector('.character-summary').textContent).toContain('剑士');
 	expect(root.querySelector('[data-action="apply-job"]').disabled).toBe(true);
 	maintainCurrentCharacter.mockRejectedValue(new Error('服务暂时不可用'));

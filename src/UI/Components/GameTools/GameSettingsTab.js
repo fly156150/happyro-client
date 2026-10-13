@@ -96,7 +96,7 @@ function control(key, value, definition) {
 	}
 	const isRate = rateKeys.has(key);
 	const suffix = definition.unit === 'seconds' ? '秒' : '倍';
-	return `<span class="setting-number"><input name="${key}" aria-label="${labels[key]}" type="number" min="${displayValue(key, definition.minimum)}" max="${displayValue(key, definition.maximum)}" step="${isRate ? '0.01' : '1'}" value="${displayValue(key, value)}" required><em>${suffix}</em></span>`;
+	return `<span class="setting-number"><input name="${key}" aria-label="${labels[key]}" type="number" min="${displayValue(key, definition.minimum)}" max="${displayValue(key, definition.maximum)}" step="${isRate ? '0.01' : '1'}" value="${displayValue(key, value)}" required>${dropKeys.includes(key) ? '' : `<em>${suffix}</em>`}</span>`;
 }
 
 function mount(container, context = {}) {
@@ -124,8 +124,8 @@ function mount(container, context = {}) {
 		container.innerHTML = `<form class="settings-form">
 			<div class="settings-scroll">
 				<section><h4>经验倍率</h4><div class="settings-rate-columns">${groups[0].keys.map(key => `<div class="settings-rate-list"><label><span>${labels[key]}</span>${control(key, settings.values[key], settings.definitions[key])}</label></div>`).join('')}</div></section>
-				<section><h4>${context.mobile ? '掉落倍率' : '掉落倍率（普通魔物 &amp; Mini &amp; MVP）'}</h4><div class="settings-drop-scroll"><table class="settings-drop-table">
-					${context.mobile ? '<thead><tr><th scope="col">物品类型</th><th scope="col">普通</th><th scope="col">Mini</th><th scope="col">MVP</th></tr></thead>' : ''}
+				<section><h4>掉落倍率</h4><div class="settings-drop-scroll"><table class="settings-drop-table">
+					<thead><tr><th scope="col">物品类型</th><th scope="col">普通（倍）</th><th scope="col">Mini（倍）</th><th scope="col">MVP（倍）</th></tr></thead>
 					<tbody>${dropTypes
 						.map(
 							type =>

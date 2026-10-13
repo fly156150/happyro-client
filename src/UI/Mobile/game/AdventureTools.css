@@ -215,8 +215,7 @@
 	min-width: 64px;
 }
 .mobile-adventure .catalog-summary,
-.mobile-adventure .monster-summary,
-.mobile-adventure .character-job-summary {
+.mobile-adventure .monster-summary {
 	padding: 4px 12px;
 }
 .mobile-adventure .catalog-action-panel,
@@ -692,7 +691,6 @@
 .mobile-adventure .adventure-home span,
 .mobile-adventure .catalog-summary,
 .mobile-adventure .monster-summary,
-.mobile-adventure .character-job-summary,
 .mobile-adventure .catalog-heading p,
 .mobile-adventure .monster-heading p,
 .mobile-adventure .monster-stats span,
@@ -872,7 +870,6 @@
 .mobile-adventure .character-job-toolbar,
 .mobile-adventure .catalog-summary,
 .mobile-adventure .monster-summary,
-.mobile-adventure .character-job-summary,
 .mobile-adventure .character-job-browser,
 .mobile-adventure .monster-resources > section > h4 {
 	background: #19212a;
@@ -1581,7 +1578,6 @@
 		td,
 		.catalog-summary,
 		.monster-summary,
-		.character-job-summary,
 		.catalog-status,
 		.management-status,
 		.monster-stats div,
@@ -1690,6 +1686,10 @@
 	gap:6px;
 }
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-map-picker {
+	box-sizing:border-box;
+	border:1px solid #65717b;
+	border-radius:0;
+	background:#17191c;
 	height:100%;
 	min-height:0;
 	min-width:0;
@@ -1777,7 +1777,7 @@
 }
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='monsters'] .game-tools-tab {
 	display:grid;
-	grid-template-columns:minmax(0,1fr) 78px 36px 36px;
+	grid-template-columns:minmax(0,1fr) 78px 35px 35px;
 	grid-template-rows:minmax(0,1.15fr) 21px minmax(0,.85fr) 9px 32px 4px auto;
 	grid-template-areas:"info info info info" "divider divider divider divider" "list list list list" "controls-divider controls-divider controls-divider controls-divider" "search filter pages pages" ". . . ." "actions actions actions actions";
 	height:100%;
@@ -2029,7 +2029,7 @@
 }
 
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='items'] .game-tools-tab {
-	grid-template-columns:repeat(6,minmax(0,1fr));
+	grid-template-columns:repeat(4,minmax(0,1fr)) 35px 35px;
 	grid-template-rows:minmax(0,1.15fr) 21px minmax(0,.85fr) 9px 32px 0px 32px 4px auto;
 	grid-template-areas:"map map map map map map" "divider divider divider divider divider divider" "list list list list list list" "controls-divider controls-divider controls-divider controls-divider controls-divider controls-divider" "search search search search search search" ". . . . . ." "filters filters filters filters pages pages" ". . . . . ." "actions actions actions actions actions actions";
 }
@@ -2195,13 +2195,6 @@
 	overflow-wrap:anywhere;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='character'] .character-job-summary {
-	height:auto;
-	min-height:25px;
-	flex-basis:auto;
-	padding:4px 6px;
-	line-height:17px;
-}
 
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='character'] .character-detail-scroll {
 	flex:1 1 0;
@@ -2351,4 +2344,36 @@
 	border-radius:0;
 	color:#f5f2e9;
 	background:#283541;
+}
+
+/* Phone portrait action rows share one height across adventure tabs. */
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure :is(.catalog-action-panel, .summon-panel, .settings-footer, .character-actions) {
+	box-sizing:border-box;
+	min-height:40px;
+	height:auto;
+	padding-block:5px;
+	align-items:center;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure :is(.catalog-action-panel, .summon-panel, .settings-footer, .character-actions) > button {
+	box-sizing:border-box;
+	height:28px;
+	min-height:28px;
+	margin-block:0;
+}
+
+/* Equal page buttons and six-pixel spacing throughout phone portrait search rows. */
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='npcs'], [data-feature='items']) :is(.catalog-pagination, .monster-pagination) {
+ display:flex;
+ gap:6px;
+ padding:0 6px 0 0;
+ width:auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='npcs'], [data-feature='items']) :is(.catalog-pagination, .monster-pagination) button {
+ box-sizing:border-box;
+ flex:0 0 32px;
+ width:32px;
+ min-width:32px;
+ height:28px;
+ min-height:28px;
+ padding:0;
 }
