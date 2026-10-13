@@ -1646,3 +1646,20 @@
 	transform: scale(var(--panel-list-image-scale));
 	margin: calc(20px * (var(--panel-list-image-scale) - 1));
 }
+
+/* Phone item search occupies one row; filters and the grant action share the next. */
+:host([data-phone-screen]) .mobile-adventure .adventure-content[data-feature='items'] .catalog-toolbar {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 5px;
+}
+:host([data-phone-screen]) .mobile-adventure .adventure-content[data-feature='items'] .catalog-search {
+	grid-column: 1 / -1;
+	width: 100%;
+	min-width: 0;
+}
+:host([data-phone-screen]) .mobile-adventure .adventure-content[data-feature='items'] .catalog-toolbar > :is(.game-select, button) {
+	width: 100%;
+	min-width: 0;
+	margin: 0;
+}
