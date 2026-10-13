@@ -287,7 +287,6 @@ describe('game tools integration', () => {
 		expect(source).toContain('${item.Buy ?? \'-\'} / ${item.Sell ?? \'-\'}');
 		expect(source).toContain("['洞数', item.Slots ?? 0]");
 		expect(source).toContain("ariaLabel: '子类'");
-		expect(source).toContain("pending ? '发放中...' : '发放到背包'");
 		expect(read('src/UI/Components/GameTools/RemoteCatalogBrowser.js')).toContain(
 			'state.selected = state.items[0] || null'
 		);

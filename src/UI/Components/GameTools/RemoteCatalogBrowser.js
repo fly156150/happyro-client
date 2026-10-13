@@ -41,8 +41,10 @@ export function mountRemoteCatalogBrowser(container, options) {
 			resetTabScroll(container, detail);
 			options.onSelectionChange?.(state.selected);
 		}
-		if (!state.selected) detail.innerHTML = `<div class="empty-detail">${options.emptyDetail}</div>`;
-		else options.renderDetail(detail, state.selected, api);
+		if (!state.selected) {
+			if (options.renderEmptyDetail) options.renderEmptyDetail(detail, api);
+			else detail.innerHTML = `<div class="empty-detail">${options.emptyDetail}</div>`;
+		} else options.renderDetail(detail, state.selected, api);
 	}
 
 	function renderList() {

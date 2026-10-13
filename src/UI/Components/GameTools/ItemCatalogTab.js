@@ -8,7 +8,6 @@ import {
 import { escapeCatalogHtml } from './CatalogData.js';
 import { toPlainRagnarokText } from '../../../Utils/RagnarokText.js';
 import { requestConfirmation } from 'UI/Components/Confirmation.js';
-import { requestGameToolsNumber } from './GameToolsNumberPrompt.js';
 import { renderGameSelect, setGameSelectOptions } from './GameSelect.js';
 import { mountRemoteCatalogBrowser } from './RemoteCatalogBrowser.js';
 
@@ -137,20 +136,76 @@ function renderDescription(value) {
 function mount(container, context = {}) {
 	container.classList.add('world-catalog-tab', 'item-catalog-tab');
 	const assetUrls = new Map();
-	let pending = false;
-	let zenyPending = false;
-	let status = '';
-	let statusError = false;
+	let pending = null;
+	let amountValue = '1';
+	let active = true;
 	let browserApi;
-	const clearFeedback = () => {
-		status = '';
-		statusError = false;
-		const error = container.querySelector('.zeny-grant-error');
-		if (error) error.textContent = '';
-		const button = container.querySelector('.zeny-grant-open');
-		if (button) button.disabled = zenyPending || !context.capabilities?.itemGrantAllowed;
-		browserApi?.refreshDetail();
-	};
+	const clearFeedback = () => browserApi?.refreshDetail();
+	function renderActions(detail, item) {
+		const allowed = Boolean(context.capabilities?.itemGrantAllowed);
+		const panel = document.createElement('div');
+		panel.className = 'catalog-action-panel item-grant-panel';
+		panel.innerHTML = `<label class="item-grant-quantity"><span aria-hidden="true">数量</span><input aria-label="数量" class="item-grant-amount" type="number" inputmode="numeric" min="1" max="2147483647" step="1"></label><button class="zeny-grant-open" type="button">发放 Zeny</button><button class="item-grant" type="button">发放到背包</button><span class="catalog-status error" role="status" aria-live="polite"></span>`;
+		const input = panel.querySelector('.item-grant-amount');
+		input.value = amountValue;
+		input.disabled = Boolean(pending);
+		input.addEventListener('input', () => {
+			amountValue = input.value;
+		});
+		const zeny = panel.querySelector('.zeny-grant-open');
+		const grant = panel.querySelector('.item-grant');
+		zeny.disabled = Boolean(pending) || !allowed;
+		grant.disabled = Boolean(pending) || !allowed || !item?.grantable;
+		panel.querySelector('.catalog-status').textContent = !allowed
+			? '当前账号没有发放权限'
+			: item && !item.grantable
+				? '该特殊物品暂不支持直接发放'
+				: '';
+		zeny.addEventListener('click', () => void grantAmount('zeny', item, input));
+		grant.addEventListener('click', () => void grantAmount('item', item, input));
+		detail.append(panel);
+	}
+	async function grantAmount(kind, item, input) {
+		if (pending || !active || !context.capabilities?.itemGrantAllowed || (kind === 'item' && !item?.grantable))
+			return;
+		amountValue = input.value;
+		const amount = Number(amountValue);
+		const max = kind === 'zeny' ? 2147483647 : 30000;
+		if (!Number.isInteger(amount) || amount < 1 || amount > max) {
+			showToast(container, `请输入 1 至 ${max} 的整数${kind === 'zeny' ? '金额' : '数量'}`, 'error');
+			return;
+		}
+		const name = item?.names?.['zh-CN'] || item?.names?.['en-US'] || item?.AegisName;
+		const message =
+			kind === 'zeny'
+				? `确认向当前角色发放 ${amount.toLocaleString()} Zeny？`
+				: `确认向当前角色发放 ${amount} 个“${name}”到背包？`;
+		pending = kind;
+		browserApi.refreshDetail();
+		try {
+			if (!(await requestConfirmation(container, message)) || !active) return;
+			if (kind === 'zeny') await grantAdventureZeny(amount);
+			else await grantAdventureItem(item.Id, amount);
+			if (active)
+				showToast(
+					container,
+					kind === 'zeny' ? `已发放 ${amount.toLocaleString()} Zeny` : `已发放 ${amount} 个${name}`,
+					'success'
+				);
+		} catch (error) {
+			if (active)
+				showToast(
+					container,
+					error.code === 'zeny_amount_exceeded'
+						? '发放后会超过角色 Zeny 持有上限'
+						: errorMessages[error.code] || error.message,
+					'error'
+				);
+		} finally {
+			pending = null;
+			if (active) browserApi.refreshDetail();
+		}
+	}
 	container.addEventListener('game-tools-reset-feedback', clearFeedback);
 	return mountRemoteCatalogBrowser(container, {
 		placeholder: '搜索中文名、英文名、Aegis 名或 ID',
@@ -174,7 +229,6 @@ function mount(container, context = {}) {
 				disabled: true,
 				options: subtypeOptions('').options
 			}),
-		toolbarActionHtml: `<button class="zeny-grant-open" type="button" ${context.capabilities?.itemGrantAllowed ? '' : 'disabled'}>发放 Zeny</button>`,
 		emptyDetail: '选择一个物品查看详情',
 		pageSize: 30,
 		key: item => item.Id,
@@ -200,40 +254,11 @@ function mount(container, context = {}) {
 		},
 		onReady(api) {
 			browserApi = api;
-			const { container: root, refreshDetail } = api;
-			const button = root.querySelector('.zeny-grant-open');
-
-			button.addEventListener('click', async () => {
-				const amount = await requestGameToolsNumber(root, {
-					title: '向当前角色发放 Zeny',
-					label: '数量',
-					value: 100000,
-					min: 1,
-					max: 2147483647
-				});
-				if (amount === null) return;
-				zenyPending = true;
-				button.disabled = true;
-
-				try {
-					await grantAdventureZeny(amount);
-					status = `已发放 ${amount.toLocaleString()} Zeny`;
-					statusError = false;
-				} catch (error) {
-					status = error.code === 'zeny_amount_exceeded' ? '发放后会超过角色 Zeny 持有上限' : error.message;
-					statusError = true;
-				}
-				showToast(container, status, statusError ? 'error' : 'success');
-				status = '';
-				statusError = false;
-				refreshDetail();
-				setTimeout(() => {
-					if (!button.isConnected) return;
-					button.textContent = '发放 Zeny';
-					zenyPending = false;
-					button.disabled = !context.capabilities?.itemGrantAllowed;
-				}, 1500);
-			});
+			api.refreshDetail();
+		},
+		renderEmptyDetail(detail) {
+			detail.innerHTML = '<div class="empty-detail">选择一个物品查看详情</div>';
+			renderActions(detail, null);
 		},
 		renderRow(item, selected) {
 			return `<button class="catalog-row${selected?.Id === item.Id ? ' selected' : ''}" type="button" data-catalog-key="${item.Id}">
@@ -247,16 +272,8 @@ function mount(container, context = {}) {
 				loadImage(image, item?.icon, assetUrls);
 			});
 		},
-		onSelectionChange(item) {
-			if (!item && context.mobile) {
-				const button = container.querySelector('.zeny-grant-open');
-				if (button) container.querySelector('.catalog-toolbar').append(button);
-			}
-		},
-		renderDetail(detail, item, api) {
-			const zenyButton = context.mobile ? container.querySelector('.zeny-grant-open') : null;
+		renderDetail(detail, item) {
 			const name = item.names?.['zh-CN'] || item.names?.['en-US'] || item.AegisName;
-			const canGrant = context.capabilities?.itemGrantAllowed && item.grantable;
 			const type = typeNames[item.Type] || item.Type || '其他';
 			const weight = Number(item.Weight || 0) / 10;
 			const metadata = context.mobile
@@ -278,36 +295,12 @@ function mount(container, context = {}) {
 					];
 			detail.innerHTML = `<div class="item-detail-content"><div class="item-overview"><div class="catalog-heading item-heading"><span class="catalog-portrait item-portrait"><img alt="${escapeCatalogHtml(name)}"></span>${context.mobile ? '' : `<div><h3>${escapeCatalogHtml(name)}</h3><p>${escapeCatalogHtml(item.AegisName)} · ID ${item.Id}</p></div>`}</div>
 			<div class="catalog-metadata">${metadata.map(([label, value]) => `<div><span>${label}</span><strong>${escapeCatalogHtml(value)}</strong></div>`).join('')}</div>
-			</div><div class="item-description">${renderDescription(item.description)}</div></div>
-			<div class="catalog-action-panel item-grant-panel"><label><input aria-label="数量" class="item-grant-amount" type="number" min="1" max="30000" value="1"></label><button class="item-grant" type="button" ${pending || !canGrant ? 'disabled' : ''}>${pending ? '发放中...' : '发放到背包'}</button><span class="catalog-status error" role="status" aria-live="polite">${escapeCatalogHtml(!item.grantable ? '该特殊物品暂不支持直接发放' : !context.capabilities?.itemGrantAllowed ? '当前账号没有发放权限' : '')}</span></div>`;
-			if (zenyButton) detail.querySelector('.item-grant').after(zenyButton);
+			</div><div class="item-description">${renderDescription(item.description)}</div></div>`;
+			renderActions(detail, item);
 			loadImage(detail.querySelector('.item-portrait img'), item.illustration || item.icon, assetUrls);
-			detail.querySelector('.item-grant').addEventListener('click', async () => {
-				const amount = Number(detail.querySelector('.item-grant-amount').value);
-				if (!Number.isInteger(amount) || amount < 1 || amount > 30000) {
-					showToast(container, '请输入 1 至 30000 的整数', 'error');
-					statusError = true;
-					api.refreshDetail();
-					return;
-				}
-				if (!(await requestConfirmation(container, `确认向当前角色发放 ${amount} 个“${name}”到背包？`))) return;
-				pending = true;
-				status = '';
-				statusError = false;
-				api.refreshDetail();
-				try {
-					await grantAdventureItem(item.Id, amount);
-					showToast(container, `已发放 ${amount} 个${name}`);
-				} catch (error) {
-					showToast(container, errorMessages[error.code] || error.message, 'error');
-					statusError = true;
-				} finally {
-					pending = false;
-					api.refreshDetail();
-				}
-			});
 		},
 		cleanup() {
+			active = false;
 			container.removeEventListener('game-tools-reset-feedback', clearFeedback);
 			assetUrls.forEach(url => URL.revokeObjectURL(url));
 			assetUrls.clear();
