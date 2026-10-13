@@ -2332,3 +2332,23 @@
 .mobile-adventure .settings-drop-table th:first-child {
 	width:24%;
 }
+
+.mobile-adventure.game-tools-window .character-attributes-tab .management-form > label {
+	height:var(--panel-control);
+	border-color:#65717b;
+	background:#283541;
+}
+.mobile-adventure.game-tools-window .character-attributes-tab .management-form > label > span {
+	padding-inline:6px;
+	border-color:#65717b;
+	background:#394753;
+}
+:host([data-menu-density]) .mobile-adventure.game-tools-window .character-attributes-tab .management-form > label > input[type='number'] {
+	height:100%;
+	min-height:0;
+	padding:0 6px;
+	border:0;
+	border-radius:0;
+	color:#f5f2e9;
+	background:#283541;
+}

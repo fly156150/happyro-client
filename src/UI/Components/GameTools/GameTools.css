@@ -1324,12 +1324,11 @@
 	border-bottom: 0;
 }
 
-/* One labelled quantity field serves both item and Zeny grants. */
-.game-tools-window .item-grant-quantity {
+/* Shared joined labels for grant quantities and character numeric fields. */
+.game-tools-window :is(.item-grant-quantity, :where(.character-attributes-tab) .management-form > label) {
 	display:flex;
 	align-items:stretch;
-	flex:0 0 160px;
-	width:160px;
+	gap:0;
 	min-width:0;
 	height:28px;
 	box-sizing:border-box;
@@ -1338,7 +1337,7 @@
 	overflow:hidden;
 	background:white;
 }
-.game-tools-window .item-grant-quantity > span {
+.game-tools-window :is(.item-grant-quantity, :where(.character-attributes-tab) .management-form > label) > span {
 	display:flex;
 	align-items:center;
 	padding:0 5px;
@@ -1346,7 +1345,7 @@
 	border-right:1px solid #6d7f98;
 	background:#edf3f6;
 }
-.game-tools-window .item-grant-quantity > .item-grant-amount {
+.game-tools-window :is(.item-grant-quantity, :where(.character-attributes-tab) .management-form > label) > input {
 	flex:1 1 0;
 	width:0;
 	min-width:0;
@@ -1359,14 +1358,45 @@
 	padding:0 4px;
 	appearance:textfield;
 }
-.game-tools-window .item-grant-amount::-webkit-inner-spin-button,
-.game-tools-window .item-grant-amount::-webkit-outer-spin-button {
+.game-tools-window :is(.item-grant-amount, .character-attributes-tab .management-form input)::-webkit-inner-spin-button,
+.game-tools-window :is(.item-grant-amount, .character-attributes-tab .management-form input)::-webkit-outer-spin-button {
 	-webkit-appearance:none;
 	margin:0;
 }
-.game-tools-window .item-grant-quantity:focus-within {
+.game-tools-window :is(.item-grant-quantity, :where(.character-attributes-tab) .management-form > label):focus-within {
 	outline:2px solid #6d7f98;
 	outline-offset:1px;
+}
+
+.game-tools-window .item-grant-quantity {
+	flex:0 0 160px;
+	width:160px;
+}
+.game-tools-window .character-attributes-tab .management-form {
+	--character-label-width:calc(2em + 13px);
+}
+.game-tools-window .character-attributes-tab .progression-form {
+	--character-label-width:calc(4em + 13px);
+}
+.game-tools-window .character-attributes-tab .management-form.progression-form {
+	grid-template-columns:repeat(auto-fit, minmax(min(190px, 100%), 1fr));
+}
+.game-tools-window .character-attributes-tab [data-form='traits'] {
+	--character-label-width:calc(2em + 5ch + 13px);
+}
+.game-tools-window .character-attributes-tab .management-form > label > span {
+	box-sizing:border-box;
+	flex:0 0 var(--character-label-width);
+	width:var(--character-label-width);
+	max-width:none;
+	padding-inline:6px;
+	justify-content:flex-start;
+	text-align:left;
+	font-weight:normal;
+	white-space:nowrap;
+}
+.game-tools-window .character-attributes-tab .management-form > label > input {
+	padding-inline:6px;
 }
 
 /* Settings units form a single control with their numeric input. */
