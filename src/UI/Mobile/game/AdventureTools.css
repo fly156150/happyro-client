@@ -1988,6 +1988,19 @@
 	border-top:0;
 }
 
+.mobile-adventure .monster-empty-compact {
+	display:none;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='monsters'] .monster-locations-empty {
+	margin:6px 0;
+	padding:0 6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='monsters'] .monster-empty-full {
+	display:none;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='monsters'] .monster-empty-compact {
+	display:inline;
+}
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .npc-detail-info .catalog-metadata span {
 	display:none;
 }

@@ -375,7 +375,7 @@ function mount(container, context = {}) {
 										return `<button type="button" data-spawn-map="${escapeHtml(spawn.mapName)}" class="monster-location${state.selectedSpawn?.mapName === spawn.mapName ? ' selected' : ''}"><strong>${escapeHtml(displayName)}</strong><small>${escapeHtml(spawn.mapName)}</small></button>`;
 									})
 									.join('')
-							: '<p>暂无常驻刷新地图</p>'
+							: `<p class="monster-locations-empty">${context.mobile ? '<span class="monster-empty-full">暂无常驻刷新地图</span><span class="monster-empty-compact">无</span>' : '暂无常驻刷新地图'}</p>`
 					}</div>
 				</section>
 			</div>
