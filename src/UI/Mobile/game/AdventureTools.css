@@ -1663,3 +1663,109 @@
 	min-width: 0;
 	margin: 0;
 }
+
+/* Only the phone portrait map tab changes order; actions stay at the bottom. */
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .game-tools-tab {
+	display:grid;
+	grid-template-columns:minmax(0,1fr) auto;
+	grid-template-rows:minmax(0,1fr) minmax(0,1fr) auto auto;
+	grid-template-areas:"map map" "list list" "search pages" "actions actions";
+	height:100%;
+	min-height:0;
+	gap:6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] :is(.catalog-layout, .catalog-detail) {
+	display:contents;
+	container-type:normal;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .map-detail-body {
+	grid-area:map;
+	display:grid;
+	grid-template-columns:minmax(0,3fr) minmax(0,2fr);
+	grid-template-rows:minmax(0,1fr);
+	min-height:0;
+	overflow:auto;
+	padding:6px;
+	gap:6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-map-picker {
+	height:100%;
+	min-height:0;
+	min-width:0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .map-npc-list {
+	height:100%;
+	min-height:0;
+	min-width:0;
+	overflow:hidden;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .map-npc-scroll {
+	max-height:none;
+	min-height:0;
+	overflow:auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-browser {
+	display:contents;
+	width:auto;
+	min-height:0;
+	overflow:hidden;
+	border:0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-list {
+	grid-area:list;
+	border-top:1px solid #65717b;
+	flex:1;
+	min-height:0;
+	overflow:auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-toolbar {
+	grid-area:search;
+	border-bottom:0;
+	display:flex;
+	margin:0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-action-panel {
+	grid-area:actions;
+	border-top:0;
+	position:static;
+	margin:0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-detail > .empty-detail {
+	grid-area:map;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-summary {
+	display:none;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-pagination {
+	grid-area:pages;
+	align-self:center;
+	min-height:0;
+	padding:0 6px 0 0;
+	gap:4px;
+	border:0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-page {
+	display:none;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-toolbar {
+	min-width:0;
+	padding:6px 0 6px 6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-search {
+	width:100%;
+	min-width:0;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .map-npc-text small {
+	display:none;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .map-npc-row {
+	height:auto;
+	min-height:32px;
+	padding:4px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .map-npc-text strong {
+	white-space:normal;
+	overflow-wrap:anywhere;
+}
