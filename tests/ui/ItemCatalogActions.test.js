@@ -15,7 +15,7 @@ const mount = async (mobile=true, allowed=true) => { cleanup=tab.mount(root,{mob
 beforeEach(() => {
  vi.useFakeTimers(); vi.resetAllMocks();
  requestConfirmation.mockResolvedValue(false);
- searchAdventureItems.mockImplementation(async ({ query }) => ({data: query === 'absent' ? [] : [501,502].map(Id => ({Id,Type:'Healing',AegisName:`Item_${Id}`,grantable:true})),total:query === 'absent' ? 0 : 2}));
+ searchAdventureItems.mockImplementation(async ({ query }) => ({data: query === 'absent' ? [] : [501,502].map(Id => ({Id,Type:'Healing',AegisName:`Item_${Id}`,grantable:true})),total:query === 'absent' ? 0 : 2,subtypes:[]}));
  root=document.createElement('div');document.body.append(root);
 });
 afterEach(() => { cleanup?.();root.remove();vi.useRealTimers(); });
@@ -62,4 +62,26 @@ it('recovers after cancellation and failed Zeny grants',async()=>{
 it('does not grant after unmount or without permission',async()=>{
  await mount(false,false);expect(root.querySelector('.zeny-grant-open').disabled).toBe(true);expect(root.querySelector('.item-grant').disabled).toBe(true);
  cleanup();await mount();let confirm;requestConfirmation.mockImplementationOnce(()=>new Promise(resolve=>{confirm=resolve;}));root.querySelector('.zeny-grant-open').click();cleanup();confirm(true);await tick();expect(grantAdventureZeny).not.toHaveBeenCalled();
+});
+
+it('offers only populated subtypes and keeps them during empty searches',async()=>{
+ searchAdventureItems.mockImplementation(async({type})=>({data:[],total:0,subtypes:type==='Weapon'?['Dagger','Bow']:type==='Armor'?['Armor']:[]}));
+ await mount();
+ const type=root.querySelector('[name=type]'),subtype=root.querySelector('[name=subtype]');
+ const values=()=>[...root.querySelectorAll('.item-subtype-filter [data-value]')].map(e=>e.dataset.value);
+ type.value='Weapon';type.dispatchEvent(new Event('change'));await tick();
+ expect(values()).toEqual(['','Dagger','Bow']);
+ subtype.value='Dagger';subtype.dispatchEvent(new Event('change'));await tick();expect(subtype.value).toBe('Dagger');
+ const search=root.querySelector('.catalog-search');search.value='absent';search.dispatchEvent(new Event('input'));await vi.advanceTimersByTimeAsync(300);
+ expect(values()).toEqual(['','Dagger','Bow']);expect(subtype.value).toBe('Dagger');
+ type.value='Armor';type.dispatchEvent(new Event('change'));await tick();expect(values()).toEqual(['','Armor']);expect(subtype.value).toBe('');
+ type.value='Healing';type.dispatchEvent(new Event('change'));await tick();expect(values()).toEqual(['']);expect(root.querySelector('.item-subtype-filter button').disabled).toBe(true);
+});
+it('does not apply a stale type response to the current subtype menu',async()=>{
+ await mount();let resolveWeapon;
+ searchAdventureItems.mockImplementation(({type})=>type==='Weapon'?new Promise(resolve=>{resolveWeapon=resolve;}):Promise.resolve({data:[],total:0,subtypes:['Armor']}));
+ const type=root.querySelector('[name=type]');type.value='Weapon';type.dispatchEvent(new Event('change'));
+ type.value='Armor';type.dispatchEvent(new Event('change'));await tick();
+ resolveWeapon({data:[],total:0,subtypes:['Dagger']});await tick();
+ expect([...root.querySelectorAll('.item-subtype-filter [data-value]')].map(e=>e.dataset.value)).toEqual(['','Armor']);
 });

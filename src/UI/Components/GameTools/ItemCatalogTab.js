@@ -72,7 +72,7 @@ const cardSubtypeNames = {
 	Any: '任意部位'
 };
 
-function subtypeOptions(type) {
+function subtypeOptions(type, available = []) {
 	const names =
 		type === 'Weapon'
 			? weaponSubtypeNames
@@ -81,14 +81,14 @@ function subtypeOptions(type) {
 				: type === 'Card'
 					? cardSubtypeNames
 					: null;
-	if (!names) {
+	if (!names || !available.length) {
 		return { disabled: true, options: [{ value: '', label: '子类' }] };
 	}
 	return {
 		disabled: false,
 		options: [
 			{ value: '', label: '全部子类' },
-			...Object.entries(names).map(([value, label]) => ({ value, label }))
+			...Object.entries(names).filter(([value]) => available.includes(value)).map(([value, label]) => ({ value, label }))
 		]
 	};
 }
@@ -136,11 +136,24 @@ function renderDescription(value) {
 function mount(container, context = {}) {
 	container.classList.add('world-catalog-tab', 'item-catalog-tab');
 	const assetUrls = new Map();
+	const availableSubtypes = new Map();
 	let pending = null;
 	let amountValue = '1';
 	let active = true;
 	let browserApi;
 	const clearFeedback = () => browserApi?.refreshDetail();
+	function updateSubtypeOptions(type) {
+		const root = container.querySelector('.item-subtype-filter[data-game-select]');
+		const current = root.querySelector('.game-select-value').value;
+		const { disabled, options } = subtypeOptions(type, availableSubtypes.get(type));
+		const keep = !disabled && options.some(option => option.value === current);
+		setGameSelectOptions(root, {
+			options,
+			value: keep ? current : '',
+			disabled,
+			ariaLabel: '子类'
+		});
+	}
 	function renderActions(detail, item) {
 		const allowed = Boolean(context.capabilities?.itemGrantAllowed);
 		const panel = document.createElement('div');
@@ -238,19 +251,14 @@ function mount(container, context = {}) {
 				type: query.filters.type,
 				subtype: query.filters.subtype
 			});
+			if (active) {
+				availableSubtypes.set(query.filters.type, result.subtypes);
+				if (container.querySelector('[name=type]').value === query.filters.type) updateSubtypeOptions(query.filters.type);
+			}
 			return { items: result.data, total: result.total };
 		},
 		onFiltersChange(filters) {
-			const root = container.querySelector('.item-subtype-filter[data-game-select]');
-			const current = root.querySelector('.game-select-value').value;
-			const { disabled, options } = subtypeOptions(filters.type);
-			const keep = !disabled && options.some(option => option.value === current);
-			setGameSelectOptions(root, {
-				options,
-				value: keep ? current : '',
-				disabled,
-				ariaLabel: '子类'
-			});
+			updateSubtypeOptions(filters.type);
 		},
 		onReady(api) {
 			browserApi = api;
