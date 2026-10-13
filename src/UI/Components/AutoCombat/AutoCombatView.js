@@ -38,6 +38,7 @@ export function createAutoCombatView(root, actions, pickup) {
 
 		$('.auto-config-body').replaceChildren();
 		$('.desktop-pickup-scroll').replaceChildren();
+		$('.desktop-pickup-panel > .pickup-enabled')?.remove();
 		$('[data-settings]').setAttribute('aria-expanded', 'false');
 		$('[data-settings]').focus();
 	}
@@ -61,6 +62,7 @@ export function createAutoCombatView(root, actions, pickup) {
 			structuredClone(pickup.load()),
 			pickup.save
 		);
+		$('.desktop-pickup-panel').prepend($('.desktop-pickup-scroll > .pickup-enabled'));
 		selectTab('combat');
 		backdrop.hidden = false;
 		root.getRootNode().host?.setAttribute('data-settings-open', '');

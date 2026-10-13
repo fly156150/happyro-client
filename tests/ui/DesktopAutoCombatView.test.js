@@ -98,3 +98,15 @@ it('keeps combat controls inside their tab across closing and reopening', () => 
  click('[data-toggle]');
  expect(actions.stop).toHaveBeenCalledOnce();
 });
+
+it('keeps the pickup master switch outside scrolling content across reopening', () => {
+ view.open();
+ const row=root.querySelector('.pickup-enabled');
+ expect(row.parentElement.matches('.desktop-pickup-panel')).toBe(true);
+ expect(root.querySelector('.desktop-pickup-scroll .pickup-enabled')).toBeNull();
+ const toggle=row.querySelector('input');toggle.checked=true;toggle.dispatchEvent(new Event('input'));
+ expect(saved.enabled).toBe(true);
+ click('[data-close]');expect(root.querySelector('.pickup-enabled')).toBeNull();
+ view.open();expect(root.querySelectorAll('.pickup-enabled')).toHaveLength(1);
+ expect(root.querySelector('.pickup-enabled input').checked).toBe(true);
+});

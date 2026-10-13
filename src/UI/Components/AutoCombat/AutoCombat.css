@@ -100,12 +100,13 @@ button:disabled {
 	place-items: center;
 	width: 40px;
 	height: 40px;
-	padding: 9px;
+	padding: 0;
 	pointer-events: auto;
 	background: #18212be8;
 	box-shadow: 0 2px 8px #0005;
 }
 .combat-launcher svg {
+	display: block;
 	width: 22px;
 	height: 22px;
 	fill: none;
@@ -130,7 +131,7 @@ button:disabled {
 	color: #bac4cd;
 }
 .combat-runtime,
-.combat-dialog .pickup-section > .pickup-enabled {
+.combat-dialog .desktop-pickup-panel > .pickup-enabled {
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -235,9 +236,9 @@ button:disabled {
 :host([data-settings-open]) {
 	z-index: 1000 !important;
 }
-.combat-dialog .pickup-section > .pickup-enabled {
+.combat-dialog .desktop-pickup-panel > .pickup-enabled {
 	width: 100%;
-	margin: 0 0 12px;
+	margin: 0;
 }
 .combat-dialog .pickup-enabled > span {
 	font-weight: bold;
