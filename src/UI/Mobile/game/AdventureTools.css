@@ -2307,3 +2307,28 @@
 	min-height:0;
 	padding:0 4px;
 }
+
+.mobile-adventure.game-tools-window .settings-form .setting-number {
+	gap:0;
+	border-color:#65717b;
+	background:#283541;
+}
+.mobile-adventure.game-tools-window .settings-form .setting-number input {
+	width:0;
+	min-width:0;
+	border:0;
+	border-radius:0;
+	padding-inline:4px;
+}
+.mobile-adventure.game-tools-window .settings-form .setting-number em {
+	flex:0 0 auto;
+	padding:0 4px;
+	border-color:#65717b;
+	background:#394753;
+}
+.mobile-adventure .settings-drop-table {
+	min-width:360px;
+}
+.mobile-adventure .settings-drop-table th:first-child {
+	width:24%;
+}

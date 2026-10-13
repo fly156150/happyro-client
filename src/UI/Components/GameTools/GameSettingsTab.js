@@ -35,21 +35,21 @@ const dropKeys = dropTypes.flatMap(type => dropCategories.map(suffix => `item_ra
 const labels = {
 	base_exp_rate: '基础倍率',
 	job_exp_rate: '职业经验倍率',
-	item_rate_common: '普通物品掉落倍率',
-	item_rate_common_boss: 'Mini 普通物品掉落倍率',
-	item_rate_common_mvp: 'MVP 普通物品掉落倍率',
-	item_rate_heal: '恢复品掉落倍率',
-	item_rate_heal_boss: 'Mini 恢复品掉落倍率',
-	item_rate_heal_mvp: 'MVP 恢复品掉落倍率',
-	item_rate_use: '消耗品掉落倍率',
-	item_rate_use_boss: 'Mini 消耗品掉落倍率',
-	item_rate_use_mvp: 'MVP 消耗品掉落倍率',
-	item_rate_equip: '装备与武器掉落倍率',
-	item_rate_equip_boss: 'Mini 装备与武器掉落倍率',
-	item_rate_equip_mvp: 'MVP 装备与武器掉落倍率',
-	item_rate_card: '卡片掉落倍率',
-	item_rate_card_boss: 'Mini 卡片掉落倍率',
-	item_rate_card_mvp: 'MVP 卡片掉落倍率',
+	item_rate_common: '普通物品',
+	item_rate_common_boss: 'Mini 普通物品',
+	item_rate_common_mvp: 'MVP 普通物品',
+	item_rate_heal: '恢复品',
+	item_rate_heal_boss: 'Mini 恢复品',
+	item_rate_heal_mvp: 'MVP 恢复品',
+	item_rate_use: '消耗品',
+	item_rate_use_boss: 'Mini 消耗品',
+	item_rate_use_mvp: 'MVP 消耗品',
+	item_rate_equip: '装备与武器',
+	item_rate_equip_boss: 'Mini 装备与武器',
+	item_rate_equip_mvp: 'MVP 装备与武器',
+	item_rate_card: '卡片',
+	item_rate_card_boss: 'Mini 卡片',
+	item_rate_card_mvp: 'MVP 卡片',
 	navigation_teleport_policy: '地图传送开放范围',
 	navigation_teleport_cross_map: '允许跨地图传送',
 	navigation_teleport_cooldown: '传送冷却',
@@ -95,7 +95,7 @@ function control(key, value, definition) {
 		});
 	}
 	const isRate = rateKeys.has(key);
-	const suffix = definition.unit === 'seconds' ? ' 秒' : ' 倍';
+	const suffix = definition.unit === 'seconds' ? '秒' : '倍';
 	return `<span class="setting-number"><input name="${key}" aria-label="${labels[key]}" type="number" min="${displayValue(key, definition.minimum)}" max="${displayValue(key, definition.maximum)}" step="${isRate ? '0.01' : '1'}" value="${displayValue(key, value)}" required><em>${suffix}</em></span>`;
 }
 

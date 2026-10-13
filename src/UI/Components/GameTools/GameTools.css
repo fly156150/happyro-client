@@ -1368,3 +1368,43 @@
 	outline:2px solid #6d7f98;
 	outline-offset:1px;
 }
+
+/* Settings units form a single control with their numeric input. */
+.game-tools-window .settings-form .setting-number {
+	align-items:stretch;
+	gap:0;
+	border:1px solid #6d7f98;
+	border-radius:5px;
+	overflow:hidden;
+	box-sizing:border-box;
+	background:white;
+}
+.game-tools-window .settings-form .setting-number input {
+	flex:1 1 0;
+	width:0;
+	min-width:0;
+	border:0;
+	border-radius:0;
+	box-sizing:border-box;
+	appearance:textfield;
+}
+.game-tools-window .settings-form .setting-number input::-webkit-inner-spin-button,
+.game-tools-window .settings-form .setting-number input::-webkit-outer-spin-button {
+	-webkit-appearance:none;
+	margin:0;
+}
+.game-tools-window .settings-form .setting-number em {
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	width:auto;
+	flex:0 0 auto;
+	padding:0 5px;
+	border-left:1px solid #6d7f98;
+	background:#edf3f6;
+	white-space:nowrap;
+}
+.game-tools-window .settings-form .setting-number:focus-within {
+	outline:2px solid #6d7f98;
+	outline-offset:1px;
+}
