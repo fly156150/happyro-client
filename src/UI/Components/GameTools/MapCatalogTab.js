@@ -48,7 +48,6 @@ function mount(container, context = {}) {
 	let selectedCoordinate = null;
 	let routeSelected = false;
 	let arrivalPreview = null;
-	let arrivalMessage = '';
 	let arrivalAbort = null;
 	let loadedMap = null;
 	let loadingMapName = '';
@@ -200,17 +199,15 @@ function mount(container, context = {}) {
 				arrivalAbort = new AbortController();
 				const signal = arrivalAbort.signal;
 				arrivalPreview = null;
-				arrivalMessage = '正在查询预计落点…';
 				requestArrivalPreview(map.mapName, signal)
 					.then(point => {
 						if (signal.aborted) return;
 						arrivalPreview = point;
-						arrivalMessage = `预计传送位置：${point.x}, ${point.y}（传送时重新校验）`;
 						api.refreshDetail();
 					})
-					.catch(error => {
+					.catch(() => {
 						if (signal.aborted) return;
-						arrivalMessage = error.message;
+						arrivalPreview = null;
 						api.refreshDetail();
 					});
 				loadedMap = null;
@@ -303,7 +300,6 @@ function mount(container, context = {}) {
 						}
 					</section>
 					</div>
-					<p class="map-arrival-preview" role="status" ${selectedCoordinate?.automatic ? '' : 'hidden'}>${escapeCatalogHtml(arrivalMessage)}</p>
 					<div class="catalog-action-panel">
 						<button class="catalog-route${routeActive ? ' is-active' : ''}" aria-busy="${Boolean(routePending)}" title="${!sameMap ? '寻路仅支持角色当前所在地图' : !routeTarget ? '请先选择目标位置' : routeUnavailable ? '无法寻路到所选位置' : ''}" type="button" ${routeTarget && sameMap && !routePending && !routeUnavailable ? '' : 'disabled'}>${routePending ? '计算中…' : routeActive ? '停止寻路' : '开始寻路'}</button>
 					<button class="catalog-teleport" type="button" ${canTeleportHere ? '' : 'disabled'}>${actionState.npcPending && selectedNpc ? '正在传送...' : '传送到这里'}</button>

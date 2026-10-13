@@ -59,7 +59,8 @@ it('does not replace an explicitly supplied initial coordinate',async()=>{
 
 it('draws the preview while retaining automatic teleport semantics',async()=>{
  await mount('prt_fild08');
- expect(container.querySelector('.map-arrival-preview').textContent).toContain('168, 373');
+ const {drawWorldMapPreview}=await import('../../src/UI/Components/GameTools/WorldMapPreview.js');
+ expect(drawWorldMapPreview.mock.lastCall[2]).toEqual({x:168,y:373});
  expect(container.querySelector('.catalog-route').disabled).toBe(true);
  container.querySelector('.catalog-teleport').click();
  expect(teleportToCoordinate).toHaveBeenLastCalledWith(expect.objectContaining({x:0,y:0,automatic:true}));
@@ -72,7 +73,6 @@ it('does not replace a manual marker with a late preview',async()=>{
  await mount('prt_fild08');container.querySelector('.catalog-map-picker').click();
  resolve({x:168,y:373});await vi.advanceTimersByTimeAsync(0);
  expect(drawWorldMapPreview.mock.lastCall[2]).toEqual({x:9,y:11});
- expect(container.querySelector('.map-arrival-preview').hidden).toBe(true);
  container.querySelector('.catalog-teleport').click();
  expect(teleportToCoordinate).toHaveBeenLastCalledWith(expect.objectContaining({x:9,y:11}));
 });
