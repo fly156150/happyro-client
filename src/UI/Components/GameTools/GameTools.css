@@ -1312,3 +1312,14 @@
 }
 
 .monster-overview { display: contents; }
+
+/* Bordered detail lists share their final edge with the surrounding panel. */
+.game-tools-window .monster-drops,
+.game-tools-window .monster-locations {
+	padding-bottom: 0;
+}
+.game-tools-window .monster-drops > .drop-group:last-child > div:last-child,
+.game-tools-window .monster-location-list > .monster-location:last-child,
+.game-tools-window .map-npc-list .map-npc-row:last-child {
+	border-bottom: 0;
+}
