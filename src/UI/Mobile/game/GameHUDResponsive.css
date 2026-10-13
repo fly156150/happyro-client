@@ -283,3 +283,24 @@
 :host([data-menu-density='spacious']) .profile meter::-webkit-meter-bar {
 	top: 0;
 }
+
+:host([data-orientation='landscape']) {
+	--landscape-map-width: 115.2px;
+	--landscape-map-canvas: 105.6px;
+}
+@media (max-height: 360px) {
+	:host([data-orientation='landscape']) {
+		--landscape-map-canvas: 91.2px;
+	}
+}
+:host([data-orientation='landscape'][data-menu-density='spacious']) {
+	--landscape-map-width: 172.8px;
+	--landscape-map-canvas: 153.6px;
+}
+:host([data-orientation='landscape']) .map {
+	width: var(--landscape-map-width);
+}
+:host([data-orientation='landscape']) .map canvas {
+	width: var(--landscape-map-canvas);
+	height: var(--landscape-map-canvas);
+}
