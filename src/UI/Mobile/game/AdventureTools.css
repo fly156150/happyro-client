@@ -1664,8 +1664,8 @@
 	margin: 0;
 }
 
-/* Only the phone portrait map tab changes order; actions stay at the bottom. */
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .game-tools-tab {
+/* Phone portrait catalog tabs share ordering; actions stay at the bottom. */
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .game-tools-tab {
 	display:grid;
 	grid-template-columns:minmax(0,1fr) auto;
 	grid-template-rows:minmax(0,1fr) minmax(0,1fr) auto auto;
@@ -1674,7 +1674,7 @@
 	min-height:0;
 	gap:6px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] :is(.catalog-layout, .catalog-detail) {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) :is(.catalog-layout, .catalog-detail) {
 	display:contents;
 	container-type:normal;
 }
@@ -1704,39 +1704,39 @@
 	min-height:0;
 	overflow:auto;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-browser {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-browser {
 	display:contents;
 	width:auto;
 	min-height:0;
 	overflow:hidden;
 	border:0;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-list {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-list {
 	grid-area:list;
 	border-top:1px solid #65717b;
 	flex:1;
 	min-height:0;
 	overflow:auto;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-toolbar {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-toolbar {
 	grid-area:search;
 	border-bottom:0;
 	display:flex;
 	margin:0;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-action-panel {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-action-panel {
 	grid-area:actions;
 	position:static;
 	margin:0;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-detail > .empty-detail {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-detail > .empty-detail {
 	grid-area:map;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-summary {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-summary {
 	display:none;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-pagination {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-pagination {
 	grid-area:pages;
 	align-self:center;
 	min-height:0;
@@ -1744,14 +1744,14 @@
 	gap:4px;
 	border:0;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-page {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-page {
 	display:none;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-toolbar {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-toolbar {
 	min-width:0;
 	padding:6px 0 6px 6px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='maps'] .catalog-search {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='npcs']) .catalog-search {
 	width:100%;
 	min-width:0;
 }
@@ -1875,11 +1875,11 @@
 }
 
 /* A stationary divider separates the two independently scrolling phone panels. */
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='monsters']) .game-tools-tab {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='npcs']) .game-tools-tab {
 	position: relative;
 	row-gap: 9px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='monsters']) .game-tools-tab::after {
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='npcs']) .game-tools-tab::after {
 	content: '';
 	position: absolute;
 	grid-column: 1 / -1;
@@ -1924,5 +1924,70 @@
 }
 
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='monsters'] .monster-location small {
+	display:none;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .npc-detail-body {
+	grid-area:map;
+	display:grid;
+	grid-template-columns:minmax(0,3fr) minmax(0,2fr);
+	grid-template-rows:minmax(0,1fr);
+	min-height:0;
+	padding:6px;
+	gap:6px;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] :is(.npc-map-picker, .npc-detail-info) {
+	min-width:0;
+	min-height:0;
+	height:100%;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .catalog-toolbar {
+	display:contents;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .catalog-search {
+	grid-area:search;
+	align-self:center;
+	margin-left:6px;
+	width:calc(100% - 6px);
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .catalog-scope-option {
+	grid-area:actions;
+	justify-self:end;
+	align-self:center;
+	margin-right:6px;
+	z-index:2;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .catalog-action-panel {
+	padding-right:100px;
+	min-height:40px;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .catalog-teleport {
+	min-width:0;
+	white-space:normal;
+	padding-inline:6px;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .npc-detail-info .catalog-metadata div {
+	flex-direction:column;
+	align-items:flex-start;
+	gap:2px;
+	padding:4px;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .npc-detail-info .catalog-metadata strong {
+	text-align:left;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .catalog-list {
+	border-top:0;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='npcs'] .npc-detail-info .catalog-metadata span {
 	display:none;
 }
