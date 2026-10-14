@@ -41,7 +41,7 @@ describe('SkillLocalizationTable', () => {
 		expect(SkillLocalizationTable[317].description).toContain('类型：演奏技能');
 		expect(SkillLocalizationTable[2425].description).toContain('目标：敌对玩家');
 		expect(SkillLocalizationTable[5210].description).toContain('消耗 150 AP');
-		expect(SkillLocalizationTable[5201].description).toContain('每级恢复“技能等级 × 6”AP');
+		expect(SkillLocalizationTable[5201].description).toContain('每级恢复「技能等级 × 6」AP');
 		expect(SkillLocalizationTable[82].description).toContain('最高等级：1');
 		expect(SkillLocalizationTable[404].description).toContain('最高等级：1');
 		expect(SkillLocalizationTable[2564].description).toContain('最高等级：1');

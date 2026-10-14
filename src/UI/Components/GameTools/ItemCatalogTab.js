@@ -214,13 +214,13 @@ function mount(container, context = {}) {
 		const message =
 			kind === 'zeny'
 				? `确认向当前角色发放 ${amount.toLocaleString()} Zeny？`
-				: `确认向当前角色发放 ${amount} 个“${name}”到背包？`;
+				: `确认向当前角色发放 ${amount} 个「${name}」到背包？`;
 		pending = kind;
 		browserApi.refreshDetail();
 		try {
 			if (context.mobile) {
 				amount = await requestGameToolsNumber(container, {
-					title: kind === 'zeny' ? '发放 Zeny' : `发放“${name}”到背包`,
+					title: kind === 'zeny' ? '发放 Zeny' : `发放「${name}」到背包`,
 					label: '数量', value: Math.min(max, Math.max(1, Number(amountValue) || 1)),
 					min: 1, max, steps: true
 				});

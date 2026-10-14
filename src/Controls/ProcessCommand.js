@@ -94,7 +94,7 @@ const CommandStore = {
 		}
 	},
 	miss: {
-		description: '切换“未命中”动画显示',
+		description: '切换「未命中」动画显示',
 		callback: function () {
 			this.addText(DB.getMessage(317 + MapPreferences.miss), this.TYPE.INFO, this.FILTER.PUBLIC_LOG);
 			MapPreferences.miss = !MapPreferences.miss;
@@ -151,7 +151,7 @@ const CommandStore = {
 		}
 	},
 	camera: {
-		description: '切换相机“平滑”效果。',
+		description: '切换相机「平滑」效果。',
 		callback: function () {
 			this.addText(DB.getMessage(319 + CameraPreferences.smooth), this.TYPE.INFO, this.FILTER.PUBLIC_LOG);
 			CameraPreferences.smooth = !CameraPreferences.smooth;

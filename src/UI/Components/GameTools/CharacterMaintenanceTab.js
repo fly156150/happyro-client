@@ -208,7 +208,7 @@ function mount(container, context = {}) {
 			void submit(
 				'character.progression.update',
 				{ job_id: selectedJobId },
-				`是否确认转职为"${selectedJob.name}"?`
+				`是否确认转职为「${selectedJob.name}」?`
 			);
 		});
 		detail.querySelector('[data-form="progression"]').addEventListener('submit', event => {
