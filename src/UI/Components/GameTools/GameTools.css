@@ -1544,9 +1544,6 @@
 .game-tools-window .monster-resources .monster-locations-empty { margin: 0; padding-inline: 6px; }
 
 /* Desktop adventure tools retain square controls and compact form rows. */
-.game-tools-window[data-feedback-theme='desktop'] :is(.tab-button, .character-attributes-tab .management-form > label, .settings-form .setting-number, .settings-form .game-select-trigger) {
- border-radius: 0;
-}
 .game-tools-window[data-feedback-theme='desktop'] .character-attributes-tab .management-form.progression-form {
  grid-template-columns: repeat(4, minmax(0, 1fr));
 }

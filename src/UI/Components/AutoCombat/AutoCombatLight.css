@@ -1,84 +1,81 @@
 /* Desktop-only skin: shared combat/pickup components retain their mobile theme. */
 :host {
- --assist-surface: #f5f6f7;
+ --assist-surface: var(--desktop-surface);
  --assist-border: #d3d7db;
- --assist-accent: #368354;
- color: #303438;
+ --assist-accent: var(--desktop-success);
+ color: var(--desktop-text);
  color-scheme: light;
 }
-* { scrollbar-color: #aeb4ba #eceef0; }
-::-webkit-scrollbar-track { background: #f0f2f3; }
-::-webkit-scrollbar-thumb { background: #aeb4ba; border-color: #eceef0; border-radius: 4px; }
 button,
 .pickup-picker button {
- background: #f0f2f3;
- border-color: #c7ccd1;
+ background: var(--desktop-button);
+ border-color: var(--desktop-border);
  border-radius: 4px;
- color: #303438;
+ color: var(--desktop-text);
  box-shadow: none;
 }
 button:hover:not(:disabled),
-.pickup-picker button:hover:not(:disabled) { background: #e5e9ec; border-color: #a5adb5; }
+.pickup-picker button:hover:not(:disabled) { background: var(--desktop-hover); border-color: var(--desktop-focus-border); }
 button:active:not(:disabled),
-.pickup-picker button:active:not(:disabled) { background: #cfd3d7; }
+.pickup-picker button:active:not(:disabled) { background: var(--desktop-pressed); }
 button:disabled { opacity: .55; }
 button:focus-visible,
 .pickup-picker button:focus-visible,
 .pickup-picker input:focus-visible { outline-color: #676e75; }
-.combat-dialog input:focus-visible { outline: none; border-color: #a5adb5; }
+.combat-dialog input:focus-visible { outline: none; border-color: var(--desktop-focus-border); }
 .combat-launcher {
  background: linear-gradient(#fafbfc, #e8ecef);
  border-color: #b7bfc6;
  border-radius: 10px;
  color: #58636d;
- box-shadow: inset 0 1px #fff, 0 2px 6px #0002;
+ box-shadow: inset 0 1px var(--desktop-card), 0 2px 6px #0002;
  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
 }
 .combat-dialog,
 .pickup-picker {
  background: var(--assist-surface);
- border-color: #c7ccd1;
+ border-color: var(--desktop-border);
  border-radius: 4px;
- color: #303438;
+ color: var(--desktop-text);
  border-radius: 8px;
  box-shadow: 0 10px 28px #0003, 0 1px 4px #0001;
 }
-.combat-dialog > header { padding-bottom: 10px; border-bottom: 1px solid #dce0e3; }
+.combat-dialog > header { padding-bottom: 10px; border-bottom: 1px solid var(--desktop-divider); }
 .combat-tabs { flex: 0 1 auto; margin-right: auto; padding: 3px; border: 1px solid #d9dde1; border-radius: 6px; gap: 3px; background: #e9edf0; }
 .combat-tabs button { border: 1px solid transparent; border-radius: 4px; padding: 7px 16px; color: #626c75; background: transparent; }
-.combat-tabs [aria-selected='true'] { background: #fff; color: #303b44; border-color: #d4d9de; box-shadow: 0 1px 3px #0001; }
+.combat-tabs [aria-selected='true'] { background: var(--desktop-card); color: #303b44; border-color: #d4d9de; box-shadow: 0 1px 3px #0001; }
 .combat-runtime,
-.combat-dialog .desktop-pickup-panel > .pickup-enabled { background: #eceff1; border-color: #dce0e3; border-radius: 6px; }
+.combat-dialog .desktop-pickup-panel > .pickup-enabled { background: #eceff1; border-color: var(--desktop-divider); border-radius: 6px; }
 .combat-dialog :is(.auto-range-settings, .auto-teleport-settings, .auto-species-card, .auto-skill-card),
-.pickup-excluded { background: #fff; border-color: #dce0e3; border-radius: 6px; color: #303438; }
-.combat-dialog :is(.auto-species-card, .auto-skill-card):hover { background: #f0f2f3; border-color: #9ca3aa; }
+.pickup-excluded { background: var(--desktop-card); border-color: var(--desktop-divider); border-radius: 6px; color: var(--desktop-text); }
+.combat-dialog :is(.auto-species-card, .auto-skill-card):hover { background: var(--desktop-button); border-color: #9ca3aa; }
 .combat-dialog :is(.auto-species-card, .auto-skill-card)[aria-checked='true'],
-.combat-dialog [data-normal-attack][aria-pressed='true'] { background: #edf4ef; border-color: #a8c0b0; color: #303438; }
-.combat-dialog .auto-species-check { border-color: #c7ccd1; background: #fff; color: #303438; }
-.combat-dialog [aria-checked='true'] .auto-species-check { background: #368354; border-color: #368354; color: #fff; }
-.combat-dialog .auto-range-stepper button { background: #f0f2f3; border-color: #c7ccd1; border-radius: 4px; }
-.combat-dialog .auto-range-stepper button:hover:not(:disabled) { background: #e5e9ec; }
+.combat-dialog [data-normal-attack][aria-pressed='true'] { background: var(--desktop-selected); border-color: var(--desktop-selected-border); color: var(--desktop-text); }
+.combat-dialog .auto-species-check { border-color: var(--desktop-border); background: var(--desktop-card); color: var(--desktop-text); }
+.combat-dialog [aria-checked='true'] .auto-species-check { background: var(--desktop-success); border-color: var(--desktop-success); color: var(--desktop-card); }
+.combat-dialog .auto-range-stepper button { background: var(--desktop-button); border-color: var(--desktop-border); border-radius: 4px; }
+.combat-dialog .auto-range-stepper button:hover:not(:disabled) { background: var(--desktop-hover); }
 .combat-dialog :is(input[type='number'], input[type='search']),
-.pickup-picker .pickup-search input { background: #fff; border-color: #c7ccd1; border-radius: 4px; color: #303438; }
+.pickup-picker .pickup-search input { background: var(--desktop-card); border-color: var(--desktop-border); border-radius: 4px; color: var(--desktop-text); }
 .combat-dialog :is(.auto-help, .auto-skill-card small, [data-skill-count], [data-auto-save-status], .combat-subtitle),
-.pickup-note, .pickup-search-status, .pickup-save-status { color: #62686e; }
+.pickup-note, .pickup-search-status, .pickup-save-status { color: var(--desktop-muted); }
 .combat-dialog :is([data-range-summary], [data-auto-feedback]) { color: #376a47; }
 .combat-dialog [data-auto-save-status][data-error='true'],
 .pickup-save-status[data-error='true'] { color: #a61d24; }
 .pickup-section input[aria-invalid='true'] { border-color: #a61d24; outline-color: #a61d24; }
 .pickup-item, .pickup-picker > footer { border-color: #d1d5d8; }
-.pickup-section .pickup-item input[type='checkbox'] { border-color: #c7ccd1; border-radius: 4px; background: #fff; }
-.pickup-section .pickup-item input[type='checkbox']:checked { background: #368354; border-color: #368354; }
+.pickup-section .pickup-item input[type='checkbox'] { border-color: var(--desktop-border); border-radius: 4px; background: var(--desktop-card); }
+.pickup-section .pickup-item input[type='checkbox']:checked { background: var(--desktop-success); border-color: var(--desktop-success); }
 .pickup-section .pickup-item input[type='checkbox']:focus-visible { outline-color: #676e75; }
-.pickup-picker input[type='checkbox'] { accent-color: #368354; }
+.pickup-picker input[type='checkbox'] { accent-color: var(--desktop-success); }
 .combat-dialog .game-switch[role='switch'] { background: #d8dce0; border-color: #9da5ad; }
-.combat-dialog .game-switch[role='switch']::before { background: #fff; }
-.combat-dialog .game-switch[role='switch']:is(:checked, [aria-checked='true']) { background: #368354; border-color: #368354; }
+.combat-dialog .game-switch[role='switch']::before { background: var(--desktop-card); }
+.combat-dialog .game-switch[role='switch']:is(:checked, [aria-checked='true']) { background: var(--desktop-success); border-color: var(--desktop-success); }
 .combat-dialog .game-switch[role='switch']:focus-visible { outline-color: #676e75; }
 
-.combat-dialog .ui-confirm { background: #fff; color: #303438; border-color: #c7ccd1; border-radius: 4px; }
-.combat-dialog .ui-confirm .ui-confirm-actions button { background: #f0f2f3; color: #303438; border-color: #c7ccd1; border-radius: 4px; }
-.combat-dialog .ui-confirm .ui-confirm-actions button:hover:not(:disabled) { background: #e5e9ec; border-color: #a5adb5; }
+.combat-dialog .ui-confirm { background: var(--desktop-card); color: var(--desktop-text); border-color: var(--desktop-border); border-radius: 4px; }
+.combat-dialog .ui-confirm .ui-confirm-actions button { background: var(--desktop-button); color: var(--desktop-text); border-color: var(--desktop-border); border-radius: 4px; }
+.combat-dialog .ui-confirm .ui-confirm-actions button:hover:not(:disabled) { background: var(--desktop-hover); border-color: var(--desktop-focus-border); }
 .combat-dialog .ui-confirm .ui-confirm-actions button:focus-visible { outline-color: #676e75; }
 
 .combat-launcher:hover:not(:disabled) { background: #fafbfc; border-color: #929fa9; color: #374b5a; }

@@ -5,21 +5,21 @@
  height: 28px;
  min-height: 28px;
  padding: 0 12px;
- border: 1px solid #a4a8ad;
- border-radius: 0;
- background: #eceef0;
- color: #303438;
+ border: 1px solid var(--desktop-border);
+ border-radius: var(--desktop-radius);
+ background: var(--desktop-button);
+ color: var(--desktop-text);
  box-shadow: none;
  font: 12px/1.4 Arial, sans-serif;
  white-space: nowrap;
  cursor: pointer;
 }
 .game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:hover:not(:disabled) {
- background: #dfe2e5;
- border-color: #858b91;
+ background: var(--desktop-hover);
+ border-color: var(--desktop-focus-border);
 }
 .game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:is(:active, .is-active):not(:disabled) {
- background: #cfd3d7;
+ background: var(--desktop-pressed);
  border-color: #737a81;
 }
 .game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:disabled {

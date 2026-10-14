@@ -2,7 +2,6 @@ import { resetTabScroll } from './TabViewState.js';
 import { clearTabDrafts } from './TabViewState.js';
 import { showToast } from 'UI/Components/Toast.js';
 import { getJobDisplayName } from 'DB/Jobs/JobDisplayNameTable.js';
-import DB from 'DB/DBManager.js';
 import JobPropertyTable from 'DB/Jobs/JobPropertyTable.js';
 import { renderGameSelect, mountGameSelect } from './GameSelect.js';
 import { loadCurrentCharacter, maintainCurrentCharacter } from './AdventureControlService.js';
@@ -165,17 +164,8 @@ function mount(container, context = {}) {
 		const selectedJob = jobs.find(job => job.id === selectedJobId);
 		const displayedJobId = context.mobile ? snapshot.job_id : selectedJobId;
 		const displayedJobName = getJobDisplayName(displayedJobId, `职业 ${displayedJobId}`);
-		const mapName = DB.getMapInfo(`${snapshot.map}.rsw`)?.displayName || DB.getMapName(snapshot.map, snapshot.map);
 		const detail = container.querySelector('.character-detail');
 		detail.innerHTML = `
-			${
-				context.mobile
-					? ''
-					: `<header class="character-summary">
-				<div><h3>${escapeHtml(snapshot.name)}</h3><p>${escapeHtml(getJobDisplayName(snapshot.job_id, `职业 ${snapshot.job_id}`))} · ${escapeHtml(mapName)} (${snapshot.x}, ${snapshot.y})</p></div>
-				<div><strong>HP ${snapshot.hp} / ${snapshot.max_hp}</strong><span>SP ${snapshot.sp} / ${snapshot.max_sp}${snapshot.max_ap ? ` · AP ${snapshot.ap} / ${snapshot.max_ap}` : ''}</span></div>
-			</header>`
-			}
 			<div class="character-detail-scroll">
 				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${context.mobile && selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
 				</section>

@@ -1,0 +1,80 @@
+/* Desktop skin only. Shared catalog geometry remains in GameTools.css. */
+.game-tools-window[data-feedback-theme='desktop'] {
+ --joined-field-border: var(--desktop-border);
+ --joined-field-label-background: #edf0f2;
+ --joined-field-radius: var(--desktop-radius);
+ background: var(--desktop-surface);
+ color: var(--desktop-text);
+ border-color: var(--desktop-border);
+ border-radius: var(--desktop-window-radius);
+ box-shadow: 0 10px 28px #0003, 0 1px 4px #0001;
+ color-scheme: light;
+}
+.game-tools-window[data-feedback-theme='desktop'] .titlebar {
+ height: 30px; flex-basis: 30px;
+ background: var(--desktop-surface);
+ border: 0;
+ border-radius: 8px 8px 0 0;
+}
+.game-tools-window[data-feedback-theme='desktop'] .title { line-height: 30px; padding-left: 12px; }
+.game-tools-window[data-feedback-theme='desktop'] .close {
+ width: 20px; height: 20px; top: 5px; right: 8px;
+ background: transparent; border-color: transparent; border-radius: 4px;
+}
+.game-tools-window[data-feedback-theme='desktop'] .close:hover { background: var(--desktop-hover); border-color: var(--desktop-border); }
+.game-tools-window[data-feedback-theme='desktop'] .close::before,
+.game-tools-window[data-feedback-theme='desktop'] .close::after { left: 8px; top: 4px; background: #626c75; }
+.game-tools-window[data-feedback-theme='desktop'] .tab-list {
+ flex-basis: 42px; padding: 5px 10px 8px; gap: 3px; align-items: center;
+ background: var(--desktop-surface); border-color: var(--desktop-divider);
+}
+.game-tools-window[data-feedback-theme='desktop'] .tab-button {
+ height: 28px; margin-bottom: 0;
+ border: 1px solid transparent; border-radius: var(--desktop-radius);
+ background: #e9edf0; color: var(--desktop-muted);
+}
+.game-tools-window[data-feedback-theme='desktop'] .tab-button:hover { background: var(--desktop-hover); }
+.game-tools-window[data-feedback-theme='desktop'] .tab-button.active {
+ background: var(--desktop-card); color: var(--desktop-text);
+ border-color: var(--desktop-border); box-shadow: 0 1px 3px #0001;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.tab-content, .management-tab, .character-detail, .settings-scroll) { background: var(--desktop-surface); }
+.game-tools-window[data-feedback-theme='desktop'] .tab-content { border-radius: 0 0 8px 8px; }
+.game-tools-window[data-feedback-theme='desktop'] :is(.monster-toolbar, .catalog-toolbar, .monster-pagination, .catalog-pagination, .character-actions, .settings-footer, .summon-panel, .catalog-action-panel) {
+ background: var(--desktop-surface); border-color: var(--desktop-divider);
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-actions, .settings-footer, .summon-panel, .catalog-action-panel) { border-radius: 0 0 6px 6px; }
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-job-browser, .character-summary, .catalog-detail, .monster-detail) { border-color: var(--desktop-divider); }
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-job-row, .catalog-row, .monster-row, .game-select-option):hover { background: #f0f3f5; }
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-job-row, .catalog-row, .monster-row, .game-select-option).selected {
+ background: #e8eef1; border-color: #b9c6ce;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-attributes-tab .management-form > label, .settings-form .setting-number) { border-radius: var(--desktop-radius); }
+.game-tools-window[data-feedback-theme='desktop'] :is(.catalog-search, .monster-search, .game-select-trigger, .game-select-search) {
+ border-color: var(--desktop-border); border-radius: var(--desktop-radius); color: var(--desktop-text); background: var(--desktop-card);
+}
+.game-tools-window[data-feedback-theme='desktop'] .game-select-menu { border-color: var(--desktop-border); border-radius: 6px; box-shadow: 0 4px 12px #0002; }
+.game-tools-window[data-feedback-theme='desktop'] :is(.monster-drops, .monster-locations, .item-description, .item-source-scroll) {
+ border-color: var(--desktop-divider); border-radius: var(--desktop-panel-radius); background: var(--desktop-card);
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.item-source-table th, .item-source-table td) { border-color: var(--desktop-divider); }
+.game-tools-window[data-feedback-theme='desktop'] :is(.item-source-table thead, .monster-drops > h4, .monster-locations > h4) { background: #eff2f4; }
+.game-tools-window[data-feedback-theme='desktop'] .catalog-metadata { border-color: var(--desktop-divider); background: var(--desktop-divider); border-radius: 6px; overflow: hidden; }
+.game-tools-window[data-feedback-theme='desktop'] .catalog-metadata div { background: var(--desktop-card); }
+.game-tools-window[data-feedback-theme='desktop'] .ui-confirm { background: var(--desktop-surface); border-color: var(--desktop-border); border-radius: 8px; box-shadow: 0 10px 28px #0003; color: var(--desktop-text); }
+
+/* Match secondary frames and empty states to the main light surfaces. */
+.game-tools-window[data-feedback-theme='desktop'] .map-npc-list {
+ border-color: var(--desktop-divider); border-radius: var(--desktop-panel-radius);
+ background: var(--desktop-card);
+}
+.game-tools-window[data-feedback-theme='desktop'] .map-npc-list h4 {
+ background: #eff2f4; border-color: var(--desktop-divider);
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.map-npc-row, .monster-location):hover { background: #f0f3f5; }
+.game-tools-window[data-feedback-theme='desktop'] .monster-location.selected { background: #e8eef1; border-color: #b9c6ce; }
+.game-tools-window[data-feedback-theme='desktop'] .item-sources-empty {
+ background: var(--desktop-card); border-color: var(--desktop-divider);
+ border-radius: var(--desktop-panel-radius); color: var(--desktop-muted);
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.tab-button, .close):focus-visible { outline: 2px solid #676e75; outline-offset: -2px; }

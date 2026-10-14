@@ -1,0 +1,31 @@
+/* Shared palette, loaded only by desktop windows. */
+:host {
+ --desktop-surface: #f5f6f7;
+ --desktop-card: #fff;
+ --desktop-text: #303438;
+ --desktop-muted: #62686e;
+ --desktop-divider: #dce0e3;
+ --desktop-border: #c7ccd1;
+ --desktop-button: #f0f2f3;
+ --desktop-hover: #e5e9ec;
+ --desktop-pressed: #cfd3d7;
+ --desktop-focus-border: #a5adb5;
+ --desktop-success: #368354;
+ --desktop-selected: #edf4ef;
+ --desktop-selected-border: #a8c0b0;
+ --desktop-radius: 4px;
+ --desktop-panel-radius: 6px;
+ --desktop-window-radius: 8px;
+}
+
+/* One scrollbar skin for desktop lists, form panes, dropdowns and dialogs. */
+* { scrollbar-width: thin; scrollbar-color: #b8c0c7 #f0f2f4; }
+@supports selector(::-webkit-scrollbar) {
+ * { scrollbar-width: auto; scrollbar-color: auto; }
+ ::-webkit-scrollbar { width: 10px; height: 10px; }
+ ::-webkit-scrollbar-track { background: #f0f2f4; border-radius: 8px; }
+ ::-webkit-scrollbar-thumb { background: #b8c0c7; border: 3px solid #f0f2f4; border-radius: 8px; }
+ ::-webkit-scrollbar-thumb:hover { background: #929fa9; }
+ ::-webkit-scrollbar-thumb:active { background: #788994; }
+ ::-webkit-scrollbar-corner { background: transparent; }
+}

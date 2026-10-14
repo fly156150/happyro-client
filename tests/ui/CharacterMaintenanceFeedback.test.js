@@ -1,6 +1,5 @@
 import { afterEach, expect, it, vi } from 'vitest';
 vi.mock('DB/Jobs/JobDisplayNameTable.js', () => ({ default: { 0: '初心者', 1: '剑士' }, getJobDisplayName: id => id === 1 ? '剑士' : '初心者' }));
-vi.mock('DB/DBManager.js', () => ({ default: { getMapInfo: () => ({ displayName: '普隆德拉' }) } }));
 vi.mock('../../src/UI/Components/GameTools/AdventureControlService.js', () => ({ loadCurrentCharacter: vi.fn(), maintainCurrentCharacter: vi.fn() }));
 vi.mock('../../src/UI/Components/Confirmation.js', () => ({ requestConfirmation: vi.fn().mockResolvedValue(true) }));
 import { loadCurrentCharacter, maintainCurrentCharacter } from '../../src/UI/Components/GameTools/AdventureControlService.js';
@@ -32,7 +31,9 @@ it.each([false, true])('keeps character actions working with mobile layout %s', 
 		expect(root.querySelector('.character-current-job')).toBeNull();
 		expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');
 		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['剑士', '等级与点数', '基础属性', '四转属性']);
-	} else expect(root.querySelector('.character-summary').textContent).toContain('剑士');
+	}
+	expect(root.querySelector('.character-summary')).toBeNull();
+	expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');
 	expect(root.querySelector('[data-action="apply-job"]').disabled).toBe(true);
 	maintainCurrentCharacter.mockRejectedValue(new Error('服务暂时不可用'));
 	root.querySelector('[data-action="vitals"]').click();
