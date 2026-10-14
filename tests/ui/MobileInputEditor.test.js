@@ -47,7 +47,7 @@ it('does not submit when confirming Chinese composition and retains multiline En
 it('follows the visible viewport and removes viewport listeners on close', () => {
  const visual=new EventTarget(); Object.assign(visual,{height:390,offsetTop:0}); vi.stubGlobal('visualViewport',visual);
  const {editor}=setup(); visual.height=150; visual.offsetTop=20; visual.dispatchEvent(new Event('resize'));
- expect(editor.querySelector('section').style.height).toBe('150px'); expect(editor.querySelector('section').style.top).toBe('20px');
+ expect(editor.querySelector('section').style.height).toBe('150px'); expect(editor.querySelector('section').style.top).toBe(''); expect(document.querySelector('[data-mobile-input-editor]').style.getPropertyValue('--mobile-visual-top')).toBe('20px');
  editor.querySelector('[data-cancel]').click(); visual.height=390; visual.dispatchEvent(new Event('resize')); expect(editor.querySelector('section').style.height).toBe('150px');
 });
 it('leaves readonly fields alone', () => { expect(setup('<input readonly value="fixed">').overlay).toBeNull(); });
@@ -145,4 +145,15 @@ it('keeps a phone portrait draft in a bounded dialog through keyboard resizing a
  expect(overlay.dataset.editorLayout).toBe('dialog');
  expect(editor.querySelector('section').style.height).toBe('');
  expect(field.value).toBe('竖屏草稿');
+});
+
+it('keeps the draft and clears portrait placement when returning to a landscape strip', () => {
+ const visual=new EventTarget();Object.assign(visual,{height:170,offsetTop:24});vi.stubGlobal('visualViewport',visual);
+ const {overlay,editor,field}=setup();field.value='旋转草稿';
+ for(const [width,height,visible,offset,mode] of [[390,844,350,40,'dialog'],[844,390,170,0,'strip'],[390,844,350,0,'dialog'],[844,390,170,24,'strip']]) {
+  vi.stubGlobal('innerWidth',width);vi.stubGlobal('innerHeight',height);Object.assign(visual,{height:visible,offsetTop:offset});window.dispatchEvent(new Event('resize'));visual.dispatchEvent(new Event('scroll'));
+  expect(overlay.dataset.editorLayout).toBe(mode);
+  expect(editor.querySelector('section').style.top).toBe('');
+  expect(field.value).toBe('旋转草稿');
+ }
 });

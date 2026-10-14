@@ -17,6 +17,10 @@ dialog {
 	overscroll-behavior: none;
 }
 :host([data-editor-layout='strip']) dialog { background: transparent; }
+/* offsetTop and the safe area share the layout viewport origin: do not add them. */
+:host([data-editor-layout='strip']) section {
+ top: max(0px, var(--mobile-visual-top, 0px), env(safe-area-inset-top, 0px));
+}
 section {
 	position: absolute;
 	left: 0;
