@@ -286,10 +286,10 @@ it('hides the close button while the server requires a response and restores it 
  expect(root.querySelector('[data-close]').hidden).toBe(false);
 });
 
-it('preserves server dialogs across browser suspension while closing local menus', () => {
+it('preserves server dialogs and local menus across browser suspension', () => {
  const close=vi.fn();view.showInteraction({kind:'npc',token:{},mode:'menu',options:[],canClose:true,lines:['选择'],close});
  view.suspend();expect(close).not.toHaveBeenCalled();expect(root.querySelector('.backdrop').hidden).toBe(false);
- view.showInteraction(null);click('[data-panel="menu"]');view.suspend();expect(root.querySelector('.backdrop').hidden).toBe(true);
+ view.showInteraction(null);click('[data-panel="menu"]');view.suspend();expect(root.querySelector('.backdrop').hidden).toBe(false);
 });
 
 
@@ -335,4 +335,23 @@ it('closes a menu bank interaction before returning to the menu', () => {
  expect(root.querySelector('[data-back]').hidden).toBe(false);
  click('[data-back]');expect(close).toHaveBeenCalledOnce();
  expect(root.querySelector('.panel').dataset.view).toBe('menu');
+});
+
+it('preserves local drafts and scroll position without releasing the modal on suspension', () => {
+ click('[data-panel="chat"]');
+ const input=root.querySelector('[aria-label="聊天内容"]');input.value='未发送的草稿';
+ const body=root.querySelector('.panel-body');body.scrollTop=75;
+ actions.setModal.mockClear();view.suspend();view.suspend();view.update({...state,hp:35});
+ expect(root.querySelector('[aria-label="聊天内容"]')).toBe(input);
+ expect(input.value).toBe('未发送的草稿');expect(body.scrollTop).toBe(75);
+ expect(root.querySelector('.backdrop').hidden).toBe(false);expect(actions.setModal).not.toHaveBeenCalled();
+ click('[data-close]');expect(root.querySelector('.backdrop').hidden).toBe(true);
+ expect(actions.setModal).toHaveBeenCalledWith(false);
+});
+it.each(['held','released'])('discards a %s backdrop gesture across suspension', phase => {
+ click('[data-panel="menu"]');const backdrop=root.querySelector('.backdrop');
+ const pointer=type=>{const event=new Event(type,{bubbles:true});Object.defineProperty(event,'pointerId',{value:7});backdrop.dispatchEvent(event);};
+ pointer('pointerdown');if(phase==='released')pointer('pointerup');view.suspend();
+ if(phase==='held')pointer('pointerup');backdrop.click();expect(backdrop.hidden).toBe(false);
+ pointer('pointerdown');pointer('pointerup');backdrop.click();expect(backdrop.hidden).toBe(true);
 });

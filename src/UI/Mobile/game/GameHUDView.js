@@ -705,8 +705,11 @@ ${menuNavigationCSS}</style>${html}`;
 	});
 	return {
 		suspend() {
-			// Browser focus and orientation changes must not send NPC cancellation packets.
-			if (!serverState) close();
+			// Backgrounding cancels gestures, not the menu or its local drafts.
+			// Disconnect/removal still destroys the view through the normal lifecycle.
+			backdropPointer = null;
+			dismissBackdrop = false;
+			interactionPress = null;
 		},
 		update(next) {
 			snapshot = next;
