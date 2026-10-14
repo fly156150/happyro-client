@@ -1,3 +1,4 @@
+import mobileInputCSS from '../Mobile/game/MobileModalInput.css?raw';
 import backdropCSS from '../Mobile/game/MobileModalBackdrop.css?raw';
 import css from './Confirmation.css?raw';
 import desktopCSS from './ConfirmationDesktop.css?raw';
@@ -12,7 +13,7 @@ export function confirmAction(container, message, action, { content, bounds, can
 	dialog.setAttribute('aria-label', '操作确认');
 	const style = document.createElement('style');
 	const desktopOwner = container.closest('[data-feedback-theme="desktop"]');
-	style.textContent = desktopOwner ? desktopCSS : css + backdropCSS;
+	style.textContent = desktopOwner ? desktopCSS : css + backdropCSS + mobileInputCSS;
 	const text = document.createElement('p');
 	text.textContent = message;
 	text.tabIndex = -1;

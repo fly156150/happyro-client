@@ -1,0 +1,35 @@
+/* Shared mobile modal fields, isolated from the underlying menu form rules. */
+:host([data-menu-density]) {
+ --modal-input-height: max(36px, var(--panel-control, 36px));
+ --modal-input-font: 16px/1.4 system-ui, sans-serif;
+}
+:host([data-menu-density]) .ui-confirm[open] .ui-confirm-body .quantity-stepper .quantity-stepper-control:is(input, button),
+:host([data-menu-density]) .mobile-menu-editor :is(input, textarea) {
+ box-sizing: border-box;
+ height: var(--modal-input-height);
+ min-height: var(--modal-input-height);
+ max-height: var(--modal-input-height);
+ margin: 0;
+ padding: 6px 10px;
+ border: 1px solid #65717b;
+ border-radius: 6px;
+ background: #222b35;
+ color: #f5f2e9;
+ font: var(--modal-input-font);
+}
+:host([data-menu-density]) .ui-confirm[open] .ui-confirm-body .quantity-stepper .quantity-stepper-control:is(button) {
+ width: var(--modal-input-height);
+ min-width: var(--modal-input-height);
+ padding: 0 2px;
+ background: #303b48;
+ font: 13px/1.4 system-ui, sans-serif;
+}
+:host([data-menu-density]) .mobile-menu-editor textarea {
+ height: 100%;
+ max-height: none;
+}
+:host([data-menu-density]) .ui-confirm[open] .ui-confirm-body .quantity-stepper input:focus,
+:host([data-menu-density]) .mobile-menu-editor :is(input, textarea):focus {
+ border-color: #aa8750;
+ outline: none;
+}
