@@ -2377,3 +2377,8 @@
  min-height:28px;
  padding:0;
 }
+
+:host([data-orientation='landscape']) .mobile-adventure .item-portrait.has-card-art {
+	background: transparent;
+	border: 0;
+}

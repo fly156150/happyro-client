@@ -53,3 +53,8 @@
 }
 
 .item-overview { display: contents; }
+
+.game-tools-window:not(.mobile-adventure) .item-portrait.has-card-art {
+	background: transparent;
+	border: 0;
+}

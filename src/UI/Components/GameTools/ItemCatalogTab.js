@@ -1,3 +1,5 @@
+import Client from 'Core/Client.js';
+import DB from 'DB/DBManager.js';
 import { showToast } from 'UI/Components/Toast.js';
 import {
 	grantAdventureItem,
@@ -142,6 +144,22 @@ function mount(container, context = {}) {
 	let active = true;
 	let browserApi;
 	const clearFeedback = () => browserApi?.refreshDetail();
+	function loadPortrait(element, item) {
+		const ordinaryImage = () => {
+			if (active && element.isConnected) loadImage(element, item.illustration || item.icon, assetUrls);
+		};
+		const illustration = item.Type === 'Card' && DB.getItemInfo(item.Id).illustResourcesName;
+		if (!illustration) {
+			ordinaryImage();
+			return;
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}cardbmp/${illustration}.bmp`, url => {
+			if (active && element.isConnected) {
+				element.parentElement.classList.add('has-card-art');
+				element.src = url;
+			}
+		}, ordinaryImage);
+	}
 	function updateSubtypeOptions(type) {
 		const root = container.querySelector('.item-subtype-filter[data-game-select]');
 		const current = root.querySelector('.game-select-value').value;
@@ -305,7 +323,7 @@ function mount(container, context = {}) {
 			<div class="catalog-metadata">${metadata.map(([label, value]) => `<div><span>${label}</span><strong>${escapeCatalogHtml(value)}</strong></div>`).join('')}</div>
 			</div><div class="item-description">${renderDescription(item.description)}</div></div>`;
 			renderActions(detail, item);
-			loadImage(detail.querySelector('.item-portrait img'), item.illustration || item.icon, assetUrls);
+			loadPortrait(detail.querySelector('.item-portrait img'), item);
 		},
 		cleanup() {
 			active = false;

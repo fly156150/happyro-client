@@ -1,3 +1,7 @@
+vi.mock('Core/Client.js', () => ({ default: { loadFile: vi.fn() } }));
+vi.mock('DB/DBManager.js', () => ({ default: { INTERFACE_PATH: 'data/interface/', getItemInfo: vi.fn() } }));
+import Client from 'Core/Client.js';
+import DB from 'DB/DBManager.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 vi.mock('UI/Components/Toast.js', () => ({ showToast: vi.fn() }));
 vi.mock('UI/Components/Confirmation.js', () => ({ requestConfirmation: vi.fn() }));
@@ -5,7 +9,7 @@ vi.mock('../../src/UI/Components/GameTools/AdventureControlService.js', () => ({
  searchAdventureItems: vi.fn(), grantAdventureItem: vi.fn(), grantAdventureZeny: vi.fn(), loadAdventureAsset: vi.fn()
 }));
 import tab from '../../src/UI/Components/GameTools/ItemCatalogTab.js';
-import { searchAdventureItems, grantAdventureItem, grantAdventureZeny } from '../../src/UI/Components/GameTools/AdventureControlService.js';
+import { searchAdventureItems, grantAdventureItem, grantAdventureZeny, loadAdventureAsset } from '../../src/UI/Components/GameTools/AdventureControlService.js';
 import { requestConfirmation } from 'UI/Components/Confirmation.js';
 import { showToast } from 'UI/Components/Toast.js';
 let root, cleanup;
@@ -84,4 +88,35 @@ it('does not apply a stale type response to the current subtype menu',async()=>{
  type.value='Armor';type.dispatchEvent(new Event('change'));await tick();
  resolveWeapon({data:[],total:0,subtypes:['Dagger']});await tick();
  expect([...root.querySelectorAll('.item-subtype-filter [data-value]')].map(e=>e.dataset.value)).toEqual(['','Armor']);
+});
+
+it.each([true,false])('shows card artwork only in the detail while preserving list icons on mobile=%s',async mobile=>{
+ DB.getItemInfo.mockReturnValue({illustResourcesName:'poring'});
+ Client.loadFile.mockImplementation((path,resolve)=>resolve('data:image/png;base64,card'));
+ loadAdventureAsset.mockResolvedValue('data:image/png;base64,icon');
+ searchAdventureItems.mockResolvedValue({data:[{Id:4001,Type:'Card',AegisName:'Poring_Card',icon:'/icon',illustration:'/illustration'}],total:1,subtypes:[]});
+ await mount(mobile);
+ expect(Client.loadFile.mock.calls[0][0]).toBe('data/interface/cardbmp/poring.bmp');
+ expect(root.querySelector('.item-portrait img').src).toBe('data:image/png;base64,card');
+ expect(root.querySelector('.item-thumb img').src).toBe('data:image/png;base64,icon');
+ expect(loadAdventureAsset).not.toHaveBeenCalledWith('/illustration');
+});
+it.each(['ordinary','no-art','missing-file'])('preserves ordinary detail images for %s',async kind=>{
+ DB.getItemInfo.mockReturnValue(kind==='no-art'?{}:{illustResourcesName:'missing'});
+ Client.loadFile.mockImplementation((path,resolve,reject)=>reject());
+ loadAdventureAsset.mockImplementation(async path=>`data:image/png;base64,${path.slice(1)}`);
+ searchAdventureItems.mockResolvedValue({data:[{Id:4001,Type:kind==='ordinary'?'Healing':'Card',AegisName:'Item',icon:'/icon',illustration:'/illustration'}],total:1,subtypes:[]});
+ await mount();
+ expect(root.querySelector('.item-portrait img').src).toBe('data:image/png;base64,illustration');
+ if(kind==='ordinary') expect(DB.getItemInfo).not.toHaveBeenCalled();
+});
+it('ignores card artwork arriving after selection changes',async()=>{
+ let resolveCard;
+ DB.getItemInfo.mockReturnValue({illustResourcesName:'poring'});
+ Client.loadFile.mockImplementation((path,resolve)=>{resolveCard=resolve;});
+ loadAdventureAsset.mockResolvedValue('data:image/png;base64,ordinary');
+ searchAdventureItems.mockResolvedValue({data:[{Id:4001,Type:'Card',AegisName:'Poring',icon:'/icon'},{Id:501,Type:'Healing',AegisName:'Potion',illustration:'/potion'}],total:2,subtypes:[]});
+ await mount();root.querySelector('[data-catalog-key="501"]').click();await tick();
+ resolveCard('data:image/png;base64,late');await tick();
+ expect(root.querySelector('.item-portrait img').src).toBe('data:image/png;base64,ordinary');
 });
