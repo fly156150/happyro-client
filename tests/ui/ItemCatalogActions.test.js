@@ -1,3 +1,5 @@
+vi.mock('../../src/UI/Components/GameTools/GameToolsNumberPrompt.js', () => ({ requestGameToolsNumber: vi.fn() }));
+import { requestGameToolsNumber } from '../../src/UI/Components/GameTools/GameToolsNumberPrompt.js';
 vi.mock('../../src/UI/Components/GameTools/MonsterCatalogAssets.js', () => ({ loadMonsterCatalog: vi.fn() }));
 import { loadMonsterCatalog } from '../../src/UI/Components/GameTools/MonsterCatalogAssets.js';
 vi.mock('Core/Client.js', () => ({ default: { loadFile: vi.fn() } }));
@@ -17,7 +19,7 @@ import { showToast } from 'UI/Components/Toast.js';
 let root, cleanup;
 const tick = () => vi.advanceTimersByTimeAsync(0);
 const amount = value => { const input=root.querySelector('.item-grant-amount');input.value=value;input.dispatchEvent(new Event('input')); };
-const mount = async (mobile=true, allowed=true) => { cleanup=tab.mount(root,{mobile,capabilities:{itemGrantAllowed:allowed}});await tick(); };
+const mount = async (mobile=false, allowed=true) => { cleanup=tab.mount(root,{mobile,capabilities:{itemGrantAllowed:allowed}});await tick(); };
 beforeEach(() => {
  vi.useFakeTimers(); vi.resetAllMocks();
  requestConfirmation.mockResolvedValue(false);
@@ -27,7 +29,7 @@ beforeEach(() => {
  root=document.createElement('div');document.body.append(root);
 });
 afterEach(() => { cleanup?.();root.remove();vi.useRealTimers(); });
-it.each([true,false])('shares a persistent quantity and confirms Zeny on mobile=%s', async mobile => {
+it.each([false])('shares a persistent quantity and confirms Zeny on mobile=%s', async mobile => {
  await mount(mobile);amount('1234567890');
  root.querySelectorAll('.catalog-row')[1].click();root.dispatchEvent(new Event('game-tools-reset-feedback'));
  expect(root.querySelector('.item-grant-amount').value).toBe('1234567890');
@@ -170,4 +172,32 @@ it('sorts rates before spawn availability and level, keeps distinct IDs and disp
  const rows=root.querySelectorAll('.item-source-table tbody tr');
  expect([...rows[1].children].map(e=>e.textContent)).toEqual(['波利','1002','1','1% × 2','普隆德拉南门']);
  expect(rows[0].lastElementChild.textContent).toBe('未收录');
+});
+
+it('prompts mobile grants with steps, locks actions, and retains the selected item', async () => {
+ await mount(true);
+ expect(root.querySelector('.item-grant-amount')).toBeNull();
+ let resolve;
+ requestGameToolsNumber.mockImplementationOnce(() => new Promise(done => { resolve = done; }));
+ root.querySelector('.item-grant').click();
+ expect(requestGameToolsNumber).toHaveBeenCalledWith(root, expect.objectContaining({min:1,max:30000,steps:true}));
+ expect(root.querySelector('.zeny-grant-open').disabled).toBe(true);
+ root.querySelectorAll('.catalog-row')[1].click();
+ resolve(11); await tick();
+ expect(grantAdventureItem).toHaveBeenCalledWith(501,11);
+ expect(requestConfirmation).not.toHaveBeenCalled();
+ requestGameToolsNumber.mockResolvedValueOnce(null);
+ root.querySelector('.zeny-grant-open').click();await tick();
+ expect(requestGameToolsNumber).toHaveBeenLastCalledWith(root, expect.objectContaining({max:2147483647,value:11}));
+ expect(grantAdventureZeny).not.toHaveBeenCalled();
+ expect(root.querySelector('.zeny-grant-open').disabled).toBe(false);
+ requestGameToolsNumber.mockResolvedValueOnce(2147483647);
+ root.querySelector('.zeny-grant-open').click();await tick();
+ expect(grantAdventureZeny).toHaveBeenCalledWith(2147483647);
+});
+it('does not grant when a mobile prompt resolves after unmount', async () => {
+ await mount(true);let resolve;
+ requestGameToolsNumber.mockImplementationOnce(() => new Promise(done => {resolve=done;}));
+ root.querySelector('.item-grant').click();cleanup();resolve(1);await tick();
+ expect(grantAdventureItem).not.toHaveBeenCalled();
 });

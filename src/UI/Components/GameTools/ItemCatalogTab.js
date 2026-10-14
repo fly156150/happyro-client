@@ -1,3 +1,4 @@
+import { requestGameToolsNumber } from './GameToolsNumberPrompt.js';
 import { createItemDropSources } from './ItemDropSources.js';
 import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
@@ -178,8 +179,9 @@ function mount(container, context = {}) {
 		const allowed = Boolean(context.capabilities?.itemGrantAllowed);
 		const panel = document.createElement('div');
 		panel.className = 'catalog-action-panel item-grant-panel';
-		panel.innerHTML = `<label class="item-grant-quantity"><span aria-hidden="true">数量</span><input aria-label="数量" class="item-grant-amount" type="number" inputmode="numeric" min="1" max="2147483647" step="1"></label><button class="zeny-grant-open" type="button">发放 Zeny</button><button class="item-grant" type="button">发放到背包</button><span class="catalog-status error" role="status" aria-live="polite"></span>`;
+		panel.innerHTML = `<label class="item-grant-quantity"><span aria-hidden="true">数量</span><input aria-label="数量" class="item-grant-amount" type="number" inputmode="numeric" min="1" max="2147483647" step="1"></label><button class="zeny-grant-open" type="button">发放 Zeny</button><button class="item-grant" type="button">发放物品</button><span class="catalog-status error" role="status" aria-live="polite"></span>`;
 		const input = panel.querySelector('.item-grant-amount');
+		if (context.mobile) input.closest('label').remove();
 		input.value = amountValue;
 		input.disabled = Boolean(pending);
 		input.addEventListener('input', () => {
@@ -201,10 +203,10 @@ function mount(container, context = {}) {
 	async function grantAmount(kind, item, input) {
 		if (pending || !active || !context.capabilities?.itemGrantAllowed || (kind === 'item' && !item?.grantable))
 			return;
-		amountValue = input.value;
-		const amount = Number(amountValue);
+		if (!context.mobile) amountValue = input.value;
+		let amount = Number(amountValue);
 		const max = kind === 'zeny' ? 2147483647 : 30000;
-		if (!Number.isInteger(amount) || amount < 1 || amount > max) {
+		if (!context.mobile && (!Number.isInteger(amount) || amount < 1 || amount > max)) {
 			showToast(container, `请输入 1 至 ${max} 的整数${kind === 'zeny' ? '金额' : '数量'}`, 'error');
 			return;
 		}
@@ -216,7 +218,15 @@ function mount(container, context = {}) {
 		pending = kind;
 		browserApi.refreshDetail();
 		try {
-			if (!(await requestConfirmation(container, message)) || !active) return;
+			if (context.mobile) {
+				amount = await requestGameToolsNumber(container, {
+					title: kind === 'zeny' ? '发放 Zeny' : `发放“${name}”到背包`,
+					label: '数量', value: Math.min(max, Math.max(1, Number(amountValue) || 1)),
+					min: 1, max, steps: true
+				});
+				if (amount === null || !active) return;
+				amountValue = String(amount);
+			} else if (!(await requestConfirmation(container, message)) || !active) return;
 			if (kind === 'zeny') await grantAdventureZeny(amount);
 			else await grantAdventureItem(item.Id, amount);
 			if (active)

@@ -16,9 +16,7 @@ dialog {
 	overflow: hidden;
 	overscroll-behavior: none;
 }
-dialog::backdrop {
-	background: #191f26;
-}
+:host([data-editor-layout='strip']) dialog { background: transparent; }
 section {
 	position: absolute;
 	left: 0;

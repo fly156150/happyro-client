@@ -1,3 +1,4 @@
+import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
@@ -28,40 +29,11 @@ export function createShopPanel(body, service) {
 		const item = selectedItem();
 		if (!state.allowed || !item || !capacity(item, direction) || quantityDialog) return;
 		const key = selected;
-		const content = document.createElement('div');
-		content.className = 'shop-quantity';
-		const input = document.createElement('input');
-		input.type = 'number';
-		input.inputMode = 'numeric';
-		input.required = true;
-		input.min = '1';
-		input.max = String(capacity(item, direction));
-		input.step = '1';
-		input.value = '1';
-		input.setAttribute('aria-label', '交易数量');
-		const decreases = document.createElement('div');
-		const increases = document.createElement('div');
-		decreases.className = increases.className = 'shop-quantity-steps';
-		const stepButtons = [-10, -1, 1, 10].map(delta => {
-			const node = button(delta > 0 ? `+${delta}` : String(delta), () => {
-				update();
-				if (!quantityDialog) return;
-				const count = Number(input.value);
-				input.value = String(
-					Math.max(1, Math.min(Number(input.max), (Number.isInteger(count) ? count : 0) + delta))
-				);
-				updateSteps();
-			});
-			(delta < 0 ? decreases : increases).append(node);
-			return { node, delta };
+		const stepper = createQuantityStepper({
+			label: '交易数量', value: 1, min: 1, max: capacity(item, direction),
+			beforeStep: () => { update(); return Boolean(quantityDialog); }
 		});
-		function updateSteps() {
-			const count = Number(input.value);
-			for (const { node, delta } of stepButtons)
-				node.disabled = delta > 0 ? count >= Number(input.max) : count <= 1;
-		}
-		input.addEventListener('input', updateSteps);
-		content.append(decreases, input, increases);
+		const { element: content, input } = stepper;
 		const dismiss = confirmAction(
 			body,
 			item.name,
@@ -93,7 +65,7 @@ export function createShopPanel(body, service) {
 				}
 			}
 		);
-		quantityDialog = { key, direction, input, dismiss, updateSteps };
+		quantityDialog = { key, direction, input, dismiss, stepper };
 		// Native form submission also supports the mobile keyboard's Done key.
 		input.addEventListener('keydown', event => {
 			if (event.key !== 'Enter') return;
@@ -208,8 +180,7 @@ export function createShopPanel(body, service) {
 				quantityDialog.dismiss();
 				return;
 			}
-			quantityDialog.input.max = String(capacity(current, quantityDialog.direction));
-			quantityDialog.updateSteps();
+			quantityDialog.stepper.setBounds({ min: 1, max: capacity(current, quantityDialog.direction) });
 		}
 	}
 	update();

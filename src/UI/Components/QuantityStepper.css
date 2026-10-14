@@ -1,0 +1,44 @@
+.quantity-stepper {
+	--quantity-control-height: var(--panel-control, 36px);
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+.quantity-stepper-buttons { display: flex; gap: 4px; }
+.quantity-stepper .quantity-stepper-control:is(input, button),
+:host([data-menu-density]) .quantity-stepper .quantity-stepper-control:is(input, button) {
+	box-sizing: border-box;
+	flex: none;
+	height: var(--quantity-control-height);
+	min-height: var(--quantity-control-height);
+	max-height: var(--quantity-control-height);
+	margin: 0;
+	padding: 0 4px;
+	border: 1px solid #7e8c99;
+	border-radius: 6px;
+	color: #f5f2e9;
+	font: 16px/1.2 Arial, sans-serif;
+	text-align: center;
+}
+.quantity-stepper .quantity-stepper-control:is(button),
+:host([data-menu-density]) .quantity-stepper .quantity-stepper-control:is(button) {
+	width: var(--quantity-control-height);
+	min-width: 30px;
+	font-size: 12px;
+	background: #394753;
+	cursor: pointer;
+}
+.quantity-stepper .quantity-stepper-control:is(input),
+:host([data-menu-density]) .quantity-stepper .quantity-stepper-control:is(input) {
+	width: 100%;
+	min-width: 0;
+	background: #25313b;
+	appearance: textfield;
+	-moz-appearance: textfield;
+}
+.quantity-stepper input::-webkit-inner-spin-button,
+.quantity-stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.quantity-stepper button:disabled { opacity: .45; cursor: default; }
+.quantity-stepper .quantity-stepper-control:focus-visible { outline: 2px solid #ceaa70; outline-offset: 2px; }

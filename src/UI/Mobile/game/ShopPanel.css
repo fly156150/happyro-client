@@ -79,32 +79,6 @@
 .shop-footer button {
 	flex-shrink: 0;
 }
-.shop-quantity-steps {
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: var(--panel-gap);
-}
-.shop-quantity {
-	display: grid;
-	grid-template-columns: auto minmax(64px, 1fr) auto;
-	align-items: center;
-	gap: 6px;
-}
-.shop-quantity-steps button {
-	min-width: 36px;
-}
-:host([data-menu-density]) .panel[data-view='shop'] .shop-quantity input[aria-label] {
-	width: 100%;
-	min-width: 0;
-	height: var(--shop-control);
-	min-height: var(--shop-control);
-	font-size: 16px;
-	border: 1px solid #65717b;
-	border-radius: 6px;
-	padding: 4px 8px;
-	background: #111a23;
-	color: inherit;
-}
 .shop-price {
 	white-space: pre-line;
 	overflow-wrap: anywhere;
@@ -121,34 +95,6 @@
 	font-size: var(--shop-text);
 }
 
-:host([data-menu-density='spacious']) .panel[data-view='shop'] .ui-confirm:has(.shop-quantity) {
+:host([data-menu-density='spacious']) .panel[data-view='shop'] .ui-confirm:has(.quantity-stepper) {
 	--menu-dialog-width: 532.4px;
-}
-:host([data-menu-density='spacious']) .shop-quantity {
-	grid-template-columns: calc(var(--panel-control) * 2 + var(--panel-gap)) minmax(0, 1fr) calc(
-			var(--panel-control) * 2 + var(--panel-gap)
-		);
-	gap: var(--panel-gap);
-}
-:host([data-menu-density='spacious']) .panel[data-view='shop'] .shop-quantity-steps button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	width: var(--panel-control);
-	min-width: 0;
-	height: var(--panel-control);
-	padding: 0;
-	margin: 0;
-}
-:host([data-menu-density='spacious']) .panel[data-view='shop'] .shop-quantity input[aria-label] {
-	margin: 0;
-	box-sizing: border-box;
-}
-
-:host([data-menu-density]) .panel[data-view='shop'] .shop-quantity-steps button {
-	height: var(--shop-control);
-	min-height: var(--shop-control);
-	padding-block: 0;
-	box-sizing: border-box;
 }

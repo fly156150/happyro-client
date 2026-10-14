@@ -199,9 +199,6 @@
 	border: 1px solid #657584;
 	border-radius: 10px;
 }
-:host([data-editor-layout='dialog']) .mobile-menu-editor::backdrop {
-	background: #0006;
-}
 :host([data-editor-layout='dialog']) .mobile-menu-editor:has(textarea) {
 	--menu-editor-height: 320px;
 }

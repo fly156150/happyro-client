@@ -41,3 +41,9 @@
 ## 验证
 
 执行相关单测，并经 Gateway 检查窗口开合、重复挂载、版本选择、拖动、滚动、输入焦点、资源加载和服务器回包。涉及移动端时覆盖手机横竖屏、平板与软键盘；Canvas 模拟测试不替代真机角色预览。构建与提交检查见[构建与测试](../build-and-test.md)。
+
+## 数量步进组件
+
+`src/UI/Components/QuantityStepper.js` 的 `createQuantityStepper` 返回 `element`、原生 `input` 与 `setBounds({ min, max })`。移动端 NPC 购买和冒险工具发放复用该组件，固定顺序为 −10、−1、输入框、+1、+10。组件自带局部样式，按钮与输入框共用 `--quantity-control-height`（默认跟随 `--panel-control`），页面不再单独覆盖内部尺寸。
+
+调用方传入可访问标签、初始值和整数上下限；用户编辑与步进均发出原生 `input` 事件，兼容菜单键盘编辑器。动态库存通过 `beforeStep` 刷新，返回 `false` 可取消步进；`setBounds` 不修改草稿值，由原生校验提示越界。弹窗、确认、权限、实时业务校验与提交由调用方负责，组件不请求接口、不创建弹窗。
