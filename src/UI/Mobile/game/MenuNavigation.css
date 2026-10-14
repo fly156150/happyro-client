@@ -1,0 +1,81 @@
+/* Shared navigation appearance. Individual panels own placement and orientation. */
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs {
+ --menu-tab-background: #25313b;
+ --menu-tab-active-background: #191f26;
+ --menu-tab-border: #65717b;
+ --menu-tab-color: #bac4cd;
+ --menu-tab-active-color: #ffe1ae;
+ gap: 0;
+ min-width: 0;
+ flex-wrap: nowrap;
+}
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button {
+ box-sizing: border-box;
+ height: var(--menu-tab-height, var(--panel-control));
+ min-height: var(--menu-tab-height, var(--panel-control));
+ border: 1px solid var(--menu-tab-border);
+ border-radius: 0;
+ background: var(--menu-tab-background);
+ color: var(--menu-tab-color);
+ box-shadow: none;
+ white-space: nowrap;
+}
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button + button { border-left: 0; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:first-child { border-radius: 6px 0 0 6px; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:last-child { border-radius: 0 6px 6px 0; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:is([aria-selected='true'], [aria-pressed='true']) {
+ background: var(--menu-tab-active-background);
+ color: var(--menu-tab-active-color);
+}
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:focus-visible { outline: 2px solid #ceaa70; outline-offset: -3px; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-preview-tabs {
+ --menu-tab-height: var(--chat-preview-tab-height);
+ --menu-tab-background: rgba(25, 31, 38, .85);
+ --menu-tab-active-background: rgba(25, 31, 38, .68);
+}
+/* The full chat panel keeps vertical navigation when there is room. */
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button + button { border-left: 1px solid var(--menu-tab-border); border-top: 0; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button:first-child { border-radius: 6px 6px 0 0; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button:last-child { border-radius: 0 0 6px 6px; }
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button[aria-pressed='true'] {
+ border-bottom-color: var(--menu-tab-border);
+ border-right-color: var(--menu-tab-border);
+}
+@container menu-window (width < 640px) {
+ :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button + button { border-top: 1px solid var(--menu-tab-border); border-left: 0; }
+ :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button:first-child { border-radius: 6px 0 0 6px; }
+ :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button:last-child { border-radius: 0 6px 6px 0; }
+ :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button[aria-pressed='true'] { border-right-color: var(--menu-tab-border); border-bottom-color: var(--menu-tab-border); }
+}
+:host([data-menu-density]) :is(.panel-navigation, .adventure-header) > button {
+ box-sizing: border-box;
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ border: 1px solid #465461;
+ border-radius: 3px;
+ background: transparent;
+ color: #bac4cd;
+}
+:host([data-menu-density]) :is(.panel-navigation, .adventure-header) > button:is(:hover, :active) {
+ border-color: #65717b;
+ background: #25313b;
+ color: #f5f2e9;
+}
+:host([data-menu-density]) :is(.panel-navigation, .adventure-header) > button:focus-visible { outline: 2px solid #ceaa70; outline-offset: -3px; }
+
+/* Header tabs and actions share the same space above the separator. */
+:host([data-menu-density]) :is(.panel > header, .mobile-adventure .adventure-header) {
+ padding-bottom: 0;
+}
+:host([data-menu-density]) :is(.panel > header > .panel-navigation, .adventure-header > button, .panel > header .menu-tabs, .mobile-adventure .adventure-tabs) {
+ align-self: flex-end;
+ margin-bottom: 6px;
+}
+:host([data-menu-density]) .chat-preview .chat-preview-tabs { margin-bottom: 6px; }
+:host([data-menu-density]) .panel .attribute-tabs { flex: 1; }
+/* Content tabs keep their own closed outline, without a second square rail. */
+:host([data-menu-density]) .panel .chat-filters {
+ padding-right: 0;
+ border-right: 0;
+}
+:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:only-child { border-radius: 6px; }

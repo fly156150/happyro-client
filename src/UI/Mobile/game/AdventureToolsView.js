@@ -6,7 +6,7 @@ const labels = { maps: '地图', monsters: '魔物', npcs: 'NPC', items: '物品
 /** Mobile navigation owns presentation; registered features own data and actions. */
 export function createAdventureToolsView(root, { tabs, context, close, backToMenu }) {
 	root.innerHTML = `<section class="game-tools-window mobile-adventure mobile-menu-window">
-		<header class="adventure-header"><button type="button" data-back hidden>返回</button><nav class="adventure-tabs" role="tablist" aria-label="冒险工具"></nav><button type="button" data-menu-back>返回</button><button type="button" data-close>关闭</button></header>
+		<header class="adventure-header"><button type="button" data-back hidden>返回</button><nav class="adventure-tabs menu-tabs" role="tablist" aria-label="冒险工具"></nav><button type="button" data-menu-back>返回</button><button type="button" data-close>关闭</button></header>
 		<div class="adventure-content" hidden></div>
 	</section>`;
 	const $ = selector => root.querySelector(selector);

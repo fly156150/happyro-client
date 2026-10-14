@@ -1,3 +1,4 @@
+import menuNavigationCSS from './MenuNavigation.css?raw';
 import menuContentComponentsCSS from './MenuContentComponents.css?raw';
 import menuContentLayoutCSS from './MenuContentLayout.css?raw';
 import menuPortraitCSS from './MenuPortrait.css?raw';
@@ -31,7 +32,8 @@ const Tools = new GUIComponent(
 		menuLayoutCSS +
 		menuPortraitCSS +
 		menuContentLayoutCSS +
-		menuContentComponentsCSS
+		menuContentComponentsCSS +
+		menuNavigationCSS
 );
 Tools.render = () => '<div class="adventure-mount mobile-menu-viewport"></div>';
 Tools.needFocus = false;

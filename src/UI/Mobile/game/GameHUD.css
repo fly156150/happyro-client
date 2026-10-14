@@ -685,7 +685,6 @@ dd {
 	flex: 1;
 	padding: 6px;
 }
-.inventory-tabs [aria-pressed='true'],
 .inventory-item[aria-pressed='true'] {
 	border-color: #ffca67;
 	background: #57452c;
@@ -772,7 +771,6 @@ dd {
 .equipment-tabs button {
 	flex: 1;
 }
-.equipment-tabs [aria-pressed='true'],
 .equipment-slot[aria-pressed='true'],
 .equipment-candidate[aria-pressed='true'] {
 	border-color: #ffca67;

@@ -57,14 +57,14 @@
 .tab-list {
 	flex: 0 0 31px;
 	display: flex;
-	gap: 2px;
+	gap: 0;
 	align-items: end;
 	padding: 0 8px;
 	border-bottom: 1px solid #aeb2b7;
 	background: #e3e5e8;
 }
 .tab-button {
-	height: 26px;
+	height: 28px;
 	padding: 0 14px;
 	border: 1px solid #aeb2b7;
 	border-bottom: none;
@@ -77,6 +77,10 @@
 	height: 28px;
 	margin-bottom: -1px;
 }
+.tab-button + .tab-button { border-left: 0; }
+.tab-button:first-child { border-top-left-radius: 6px; }
+.tab-button:last-child { border-top-right-radius: 6px; }
+.tab-button:focus-visible { outline: 2px solid #3a789d; outline-offset: -3px; }
 .tab-content {
 	flex: 1;
 	min-height: 0;

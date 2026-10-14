@@ -4,7 +4,7 @@ import { loadPickupSettings } from 'UI/Game/PickupSettings.js';
 
 /** Keep both editors mounted while switching tabs so pending edits are retained. */
 export function createCombatSettingsPanel(body, actions, header) {
-	body.innerHTML = `<div class="settings-tabs" role="tablist" aria-label="战斗辅助设置">
+	body.innerHTML = `<div class="settings-tabs menu-tabs" role="tablist" aria-label="战斗辅助设置">
 		<button type="button" role="tab" id="mobile-combat-tab" aria-controls="mobile-combat-settings" aria-selected="true" aria-pressed="true" data-assist-tab="combat">战斗设置</button>
 		<button type="button" role="tab" id="mobile-pickup-tab" aria-controls="mobile-pickup-settings" aria-selected="false" aria-pressed="false" tabindex="-1" data-assist-tab="pickup">拾取设置</button>
 		</div>

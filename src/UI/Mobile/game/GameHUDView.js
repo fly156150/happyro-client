@@ -1,3 +1,4 @@
+import menuNavigationCSS from './MenuNavigation.css?raw';
 import menuContentComponentsCSS from './MenuContentComponents.css?raw';
 import menuContentLayoutCSS from './MenuContentLayout.css?raw';
 import { bindHUDNotificationInset } from './HUDNotificationInset.js';
@@ -75,7 +76,8 @@ ${switchCSS}
 ${portraitCSS}
 ${menuPortraitCSS}
 ${menuContentLayoutCSS}
-${menuContentComponentsCSS}</style>${html}`;
+${menuContentComponentsCSS}
+${menuNavigationCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const orientationHint = Preferences.get('OrientationHint', { dismissed: false }, 1.0);

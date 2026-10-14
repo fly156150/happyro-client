@@ -48,3 +48,11 @@
 `src/UI/Components/QuantityStepper.js` 的 `createQuantityStepper` 返回 `element`、原生 `input` 与 `setBounds({ min, max })`。移动端 NPC 购买和冒险工具发放复用该组件，固定顺序为 −10、−1、输入框、+1、+10。组件自带局部样式，按钮与输入框共用 `--quantity-control-height`（默认跟随 `--panel-control`），页面不再单独覆盖内部尺寸。
 
 调用方传入可访问标签、初始值和整数上下限；用户编辑与步进均发出原生 `input` 事件，兼容菜单键盘编辑器。动态库存通过 `beforeStep` 刷新，返回 `false` 可取消步进；`setBounds` 不修改草稿值，由原生校验提示越界。弹窗、确认、权限、实时业务校验与提交由调用方负责，组件不请求接口、不创建弹窗。
+
+## 移动菜单导航
+
+`src/UI/Mobile/game/MenuNavigation.css` 是菜单页签及顶部返回／关闭按钮的公共外观来源，由 `GameHUDView` 和 `AdventureTools` 在布局样式之后加载。分类栏添加 `menu-tabs`，通过现有 `aria-selected` 或 `aria-pressed` 表达选中状态，页面只负责位置、宽度与排列方向，不再单独定义选中颜色、边框和圆角。
+
+控件高度默认跟随 `--panel-control`；聊天预览通过 `--menu-tab-height` 保留紧凑尺寸。聊天分类保留宽屏纵向和窄竖屏横向布局。顶部动作与底部提交按钮分开管理，不以全局 `button` 规则覆盖业务动作。
+
+顶部返回／关闭按钮及页签底部统一保留 6px 外边距。所有位置的页签均保留完整底边框与整组四角圆角，不再将选中页签底边隐藏，也不在内容区叠加直角连接线。

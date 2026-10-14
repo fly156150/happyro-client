@@ -42,8 +42,7 @@
 	line-height: 1.5;
 	overflow-wrap: anywhere;
 }
-.panel :is(.inventory-item, .equipment-slot, .equipment-candidate, .shortcut-choice)[aria-pressed='true'],
-.panel :is(.inventory-tabs, .equipment-tabs) [aria-pressed='true'] {
+.panel :is(.inventory-item, .equipment-slot, .equipment-candidate, .shortcut-choice)[aria-pressed='true'] {
 	color: #ffe1ae;
 	border-color: #ceaa70;
 	background: #57452c;
@@ -370,11 +369,6 @@
 }
 .attribute-toolbar {
 	justify-content: space-between;
-}
-.attribute-tabs [aria-pressed='true'] {
-	color: #ffe1ae;
-	border-color: #ceaa70;
-	background: #57452c;
 }
 .attribute-layout {
 	display: grid;
@@ -977,18 +971,9 @@
 	width: 100%;
 	min-height: 32px;
 	padding: 6px 8px;
-	border: 0;
-	border-radius: 0;
-	background: transparent;
-	box-shadow: none;
 	text-align: left;
 	font-size: var(--panel-label);
 	white-space: nowrap;
-}
-.panel .chat-filters > button[aria-pressed='true'] {
-	background: #ceaa701a;
-	box-shadow: inset 2px 0 #ceaa70;
-	color: #ffe1aa;
 }
 .chat-content {
 	display: flex;

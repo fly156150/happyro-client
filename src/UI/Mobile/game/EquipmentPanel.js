@@ -3,7 +3,7 @@ import { createFeedback } from 'UI/Components/Feedback.js';
 /** Independent touch equipment view; server snapshots own all item and stat values. */
 export function createEquipmentPanel(body, actions) {
 	body.innerHTML =
-		'<nav class="equipment-tabs" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><dl class="equipment-stats" hidden></dl>';
+		'<nav class="equipment-tabs menu-tabs" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><dl class="equipment-stats" hidden></dl>';
 	const $ = selector => body.querySelector(selector);
 	const slotsRoot = $('.equipment-slots'),
 		detail = $('.equipment-detail');

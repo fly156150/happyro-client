@@ -1103,7 +1103,13 @@
 	display: flex;
 	flex: 1;
 	min-width: 0;
-	gap: 4px;
+	gap: 0;
+	align-self: stretch;
+	align-items: flex-end;
+	position: relative;
+	z-index: 1;
+	margin-bottom: -1px;
+	touch-action: pan-x;
 	overflow-x: auto;
 	scrollbar-width: none;
 }
@@ -1114,11 +1120,6 @@
 	flex: 0 0 auto;
 	min-width: 48px;
 	white-space: nowrap;
-}
-.mobile-adventure .adventure-tabs button[aria-selected='true'] {
-	background: #57452c;
-	border-color: #ffca67;
-	color: #ffd27f;
 }
 .adventure-header > button {
 	flex-shrink: 0;
@@ -1500,9 +1501,6 @@
 :host([data-menu-density='spacious']) .adventure-header,
 :host([data-menu-density='spacious']) .mobile-adventure :is(.catalog-toolbar, .monster-toolbar) {
 	padding: var(--adventure-padding) 16px;
-	gap: 8px;
-}
-:host([data-menu-density='spacious']) .adventure-tabs {
 	gap: 8px;
 }
 :host([data-menu-density='spacious']) .mobile-adventure button {
