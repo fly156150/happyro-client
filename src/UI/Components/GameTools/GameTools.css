@@ -1562,3 +1562,20 @@
  --joined-field-label-background: #eceef0;
  --joined-field-radius: 0;
 }
+
+.game-tools-window[data-feedback-theme='desktop'] .settings-footer > button {
+ grid-column: 2;
+ justify-self: end;
+ width: auto;
+}
+
+/* Focus changes the existing field edge instead of adding a second outer ring. */
+.game-tools-window[data-feedback-theme='desktop'] :is(.item-grant-quantity, .character-attributes-tab .management-form > label, .settings-form .setting-number):focus-within {
+ outline: none;
+ border-color: #858b91;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(input:not([type='checkbox']):not([type='radio']):not([type='range']), textarea):focus {
+ outline: none;
+ box-shadow: none;
+ border-color: #858b91;
+}

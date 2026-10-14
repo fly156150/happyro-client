@@ -8,6 +8,7 @@ import UIManager from 'UI/UIManager.js';
 import Preferences from 'Core/Preferences.js';
 import htmlText from './GameTools.html?raw';
 import cssText from './GameTools.css?raw';
+import buttonCssText from './GameToolsButtons.css?raw';
 import itemCatalogCssText from './ItemCatalogTab.css?raw';
 import gameSelectCssText from './GameSelect.css?raw';
 import { getGameToolsTabs } from './GameToolsRegistry.js';
@@ -16,7 +17,7 @@ import { loadAdventureControlBootstrap } from './AdventureControlService.js';
 import { notifyMonsterSpawnConfig, notifyMonsterSpawnResult } from './MonsterCatalogTab.js';
 
 const preferences = Preferences.get('GameTools', { tab: 'maps' }, 2.0);
-const GameTools = new GUIComponent('GameTools', cssText + itemCatalogCssText + gameSelectCssText);
+const GameTools = new GUIComponent('GameTools', cssText + itemCatalogCssText + gameSelectCssText + buttonCssText);
 const mountedTabs = new Map();
 let activeTabId;
 let capabilities;

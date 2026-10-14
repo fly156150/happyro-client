@@ -1,0 +1,46 @@
+/* Desktop action skin. Layouts retain ownership of button widths and placement.
+ * Tabs, list rows, selects, switches and text links are intentionally separate controls. */
+.game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button {
+ box-sizing: border-box;
+ height: 28px;
+ min-height: 28px;
+ padding: 0 12px;
+ border: 1px solid #a4a8ad;
+ border-radius: 0;
+ background: #eceef0;
+ color: #303438;
+ box-shadow: none;
+ font: 12px/1.4 Arial, sans-serif;
+ white-space: nowrap;
+ cursor: pointer;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:hover:not(:disabled) {
+ background: #dfe2e5;
+ border-color: #858b91;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:is(:active, .is-active):not(:disabled) {
+ background: #cfd3d7;
+ border-color: #737a81;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:disabled {
+ background: #f1f2f3;
+ border-color: #d0d3d6;
+ color: #92979c;
+ opacity: 1;
+ cursor: default;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.management-form-actions, .maintenance-actions, .character-actions, .settings-footer, .catalog-empty-state, .catalog-action-panel, .summon-panel, .monster-pagination, .catalog-pagination, .ui-confirm-actions) > button:focus-visible {
+ outline: 2px solid #676e75;
+ outline-offset: 2px;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.monster-pagination, .catalog-pagination) > button {
+ width: 28px;
+ min-width: 28px;
+ padding: 0;
+}
+
+/* Compact footer actions leave breathing room inside the 36px action bar. */
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-actions, .settings-footer, .summon-panel, .catalog-action-panel) > button {
+ height: 24px;
+ min-height: 24px;
+}
