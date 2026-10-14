@@ -2316,7 +2316,6 @@
 }
 .mobile-adventure.game-tools-window .settings-form .setting-number em {
 	flex:0 0 auto;
-	padding:0 4px;
 	border-color:#65717b;
 	background:#394753;
 }
@@ -2431,4 +2430,13 @@
  justify-self: end;
  width: 76px;
  justify-content: flex-end;
+}
+
+/* Fit all three rate inputs within the phone portrait settings panel. */
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .settings-drop-table {
+ min-width: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .settings-drop-table .setting-number {
+ width: 100%;
+ min-width: 0;
 }
