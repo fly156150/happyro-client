@@ -208,3 +208,17 @@
 		grid-column: 1 / -1;
 	}
 }
+
+/* Keep the phone combat divider outside both independently scrolling panes. */
+:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout[data-menu-layout='form'] {
+ grid-template-rows: minmax(0, 1fr) 1px minmax(0, 1fr);
+ row-gap: 10px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout::after {
+ content: '';
+ grid-row: 2;
+ grid-column: 1 / -1;
+ background: #64707c;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout > .auto-target-section { grid-row: 1; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout > .auto-skill-section { grid-row: 3; }
