@@ -59,12 +59,17 @@ export function loadAdventureGameSettings() {
 	return request('/game-settings');
 }
 
-export function searchAdventureItems({ query = '', type = '', subtype = '', page = 1, perPage = 30 } = {}) {
+export function searchAdventureItems({ query = '', type = '', subtype = '', dropKind = 'all', page = 1, perPage = 30 } = {}) {
 	const params = new URLSearchParams({ page, perPage });
 	if (query) params.set('query', query);
 	if (type) params.set('type', type);
 	if (subtype) params.set('subtype', subtype);
+	if (dropKind !== 'all') params.set('dropKind', dropKind);
 	return requestBody(`/items?${params}`);
+}
+
+export function loadAdventureItem(itemId) {
+	return request(`/items/${itemId}`);
 }
 
 export function searchAdventureNpcs({ query = '', onMap = '', currentMap = '', page = 1, perPage = 32 } = {}) {

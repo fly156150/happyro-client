@@ -58,3 +58,60 @@
 	background: transparent;
 	border: 0;
 }
+
+.item-drop-sources { margin-top: 12px; min-width: 0; }
+.item-source-list p { margin: 0; padding: 6px 7px; line-height: 1.6; }
+.item-source-group h5 { margin: 0 0 8px; padding: 6px 7px; font-size: 13px; }
+.item-source-scroll { overflow-x: auto; border: 1px solid #e1e3e5; background: #fafafa; }
+.item-source-group + .item-source-group { margin-top: 12px; }
+.game-tools-window .item-source-group > h5 { margin-bottom: 10px; }
+.item-source-table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; font-size: inherit; }
+.item-source-table th, .item-source-table td { padding: 6px 7px; text-align: left; border: 1px solid #e1e3e5; }
+.item-source-table th { white-space: nowrap; }
+.item-source-table tbody tr:last-child td { border-bottom: 0; }
+.item-source-table th:nth-child(2), .item-source-table td:nth-child(2),
+.item-source-table th:nth-child(3), .item-source-table td:nth-child(3) { text-align: center; white-space: nowrap; }
+.item-source-table th:nth-child(4), .item-source-table td:nth-child(4) { text-align: right; white-space: nowrap; }
+.item-source-table .source-name { width: 25%; }
+.item-source-table .source-id { width: 16%; }
+.item-source-table .source-level { width: 12%; }
+.item-source-table .source-rate { width: 18%; }
+.item-source-table .source-map { width: 29%; }
+.item-source-table td { vertical-align: middle; overflow-wrap: anywhere; }
+.item-source-table thead { background: #f5f6f7; }
+.item-source-list .item-source-monster {
+ display: block; width: 100%; height: auto; min-height: 0; padding: 0;
+ background: transparent; border: 0; box-shadow: none; color: inherit; text-align: left; font: inherit; white-space: normal; line-height: 1.5;
+}
+.item-source-rate { display: block; }
+.item-source-table tfoot .item-sources-footer { padding: 0; text-align: center; border-bottom: 0; }
+.game-tools-window .item-source-list .item-sources-more {
+ display: inline-block; width: auto; height: auto; min-height: 30px; margin: 0;
+ padding: 6px 12px; border: 0; border-radius: 0; background: transparent; box-shadow: none;
+ color: #245f9e; font: inherit; line-height: 1.5; text-align: center;
+ text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.game-tools-window .item-source-list .item-sources-more:hover { color: #16416f; }
+.game-tools-window .item-source-list .item-sources-more:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+
+.item-source-table tr > :first-child { border-left: 0; }
+.item-source-table tr > :last-child { border-right: 0; }
+.item-source-table thead tr:first-child th { border-top: 0; }
+.item-source-list .item-source-monster {
+ color: #245f9e;
+ text-decoration: underline;
+ text-underline-offset: 3px;
+ cursor: pointer;
+}
+.item-source-list .item-source-monster:hover { color: #16416f; }
+.item-source-list .item-source-monster:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+.item-source-table thead th:nth-child(n) { text-align: left; }
+
+.item-source-list .item-sources-empty {
+ display: flex; align-items: center; justify-content: center; gap: 6px;
+ box-sizing: border-box; min-height: 30px; padding: 4px 8px;
+ border: 1px solid #e1e3e5; background: #fafafa; color: #777;
+ text-align: center;
+}
+.item-sources-empty svg { width: 16px; height: 16px; flex: none; opacity: .8; }

@@ -1035,9 +1035,7 @@
 	padding: 4px 8px;
 	box-sizing: border-box;
 }
-.mobile-adventure .drop-group > div {
-	padding-left: 14px;
-}
+
 .mobile-adventure .monster-locations,
 .mobile-adventure .monster-location-list {
 	height: auto;
@@ -1314,7 +1312,8 @@
 }
 
 .mobile-adventure .character-detail-scroll > section > h4,
-.mobile-adventure .settings-scroll > section > h4 {
+.mobile-adventure .settings-scroll > section > h4,
+.mobile-adventure .item-source-group > h5 {
 	margin: 0 0 8px;
 	padding: 6px 8px;
 	border-left: 3px solid #ceaa70;
@@ -1917,7 +1916,7 @@
 }
 
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='monsters'] .drop-group > div {
-	padding:3px 6px 3px 14px;
+	padding:3px 6px;
 	gap:4px;
 }
 
@@ -2382,3 +2381,46 @@
 	background: transparent;
 	border: 0;
 }
+
+/* Drop sources share the catalog table colors and the detail scroller. */
+.mobile-adventure .item-drop-sources { font-size: var(--panel-text); }
+.mobile-adventure .item-source-scroll { background: #222e38; border-color: #65717b; }
+.mobile-adventure.game-tools-window .item-source-group > h5 { margin-bottom: 10px; }
+.mobile-adventure .item-source-table th,
+.mobile-adventure .item-source-table td { border-color: #65717b; }
+.mobile-adventure .item-source-list .item-source-monster { background: transparent; border: 0; color: inherit; font: inherit; }
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='items'] .game-tools-tab {
+ grid-template-columns: repeat(6,minmax(0,1fr));
+ grid-template-areas:"map map map map map map" "divider divider divider divider divider divider" "list list list list list list" "controls-divider controls-divider controls-divider controls-divider controls-divider controls-divider" "search search search search pages pages" ". . . . . ." "filters filters filters filters filters filters" ". . . . . ." "actions actions actions actions actions actions";
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='items'] .catalog-toolbar > .item-drop-filter {
+ grid-column:5 / 7;
+ margin-right:6px;
+ width:calc(100% - 6px);
+}
+
+.mobile-adventure .item-source-table thead { background: #283641; }
+.mobile-adventure .item-source-list .item-source-monster { min-height: 0; height: auto; padding: 0; line-height: 1.5; white-space: normal; }
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .item-source-table th,
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .item-source-table td {
+ padding: 6px 4px;
+ height: 32px;
+ box-sizing: border-box;
+ line-height: 1.5;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .item-source-table td:nth-child(4) { white-space: normal; }
+
+.mobile-adventure .item-source-list .item-source-monster { color: #ffd27f; }
+.mobile-adventure .item-source-list .item-source-monster:hover,
+.mobile-adventure .item-source-list .item-source-monster:active { color: #ffe6ac; }
+
+:host([data-menu-density='spacious']) .mobile-adventure .monster-resources .monster-location { padding-inline: 6px; }
+
+.mobile-adventure.game-tools-window .item-source-list .item-sources-more {
+ min-height: var(--panel-control, 36px); color: #ffd27f;
+}
+.mobile-adventure.game-tools-window .item-source-list .item-sources-more:hover,
+.mobile-adventure.game-tools-window .item-source-list .item-sources-more:active { color: #ffe6ac; }
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .item-source-table .item-sources-footer { padding: 0; }
+
+.mobile-adventure .item-source-list .item-sources-empty { border-color: #65717b; background: #222e38; color: #bac4cd; }

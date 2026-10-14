@@ -25,6 +25,22 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		tabView,
 		detail = false;
 	const scrolls = new Map();
+	let savedItem = null;
+	let availableTabs = tabs;
+	function discardSavedItem() {
+		savedItem?.cleanup?.();
+		savedItem?.tabView?.destroy();
+		savedItem = null;
+	}
+	function openMonster(id) {
+		const tab = availableTabs.find(candidate => candidate.id === 'monsters');
+		if (!tab || active?.id !== 'items') return;
+		savedItem = { container: content.firstElementChild, cleanup, tabView, detail, scrolls: new Map(scrolls) };
+		savedItem.container.remove();
+		cleanup = null;
+		tabView = null;
+		open(tab, { initialMonsterId: id });
+	}
 	function disposeTab() {
 		clearToast(content);
 		// Resolve outstanding confirmations before removing a feature view.
@@ -41,7 +57,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		back.hidden = true;
 		for (const [node, offset] of scrolls) if (node.isConnected) node.scrollTop = offset;
 	}
-	function open(tab) {
+	function open(tab, target = {}) {
 		if (active?.id === tab.id) return;
 		disposeTab();
 		active = tab;
@@ -58,7 +74,22 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		container.className = 'game-tools-tab';
 		container.dataset.tabId = tab.id;
 		content.append(container);
-		cleanup = tab.mount(container, context);
+		if (tab.id === 'items' && savedItem) {
+			container.replaceWith(savedItem.container);
+			cleanup = savedItem.cleanup;
+			tabView = savedItem.tabView;
+			detail = savedItem.detail;
+			for (const [node, offset] of savedItem.scrolls) scrolls.set(node, offset);
+			savedItem = null;
+			content.classList.toggle('show-detail', detail);
+			back.textContent = '返回列表';
+			back.hidden = wide || !detail;
+			content.firstElementChild.dispatchEvent(new Event('game-tools-reset-feedback'));
+			tabView.restore();
+			return;
+		}
+		if (tab.id !== 'monsters') discardSavedItem();
+		cleanup = tab.mount(container, { ...context, ...target, openMonster, returnToItem: () => open(availableTabs.find(candidate => candidate.id === 'items')) });
 		tabView = trackTabView(container);
 		showList();
 		if (tab.id === 'character') {
@@ -69,6 +100,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		}
 	}
 	function setTabs(nextTabs) {
+		availableTabs = nextTabs;
 		navigation.replaceChildren();
 		for (const tab of nextTabs) {
 			const button = document.createElement('button');
@@ -116,6 +148,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			abort.abort();
 			resize.disconnect();
 			disposeTab();
+			discardSavedItem();
 			root.replaceChildren();
 		}
 	};

@@ -1,3 +1,4 @@
+import { loadMonsterCatalog, loadMonsterDrops } from './MonsterCatalogAssets.js';
 import preferences from 'Preferences/AdventureTools.js';
 import { renderCatalogEmptyState } from './CatalogEmptyState.js';
 import { resetTabScroll } from './TabViewState.js';
@@ -61,38 +62,7 @@ const resultMessages = [
 	'角色附近没有可用位置'
 ];
 
-let catalogPromise;
-let dropsPromise;
 let activeController;
-
-function loadCatalog() {
-	if (!catalogPromise) {
-		catalogPromise = loadMonsterFile('catalog.json', 'Monster catalog');
-	}
-	return catalogPromise;
-}
-
-/**
- * Drops are most of the catalog's weight and only matter once a monster is
- * opened, so they live in their own file fetched on first detail render.
- */
-function loadDrops() {
-	if (!dropsPromise) {
-		dropsPromise = loadMonsterFile('drops.json', 'Monster drops').catch(error => {
-			dropsPromise = null;
-			throw error;
-		});
-	}
-	return dropsPromise;
-}
-
-function loadMonsterFile(name, label) {
-	const url = new URL(`./data/monsters/${name}`, window.location.href);
-	return fetch(url).then(response => {
-		if (!response.ok) throw new Error(`${label} request failed: ${response.status}`);
-		return response.json();
-	});
-}
 
 function atlasStyle(catalog, monster, displaySize) {
 	if (monster.atlas === null) return '';
@@ -114,6 +84,8 @@ function formatRate(rate) {
 function mount(container, context = {}) {
 	container.classList.add('monster-tab');
 	let destroyed = false;
+	let requestedMonsterId = context.initialMonsterId;
+	let showReturnToItem = Boolean(requestedMonsterId);
 	const state = {
 		catalog: null,
 		drops: null,
@@ -199,6 +171,19 @@ function mount(container, context = {}) {
 	const pageLabel = container.querySelector('.page-label');
 	mountGameSelects(container);
 
+	function openRequestedMonster() {
+		if (!requestedMonsterId || !state.catalog) return;
+		const id = requestedMonsterId;
+		requestedMonsterId = null;
+		showReturnToItem = true;
+		search.value = String(id);
+		if (scopeFilter) scopeFilter.checked = false;
+		container.querySelector('[data-game-select] [data-value="all"]').click();
+		applyFilter();
+		selectMonster(state.monsters.find(monster => monster.id === id) || null);
+	}
+	const openMonster = event => { requestedMonsterId = event.detail; openRequestedMonster(); };
+	container.addEventListener('game-tools-open-monster', openMonster);
 	function getScope() {
 		return scopeFilter?.checked ? 'current' : 'all';
 	}
@@ -292,6 +277,7 @@ function mount(container, context = {}) {
 
 	function renderActionPanel(summonDisabled = true, teleportEnabled = false, status = '') {
 		return `<div class="summon-panel">
+			${showReturnToItem ? '<button class="monster-return-item" type="button">返回物品</button>' : ''}
 			<button class="summon-button" type="button" ${summonDisabled ? 'disabled' : ''}>${state.pending ? '召唤中...' : '召唤'}</button>
 			<button class="monster-map-teleport" type="button" ${teleportEnabled ? '' : 'disabled'}>传送到地图</button>
 			<span class="summon-status error" role="status" aria-live="polite">${escapeHtml(status)}</span>
@@ -315,7 +301,7 @@ function mount(container, context = {}) {
 		}
 		if (!state.drops && !state.dropsLoading && !state.dropsError) {
 			state.dropsLoading = true;
-			loadDrops()
+			loadMonsterDrops()
 				.then(payload => {
 					if (destroyed) return;
 					state.drops = payload.drops;
@@ -438,18 +424,24 @@ function mount(container, context = {}) {
 	container.querySelector('.page-prev').addEventListener('click', () => changePage(-1));
 	container.querySelector('.page-next').addEventListener('click', () => changePage(1));
 
-	Promise.all([loadCatalog(), DB.listNavigation('MAP', { channelsEnabled: Session.NavigationMapChannelsEnabled })])
+	Promise.all([loadMonsterCatalog(), DB.listNavigation('MAP', { channelsEnabled: Session.NavigationMapChannelsEnabled })])
 		.then(([catalog, navigationMaps]) => {
 			state.catalog = catalog;
 			state.navigationMaps = navigationMaps;
 			state.monsters = catalog.monsters;
 			applyFilter();
+			openRequestedMonster();
 		})
 		.catch(error => {
 			console.error(error);
 			summary.textContent = '魔物资料加载失败';
 		});
 	container.addEventListener('click', event => {
+		if (event.target.closest('.monster-return-item')) {
+			showReturnToItem = false;
+			context.returnToItem?.();
+			return;
+		}
 		if (!event.target.closest('.monster-drops-retry')) return;
 		state.dropsError = false;
 		renderDetail();
@@ -471,6 +463,7 @@ function mount(container, context = {}) {
 
 	return () => {
 		destroyed = true;
+		container.removeEventListener('game-tools-open-monster', openMonster);
 		clearInterval(mapTimer);
 		container.removeEventListener('game-tools-reset-feedback', clearFeedback);
 		clearTimeout(state.requestTimer);

@@ -134,6 +134,11 @@ GameTools.mountTab = function mountTab(tab, reopening = false) {
 		content.append(container);
 		const view = trackTabView(container);
 		const context = {
+			openMonster: id => {
+				this.selectTab('monsters');
+				mountedTabs.get('monsters')?.container.dispatchEvent(new CustomEvent('game-tools-open-monster', { detail: id }));
+			},
+			returnToItem: () => this.selectTab('items'),
 			get capabilities() {
 				return capabilities;
 			}

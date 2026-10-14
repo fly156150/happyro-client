@@ -98,3 +98,19 @@ it('remembers explicit scope after remount without changing the other catalog', 
  world.map='empty_map';await vi.advanceTimersByTimeAsync(500);
  expect(root.querySelector('.catalog-scope-filter').checked).toBe(false);
 });
+
+it('opens a requested drop monster despite current-map scope and returns without saving that override', async () => {
+ vi.useFakeTimers();preferences.monsterCurrentMap=true;world.map='prontera';
+ const catalog=JSON.parse(readFileSync('applications/pwa/data/monsters/catalog.json'));
+ const drops=JSON.parse(readFileSync('applications/pwa/data/monsters/drops.json'));
+ vi.stubGlobal('fetch',vi.fn(async url=>({ok:true,json:async()=>String(url).endsWith('/drops.json')?drops:catalog})));
+ const returnToItem=vi.fn();
+ root=document.createElement('div');document.body.append(root);
+ cleanup=tab.mount(root,{initialMonsterId:1002,returnToItem});await vi.advanceTimersByTimeAsync(0);
+ expect(root.querySelector('.monster-row.selected').dataset.id).toBe('1002');
+ expect(root.querySelector('.catalog-scope-filter').checked).toBe(false);
+ expect(preferences.monsterCurrentMap).toBe(true);
+ root.dispatchEvent(new CustomEvent('game-tools-open-monster',{detail:1039}));
+ expect(root.querySelector('.monster-row.selected').dataset.id).toBe('1039');
+ root.querySelector('.monster-return-item').click();expect(returnToItem).toHaveBeenCalledOnce();
+});

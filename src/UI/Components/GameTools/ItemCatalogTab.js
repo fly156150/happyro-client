@@ -1,3 +1,4 @@
+import { createItemDropSources } from './ItemDropSources.js';
 import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
 import { showToast } from 'UI/Components/Toast.js';
@@ -138,6 +139,7 @@ function renderDescription(value) {
 function mount(container, context = {}) {
 	container.classList.add('world-catalog-tab', 'item-catalog-tab');
 	const assetUrls = new Map();
+	const dropSources = createItemDropSources(context);
 	const availableSubtypes = new Map();
 	let pending = null;
 	let amountValue = '1';
@@ -259,6 +261,9 @@ function mount(container, context = {}) {
 				value: '',
 				disabled: true,
 				options: subtypeOptions('').options
+			}) + renderGameSelect({
+				name: 'dropKind', className: 'catalog-filter item-drop-filter', ariaLabel: '掉落来源', value: 'all',
+				options: [{ value: 'all', label: '全部来源' }, { value: 'normal', label: '普通魔物' }, { value: 'mvp', label: 'MVP' }, { value: 'mini', label: 'Mini' }]
 			}),
 		emptyDetail: '选择一个物品查看详情',
 		pageSize: 30,
@@ -267,7 +272,8 @@ function mount(container, context = {}) {
 			const result = await searchAdventureItems({
 				...query,
 				type: query.filters.type,
-				subtype: query.filters.subtype
+				subtype: query.filters.subtype,
+				dropKind: query.filters.dropKind
 			});
 			if (active) {
 				availableSubtypes.set(query.filters.type, result.subtypes);
@@ -321,12 +327,14 @@ function mount(container, context = {}) {
 					];
 			detail.innerHTML = `<div class="item-detail-content"><div class="item-overview"><div class="catalog-heading item-heading"><span class="catalog-portrait item-portrait"><img alt="${escapeCatalogHtml(name)}"></span>${context.mobile ? '' : `<div><h3>${escapeCatalogHtml(name)}</h3><p>${escapeCatalogHtml(item.AegisName)} · ID ${item.Id}</p></div>`}</div>
 			<div class="catalog-metadata">${metadata.map(([label, value]) => `<div><span>${label}</span><strong>${escapeCatalogHtml(value)}</strong></div>`).join('')}</div>
-			</div><div class="item-description">${renderDescription(item.description)}</div></div>`;
+			</div><div class="item-description">${renderDescription(item.description)}</div><section class="item-drop-sources" aria-label="掉落来源"><div class="item-source-list"></div></section></div>`;
+			dropSources.render(detail.querySelector('.item-source-list'), item.Id);
 			renderActions(detail, item);
 			loadPortrait(detail.querySelector('.item-portrait img'), item);
 		},
 		cleanup() {
 			active = false;
+			dropSources.destroy();
 			container.removeEventListener('game-tools-reset-feedback', clearFeedback);
 			assetUrls.forEach(url => URL.revokeObjectURL(url));
 			assetUrls.clear();

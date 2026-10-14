@@ -8,7 +8,7 @@ function mount() {
 	const cleanup = vi.fn(), context = { capabilities: { itemGrantAllowed: true } }, close = vi.fn();
 	const tabs = ['maps','monsters','npcs','items','character','settings'].map(id => ({
 		id, label: id, mount: vi.fn((container, passed) => {
-			expect(passed).toBe(context);
+			expect(passed).toMatchObject(context);
 			container.innerHTML = '<div class="catalog-list"><button data-catalog-key="1">Entry</button></div><section class="catalog-detail"><input aria-label="数量" value="1"></section>';
 			return cleanup;
 		})
@@ -79,4 +79,26 @@ it('places menu return before close and delegates to the parent menu', () => {
  expect(back.hidden).toBe(false);
  expect(back.nextElementSibling).toBe(root.querySelector('[data-close]'));
  back.click(); expect(backToMenu).toHaveBeenCalledOnce(); expect(close).not.toHaveBeenCalled();
+});
+
+it('returns from a drop monster to the same item DOM and destroys suspended views on close', () => {
+ const {root,tabs,cleanup}=mount();
+ root.querySelector('[data-tool="items"]').click();
+ const item=root.querySelector('.game-tools-tab');
+ item.querySelector('input').value='123';
+ const list=item.querySelector('.catalog-list');list.scrollTop=70;
+ const itemContext=tabs[3].mount.mock.calls[0][1];
+ itemContext.openMonster(1002);
+ expect(view.activeFeature()).toBe('monsters');
+ const monsterContext=tabs[1].mount.mock.calls[0][1];
+ expect(monsterContext.initialMonsterId).toBe(1002);
+ monsterContext.returnToItem();
+ expect(root.querySelector('.game-tools-tab')).toBe(item);
+ expect(item.querySelector('input').value).toBe('123');
+ expect(list.scrollTop).toBe(70);
+ expect(tabs[3].mount).toHaveBeenCalledOnce();
+ itemContext.openMonster(1039);
+ const count=cleanup.mock.calls.length;
+ view.destroy();expect(cleanup).toHaveBeenCalledTimes(count+2);
+ view=null;
 });
