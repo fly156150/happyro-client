@@ -67,7 +67,6 @@ export function createMobileInputEditor(host) {
 				dialog.style.removeProperty('height');
 				return;
 			}
-			content.style.height = `${visual?.height || window.innerHeight}px`;
 			dialog.style.height = `${Math.max(window.innerHeight, document.documentElement.clientHeight, (visual?.height || 0) + (visual?.offsetTop || 0))}px`;
 		}
 		close = () => {

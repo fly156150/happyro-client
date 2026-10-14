@@ -17,10 +17,7 @@ dialog {
 	overscroll-behavior: none;
 }
 :host([data-editor-layout='strip']) dialog { background: transparent; }
-/* offsetTop and the safe area share the layout viewport origin: do not add them. */
-:host([data-editor-layout='strip']) section {
- top: max(0px, var(--mobile-visual-top, 0px), env(safe-area-inset-top, 0px));
-}
+
 section {
 	position: absolute;
 	left: 0;
@@ -80,3 +77,34 @@ textarea {
 	height: 100%;
 	resize: none;
 }
+
+/* Compact landscape editor, bounded by both the keyboard and display cutouts. */
+:host([data-editor-layout='strip']) section {
+ --editor-safe-top: max(0px, var(--mobile-visual-top, 0px), env(safe-area-inset-top, 0px));
+ top: calc(var(--editor-safe-top) + 8px);
+ left: max(8px, env(safe-area-inset-left, 0px));
+ right: max(8px, env(safe-area-inset-right, 0px));
+ height: auto;
+ max-height: max(0px, calc(var(--mobile-visible-height, 100dvh) + var(--mobile-visual-top, 0px) - var(--editor-safe-top) - 16px));
+ padding: 8px;
+ gap: 8px;
+ align-items: flex-start;
+ border: 1px solid #465461;
+ border-radius: 8px;
+ background: #191f26;
+ box-shadow: 0 3px 12px #0004;
+ overflow: auto;
+}
+:host([data-editor-layout='strip']) main {
+ height: var(--modal-input-height, 36px);
+ min-height: var(--modal-input-height, 36px);
+}
+:host([data-editor-layout='strip']) button {
+ height: var(--modal-input-height, 36px);
+ min-height: var(--modal-input-height, 36px);
+ padding: 0 12px;
+}
+:host([data-editor-layout='strip']) section:has(textarea) {
+ height: max(54px, calc(var(--mobile-visible-height, 100dvh) + var(--mobile-visual-top, 0px) - var(--editor-safe-top) - 16px));
+}
+:host([data-editor-layout='strip']) section:has(textarea) main { height: 100%; }

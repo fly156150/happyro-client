@@ -47,8 +47,8 @@ it('does not submit when confirming Chinese composition and retains multiline En
 it('follows the visible viewport and removes viewport listeners on close', () => {
  const visual=new EventTarget(); Object.assign(visual,{height:390,offsetTop:0}); vi.stubGlobal('visualViewport',visual);
  const {editor}=setup(); visual.height=150; visual.offsetTop=20; visual.dispatchEvent(new Event('resize'));
- expect(editor.querySelector('section').style.height).toBe('150px'); expect(editor.querySelector('section').style.top).toBe(''); expect(document.querySelector('[data-mobile-input-editor]').style.getPropertyValue('--mobile-visual-top')).toBe('20px');
- editor.querySelector('[data-cancel]').click(); visual.height=390; visual.dispatchEvent(new Event('resize')); expect(editor.querySelector('section').style.height).toBe('150px');
+ expect(editor.querySelector('section').style.height).toBe(''); expect(editor.querySelector('section').style.top).toBe(''); expect(document.querySelector('[data-mobile-input-editor]').style.getPropertyValue('--mobile-visual-top')).toBe('20px');
+ editor.querySelector('[data-cancel]').click(); visual.height=390; visual.dispatchEvent(new Event('resize')); expect(editor.querySelector('section').style.height).toBe('');
 });
 it('leaves readonly fields alone', () => { expect(setup('<input readonly value="fixed">').overlay).toBeNull(); });
 
@@ -139,7 +139,7 @@ it('keeps a phone portrait draft in a bounded dialog through keyboard resizing a
  expect(editor.querySelector('dialog').style.height).toBe('');
  vi.stubGlobal('innerWidth',844);vi.stubGlobal('innerHeight',390);visual.height=170;window.dispatchEvent(new Event('resize'));
  expect(overlay.dataset.editorLayout).toBe('strip');
- expect(editor.querySelector('section').style.height).toBe('170px');
+ expect(editor.querySelector('section').style.height).toBe('');
  expect(field.value).toBe('竖屏草稿');
  vi.stubGlobal('innerWidth',390);vi.stubGlobal('innerHeight',844);visual.height=300;window.dispatchEvent(new Event('resize'));
  expect(overlay.dataset.editorLayout).toBe('dialog');
