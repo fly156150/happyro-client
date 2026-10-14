@@ -42,10 +42,10 @@
  border-right-color: var(--menu-tab-border);
 }
 @container menu-window (width < 640px) {
- :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button + button { border-top: 1px solid var(--menu-tab-border); border-left: 0; }
- :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button:first-child { border-radius: 6px 0 0 6px; }
- :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button:last-child { border-radius: 0 6px 6px 0; }
- :host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters > button[aria-pressed='true'] { border-right-color: var(--menu-tab-border); border-bottom-color: var(--menu-tab-border); }
+ :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button + button { border-top: 1px solid var(--menu-tab-border); border-left: 0; }
+ :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button:first-child { border-radius: 6px 0 0 6px; }
+ :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button:last-child { border-radius: 0 6px 6px 0; }
+ :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button[aria-pressed='true'] { border-right-color: var(--menu-tab-border); border-bottom-color: var(--menu-tab-border); }
 }
 :host([data-menu-density]) :is(.panel-navigation, .adventure-header) > button {
  box-sizing: border-box;
@@ -79,3 +79,5 @@
  border-right: 0;
 }
 :host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:only-child { border-radius: 6px; }
+
+:host([data-menu-density]) .panel .attribute-tabs > button:first-child:has(+ button[hidden]) { border-radius: 6px; }

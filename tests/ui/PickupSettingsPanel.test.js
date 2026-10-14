@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 afterEach(()=>{editor?.destroy();document.body.replaceChildren();vi.restoreAllMocks();vi.clearAllMocks();});
 function mount(){editor=createPickupSettingsPanel(section,draft,persist);}
-function click(text,root=section){[...root.querySelectorAll('button')].find(b=>b.textContent===text).click();}
+function click(text,root=section){[...root.querySelectorAll('button')].find(b=>(b.getAttribute('aria-label') || b.textContent)===text).click();}
 function choose(selector){const input=section.querySelector(selector);input.checked=!input.checked;input.dispatchEvent(new Event('change'));}
 async function search(data,total=1){
  searchAdventureItems.mockResolvedValueOnce({data,total});

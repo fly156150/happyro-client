@@ -1,11 +1,13 @@
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { allocationCost } from 'UI/Game/AttributeAllocation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
-export function createAttributesPanel(body, actions) {
+export function createAttributesPanel(body, actions, header) {
 	body.innerHTML =
 		'<div class="attribute-toolbar"><div class="attribute-tabs menu-tabs" role="group" aria-label="素质分类"></div></div><div class="attribute-layout" data-menu-layout="form"><section class="attribute-editor"><div class="attribute-allocation" aria-label="素质加点"></div></section><section class="attribute-results" aria-label="相关数值"><dl></dl></section></div><div class="attribute-footer"><strong data-attribute-points></strong><div class="attribute-plan-actions"><button type="button" class="point-reset-button" data-reset-points>重置素质点</button><button type="button" data-clear-plan>清除预加点</button><button type="button" data-apply-plan>确认</button></div></div>';
 	const $ = selector => body.querySelector(selector);
 	const toolbar = $('.attribute-toolbar');
+	const layout = $('.attribute-layout');
+	let destroyed = false;
 	const feedback = createFeedback(body);
 	const drafts = { base: {}, traits: {} };
 	let baseline = '',
@@ -108,7 +110,7 @@ export function createAttributesPanel(body, actions) {
 		$('.attribute-tabs').append(tab);
 	}
 	function update() {
-		if (!body.contains(toolbar)) return;
+		if (destroyed || !body.contains(layout)) return;
 		state = actions.snapshot();
 		const nextBaseline = signature(state);
 		if (baseline && baseline !== nextBaseline && !submitting) {
@@ -193,12 +195,23 @@ export function createAttributesPanel(body, actions) {
 			pair.textContent = String(stat.value);
 		}
 	}
+	if (header) {
+		header.insertBefore(toolbar, header.querySelector('.panel-navigation'));
+		header.classList.add('has-attribute-tabs');
+	}
 	update();
 	actions
 		.prepare()
 		.then(update)
 		.catch(error => {
-			if (body.contains(toolbar)) feedback(error.message, 'error');
+			if (!destroyed && body.contains(layout)) feedback(error.message, 'error');
 		});
-	return { update };
+	return {
+		update,
+		destroy() {
+			destroyed = true;
+			toolbar.remove();
+			header?.classList.remove('has-attribute-tabs');
+		}
+	};
 }

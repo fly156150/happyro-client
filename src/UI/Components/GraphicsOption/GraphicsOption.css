@@ -79,6 +79,7 @@
 }
 
 #GraphicsOption .tab-content {
+	padding-top: 8px;
 	display: none;
 }
 

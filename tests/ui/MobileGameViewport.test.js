@@ -64,3 +64,17 @@ it('shares portrait direction with every menu host without reacting to the softw
  vi.stubGlobal('innerWidth',844);vi.stubGlobal('innerHeight',390);visual.height=390;update();expect(host.dataset.orientation).toBe('landscape');
  update.destroy();
 });
+
+it('uses the physical screen to keep narrow tablet windows out of phone layouts', () => {
+ const host = document.createElement('div');
+ vi.stubGlobal('innerWidth', 390); vi.stubGlobal('innerHeight', 844);
+ vi.stubGlobal('screen', { width: 820, height: 1180 });
+ const update = createMobileViewport(host);
+ update(); expect(host.hasAttribute('data-phone-screen')).toBe(false);
+ vi.stubGlobal('screen', { width: 390, height: 844 });
+ update(); expect(host.hasAttribute('data-phone-screen')).toBe(true);
+ vi.stubGlobal('innerWidth', 844); vi.stubGlobal('innerHeight', 390);
+ update(); expect(host.hasAttribute('data-phone-screen')).toBe(true);
+ expect(host.dataset.orientation).toBe('landscape');
+ update.destroy();
+});

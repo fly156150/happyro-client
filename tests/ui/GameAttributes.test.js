@@ -184,3 +184,24 @@ it('shows only current related values while drafting and after server updates', 
  body.querySelector('[data-clear-plan]').click();
  expect(body.querySelector('.attribute-results').textContent).not.toContain('→');
 });
+
+it('keeps header categories functional and removes them when the panel closes', async () => {
+ const header = document.body.appendChild(document.createElement('header'));
+ header.innerHTML = '<div class="panel-navigation"><button>关闭</button></div>';
+ const body = document.body.appendChild(document.createElement('div'));
+ const service = createGameAttributes(() => true);
+ let finish;
+ service.prepare = () => new Promise(resolve => { finish = resolve; });
+ const panel = createAttributesPanel(body, service, header);
+ expect(body.querySelector('.attribute-tabs')).toBeNull();
+ expect(header.querySelector('.attribute-tabs')).not.toBeNull();
+ [...header.querySelectorAll('.attribute-tabs button')].find(b => b.textContent === '四转素质').click();
+ expect(body.querySelector('[data-attribute=pow]')).not.toBeNull();
+ panel.destroy();
+ expect(header.querySelector('.attribute-toolbar')).toBeNull();
+ expect(header.classList.contains('has-attribute-tabs')).toBe(false);
+ body.textContent = '新的菜单';
+ finish(); await Promise.resolve(); panel.update();
+ expect(body.textContent).toBe('新的菜单');
+ expect(header.querySelector('.panel-navigation')).not.toBeNull();
+});

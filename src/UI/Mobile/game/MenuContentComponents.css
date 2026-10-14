@@ -98,16 +98,16 @@
 	:host([data-orientation='portrait'][data-menu-density]) .mobile-adventure .settings-rate-columns {
 		grid-template-columns: minmax(0, 1fr);
 	}
-	:host([data-orientation='portrait'][data-menu-density]) .panel .chat-conversation {
+	:host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-conversation {
 		grid-template-columns: minmax(0, 1fr);
 		grid-template-rows: auto minmax(0, 1fr);
 	}
-	:host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters {
+	:host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters {
 		flex-direction: row;
 		overflow-x: auto;
 		border-right: 0;
 	}
-	:host([data-orientation='portrait'][data-menu-density]) .panel .chat-filters button {
+	:host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters button {
 		width: auto;
 		flex-shrink: 0;
 	}
@@ -209,16 +209,152 @@
 	}
 }
 
-/* Keep the phone combat divider outside both independently scrolling panes. */
+/* Frame each phone combat pane independently, including while its content scrolls. */
 :host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout[data-menu-layout='form'] {
- grid-template-rows: minmax(0, 1fr) 1px minmax(0, 1fr);
+ grid-template-rows: repeat(2, minmax(0, 1fr));
  row-gap: 10px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout::after {
- content: '';
- grid-row: 2;
- grid-column: 1 / -1;
- background: #64707c;
+:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout > section {
+ box-sizing: border-box;
+ border: 1px solid #52606d;
+ border-radius: 10px;
+ padding: 8px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout > .auto-target-section { grid-row: 1; }
-:host([data-phone-screen][data-orientation='portrait']) .panel .auto-layout > .auto-skill-section { grid-row: 3; }
+
+/* Category controls share spacing and grouped increments across touch layouts. */
+:host([data-menu-density]) .panel .settings-form > .settings-tabs { margin-bottom: 8px; }
+:host([data-menu-density]) .panel > header.has-attribute-tabs > h2 {
+ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+ overflow: hidden; clip-path: inset(50%);
+}
+:host([data-menu-density]) .panel > header .attribute-toolbar { flex: 1; min-width: 0; margin-right: 8px; }
+:host([data-menu-density]) .panel .attribute-tabs > button { flex: 0 1 auto; }
+:host([data-menu-density]) .panel .attribute-row {
+ grid-template-rows: minmax(34px, auto);
+ min-height: 44px;
+ padding-block: 5px;
+}
+:host([data-menu-density]) .panel .attribute-increments {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ column-gap: 0;
+}
+:host([data-menu-density]) .panel .attribute-increments button {
+ width: 100%; min-width: 0;
+ height: max(34px, var(--panel-attribute-control));
+ min-height: max(34px, var(--panel-attribute-control));
+ border-radius: 0;
+}
+:host([data-menu-density]) .panel .attribute-increments button + button { border-left: 0; }
+:host([data-menu-density]) .panel .attribute-increments button:first-child { border-radius: 5px 0 0 5px; }
+:host([data-menu-density]) .panel .attribute-increments button:last-child { border-radius: 0 5px 5px 0; }
+
+/* Phone portrait: details first, browsing and actions below. */
+:host([data-phone-screen][data-orientation='portrait']) .panel .chat-conversation {
+ grid-template-columns: 72px minmax(0, 1fr);
+ grid-template-rows: minmax(0, 1fr);
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .attribute-results {
+ grid-row: 1; border: 0; padding: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .attribute-editor {
+ grid-row: 2; border-top: 1px solid #52606d; padding-top: 10px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .shortcut-pages { order: 2; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .shortcut-layout { order: 1; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .shortcut-editor { grid-row: 1; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .shortcut-browser { grid-row: 2; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .shortcut-filters { order: 2; flex-shrink: 0; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='inventory'] .inventory-body {
+ display: grid;
+ grid-template-columns: minmax(0, 1fr);
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-layout[data-menu-layout='split'],
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-item-detail:has(.inventory-item-description) {
+ display: contents;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-item-detail,
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-item-description {
+ grid-row: 1; min-width: 0; min-height: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-list { grid-row: 2; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-toolbar { grid-row: 3; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-item-detail > .inventory-actions {
+ grid-row: 4; justify-content: flex-end; padding-top: 8px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-item-overview {
+ grid-template-columns: var(--inventory-picture-width) minmax(0, 1fr);
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel .inventory-item-detail > .inventory-actions > button { flex: 0 1 auto; }
+
+:host([data-menu-density='spacious']) .panel .attribute-row { min-height: 66px; padding-block: 10px; }
+
+/* Phone pickup frames expand with content; only the full page scrolls. */
+:host([data-phone-screen][data-orientation='portrait']) .panel .mobile-pickup-settings > .pickup-section {
+ display: block;
+ padding: 0; border: 0; background: none;
+ overflow-y: auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-section > .pickup-enabled {
+ box-sizing: border-box;
+ margin: 0 0 10px; padding: 8px;
+ border: 1px solid #52606d; border-radius: 10px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-controls { gap: 10px; }
+:host([data-phone-screen][data-orientation='portrait']) .panel :is(.pickup-rules-group, .pickup-exclusions-group) {
+ display: flex; flex-direction: column; gap: 8px;
+ box-sizing: border-box;
+ border: 1px solid #52606d; border-radius: 10px; padding: 8px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel :is(.pickup-rules-title, .pickup-exclusions-group > h4) {
+ display: block; margin: 0;
+ color: #f6d9a5; font-size: var(--panel-heading); line-height: 1.5;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-categories {
+ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-exclusions-group > .pickup-excluded {
+ min-height: 0; max-height: none; overflow: visible;
+ border: 0; border-radius: 0; padding: 0;
+}
+
+/* Phone picker shares the adventure toolbar's 6px gaps and equal paging buttons. */
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker {
+ height: min(520px, calc(var(--mobile-visible-height, 100dvh) * 0.65));
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker[open] {
+ display: grid;
+ grid-template-columns: minmax(0, 1fr) auto auto auto;
+ grid-template-rows: minmax(0, 1fr) auto 1px auto auto;
+ gap: 6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker .pickup-results {
+ grid-row: 1; grid-column: 1 / -1; height: auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker .pickup-search-status {
+ grid-row: 2; grid-column: 1 / -1;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker :is(.pickup-search, footer) { display: contents; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker .pickup-search input { grid-row: 4; grid-column: 1; width: 100%; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker [data-search] { grid-row: 4; grid-column: 4; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker :is([data-selected], [data-page]) { display: none; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker [data-previous] { grid-row: 4; grid-column: 2; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker [data-next] { grid-row: 4; grid-column: 3; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker :is([data-search], [data-previous], [data-next]) {
+ box-sizing: border-box;
+ height: max(30px, var(--panel-control)); min-height: max(30px, var(--panel-control));
+ margin: 0; padding: 3px 6px; font: inherit; font-size: var(--panel-label);
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker .pickup-picker-actions {
+ display: flex; grid-row: 5; grid-column: 1 / -1;
+ justify-self: stretch; justify-content: flex-end;
+ border-top: 1px solid #52606d; padding-top: 10px; gap: 6px;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker::before {
+ content: ''; grid-row: 3; grid-column: 1 / -1; background: #52606d;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker .pickup-page-label { display: none; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker .pickup-page-symbol { display: inline; font-size: 20px; line-height: 1; }
+:host([data-phone-screen][data-orientation='portrait']) .panel .pickup-picker :is([data-previous], [data-next]) { width: max(30px, var(--panel-control)); }

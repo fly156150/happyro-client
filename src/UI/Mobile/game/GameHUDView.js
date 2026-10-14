@@ -220,6 +220,7 @@ ${menuNavigationCSS}</style>${html}`;
 	function close(notify = true) {
 		menuSelects.close();
 		if (!currentPanel || (notify && serverState?.canClose === false)) return;
+		attributesPanel?.destroy();
 		combatSettingsCleanup?.();
 		combatSettingsCleanup = null;
 		settingsCleanup?.();
@@ -288,6 +289,7 @@ ${menuNavigationCSS}</style>${html}`;
 		if (currentPanel === 'status') statusPanel?.update(snapshot.statuses || []);
 	}
 	function open(panel, slotIndex) {
+		attributesPanel?.destroy();
 		combatSettingsCleanup?.();
 		combatSettingsCleanup = null;
 		settingsCleanup?.();
@@ -593,7 +595,7 @@ ${menuNavigationCSS}</style>${html}`;
 			serverState.service.setOperationGuard(actions.canOperate);
 			shopPanel = createShopPanel(body, serverState.service);
 		}
-		if (panel === 'attributes') attributesPanel = createAttributesPanel(body, actions.attributes);
+		if (panel === 'attributes') attributesPanel = createAttributesPanel(body, actions.attributes, $('.panel > header'));
 		if (panel === 'skills')
 			skillsPanel = createSkillsPanel(body, {
 				snapshot: actions.skillsSnapshot,

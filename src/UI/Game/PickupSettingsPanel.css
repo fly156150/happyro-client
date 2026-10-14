@@ -354,8 +354,9 @@
 	flex-direction: column;
 	gap: 12px;
 }
-.pickup-controls > h4,
-.pickup-controls > p {
+.pickup-exclusions-group > h4,
+.pickup-exclusions-group > p,
+.pickup-rules-group > p {
 	margin: 0;
 }
 .pickup-categories {
@@ -368,3 +369,11 @@
 .pickup-section > .pickup-note {
 	margin-block: 12px;
 }
+
+/* Group wrappers are layout-neutral outside phone portrait. */
+.pickup-rules-group,
+.pickup-exclusions-group { display: contents; }
+
+.pickup-rules-title { display: none; }
+
+.pickup-page-symbol { display: none; }

@@ -82,3 +82,6 @@ button:focus-visible,
 .combat-launcher:active:not(:disabled),
 .combat-launcher[aria-expanded='true'] { background: #e2e8ec; border-color: #929fa9; box-shadow: inset 0 1px 3px #0001; }
 @media (prefers-reduced-motion: reduce) { .combat-launcher { transition: none; } }
+
+/* Leave breathing room between settings navigation and its content. */
+.combat-dialog { row-gap: 16px; }
