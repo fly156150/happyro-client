@@ -277,7 +277,7 @@ function mount(container, context = {}) {
 
 	function renderActionPanel(summonDisabled = true, teleportEnabled = false, status = '') {
 		return `<div class="summon-panel">
-			${showReturnToItem ? '<button class="monster-return-item" type="button">返回物品</button>' : ''}
+			${context.mobile && showReturnToItem ? '<button class="monster-return-item" type="button">返回物品</button>' : ''}
 			<button class="summon-button" type="button" ${summonDisabled ? 'disabled' : ''}>${state.pending ? '召唤中...' : '召唤'}</button>
 			<button class="monster-map-teleport" type="button" ${teleportEnabled ? '' : 'disabled'}>传送到地图</button>
 			<span class="summon-status error" role="status" aria-live="polite">${escapeHtml(status)}</span>

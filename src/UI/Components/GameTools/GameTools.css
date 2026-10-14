@@ -1330,8 +1330,8 @@
 	min-width:0;
 	height:28px;
 	box-sizing:border-box;
-	border:1px solid #6d7f98;
-	border-radius:5px;
+	border:1px solid var(--joined-field-border, #6d7f98);
+	border-radius:var(--joined-field-radius, 5px);
 	overflow:hidden;
 	background:white;
 }
@@ -1340,8 +1340,8 @@
 	align-items:center;
 	padding:0 5px;
 	flex:0 0 auto;
-	border-right:1px solid #6d7f98;
-	background:#edf3f6;
+	border-right:1px solid var(--joined-field-border, #6d7f98);
+	background:var(--joined-field-label-background, #edf3f6);
 }
 .game-tools-window :is(.item-grant-quantity, :where(.character-attributes-tab) .management-form > label) > input {
 	flex:1 1 0;
@@ -1362,7 +1362,7 @@
 	margin:0;
 }
 .game-tools-window :is(.item-grant-quantity, :where(.character-attributes-tab) .management-form > label):focus-within {
-	outline:2px solid #6d7f98;
+	outline:2px solid var(--joined-field-border, #6d7f98);
 	outline-offset:1px;
 }
 
@@ -1401,8 +1401,8 @@
 .game-tools-window .settings-form .setting-number {
 	align-items:stretch;
 	gap:0;
-	border:1px solid #6d7f98;
-	border-radius:5px;
+	border:1px solid var(--joined-field-border, #6d7f98);
+	border-radius:var(--joined-field-radius, 5px);
 	overflow:hidden;
 	box-sizing:border-box;
 	background:white;
@@ -1428,12 +1428,12 @@
 	width:auto;
 	flex:0 0 auto;
 	padding:0 8px;
-	border-left:1px solid #6d7f98;
-	background:#edf3f6;
+	border-left:1px solid var(--joined-field-border, #6d7f98);
+	background:var(--joined-field-label-background, #edf3f6);
 	white-space:nowrap;
 }
 .game-tools-window .settings-form .setting-number:focus-within {
-	outline:2px solid #6d7f98;
+	outline:2px solid var(--joined-field-border, #6d7f98);
 	outline-offset:1px;
 }
 /* Shared compact scope switch for desktop, tablet and phone layouts. */
@@ -1542,3 +1542,23 @@
 .game-tools-window .monster-resources .monster-location,
 .game-tools-window .monster-resources .monster-location:hover { padding-inline: 6px; border-inline: 0; }
 .game-tools-window .monster-resources .monster-locations-empty { margin: 0; padding-inline: 6px; }
+
+/* Desktop adventure tools retain square controls and compact form rows. */
+.game-tools-window[data-feedback-theme='desktop'] :is(.tab-button, .character-attributes-tab .management-form > label, .settings-form .setting-number, .settings-form .game-select-trigger) {
+ border-radius: 0;
+}
+.game-tools-window[data-feedback-theme='desktop'] .character-attributes-tab .management-form.progression-form {
+ grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.game-tools-window[data-feedback-theme='desktop'] .settings-grid .game-select {
+ width: 132px;
+ min-width: 132px;
+ flex: 0 0 132px;
+ margin-right: 0;
+}
+
+.game-tools-window[data-feedback-theme='desktop'] {
+ --joined-field-border: #aeb2b7;
+ --joined-field-label-background: #eceef0;
+ --joined-field-radius: 0;
+}

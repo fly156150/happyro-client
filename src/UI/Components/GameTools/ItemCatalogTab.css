@@ -115,3 +115,8 @@
  text-align: center;
 }
 .item-sources-empty svg { width: 16px; height: 16px; flex: none; opacity: .8; }
+
+.game-tools-window[data-feedback-theme='desktop'] .item-source-group > h5 {
+ padding-inline: 0;
+ text-align: left;
+}
