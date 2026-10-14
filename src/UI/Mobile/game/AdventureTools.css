@@ -2078,9 +2078,11 @@
 
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='items'] .catalog-search {
 	grid-area:search;
+	grid-column:1 / -1;
 	align-self:center;
-	margin:0 6px;
-	width:calc(100% - 12px);
+	margin:0 0 0 6px;
+	/* Two 32px page buttons, their gap, outer inset and search gap. */
+	width:calc(100% - 88px);
 }
 
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='items'] .catalog-toolbar > .game-select {
@@ -2424,3 +2426,9 @@
 :host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .item-source-table .item-sources-footer { padding: 0; }
 
 .mobile-adventure .item-source-list .item-sources-empty { border-color: #65717b; background: #222e38; color: #bac4cd; }
+
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .adventure-content[data-feature='items'] .catalog-pagination {
+ justify-self: end;
+ width: 76px;
+ justify-content: flex-end;
+}

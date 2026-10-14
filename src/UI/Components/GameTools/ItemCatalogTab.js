@@ -86,7 +86,7 @@ function subtypeOptions(type, available = []) {
 					? cardSubtypeNames
 					: null;
 	if (!names || !available.length) {
-		return { disabled: true, options: [{ value: '', label: '子类' }] };
+		return { disabled: true, options: [{ value: '', label: type ? '无子类' : '全部子类' }] };
 	}
 	return {
 		disabled: false,
@@ -273,7 +273,7 @@ function mount(container, context = {}) {
 				options: subtypeOptions('').options
 			}) + renderGameSelect({
 				name: 'dropKind', className: 'catalog-filter item-drop-filter', ariaLabel: '掉落来源', value: 'all',
-				options: [{ value: 'all', label: '全部来源' }, { value: 'normal', label: '普通魔物' }, { value: 'mvp', label: 'MVP' }, { value: 'mini', label: 'Mini' }]
+				options: [{ value: 'all', label: '全部来源' }, { value: 'normal', label: '普通魔物来源' }, { value: 'mvp', label: 'MVP 来源' }, { value: 'mini', label: 'Mini 来源' }]
 			}),
 		emptyDetail: '选择一个物品查看详情',
 		pageSize: 30,
