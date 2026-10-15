@@ -277,47 +277,305 @@
 	overflow-x: visible;
 }
 
-/* Touch mail follows the shared framed browsing and fixed-footer layout. */
-:host([data-menu-density]) .panel[data-view='mail'] > .panel-body { display: flex; flex-direction: column; overflow: hidden; gap: 6px; }
+/* Mail shares framed panels and control sizing with the touch inventory. */
+:host([data-menu-density]) .panel[data-view='mail'] > .panel-body {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	gap: 6px;
+}
 :host([data-menu-density]) .panel[data-view='mail'] .mail-layout {
- display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr);
- gap: 6px; border: 0; border-radius: 0; flex: 1; overflow: hidden;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-rows: minmax(0, 1fr);
+	gap: 6px;
+	border: 0;
+	border-radius: 0;
+	flex: 1;
+	overflow: hidden;
 }
 :host([data-menu-density]) .panel[data-view='mail'] :is(.mail-browser, .mail-detail) {
- box-sizing: border-box; border: 1px solid #52606d; border-radius: 10px; background: #19212a; padding: 8px;
- min-width: 0; min-height: 0; max-height: none;
+	box-sizing: border-box;
+	border: 1px solid #52606d;
+	border-radius: 10px;
+	background: #19212a;
+	padding: 8px;
+	min-width: 0;
+	min-height: 0;
+	max-height: none;
 }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-pane { min-height: 0; }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-rows { flex: 1; min-height: 0; max-height: none; padding: 0; gap: 6px; }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-pane {
+	min-height: 0;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-rows {
+	flex: 1;
+	min-height: 0;
+	max-height: none;
+	padding: 0;
+	gap: 6px;
+}
 :host([data-menu-density]) .panel[data-view='mail'] .mail-toolbar {
- display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 6px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	gap: 6px;
 }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-search { grid-column: 1; width: 100%; min-width: 0; }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-search {
+	width: 100%;
+	min-width: 0;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
+	margin: 0;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-write-row {
+	display: flex;
+	justify-content: flex-end;
+}
 :host([data-menu-density]) .panel[data-view='mail'] .mail-pagination {
- grid-column: 2; grid-row: 1; display: flex; gap: 6px; padding: 0; margin: 0; border: 0; min-height: 0; background: transparent;
+	display: flex;
+	gap: 6px;
+	padding: 0;
+	margin: 0 auto 0 0;
+	border: 0;
+	min-height: 0;
+	background: transparent;
 }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-pagination > span { display: none; }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-pagination > button { width: var(--panel-control); }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-toolbar > .mail-actions { grid-column: 3; margin: 0; }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-pagination > button {
+	width: var(--panel-control);
+}
 :host([data-menu-density]) .panel[data-view='mail'] .mail-footer {
- flex: 0 0 auto; justify-content: flex-end; gap: 6px; border-top: 1px solid #52606d;
- padding: 6px 0 0; min-height: calc(var(--panel-control) + 7px); background: transparent;
+	display: flex;
+	flex: 0 0 auto;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 6px;
+	border-top: 1px solid #52606d;
+	padding: 6px 0 0;
+	min-height: calc(var(--panel-control) + 7px);
+	background: transparent;
 }
-:host([data-menu-density]) .panel[data-view='mail'] :is(.mail-toolbar, .mail-footer) button {
- height: var(--panel-control); min-height: var(--panel-control); padding: 3px 6px; font-size: var(--panel-label);
+:host([data-menu-density]) .panel[data-view='mail'] .mail-footer-actions {
+	justify-content: flex-end;
+	flex-wrap: nowrap;
 }
-:host([data-menu-density]) .panel[data-view='mail'] :is(.mail-search, .mail-field input) { height: var(--panel-control); min-height: var(--panel-control); }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-field :is(input, textarea) { font-size: 16px; }
+:host([data-menu-density])
+	.panel[data-view='mail']
+	:is(.mail-toolbar, .mail-footer, .mail-form, .mail-attachment-summary)
+	button {
+	height: var(--panel-control);
+	min-height: var(--panel-control);
+	padding: 3px 6px;
+	font-size: var(--panel-label);
+}
+:host([data-menu-density]) .panel[data-view='mail'] :is(.mail-search, .mail-field input) {
+	height: var(--panel-control);
+	min-height: var(--panel-control);
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-field :is(input, textarea) {
+	font-size: 16px;
+	box-sizing: border-box;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-field {
+	display: grid;
+	grid-template-columns: 5em minmax(0, 1fr);
+	align-items: center;
+	gap: 6px;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-field:has(button) {
+	grid-template-columns: 5em minmax(0, 1fr) auto;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-field > span {
+	padding: 0 2px;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-field:has(textarea) {
+	align-items: start;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment {
+	padding: 6px;
+	border: 1px solid #52606d;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-summary {
+	display: grid;
+	grid-template-columns: 32px minmax(0, 1fr) auto;
+	gap: 6px;
+	align-items: center;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-summary:has(button) {
+	grid-template-columns: 32px minmax(0, 1fr) auto auto;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-summary > img {
+	width: 32px;
+	height: 32px;
+	object-fit: contain;
+	grid-column: 1;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-name {
+	grid-column: 2;
+	margin: 0;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-count {
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-description {
+	margin-top: 4px;
+	font-size: var(--panel-label);
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-description summary {
+	cursor: pointer;
+	color: #bac4cd;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-description p {
+	white-space: pre-line;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item-filters {
+	flex-shrink: 0;
+	padding-bottom: 6px;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item-filters > :is(select, .menu-select) {
+	width: 100%;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item-list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-content: start;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item {
+	display: grid;
+	grid-template-columns: 32px minmax(0, 1fr);
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+	padding: 6px;
+	text-align: left;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item > img {
+	width: 32px;
+	height: 32px;
+	object-fit: contain;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item .list-item-text {
+	grid-column: 2;
+	min-width: 0;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item :is(.list-item-name, .list-item-meta) {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item-list > .mail-empty {
+	grid-column: 1 / -1;
+}
 :host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] > .panel-body {
- display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto auto;
+	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto auto;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] :is(.mail-layout, .mail-pane) { display: contents; }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-detail { grid-row: 1; }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-browser { grid-row: 2; }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar {
- grid-row: 3; grid-template-columns: minmax(0, 1fr) auto; border-top: 1px solid #52606d; padding-top: 6px;
+:host([data-menu-density][data-orientation='portrait'])
+	.panel[data-view='mail']
+	:is(.mail-layout, .mail-pane, .mail-toolbar, .mail-footer) {
+	display: contents;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-detail {
+	grid-row: 1;
+	grid-column: 1 / -1;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-browser {
+	grid-row: 2;
+	grid-column: 1 / -1;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-search {
+	grid-row: 3;
+	grid-column: 1;
 }
 :host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
- grid-row: 2; grid-column: 1 / -1; justify-content: flex-end;
+	grid-row: 3;
+	grid-column: 2;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-footer { grid-row: 4; }
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-pagination {
+	grid-row: 3;
+	grid-column: 3;
+	margin: 0;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-write-row {
+	grid-row: 4;
+	grid-column: 1 / -1;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-footer-actions {
+	grid-row: 5;
+	grid-column: 1 / -1;
+	border-top: 1px solid #52606d;
+	padding-top: 6px;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] > [data-mail-writing='true'] {
+	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+:host([data-menu-density][data-orientation='portrait'])
+	.panel[data-view='mail']
+	[data-mail-writing='true']
+	.mail-toolbar {
+	display: flex;
+	grid-row: 3;
+	grid-column: 1 / -1;
+}
+:host([data-menu-density][data-orientation='portrait'])
+	.panel[data-view='mail']
+	[data-mail-writing='true']
+	.mail-footer-actions {
+	grid-row: 4;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-item-filters {
+	order: 1;
+	padding: 6px 0 0;
+	margin-top: 6px;
+	border-top: 1px solid #52606d;
+}
+
+/* Phone portrait mailbox controls fill two aligned rows. */
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] > .panel-body {
+ grid-template-columns: minmax(0, 1fr) auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-pagination { grid-column: 2; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
+ grid-row: 4; grid-column: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar .mail-actions > :is(select, .menu-select, button) {
+ width: 100%; min-width: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-write-row { grid-column: 2; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-write-row > button { width: 100%; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-field {
+ grid-template-columns: minmax(0, 1fr);
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-field:has(button) {
+ grid-template-columns: minmax(0, 1fr) auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-field > span { grid-column: 1 / -1; }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-list {
+ border: 1px solid #52606d; border-radius: 6px; margin-top: 6px; overflow: hidden;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-list > .mail-attachment {
+ border: 0; border-radius: 0; margin: 0; background: transparent;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-list > .mail-attachment + .mail-attachment { border-top: 1px solid #52606d; }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-list > .mail-empty { margin: 0; padding: 8px; }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item-list { grid-auto-rows: minmax(48px, auto); }
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item {
+ box-sizing: border-box; height: auto; min-height: 48px; max-height: none; overflow: hidden;
+}
+:host([data-menu-density]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-toolbar { display: none; }
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] > [data-mail-writing='true'] { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; }
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] [data-mail-writing='true'] .mail-footer-actions { grid-row: 3; }
+
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] [data-mail-writing='true'] .mail-toolbar { display: none; }
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-pagination > button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding-block: 0;
+	font: 22px/1 Arial, sans-serif;
+}
