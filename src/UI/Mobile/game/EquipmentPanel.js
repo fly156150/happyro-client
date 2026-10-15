@@ -3,7 +3,7 @@ import { createFeedback } from 'UI/Components/Feedback.js';
 /** Independent touch equipment view; server snapshots own all item and stat values. */
 export function createEquipmentPanel(body, actions) {
 	body.innerHTML =
-		'<nav class="equipment-tabs menu-tabs" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><dl class="equipment-stats" hidden></dl>';
+		'<nav class="equipment-tabs menu-tabs" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><div class="equipment-stats" hidden></div><div class="equipment-actions inventory-actions"></div>';
 	const $ = selector => body.querySelector(selector);
 	const slotsRoot = $('.equipment-slots'),
 		detail = $('.equipment-detail');
@@ -21,6 +21,17 @@ export function createEquipmentPanel(body, actions) {
 		node.onclick = fn;
 		return node;
 	}
+	const statSections = new Map();
+	for (const [key, title] of [['base', '基础素质'], ['combat', '战斗属性']]) {
+		const section = document.createElement('section');
+		section.className = 'equipment-stat-section';
+		const heading = document.createElement('h3');
+		heading.textContent = title;
+		const list = document.createElement('dl');
+		section.append(heading, list);
+		$('.equipment-stats').append(section);
+		statSections.set(key, list);
+	}
 	const message = createFeedback(body);
 	function select(slot) {
 		selected = slot.key;
@@ -30,6 +41,7 @@ export function createEquipmentPanel(body, actions) {
 		message('');
 		render();
 		detail.scrollTop = 0;
+		detail.querySelector('.inventory-item-description')?.scrollTo(0, 0);
 	}
 	for (const [key, label] of [
 		['normal', '装备'],
@@ -55,7 +67,55 @@ export function createEquipmentPanel(body, actions) {
 		description.textContent = item.description || '暂无装备说明';
 		const status = document.createElement('p');
 		status.textContent = `数量：${item.count}${item.worn ? ' · 已穿戴' : ''}${!item.identified ? ' · 未鉴定' : ''}${item.damaged ? ' · 已损坏' : ''}`;
-		return [title, status, description];
+		const overview = document.createElement('div');
+		overview.className = 'inventory-item-overview';
+		const media = document.createElement('div');
+		media.className = 'inventory-item-media';
+		const picture = document.createElement('img');
+		picture.className = 'inventory-item-picture';
+		picture.alt = item.name;
+		picture.hidden = !item.icon;
+		if (item.icon) picture.src = item.icon;
+		const metadata = document.createElement('div');
+		metadata.className = 'inventory-item-metadata';
+		metadata.append(status);
+		media.append(picture, metadata);
+		const summary = document.createElement('div');
+		summary.className = 'inventory-item-summary';
+		summary.append(title, description);
+		for (const [kind, label] of [
+			['card', '已插卡片'],
+			['enchant', '附魔']
+		]) {
+			const sockets = item.sockets?.filter(entry => entry.kind === kind) || [];
+			if (!sockets.length) continue;
+			const section = document.createElement('section');
+			section.className = 'inventory-sockets';
+			const heading = document.createElement('h4');
+			heading.textContent = label;
+			section.append(heading);
+			for (const socket of sockets) {
+				const details = document.createElement('details');
+				const name = document.createElement('summary');
+				name.textContent = `${socket.name} · 槽位 ${socket.slot}`;
+				const text = document.createElement('p');
+				text.className = 'item-description';
+				text.textContent = socket.description;
+				details.append(name, text);
+				section.append(details);
+			}
+			summary.append(section);
+		}
+		overview.append(media, summary);
+		void actions.preview(item.index, item.ID).then(preview => {
+			if (!overview.isConnected || !preview) return;
+			const source = preview.art || preview.image || item.icon;
+			if (source) {
+				picture.src = source;
+				picture.hidden = false;
+			}
+		});
+		return [overview];
 	}
 	function perform(slot, item, action) {
 		message(actions.act(slot.key, item.index, item.ID, action), 'error');
@@ -110,7 +170,7 @@ export function createEquipmentPanel(body, actions) {
 	function renderDetail() {
 		const slot = state.slots.find(entry => entry.key === selected);
 		if (!slot) return;
-		const key = JSON.stringify(slot);
+		const key = `${group}:${JSON.stringify(slot)}`;
 		if (key === detailKey) return;
 		detailKey = key;
 		const content = document.createElement('div');
@@ -118,21 +178,28 @@ export function createEquipmentPanel(body, actions) {
 		const heading = document.createElement('h3');
 		heading.textContent = slot.label;
 		content.append(heading);
-		const ops = document.createElement('div');
-		ops.className = 'inventory-actions';
+		const ops = $('.equipment-actions');
+		ops.replaceChildren();
 		if (slot.item) {
 			content.append(...itemDetails(slot.item));
 			const remove = button('卸下', () => perform(slot, slot.item, 'unequip'));
-			remove.disabled = Boolean(slot.item.reason);
+			remove.disabled = group === 'stats' || Boolean(slot.item.reason);
 			ops.append(remove);
 			if (slot.item.reason) {
 				const reason = document.createElement('p');
 				reason.textContent = slot.item.reason;
 				content.append(reason);
 			}
-		} else content.append(document.createTextNode('此部位未穿戴装备'));
-		ops.append(button(slot.item ? '更换' : '选择装备', () => chooseEquipment(slot)));
-		detail.replaceChildren(content, ops);
+		} else {
+			content.append(document.createTextNode('此部位未穿戴装备'));
+			const remove = button('卸下', () => {});
+			remove.disabled = true;
+			ops.append(remove);
+		}
+		const choose = button(slot.item ? '更换' : '选择装备', () => chooseEquipment(slot));
+		choose.disabled = group === 'stats' || !slot.candidates.length;
+		ops.append(choose);
+		detail.replaceChildren(content);
 	}
 	function render() {
 		for (const tab of $('.equipment-tabs').children)
@@ -168,7 +235,11 @@ export function createEquipmentPanel(body, actions) {
 				dt.textContent = stat.label;
 				const dd = document.createElement('dd');
 				dd.dataset.stat = stat.key;
-				$('.equipment-stats').append(dt, dd);
+				const row = document.createElement('div');
+				row.className = 'equipment-stat-row';
+				row.append(dt, dd);
+				const section = ['str', 'agi', 'vit', 'int', 'dex', 'luk'].includes(stat.key) ? 'base' : 'combat';
+				statSections.get(section).append(row);
 				statNodes.set(stat.key, dd);
 			}
 			statNodes.get(stat.key).textContent = stat.value;

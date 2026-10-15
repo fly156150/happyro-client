@@ -6,7 +6,7 @@ afterEach(() => { view?.destroy(); document.body.replaceChildren(); vi.unstubAll
 function mount() {
 	const root = document.createElement('div'); document.body.append(root);
 	const cleanup = vi.fn(), context = { capabilities: { itemGrantAllowed: true } }, close = vi.fn();
-	const tabs = ['maps','monsters','npcs','items','character','settings'].map(id => ({
+	const tabs = ['maps','monsters','items','npcs','character','settings'].map(id => ({
 		id, label: id, mount: vi.fn((container, passed) => {
 			expect(passed).toMatchObject(context);
 			container.innerHTML = '<div class="catalog-list"><button data-catalog-key="1">Entry</button></div><section class="catalog-detail"><input aria-label="数量" value="1"></section>';
@@ -33,7 +33,7 @@ it('opens details explicitly and returns to the same list without destroying its
 	expect(root.querySelector('.show-detail')).not.toBeNull();
 	root.querySelector('[data-back]').click();
 	expect(root.querySelector('.show-detail')).toBeNull(); expect(list.scrollTop).toBe(150);
-	expect(tabs[3].mount).toHaveBeenCalledOnce();
+	expect(tabs.find(tab => tab.id === 'items').mount).toHaveBeenCalledOnce();
 });
 it('cancels a pending confirmation before disposing the feature', () => {
 	const { root, cleanup } = mount(); root.querySelector('[data-tool="character"]').click();
@@ -87,7 +87,7 @@ it('returns from a drop monster to the same item DOM and destroys suspended view
  const item=root.querySelector('.game-tools-tab');
  item.querySelector('input').value='123';
  const list=item.querySelector('.catalog-list');list.scrollTop=70;
- const itemContext=tabs[3].mount.mock.calls[0][1];
+ const itemContext=tabs.find(tab => tab.id === 'items').mount.mock.calls[0][1];
  itemContext.openMonster(1002);
  expect(view.activeFeature()).toBe('monsters');
  const monsterContext=tabs[1].mount.mock.calls[0][1];
@@ -96,7 +96,7 @@ it('returns from a drop monster to the same item DOM and destroys suspended view
  expect(root.querySelector('.game-tools-tab')).toBe(item);
  expect(item.querySelector('input').value).toBe('123');
  expect(list.scrollTop).toBe(70);
- expect(tabs[3].mount).toHaveBeenCalledOnce();
+ expect(tabs.find(tab => tab.id === 'items').mount).toHaveBeenCalledOnce();
  itemContext.openMonster(1039);
  const count=cleanup.mock.calls.length;
  view.destroy();expect(cleanup).toHaveBeenCalledTimes(count+2);

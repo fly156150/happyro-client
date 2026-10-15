@@ -108,3 +108,21 @@ textarea {
  height: max(54px, calc(var(--mobile-visible-height, 100dvh) + var(--mobile-visual-top, 0px) - var(--editor-safe-top) - 16px));
 }
 :host([data-editor-layout='strip']) section:has(textarea) main { height: 100%; }
+
+/* Phone landscape keeps the controls intact when an expanded keyboard leaves little room. */
+:host([data-phone-screen][data-orientation='landscape'][data-editor-layout='strip']) section {
+ --editor-available-height: max(0px, calc(var(--mobile-visible-height, 100dvh) + var(--mobile-visual-top, 0px) - var(--editor-safe-top)));
+ --editor-top-gap: min(8px, max(0px, calc(var(--editor-available-height) - var(--modal-input-height, 36px))));
+ top: calc(var(--editor-safe-top) + var(--editor-top-gap));
+ min-height: var(--modal-input-height, 36px);
+ max-height: none;
+ padding: 0;
+ border: 0;
+ border-radius: 0;
+ background: transparent;
+ box-shadow: none;
+ overflow: visible;
+}
+:host([data-phone-screen][data-orientation='landscape'][data-editor-layout='strip']) section:has(textarea) {
+ height: max(var(--modal-input-height, 36px), calc(var(--editor-available-height) - var(--editor-top-gap) - 4px));
+}

@@ -142,3 +142,9 @@
 .npc-lines[hidden] + .npc-options {
 	padding-top: 0;
 }
+
+/* Give the final line or choice a little more breathing room above the lower edge. */
+:host([data-phone-screen]) .panel[data-view='npc'] .npc-content {
+ box-sizing: border-box;
+ padding-bottom: 4px;
+}

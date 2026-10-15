@@ -235,8 +235,15 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 		excludedTitle.textContent = `已排除 ${draft.excluded.length} 件 · 已选 ${selected.size} 件`;
 	}
 	function renderExcluded() {
+		const scrollPositions = [];
+		if (section.closest('.mobile-pickup-settings')) {
+			for (let node = excluded; node; node = node.parentElement) {
+				if (node.scrollHeight > node.clientHeight) scrollPositions.push([node, node.scrollTop]);
+				if (node === section) break;
+			}
+		}
+		const fragment = document.createDocumentFragment();
 		clearImages(excludedImageUrls);
-		excluded.replaceChildren();
 		for (const item of draft.excluded) {
 			const row = document.createElement('label');
 			row.className = 'pickup-item';
@@ -252,10 +259,13 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 			const name = document.createElement('span');
 			name.textContent = `${item.name} · ${item.id}`;
 			row.append(checkbox, itemImage(`/items/${item.id}/icon`, excludedImageUrls), name);
-			excluded.append(row);
+			fragment.append(row);
 		}
-		if (!draft.excluded.length) excluded.textContent = '暂无排除物品';
+		if (!draft.excluded.length) fragment.append('暂无排除物品');
+		excluded.replaceChildren(fragment);
 		updateSelection();
+		// Clamp only to the final list height, never the temporary empty-list height.
+		for (const [node, top] of scrollPositions) node.scrollTop = top;
 	}
 	renderExcluded();
 	const note = document.createElement('p');

@@ -57,7 +57,7 @@ button.surface,
 	width: 188px;
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 6px;
 }
 .profile {
 	isolation: isolate;

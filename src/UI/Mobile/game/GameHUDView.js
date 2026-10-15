@@ -1,3 +1,4 @@
+import companionLayoutCSS from './CompanionLayout.css?raw';
 import menuNavigationCSS from './MenuNavigation.css?raw';
 import menuContentComponentsCSS from './MenuContentComponents.css?raw';
 import menuContentLayoutCSS from './MenuContentLayout.css?raw';
@@ -77,6 +78,7 @@ ${portraitCSS}
 ${menuPortraitCSS}
 ${menuContentLayoutCSS}
 ${menuContentComponentsCSS}
+${companionLayoutCSS}
 ${menuNavigationCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
@@ -360,13 +362,16 @@ ${menuNavigationCSS}</style>${html}`;
 		$('[data-close]').disabled = serverState?.canClose === false;
 		$('[data-close]').title = panel === 'npc' && serverState?.canClose === false ? '请先完成当前对话步骤' : '关闭';
 		$('[data-back]').hidden =
-			(Boolean(serverState) && !['pet', 'companions', 'mail', 'bank', 'vending'].includes(panel)) ||
+			(Boolean(serverState) &&
+				!serverState.back &&
+				!['pet', 'companions', 'mail', 'bank', 'vending'].includes(panel)) ||
 			panel === 'menu' ||
 			panel === 'chat' ||
 			panel === 'camera' ||
 			panel === 'npc';
 		$('[data-back]').disabled = serverState?.canClose === false;
 		body.replaceChildren();
+		body.classList.remove('equipment-selection');
 		statusPanel = null;
 		body.classList.toggle('settings-body', panel === 'settings');
 		$('.panel').classList.toggle('settings-panel', panel === 'settings');
@@ -481,7 +486,9 @@ ${menuNavigationCSS}</style>${html}`;
 			grid.prepend(adventureButton);
 			const petButton = document.createElement('button');
 			petButton.textContent = '宠物';
-			petButton.onclick = () => actions.openPet();
+			petButton.onclick = () => {
+				if (!actions.openPet()) showToast(body, '当前无法打开宠物', 'error');
+			};
 			grid.append(petButton);
 			for (const [kind, label] of [
 				['homunculus', '生命体'],
@@ -489,17 +496,22 @@ ${menuNavigationCSS}</style>${html}`;
 			]) {
 				const button = document.createElement('button');
 				button.textContent = label;
-				button.onclick = () => actions.openCompanion(kind);
+				button.onclick = () => {
+					if (!actions.openCompanion(kind)) showToast(body, `当前无法打开${label}`, 'error');
+				};
 				grid.append(button);
 			}
 			const mailButton = document.createElement('button');
 			mailButton.textContent = '邮件';
-			mailButton.onclick = () => actions.openMail();
+			mailButton.onclick = () => {
+				if (!actions.openMail()) showToast(body, '当前无法打开邮件', 'error');
+			};
 			grid.append(mailButton);
 			const bankButton = document.createElement('button');
 			bankButton.textContent = '银行';
 			bankButton.onclick = () => {
-				bankButton.textContent = actions.openBank();
+				const result = actions.openBank();
+				if (result !== '已请求打开银行') showToast(body, result, 'error');
 			};
 			grid.append(bankButton);
 			const storeButton = document.createElement('button');
@@ -548,7 +560,16 @@ ${menuNavigationCSS}</style>${html}`;
 		if (panel === 'storage' || panel === 'cart')
 			containerPanel = createContainerPanel(
 				body,
-				{ snapshot: actions.containerSnapshot, transfer: actions.transferItem },
+				{
+					snapshot: actions.containerSnapshot,
+					preview: actions.containerPreview,
+					transfer: actions.transferItem,
+					setCapacity: capacity =>
+						text(
+							'h2',
+							`${panel === 'cart' ? '手推车' : serverState?.title || '仓库'}${capacity ? ` (${capacity.current}/${capacity.limit})${capacity.weight === undefined ? '' : ` · 负重 ${capacity.weight}/${capacity.maxWeight}`}` : ''}`
+						)
+				},
 				panel
 			);
 		if (panel === 'enchant') {
@@ -595,7 +616,8 @@ ${menuNavigationCSS}</style>${html}`;
 			serverState.service.setOperationGuard(actions.canOperate);
 			shopPanel = createShopPanel(body, serverState.service);
 		}
-		if (panel === 'attributes') attributesPanel = createAttributesPanel(body, actions.attributes, $('.panel > header'));
+		if (panel === 'attributes')
+			attributesPanel = createAttributesPanel(body, actions.attributes, $('.panel > header'));
 		if (panel === 'skills')
 			skillsPanel = createSkillsPanel(body, {
 				snapshot: actions.skillsSnapshot,
@@ -608,6 +630,7 @@ ${menuNavigationCSS}</style>${html}`;
 		if (panel === 'equipment')
 			equipmentPanel = createEquipmentPanel(body, {
 				snapshot: actions.equipmentSnapshot,
+				preview: actions.inventoryPreview,
 				act: actions.equipmentAct
 			});
 		if (panel === 'inventory')
@@ -671,8 +694,9 @@ ${menuNavigationCSS}</style>${html}`;
 	// A touch held before opening the panel must not dismiss it on release.
 	listen($('[data-back]'), 'click', () => {
 		if (serverState?.canClose === false) return;
+		const destination = serverState?.back || 'menu';
 		close();
-		open('menu');
+		open(destination);
 	});
 	listen(backdrop, 'pointerdown', event => {
 		backdropPointer = event.target === backdrop ? event.pointerId : null;

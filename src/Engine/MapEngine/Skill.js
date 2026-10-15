@@ -222,6 +222,7 @@ function onAutoCastSkill(pkt) {
  */
 function onIdentifyList(pkt) {
 	if (!pkt.ITIDList.length) {
+		showToast(document.body, '没有需要鉴定的物品', 'info');
 		return;
 	}
 
@@ -283,6 +284,7 @@ function onIdentifyResult(pkt) {
  */
 function onAutoSpellList(pkt) {
 	if (!pkt.SKID.length) {
+		showToast(document.body, '没有可选择的技能', 'info');
 		return;
 	}
 
@@ -334,6 +336,7 @@ function onDevotionList(pkt) {
  */
 function onSelectSkillList(pkt) {
 	if (!pkt.SKID.length) {
+		showToast(document.body, '没有可选择的技能', 'info');
 		return;
 	}
 
@@ -451,6 +454,7 @@ function onMemoResult(pkt) {
  */
 function onMakingarrowList(pkt) {
 	if (!pkt.arrowList.length) {
+		showToast(document.body, '没有可制作的箭矢', 'info');
 		return;
 	}
 
@@ -487,6 +491,7 @@ function onMakingarrowList(pkt) {
  */
 function onRefineList(pkt) {
 	if (!pkt.itemList.length) {
+		showToast(document.body, '没有可精炼的装备', 'info');
 		return;
 	}
 
@@ -523,6 +528,7 @@ function onRefineList(pkt) {
  */
 function onRepairList(pkt) {
 	if (!pkt.itemList.length) {
+		showToast(document.body, '没有需要修理的装备', 'info');
 		return;
 	}
 

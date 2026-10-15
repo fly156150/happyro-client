@@ -7,7 +7,7 @@ vi.mock('UI/Components/GameTools/CharacterMaintenanceTab.js', () => ({ default: 
 vi.mock('UI/Components/GameTools/GameSettingsTab.js', () => ({ default: {id:'settings',label:'设置',capability:'gameSettingsAllowed',mount:()=>{}} }));
 import { availableGameToolsTabs } from '../../src/UI/Components/GameTools/GameToolsTabs.js';
 it('shares all six features across presentations and filters privileged features by server capability', () => {
-	expect(availableGameToolsTabs({adminAvailable:true,characterMaintenanceAllowed:true,gameSettingsAllowed:true}).map(t=>t.id)).toEqual(['maps','monsters','npcs','items','character','settings']);
+	expect(availableGameToolsTabs({adminAvailable:true,characterMaintenanceAllowed:true,gameSettingsAllowed:true}).map(t=>t.id)).toEqual(['maps','monsters','items','npcs','character','settings']);
 	expect(availableGameToolsTabs({}).map(t=>t.id)).toEqual(['maps','monsters','npcs']);
-	expect(availableGameToolsTabs({adminAvailable:true}).map(t=>t.id)).toEqual(['maps','monsters','npcs','items']);
+	expect(availableGameToolsTabs({adminAvailable:true}).map(t=>t.id)).toEqual(['maps','monsters','items','npcs']);
 });

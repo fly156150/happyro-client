@@ -1,3 +1,4 @@
+import { showToast } from 'UI/Components/Toast.js';
 import Platform from 'UI/Platform.js';
 import {
 	openGamePetCapture,
@@ -84,6 +85,7 @@ function onPetList(pkt) {
 		return;
 	}
 	if (!pkt.eggList.length) {
+		showToast(document.body, '没有可孵化的宠物蛋', 'info');
 		return;
 	}
 

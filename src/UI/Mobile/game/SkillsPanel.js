@@ -6,7 +6,7 @@ import { createPointResetControl } from './PointResetControl.js';
 
 export function createSkillsPanel(body, actions) {
 	body.innerHTML =
-		'<div class="skills-toolbar"><select aria-label="转职分类"><option value="all">全部转职</option></select><select aria-label="技能分类"><option value="all">全部技能</option><option value="active">已学主动</option><option value="passive">已学被动</option><option value="locked">未学习</option></select></div><div class="inventory-layout skills-layout" data-menu-layout="split"><section class="skills-browser"><div class="inventory-list" aria-label="技能列表"></div><div class="skills-footer"><div class="skills-reset"></div><strong data-skill-points></strong></div></section><section class="inventory-detail inventory-item-detail" aria-label="技能详情"></section></div>';
+		'<div class="skills-toolbar"><select aria-label="转职分类"><option value="all">全部转职</option></select><select aria-label="技能分类"><option value="all">全部技能</option><option value="active">已学主动</option><option value="passive">已学被动</option><option value="locked">未学习</option></select></div><div class="inventory-layout skills-layout" data-menu-layout="split"><section class="skills-browser"><div class="inventory-list" aria-label="技能列表"></div><div class="skills-footer"><div class="skills-reset"></div><strong data-skill-points><span>技能点</span><span data-skill-points-value></span></strong></div></section><section class="inventory-detail inventory-item-detail" aria-label="技能详情"></section></div>';
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),
 		detail = $('.inventory-detail');
@@ -30,11 +30,23 @@ export function createSkillsPanel(body, actions) {
 		b.onclick = fn;
 		return b;
 	}
+	function disabledAction(label) {
+		const control = button(label, () => {});
+		control.disabled = true;
+		control.className = 'skills-placeholder-action';
+		return control;
+	}
 	const status = createFeedback(body);
 	function renderDetail() {
 		const skill = state.skills.find(entry => entry.id === selected);
 		if (!skill) {
-			detail.textContent = '点击技能查看说明、学习或设置快捷键';
+			const hint = document.createElement('div');
+			hint.className = 'skills-empty-message';
+			hint.textContent = '点击技能查看说明、学习或设置快捷键';
+			const ops = document.createElement('div');
+			ops.className = 'inventory-actions skills-empty-actions';
+			ops.append(disabledAction('学习一级'), disabledAction('设置快捷键'));
+			detail.replaceChildren(hint, ops);
 			return;
 		}
 		const next = JSON.stringify({ ...skill, icon: undefined });
@@ -92,7 +104,7 @@ export function createSkillsPanel(body, actions) {
 			});
 			bind.disabled = skill.level < 1;
 			ops.append(bind);
-		}
+		} else ops.append(disabledAction('设置快捷键'));
 		const requirements = document.createElement('p');
 		requirements.textContent = `前置技能：${skill.requirements.join('；') || '无'}${skill.reason ? '\n' + skill.reason : ''}`;
 		const description = document.createElement('p');
@@ -102,7 +114,7 @@ export function createSkillsPanel(body, actions) {
 		detail.append(content, ops);
 	}
 	function render() {
-		$('[data-skill-points]').textContent = `剩余技能点：${state.points}`;
+		$('[data-skill-points-value]').textContent = state.points;
 		const tierSelect = $('[aria-label="转职分类"]');
 		const availableTiers = ['初心者', '一转', '二转', '三转', '四转', '其它'].filter(tier =>
 			state.skills.some(skill => (skill.tier || '其它') === tier)
@@ -152,6 +164,7 @@ export function createSkillsPanel(body, actions) {
 					status('');
 					render();
 					detail.scrollTop = 0;
+				detail.querySelector('.inventory-item-description')?.scrollTo(0, 0);
 				});
 				node.className = 'inventory-item';
 				node.dataset.skill = skill.id;

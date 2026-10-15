@@ -91,3 +91,18 @@
 :host([data-orientation='portrait']) .top-left {
 	width: min(var(--portrait-profile-width), calc(100% - var(--portrait-map-width) - 36px));
 }
+
+/* Phone portrait opens the full chat window from the compact corner launcher. */
+.portrait-chat-launch { display: none; }
+:host([data-phone-screen][data-orientation='portrait']) .portrait-chat-launch {
+ display: block; position: absolute; pointer-events: auto;
+ left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
+ width: 40px; height: 36px; padding: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .portrait-chat-button { display: none; }
+:host([data-phone-screen][data-orientation='portrait']) .profile-actions {
+ display: flex; align-items: flex-start; gap: 8px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .profile-actions button {
+ flex: 0 0 auto; min-height: 30px; padding: 4px 9px;
+}

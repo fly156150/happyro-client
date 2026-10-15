@@ -1,3 +1,4 @@
+import { createEquipmentFilters } from 'UI/Game/EquipmentFilters.js';
 /**
  * UI/Components/ItemSelection/ItemSelection.js
  *
@@ -89,10 +90,32 @@ ItemSelection.onAppend = function onAppend() {
  *
  * @param {Array} list object to display
  */
-ItemSelection.setList = function setList(list, isSkill) {
+ItemSelection.setList = function setList(list, isSkill, equipment = false) {
 	const root = ItemSelection.getRoot();
 	const listEl = root.querySelector('.list');
 	listEl.innerHTML = '';
+	root.querySelector('.equipment-filters')?.remove();
+	root.querySelector('.equipment-back')?.remove();
+	root.querySelector('#ItemSelection').classList.toggle('equipment-selection', equipment);
+	if (equipment) {
+		const toolbar = document.createElement('div');
+		toolbar.className = 'equipment-filters';
+		root.querySelector('.content').prepend(toolbar);
+		const entries = list.map(id => ({ id, itemId: Inventory.getUI().getItemByIndex(id)?.ITID }));
+		const matches = createEquipmentFilters(toolbar, entries, () => {
+			for (const entry of entries) root.querySelector(`[data-index="${entry.id}"]`).hidden = !matches(entry);
+			this.setIndex(entries.find(matches)?.id ?? -1);
+		});
+		const back = document.createElement('button');
+		back.className = 'equipment-back';
+		back.textContent = '返回';
+		back.onclick = () => {
+			this.index = -1;
+			this.selectIndex();
+			Inventory.getUI().append();
+		};
+		root.querySelector('.head').append(back);
+	}
 
 	for (let i = 0, count = list.length; i < count; ++i) {
 		if (isSkill) {

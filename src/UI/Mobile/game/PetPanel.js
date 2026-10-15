@@ -1,8 +1,14 @@
+import { createCompanionLayout } from './CompanionLayout.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 export function createPetPanel(body, service) {
-	body.innerHTML =
-		'<button data-refresh>刷新宠物状态</button><dl data-info></dl><div class="social-form"><label>宠物名称<input data-name maxlength="23"></label><div class="inventory-actions" data-actions></div></div><div data-evolution></div>';
+	createCompanionLayout(body, {
+		nameAttribute: 'data-name',
+		nameLabel: '宠物名称',
+		sectionTitle: '进化',
+		contentAttribute: 'data-evolution',
+		refresh: true
+	});
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector);
 	let dismiss,
@@ -46,7 +52,8 @@ export function createPetPanel(body, service) {
 				`${label}${action === 'rename' ? '为「' + $('[data-name]').value + '」' : ''}？`
 			);
 		};
-		$('[data-actions]').append(b);
+		if (action === 'rename') $('[data-name]').parentElement.append(b);
+		else $('[data-actions]').append(b);
 	}
 	$('[data-refresh]').onclick = () => {
 		cancel();
@@ -88,6 +95,11 @@ export function createPetPanel(body, service) {
 		if (nextKey !== evoKey) {
 			evoKey = nextKey;
 			$('[data-evolution]').replaceChildren();
+			if (!state.evolutions.length) {
+				const empty = document.createElement('p');
+				empty.textContent = '暂无可用进化';
+				$('[data-evolution]').append(empty);
+			}
 			for (const evo of state.evolutions) {
 				const title = document.createElement('h3');
 				title.textContent = `进化为 ${evo.name}`;

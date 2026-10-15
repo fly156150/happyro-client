@@ -1,3 +1,5 @@
+import { itemSubtypes } from './ItemSubtypes.js';
+import { createItemPreviewLoader } from './ItemPreview.js';
 import { equipmentSockets } from './EquipmentSockets.js';
 import { beginItemOperation, finishItemOperation } from './ItemOperationFeedback.js';
 import ItemType from 'DB/Items/ItemType.js';
@@ -13,13 +15,7 @@ import { toPlainRagnarokText } from 'Utils/RagnarokText.js';
 /** Read live inventory identities; never optimistically mutate server-owned counts or equipment. */
 export function createGameInventory(canOperate) {
 	const icons = new Map();
-	const previewImages = new Map();
-	function loadPreviewImage(path) {
-		if (!previewImages.has(path)) {
-			previewImages.set(path, new Promise(resolve => Client.loadFile(path, resolve, () => resolve(''))));
-		}
-		return previewImages.get(path);
-	}
+	const loadPreview = createItemPreviewLoader();
 	function entries() {
 		const items = new Map(
 			Inventory.getUI()
@@ -72,6 +68,7 @@ export function createGameInventory(canOperate) {
 			location: item.location,
 			wearLocation: worn ? item.equipped : 0,
 			type: item.type,
+			subtypes: itemSubtypes(item),
 			category: equippable ? 'equipment' : usable ? 'usable' : 'other',
 			description: toPlainRagnarokText(
 				item.IsIdentified ? info.identifiedDescriptionName : info.unidentifiedDescriptionName
@@ -92,15 +89,7 @@ export function createGameInventory(canOperate) {
 		async preview(index, id) {
 			const entry = entries().find(({ item }) => item.index === index && item.ITID === id);
 			if (!entry) return null;
-			const { item } = entry;
-			const info = DB.getItemInfo(id);
-			const resource = item.IsIdentified ? info.identifiedResourceName : info.unidentifiedResourceName;
-			const illustration = item.IsIdentified && info.illustResourcesName;
-			const [image, art] = await Promise.all([
-				resource ? loadPreviewImage(`${DB.INTERFACE_PATH}collection/${resource}.bmp`) : '',
-				illustration ? loadPreviewImage(`${DB.INTERFACE_PATH}cardbmp/${illustration}.bmp`) : ''
-			]);
-			return { image, art };
+			return loadPreview(entry.item);
 		},
 		describe: item => describe({ item, worn: false }),
 		act(index, id, action, location) {

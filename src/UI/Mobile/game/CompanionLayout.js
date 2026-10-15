@@ -1,0 +1,13 @@
+/** Shared touch presentation for pets, homunculi and mercenaries. */
+export function createCompanionLayout(
+	body,
+	{ nameAttribute, nameLabel, sectionTitle, contentAttribute, refresh = false }
+) {
+	body.innerHTML = `<div class="companion-layout">
+  <section class="companion-info"><h3>状态</h3><dl data-info></dl></section>
+  <section class="companion-content"><h3>${sectionTitle}</h3><div ${contentAttribute}></div></section>
+ </div><div class="companion-footer">
+  <label class="companion-name"><span>${nameLabel}</span><input ${nameAttribute} maxlength="23" aria-label="${nameLabel}" placeholder="${nameLabel}"></label>
+  <div class="inventory-actions" data-actions>${refresh ? '<button type="button" data-refresh>刷新状态</button>' : ''}</div>
+ </div>`;
+}

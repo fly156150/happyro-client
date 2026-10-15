@@ -198,6 +198,7 @@ HUD.onAppend = function () {
 		questSnapshot: () => quests.snapshot(),
 		questToggle: (...args) => quests.toggle(...args),
 		containerSnapshot: source => containers.snapshot(source),
+		containerPreview: (...args) => containers.preview(...args),
 		transferItem: (...args) => containers.transfer(...args),
 		attributes,
 		skillsReset: () => skills.reset(),

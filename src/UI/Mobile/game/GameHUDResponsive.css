@@ -173,7 +173,7 @@
 }
 :host([data-menu-density='spacious']) .top-left {
 	width: 320px;
-	gap: 14px;
+	gap: 8px;
 }
 :host([data-menu-density='spacious']) .profile {
 	padding: 12px 14px;

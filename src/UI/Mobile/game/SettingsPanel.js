@@ -13,7 +13,8 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 	if (host) observer.observe(host, { attributes: true, attributeFilter: ['data-menu-density'] });
 	const resize = () => updateScene();
 	if (!host) window.addEventListener('resize', resize);
-	const notify = message => showToast(body, message);
+	const notify = message =>
+		showToast(body, message, message === '设置已保存' || message.startsWith('已保存，') ? 'success' : 'error');
 	function render() {
 		body.replaceChildren();
 		const form = document.createElement('form');

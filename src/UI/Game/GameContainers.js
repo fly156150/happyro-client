@@ -1,3 +1,4 @@
+import { createItemPreviewLoader } from './ItemPreview.js';
 import Session from 'Engine/SessionStorage.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import Equipment from 'UI/Components/Equipment/Equipment.js';
@@ -12,6 +13,7 @@ const identity = item =>
 
 export function createGameContainers(canOperate) {
 	const inventory = createGameInventory(canOperate);
+	const loadPreview = createItemPreviewLoader();
 	function available() {
 		return canOperate() && Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE;
 	}
@@ -33,6 +35,10 @@ export function createGameContainers(canOperate) {
 		return Inventory.getUI().list.filter(item => !item.equipped && !worn.has(item.index));
 	}
 	return {
+		preview(source, index, id, expectedIdentity) {
+			const item = raw(source).find(item => item.index === index && item.ITID === id && identity(item) === expectedIdentity);
+			return item ? loadPreview(item) : Promise.resolve(null);
+		},
 		snapshot(source) {
 			const containers = sources();
 			return {
@@ -41,6 +47,7 @@ export function createGameContainers(canOperate) {
 				allowed: Boolean(available() && containers.includes(source)),
 				pending: Boolean(interactionSnapshot()?.storageTransfer?.pending),
 				transferStatus: storageTransferStatus(),
+				transferSucceeded: interactionSnapshot()?.storageTransfer?.success === true,
 				items: containers.includes(source)
 					? raw(source)
 							.map(item => ({ ...inventory.describe(item), type: item.type, identity: identity(item) }))

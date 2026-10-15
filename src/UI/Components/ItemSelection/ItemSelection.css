@@ -80,3 +80,37 @@
 #ItemSelection .cancel {
 	right: 5px;
 }
+
+#ItemSelection.equipment-selection {
+	width: 360px;
+}
+#ItemSelection.equipment-selection .head .text {
+	display: inline-block;
+	max-width: 285px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+#ItemSelection .equipment-back {
+	position: absolute;
+	right: 4px;
+	top: 1px;
+}
+#ItemSelection .equipment-filters {
+	display: flex;
+	gap: 6px;
+	padding: 6px 10px;
+}
+#ItemSelection .equipment-filters select {
+	min-width: 0;
+	flex: 1;
+}
+#ItemSelection.equipment-selection .list {
+	border: 1px solid #aaa;
+	box-sizing: border-box;
+}
+#ItemSelection.equipment-selection .bottom {
+	top: 116px;
+}
+#ItemSelection .list .item[hidden] {
+	display: none;
+}

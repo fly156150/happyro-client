@@ -1,3 +1,4 @@
+import { showToast } from 'UI/Components/Toast.js';
 import { finishItemOperation, receiveItemOperationResult } from 'UI/Game/ItemOperationFeedback.js';
 import { finishRefinement } from 'UI/Game/GameRefinement.js';
 import { openGameMaterials } from 'UI/Game/GameMaterials.js';
@@ -330,7 +331,8 @@ function onUseCard(index) {
  */
 function onItemCompositionList(pkt) {
 	if (!pkt.ITIDList.length) {
-		finishItemOperation(Session.Entity, 'card', _cardComposition, false);
+		finishItemOperation(Session.Entity, 'card', _cardComposition, null);
+		showToast(document.body, '没有可镶嵌的装备', 'info');
 		_cardComposition = null;
 		return;
 	}
@@ -361,12 +363,13 @@ function onItemCompositionList(pkt) {
 			selectionEntries(pkt.ITIDList, 'inventory'),
 			ItemSelection.onIndexSelected,
 			() => ItemSelection.onIndexSelected(-1),
-			'镶嵌会消耗卡片，请确认目标装备'
+			'',
+			{ equipment: true, back: 'inventory' }
 		);
 		return;
 	}
 	ItemSelection.append();
-	ItemSelection.setList(pkt.ITIDList);
+	ItemSelection.setList(pkt.ITIDList, false, true);
 	ItemSelection.setTitle(DB.getMessage(522) + '(' + DB.getItemInfo(card.ITID).identifiedDisplayName + ')');
 }
 
@@ -534,6 +537,7 @@ function onAckAddItemToCart(pkt) {
  */
 function onMakeitemList(pkt) {
 	if (!pkt.itemList.length) {
+		showToast(document.body, '没有可制作的物品', 'info');
 		return;
 	}
 
@@ -613,12 +617,14 @@ function onMakeitem_List(pkt) {
 	let makeType;
 	if (PACKETVER.value >= 20211103) {
 		if (!pkt.items.length) {
+			showToast(document.body, '没有可制作的物品', 'info');
 			return;
 		}
 		itemList = pkt.items.map(item => item.itemId);
 		makeType = pkt.makeItem;
 	} else {
 		if (!pkt.idList.length) {
+			showToast(document.body, '没有可制作的物品', 'info');
 			return;
 		}
 		itemList = pkt.idList;

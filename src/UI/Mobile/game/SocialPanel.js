@@ -13,8 +13,37 @@ export function createSocialPanel(body, service, whisper) {
 		lastKey = '',
 		listKey = '';
 	const status = createFeedback(body);
+	const saves = new Map();
+	function savedValue(action, data, snapshot) {
+		if (action === 'partyOptions')
+			return [snapshot.options.exp_share, snapshot.options.item_share, snapshot.options.item_sharing_type];
+		if (action === 'guildNotice') return [snapshot.guild?.notice.subject, snapshot.guild?.notice.notice];
+		if (action === 'editGuildPosition') {
+			const p = snapshot.guild?.positions.find(p => p.positionID === data.position);
+			return [p?.posName, p?.payRate, p?.right & 17];
+		}
+		if (action === 'guildPosition')
+			return snapshot.guild?.members.find(m => m.AID === data.AID && m.GID === data.GID)?.GPositionID;
+	}
+	function expectedValue(action, data) {
+		if (action === 'partyOptions') return [data.exp, data.pickup, data.division];
+		if (action === 'guildNotice') return [data.subject, data.notice];
+		if (action === 'editGuildPosition') return [data.name.trim(), data.tax, data.right];
+		if (action === 'guildPosition') return data.position;
+	}
+
 	const act = (action, data) => {
+		const expected = expectedValue(action, data);
+		if (
+			expected !== undefined &&
+			JSON.stringify(expected) === JSON.stringify(savedValue(action, data, service.snapshot()))
+		) {
+			status('设置未改变', 'info');
+			return;
+		}
 		const message = service.act(action, data);
+		if (message === '已请求，等待服务器回复' && expected !== undefined)
+			saves.set(`${action}:${data.position ?? ''}`, { action, data, expected, start: Date.now() });
 		status(
 			message,
 			action === 'bindGuildSkill'
@@ -38,15 +67,19 @@ export function createSocialPanel(body, service, whisper) {
 		p.textContent = text;
 		return p;
 	}
-	function form(title, fields, submit, confirm = false) {
+	function form(title, fields, submit, confirm = false, autoSave = false) {
 		const f = document.createElement('form');
 		f.className = 'social-form';
 		const inputs = {};
 		for (const [name, label, type = 'text', value = '', options] of fields) {
 			const l = document.createElement('label');
-			l.textContent = label;
+			const caption = document.createElement('span');
+			caption.textContent = label;
+			if (!options && type === 'text') l.className = 'social-role-field';
+			l.append(caption);
 			const input = document.createElement(options ? 'select' : type === 'textarea' ? 'textarea' : 'input');
 			input.setAttribute('aria-label', label);
+			if (!options && type === 'text') input.placeholder = label;
 			if (options) for (const [id, text] of options) input.add(new Option(text, id));
 			else {
 				if (type !== 'textarea') input.type = type;
@@ -60,13 +93,16 @@ export function createSocialPanel(body, service, whisper) {
 		const send = document.createElement('button');
 		send.type = 'submit';
 		send.textContent = title;
-		f.append(send);
+		if (!autoSave) f.append(send);
 		f.onsubmit = e => {
 			e.preventDefault();
 			const values = Object.fromEntries(Object.entries(inputs).map(([name, node]) => [name, node.value]));
 			if (confirm) confirmAction(f, `确认${title}？`, () => submit(values));
 			else submit(values);
 		};
+		if (autoSave)
+			f.onchange = () =>
+				submit(Object.fromEntries(Object.entries(inputs).map(([name, node]) => [name, node.value])));
 		detail.append(f);
 		return f;
 	}
@@ -75,6 +111,9 @@ export function createSocialPanel(body, service, whisper) {
 	}
 	function render() {
 		const type = $('select').value;
+		list.dataset.socialType = type;
+		$('[data-refresh]').hidden = type !== 'guild';
+		$('[data-refresh]').disabled = !state.allowed || !state.guild;
 		const emblem = detail.querySelector('[data-guild-emblem]');
 		if (emblem) {
 			emblem.hidden = !state.guild?.emblem;
@@ -106,7 +145,12 @@ export function createSocialPanel(body, service, whisper) {
 				setListItemText(b, name);
 				list.append(b);
 			}
-			if (!members.length) list.append(paragraph('暂无成员'));
+			list.firstElementChild.classList.add('social-management');
+			if (!members.length) {
+				const empty = paragraph('暂无成员');
+				empty.className = 'social-empty';
+				list.append(empty);
+			}
 		}
 		const member = members.find(m => identity(m) === selected);
 		if (selected && !member) selected = null;
@@ -117,6 +161,7 @@ export function createSocialPanel(body, service, whisper) {
 			state.allowed,
 			state.hasParty,
 			state.leader,
+			state.options,
 			state.master,
 			state.rights,
 			state.guild?.info,
@@ -221,6 +266,7 @@ export function createSocialPanel(body, service, whisper) {
 								'partyOptions',
 								Object.fromEntries(Object.entries(values).map(([k, v]) => [k, Number(v)]))
 							),
+						false,
 						true
 					);
 				}
@@ -384,6 +430,16 @@ export function createSocialPanel(body, service, whisper) {
 	}
 	function update() {
 		state = service.snapshot();
+		for (const [key, save] of saves) {
+			if (JSON.stringify(savedValue(save.action, save.data, state)) === JSON.stringify(save.expected)) {
+				saves.delete(key);
+				status('设置已保存', 'success');
+			} else if (Date.now() - save.start > 10000) {
+				saves.delete(key);
+				lastKey = '';
+				status('设置未确认保存，请检查当前值', 'error');
+			}
+		}
 		render();
 	}
 	$('select').onchange = () => {

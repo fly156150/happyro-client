@@ -1,3 +1,4 @@
+import { createEquipmentFilters } from 'UI/Game/EquipmentFilters.js';
 import { interactionReview, interactionFooter } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -13,6 +14,18 @@ export function createSelectionPanel(body, service) {
 		editingId = null;
 	const nodes = new Map();
 	const { footer, status } = interactionFooter(body);
+	let matches = () => true;
+	if (service.snapshot().equipment) {
+		body.classList.add('equipment-selection');
+		const filters = document.createElement('div');
+		filters.className = 'equipment-filters';
+		body.prepend(filters);
+		matches = createEquipmentFilters(filters, service.snapshot().entries, () => {
+			selected = null;
+			key = '';
+			update();
+		});
+	}
 	function update() {
 		const state = service.snapshot();
 		$('[data-warning]').textContent = state.warning || '';
@@ -35,6 +48,7 @@ export function createSelectionPanel(body, service) {
 			b.querySelector('span').textContent = entry.name;
 			b.querySelector('img').hidden = !entry.icon;
 			if (entry.icon) b.querySelector('img').src = entry.icon;
+			b.hidden = !matches(entry);
 			b.setAttribute('aria-pressed', String(selected === entry.id));
 		}
 		for (const [id, node] of nodes) {

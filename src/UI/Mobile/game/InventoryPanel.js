@@ -1,3 +1,4 @@
+import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -44,6 +45,14 @@ export function createInventoryPanel(body, actions) {
 		node.onclick = fn;
 		return node;
 	}
+	function disabledAction(label) {
+		const node = document.createElement('button');
+		node.type = 'button';
+		node.textContent = label;
+		node.disabled = true;
+		node.className = 'inventory-placeholder-action';
+		return node;
+	}
 	const category = document.createElement('select');
 	category.setAttribute('aria-label', '背包分类');
 	for (const [key, label] of [
@@ -60,11 +69,16 @@ export function createInventoryPanel(body, actions) {
 		['worn', '已穿戴']
 	])
 		category.add(new Option(label, key));
+	const subtype = createItemSubtypeFilter(() => {
+		render();
+		list.scrollTop = 0;
+	});
 	category.onchange = () => {
+		subtype.reset();
 		render();
 		list.scrollTop = 0;
 	};
-	$('.inventory-toolbar').append(category, sort);
+	$('.inventory-toolbar').append(category, subtype.select, sort);
 	function renderDetail() {
 		const item = state.find(entry => entry.index === selected?.index && entry.ID === selected?.ID);
 		if (!item) {
@@ -73,7 +87,13 @@ export function createInventoryPanel(body, actions) {
 			selected = null;
 			binding = false;
 			detailKey = '';
-			detail.textContent = '点击物品查看详情和操作';
+			const hint = document.createElement('div');
+			hint.className = 'inventory-empty-message';
+			hint.textContent = '点击物品查看详情和操作';
+			const ops = document.createElement('div');
+			ops.className = 'inventory-actions inventory-empty-actions';
+			ops.append(...['使用', '设置快捷键', '丢弃'].map(disabledAction));
+			detail.replaceChildren(hint, ops);
 			return;
 		}
 		const key = JSON.stringify(item);
@@ -122,14 +142,16 @@ export function createInventoryPanel(body, actions) {
 				update();
 			};
 			const use = button(label, () => {
-				if (item.action === 'equip' || item.action === 'unequip') perform();
+				if (['equip', 'unequip', 'card'].includes(item.action)) perform();
 				else dismiss = confirmAction(body, `确认${label}「${item.name}」？`, perform);
 			});
 			use.disabled = Boolean(item.reason);
 			ops.append(use);
-		}
+		} else ops.append(disabledAction('使用'));
 		if (item.shortcut) ops.append(button('设置快捷键', () => chooseBinding(item)));
+		else ops.append(disabledAction('设置快捷键'));
 		if (!item.worn) ops.append(button('丢弃', () => chooseDrop(item)));
+		else ops.append(disabledAction('丢弃'));
 		const reason = document.createElement('p');
 		reason.textContent = item.reason === '此物品没有直接使用操作' ? '' : item.reason || '';
 		reason.className = 'inventory-item-reason';
@@ -141,7 +163,10 @@ export function createInventoryPanel(body, actions) {
 		const summary = document.createElement('div');
 		summary.className = 'inventory-item-summary';
 		summary.append(title, flags, reason, description);
-		for (const [kind, label] of [['card', '已插卡片'], ['enchant', '附魔']]) {
+		for (const [kind, label] of [
+			['card', '已插卡片'],
+			['enchant', '附魔']
+		]) {
 			const entries = item.sockets?.filter(entry => entry.kind === kind) || [];
 			if (!entries.length) continue;
 			const section = document.createElement('section');
@@ -265,12 +290,14 @@ export function createInventoryPanel(body, actions) {
 		);
 	}
 	function render() {
-		const filtered = state.filter(
+		const categoryItems = state.filter(
 			item =>
 				category.value === 'all' ||
 				(category.value === 'worn' ? item.worn : item.category === category.value) ||
 				itemTypes[category.value]?.includes(item.type)
 		);
+		subtype.update(categoryItems, category.value);
+		const filtered = categoryItems.filter(item => subtype.matches(item));
 		filtered.sort((a, b) =>
 			sort.value === 'name'
 				? a.name.localeCompare(b.name, 'zh-CN')

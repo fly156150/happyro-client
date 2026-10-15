@@ -1,5 +1,6 @@
+import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
-import { interactionColumns, interactionFooter } from './InteractionPanel.js';
+import { interactionFooter } from './InteractionPanel.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
 
@@ -18,15 +19,6 @@ export function createContainerPanel(body, actions, initialSource) {
 		'<div class="container-toolbar"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
 	const primary = initialSource;
 	const isCart = primary === 'cart';
-	if (isCart) {
-		interactionColumns(body, [
-			{ title: '物品列表', className: 'inventory-list' },
-			{ title: '物品说明', className: 'inventory-detail' }
-		]);
-		const toolbar = document.createElement('div');
-		toolbar.className = 'container-toolbar';
-		body.prepend(toolbar);
-	}
 	body.classList.add('warehouse-body');
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector);
@@ -48,8 +40,6 @@ export function createContainerPanel(body, actions, initialSource) {
 		['other', '其他']
 	])
 		category.add(new Option(text, key));
-	const capacityLabel = document.createElement('span');
-	capacityLabel.className = 'container-capacity';
 	const sourceField = document.createElement('div');
 	sourceField.className = 'container-source';
 	sourceField.append(sourceSelect);
@@ -76,11 +66,16 @@ export function createContainerPanel(body, actions, initialSource) {
 	const filters = document.createElement('div');
 	filters.className = 'container-filters';
 	filters.append(modes, sourceField, category);
+	const subtype = createItemSubtypeFilter(() => {
+		update();
+		$('.inventory-list').scrollTop = 0;
+	});
+	filters.append(subtype.select);
 	$('.container-toolbar').append(filters, search);
-	footer.prepend(capacityLabel);
 	status.hidden = true;
 	let source = initialSource,
 		selected = null,
+		transferDestination = null,
 		state;
 	const nodes = new Map();
 	function button(text, fn) {
@@ -90,10 +85,46 @@ export function createContainerPanel(body, actions, initialSource) {
 		node.onclick = fn;
 		return node;
 	}
+	function quantityGroup(amount, all) {
+		const group = document.createElement('div');
+		group.className = 'container-quantity container-quantity-group';
+		group.setAttribute('role', 'group');
+		group.setAttribute('aria-label', '转移数量');
+		const change = delta => {
+			const maximum = Math.max(1, Number(amount.max) || 1);
+			const current = Number.isFinite(amount.valueAsNumber) ? Math.trunc(amount.valueAsNumber) : 1;
+			amount.value = String(delta === 'min' ? 1 : Math.max(1, Math.min(maximum, current + delta)));
+			amount.dispatchEvent(new Event('input', { bubbles: true }));
+			amount.dispatchEvent(new Event('change', { bubbles: true }));
+		};
+		const minimum = button('MIN', () => change('min'));
+		minimum.setAttribute('aria-label', '最小数量');
+		const decrease = button('-1', () => change(-1));
+		decrease.setAttribute('aria-label', '减少数量');
+		const increase = button('+1', () => change(1));
+		increase.setAttribute('aria-label', '增加数量');
+		all.textContent = 'MAX';
+		all.setAttribute('aria-label', '全部数量');
+		for (const control of [minimum, decrease, increase]) control.disabled = amount.disabled;
+		group.append(minimum, decrease, amount, increase, all);
+		return group;
+	}
 	function reset() {
 		selected = null;
-		footer.querySelectorAll('button, .container-quantity').forEach(node => node.remove());
-		$('.inventory-detail').textContent = '点击物品选择数量';
+		footer
+			.querySelectorAll('button, .container-quantity, .container-transfer-target')
+			.forEach(node => node.remove());
+		transferDestination = null;
+		$('.inventory-detail').textContent = '点击物品查看详情和选择数量';
+		const amount = document.createElement('input');
+		amount.type = 'number';
+		amount.value = '1';
+		amount.disabled = true;
+		amount.setAttribute('aria-label', '转移数量');
+		const all = button('全部数量', () => {});
+		const transfer = button(source === primary ? '确认取出' : '确认存入', () => {});
+		all.disabled = transfer.disabled = true;
+		footer.append(quantityGroup(amount, all), transfer);
 	}
 	sourceSelect.onchange = () => {
 		source = sourceSelect.value;
@@ -101,6 +132,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		update();
 	};
 	category.onchange = () => {
+		subtype?.reset();
 		update();
 		$('.inventory-list').scrollTop = 0;
 	};
@@ -115,7 +147,9 @@ export function createContainerPanel(body, actions, initialSource) {
 	}
 	function select(item) {
 		if (!item) return;
-		footer.querySelectorAll('button, .container-quantity').forEach(node => node.remove());
+		footer
+			.querySelectorAll('button, .container-quantity, .container-transfer-target')
+			.forEach(node => node.remove());
 		selected = { index: item.index, ID: item.ID, identity: item.identity };
 		const title = document.createElement('h3');
 		title.textContent = item.name;
@@ -135,6 +169,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		amount.setAttribute('aria-label', `${operation}数量`);
 		const destination = document.createElement('select');
 		destination.setAttribute('aria-label', '转移到');
+		transferDestination = destination;
 		for (const target of targets()) destination.add(new Option(labels[target], target));
 		const count = document.createElement('p');
 		count.className = 'container-item-count';
@@ -152,8 +187,6 @@ export function createContainerPanel(body, actions, initialSource) {
 			feedback(result, result === '已请求转移，等待服务器更新' ? 'pending' : 'error');
 			update();
 		});
-		const form = document.createElement('div');
-		form.className = 'container-form';
 		for (const [text, control] of [
 			['转移到', destination],
 			[`${operation}数量`, amount]
@@ -164,20 +197,52 @@ export function createContainerPanel(body, actions, initialSource) {
 			if (control === amount) {
 				label.className = 'container-quantity';
 				footer.append(label);
-			} else form.append(label);
+			} else {
+				label.className = 'container-transfer-target';
+				footer.insertBefore(label, footer.querySelector('.container-quantity'));
+			}
 		}
-		const heading = document.createElement('div');
-		heading.className = 'container-item-heading';
-		heading.append(title, count);
-		$('.inventory-detail').replaceChildren(heading, form, description);
-		footer.append(
-			button('全部数量', () => {
-				amount.value = String(
-					state.items.find(entry => entry.index === item.index && entry.ID === item.ID)?.count || 0
-				);
-			}),
-			transfer
-		);
+		{
+			const overview = document.createElement('div');
+			overview.className = 'inventory-item-overview';
+			const media = document.createElement('div');
+			media.className = 'inventory-item-media';
+			const picture = document.createElement('img');
+			picture.className = 'inventory-item-picture';
+			picture.alt = item.name;
+			picture.hidden = !item.icon;
+			if (item.icon) picture.src = item.icon;
+			const metadata = document.createElement('div');
+			metadata.className = 'inventory-item-metadata';
+			metadata.append(count);
+			media.append(picture, metadata);
+			const summary = document.createElement('div');
+			summary.className = 'inventory-item-summary';
+			summary.append(title, description);
+			overview.append(media, summary);
+			$('.inventory-detail').replaceChildren(overview);
+			void actions.preview(source, item.index, item.ID, item.identity).then(preview => {
+				if (!overview.isConnected || !preview) return;
+				const url = preview.art || preview.image || item.icon;
+				if (url) {
+					picture.src = url;
+					picture.hidden = false;
+				}
+			});
+		}
+
+		const all = button('全部数量', () => {
+			amount.value = String(
+				state.items.find(
+					entry => entry.index === item.index && entry.ID === item.ID && entry.identity === item.identity
+				)?.count || 0
+			);
+		});
+		{
+			const quantity = footer.querySelector('.container-quantity');
+			quantity.replaceWith(quantityGroup(amount, all));
+		}
+		footer.append(transfer);
 		update();
 	}
 	function update() {
@@ -187,7 +252,10 @@ export function createContainerPanel(body, actions, initialSource) {
 			reset();
 			state = actions.snapshot(source);
 		}
-		feedback.update(state.transferStatus, state.pending ? 'pending' : 'error');
+		feedback.update(
+			state.transferStatus,
+			state.pending ? 'pending' : state.transferSucceeded ? 'success' : 'error'
+		);
 		for (const tab of modes.children) {
 			tab.setAttribute('aria-pressed', String((source === primary) === (tab.dataset.mode === primary)));
 			tab.disabled = !state.allowed || state.pending;
@@ -205,20 +273,21 @@ export function createContainerPanel(body, actions, initialSource) {
 		sourceSelect.disabled = !state.allowed || state.pending;
 		const capacity = isCart ? actions.snapshot('cart').capacity : state.storageCapacity;
 		const unavailable = !state.containers.includes(source);
-		capacityLabel.hidden = unavailable || !capacity;
-		capacityLabel.textContent =
-			capacity && !unavailable
-				? `${labels[primary]}格数：${capacity.current}/${capacity.limit}${capacity.weight === undefined ? '' : ` · 重量：${capacity.weight}/${capacity.maxWeight}`}`
-				: '';
+		actions.setCapacity(capacity);
 		if (unavailable && source !== 'cart') feedback.update(`${labels[source]}当前不可用`);
 
 		const keys = new Set();
 		const query = search.value.trim().toLocaleLowerCase();
-		const visible = state.items.filter(
+		const categoryItems = state.items.filter(
 			entry =>
-				(category.value === 'all' ||
-					entry.category === category.value ||
-					itemTypes[category.value]?.includes(entry.type)) &&
+				category.value === 'all' ||
+				entry.category === category.value ||
+				itemTypes[category.value]?.includes(entry.type)
+		);
+		subtype?.update(categoryItems, category.value);
+		const visible = categoryItems.filter(
+			entry =>
+				(!subtype || subtype.matches(entry)) &&
 				(!query || entry.name.toLocaleLowerCase().includes(query) || String(entry.ID).includes(query))
 		);
 		for (const item of visible) {
@@ -273,7 +342,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		else if (item) {
 			$('.container-item-count').textContent = `数量：${item.count}`;
 			$('.container-amount').max = String(item.count);
-			const destination = $('.inventory-detail select'),
+			const destination = transferDestination,
 				value = destination.value;
 			const destinations = targets();
 			destination.parentElement.hidden = destinations.length < 2;
@@ -283,9 +352,9 @@ export function createContainerPanel(body, actions, initialSource) {
 			}
 		}
 		for (const node of footer.querySelectorAll('button'))
-			node.disabled = !state.allowed || state.pending || unavailable || !$('.inventory-detail select')?.value;
+			node.disabled = !state.allowed || state.pending || unavailable || !transferDestination?.value;
 		for (const node of body.querySelectorAll(
-			'.inventory-detail button, .inventory-detail input, .inventory-detail select, .container-amount'
+			'.inventory-detail button, .inventory-detail input, .inventory-detail select, .container-amount, .container-transfer-target select'
 		))
 			node.disabled = !state.allowed || state.pending || unavailable;
 	}

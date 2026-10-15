@@ -160,7 +160,10 @@ export function openGameMail(canOperate = () => true) {
 		remove(index, count) {
 			if (!allowed() || !writing) return;
 			const item = attachments.find(i => i.index === index);
-			if (!item || !Number.isInteger(count) || count <= 0 || count > item.count) return;
+			if (!item || !Number.isInteger(count) || count <= 0 || count > item.count) {
+				setMessage('附件已变化，请重新选择', 'error');
+				return;
+			}
 			request('REQ_REMOVE_RODEX_ITEM', { index, count }, { kind: 'remove', index });
 		},
 		review() {

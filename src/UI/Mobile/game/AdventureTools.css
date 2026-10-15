@@ -2438,3 +2438,18 @@
  width: 100%;
  min-width: 0;
 }
+
+/* Phone job actions use the same columns and control size as progression actions. */
+:host([data-phone-screen]) .mobile-adventure .character-detail-scroll .selected-job > .management-form-actions {
+ display: grid;
+ grid-template-columns: repeat(4, minmax(0, 1fr));
+ width: 100%; min-width: 0; gap: 6px 8px;
+}
+:host([data-phone-screen]) .mobile-adventure .character-detail-scroll .selected-job > .management-form-actions > button {
+ width: 100%; min-width: 0; margin: 0;
+ min-height: var(--panel-control);
+ white-space: normal;
+}
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure .character-detail-scroll .selected-job > .management-form-actions {
+ grid-template-columns: minmax(0, 1fr);
+}

@@ -33,20 +33,6 @@
  --menu-tab-background: rgba(25, 31, 38, .85);
  --menu-tab-active-background: rgba(25, 31, 38, .68);
 }
-/* The full chat panel keeps vertical navigation when there is room. */
-:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button + button { border-left: 1px solid var(--menu-tab-border); border-top: 0; }
-:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button:first-child { border-radius: 6px 6px 0 0; }
-:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button:last-child { border-radius: 0 0 6px 6px; }
-:host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .chat-filters > button[aria-pressed='true'] {
- border-bottom-color: var(--menu-tab-border);
- border-right-color: var(--menu-tab-border);
-}
-@container menu-window (width < 640px) {
- :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button + button { border-top: 1px solid var(--menu-tab-border); border-left: 0; }
- :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button:first-child { border-radius: 6px 0 0 6px; }
- :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button:last-child { border-radius: 0 6px 6px 0; }
- :host([data-orientation='portrait'][data-menu-density]:not([data-phone-screen])) .panel .chat-filters > button[aria-pressed='true'] { border-right-color: var(--menu-tab-border); border-bottom-color: var(--menu-tab-border); }
-}
 :host([data-menu-density]) :is(.panel-navigation, .adventure-header) > button {
  box-sizing: border-box;
  height: var(--panel-control);
@@ -71,13 +57,43 @@
  align-self: flex-end;
  margin-bottom: 6px;
 }
-:host([data-menu-density]) .chat-preview .chat-preview-tabs { margin-bottom: 6px; }
+:host([data-menu-density]) .chat-preview .chat-preview-tabs { margin-bottom: -1px; }
 :host([data-menu-density]) .panel .attribute-tabs { flex: 1; }
-/* Content tabs keep their own closed outline, without a second square rail. */
-:host([data-menu-density]) .panel .chat-filters {
- padding-right: 0;
- border-right: 0;
-}
 :host([data-menu-density]) :is(.panel, .mobile-adventure, .chat-preview) .menu-tabs > button:only-child { border-radius: 6px; }
 
 :host([data-menu-density]) .panel .attribute-tabs > button:first-child:has(+ button[hidden]) { border-radius: 6px; }
+
+/* Collapse is the first segment of the preview's joined tab row. */
+:host([data-menu-density]) .chat-preview [data-chat-collapse] {
+ align-self: end;
+ margin-bottom: -1px;
+ border-radius: 6px 0 0 0;
+}
+:host([data-menu-density]) .chat-preview:not(.without-tabs) .chat-preview-tabs > button:first-child {
+ border-left: 0;
+ border-top-left-radius: 0;
+ border-bottom-left-radius: 0;
+}
+:host([data-menu-density]) .chat-preview.without-tabs [data-chat-collapse] { border-radius: 6px 6px 0 0; }
+
+/* NPC headers have no tabs: center their actions within symmetric vertical padding. */
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header {
+ padding-block: 4px;
+ align-items: center;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header > .panel-navigation {
+ align-self: center;
+ margin-bottom: 0;
+}
+
+/* Preview tabs meet the message frame; only their outer top corners are rounded. */
+:host([data-menu-density]) .chat-preview .chat-preview-tabs > button,
+:host([data-menu-density]) .chat-preview .chat-preview-tabs > button:is(:first-child, :last-child, :only-child) {
+ border-bottom-left-radius: 0;
+ border-bottom-right-radius: 0;
+}
+
+/* Reserve the action row even while the server hides the NPC close button. */
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header > .panel-navigation {
+ min-height: var(--npc-control);
+}

@@ -11,7 +11,6 @@ export function createMailPanel(body, service) {
 		term = '',
 		review = null;
 	let dismiss;
-	const feedback = createFeedback(body);
 	const controls = new Map();
 	const node = (parent, tag, className, text) => {
 		const element = document.createElement(tag);
@@ -21,13 +20,14 @@ export function createMailPanel(body, service) {
 		return element;
 	};
 	body.replaceChildren();
+	const feedback = createFeedback(body);
 	const toolbar = node(body, 'div', 'mail-toolbar');
 	const layout = node(body, 'div', 'mail-layout');
 	layout.dataset.menuLayout = 'split';
 	const list = node(layout, 'section', 'mail-browser');
 	const pane = node(layout, 'section', 'mail-pane');
 	const detail = node(pane, 'div', 'mail-detail');
-	const detailFooter = node(pane, 'div', 'mail-actions mail-footer');
+	const detailFooter = node(body, 'div', 'mail-actions mail-footer');
 	const para = (parent, text, className = 'mail-note') => node(parent, 'p', className, text);
 	const heading = (parent, text) => node(parent, 'h3', 'mail-heading', text);
 	const actions = parent => node(parent, 'div', 'mail-actions');
@@ -184,7 +184,7 @@ export function createMailPanel(body, service) {
 			);
 		}
 		if (!rows.length) para(messages, term ? '没有匹配的邮件' : '暂无邮件', 'mail-empty');
-		const pagination = node(list, 'div', 'mail-pagination');
+		const pagination = node(toolbar, 'div', 'mail-pagination');
 		const previous = button(
 			pagination,
 			'‹',
@@ -210,6 +210,7 @@ export function createMailPanel(body, service) {
 		if (!mail || mail.openType !== tab) {
 			heading(detail, '邮件详情');
 			para(detail, '请选择一封邮件查看内容。', 'mail-empty');
+			for (const label of ['领取金额', '领取物品', '删除邮件']) button(detailFooter, label, () => {}, true);
 			return;
 		}
 		heading(detail, mail.title || '（无标题）');
@@ -225,31 +226,37 @@ export function createMailPanel(body, service) {
 		}
 		if (mail.zeny || mail.ItemList.length) para(attachments, '领取前请预留背包容量和负重。');
 		const footer = detailFooter;
-		if (mail.zeny) button(footer, '领取金额', () => service.claim('zeny'));
-		if (mail.ItemList.length) button(footer, '领取物品', () => service.claim('items'));
-		if (!mail.zeny && !mail.ItemList.length) {
-			button(footer, '删除邮件', () => {
-				const selected = state.selected;
-				dismiss = confirmAction(
-					body,
-					'确定删除这封邮件？',
-					() => {
-						dismiss = null;
-						if (service.snapshot().selected !== selected) {
-							feedback('邮件已变化，请重新确认', 'error');
-							return;
-						}
-						service.delete();
-						update();
-					},
-					{}
-				);
-			});
+		button(footer, '领取金额', () => service.claim('zeny'), !mail.zeny);
+		button(footer, '领取物品', () => service.claim('items'), !mail.ItemList.length);
+		{
+			button(
+				footer,
+				'删除邮件',
+				() => {
+					const selected = state.selected;
+					dismiss = confirmAction(
+						body,
+						'确定删除这封邮件？',
+						() => {
+							dismiss = null;
+							if (service.snapshot().selected !== selected) {
+								feedback('邮件已变化，请重新确认', 'error');
+								return;
+							}
+							service.delete();
+							update();
+						},
+						{}
+					);
+				},
+				Boolean(mail.zeny || mail.ItemList.length)
+			);
 		}
 	}
 	function render() {
 		const state = service.snapshot();
 		version = state.revision;
+		layout.dataset.writing = String(state.writing);
 		controls.clear();
 		clearReview();
 		toolbar.replaceChildren();

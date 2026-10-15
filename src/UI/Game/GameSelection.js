@@ -35,7 +35,7 @@ export function selectionEntries(values, type) {
 		})
 		.filter(Boolean);
 }
-export function openGameSelection(title, entries, submit, cancel, warning = '') {
+export function openGameSelection(title, entries, submit, cancel, warning = '', options = {}) {
 	const token = Symbol('selection'),
 		inventory = createGameInventory(() => true),
 		icons = new Map();
@@ -58,6 +58,7 @@ export function openGameSelection(title, entries, submit, cancel, warning = '') 
 		snapshot() {
 			return {
 				warning,
+				equipment: Boolean(options.equipment),
 				materials: entries.some(entry => entry.materials)
 					? Inventory.getUI()
 							.list.filter(item => smithingMaterials.includes(item.ITID) && item.count > 0)
@@ -81,6 +82,7 @@ export function openGameSelection(title, entries, submit, cancel, warning = '') 
 					return {
 						...info,
 						id: entry.id,
+						itemId: entry.item?.ITID,
 						icon: info.icon || icons.get(entry.id) || icons.get(entry.file) || '',
 						materials: Boolean(entry.materials)
 					};
@@ -110,6 +112,6 @@ export function openGameSelection(title, entries, submit, cancel, warning = '') 
 			return '';
 		}
 	};
-	showInteraction({ kind: 'selection', title, token, service, close: () => finish(cancel) });
+	showInteraction({ kind: 'selection', title, token, service, back: options.back, close: () => finish(cancel) });
 	return service;
 }
