@@ -83,8 +83,7 @@ Escape.init = function init() {
 };
 
 /**
- * Window must not be visible once append
- * but need to be here to manage key event
+ * Keep game options hidden until explicitly opened from the menu.
  */
 Escape.onAppend = function onAppend() {
 	this._host.style.display = 'none';
@@ -112,12 +111,7 @@ Escape.onRemove = function onRemove() {
  */
 Escape.onKeyDown = function onKeyDown(event) {
 	if (event.which === KEYS.ESCAPE || event.key === 'Escape') {
-		if (this._host.style.display === 'none') {
-			this._host.style.display = '';
-			this.focus();
-		} else {
-			this._host.style.display = 'none';
-		}
+		this._host.style.display = 'none';
 	}
 };
 

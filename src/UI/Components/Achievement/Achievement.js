@@ -161,6 +161,16 @@ class AchievementComponent extends GUIComponent {
 		}
 	}
 
+	onKeyDown(event) {
+		if (event.key !== 'Escape') return;
+		if (event.defaultPrevented || !this.__active || this._host.style.display === 'none') return;
+		const z = Number(this._host.style.zIndex);
+		if (Object.values(UIManager.components).some(component => component !== this && component.__active && component.needFocus && component._host?.style.display !== 'none' && Number(component._host?.style.zIndex) > z)) return;
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		this.toggle();
+	}
+
 	onShortCut(key) {
 		if (key.cmd === 'TOGGLE') this.toggle();
 	}

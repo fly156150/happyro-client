@@ -282,6 +282,7 @@ class GUIComponent {
 			const position = JSON.parse(saved);
 			if (Number.isFinite(position.x)) this._host.style.left = `${position.x}px`;
 			if (Number.isFinite(position.y)) this._host.style.top = `${position.y}px`;
+			return Number.isFinite(position.x) && Number.isFinite(position.y);
 		} catch (error) {
 			console.warn(`[GUIComponent] Unable to restore position for ${this.name}:`, error);
 		}

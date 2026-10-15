@@ -1,3 +1,4 @@
+import headerCSS from '../DesktopWindowHeader.css?raw';
 import GUIComponent from 'UI/GUIComponent.js';
 import UIManager from 'UI/UIManager.js';
 import { createGameAutoCombatRuntime } from 'UI/Game/GameAutoCombatRuntime.js';
@@ -11,7 +12,7 @@ import pickupCSS from 'UI/Game/PickupSettingsPanel.css?raw';
 import panelCSS from 'UI/Game/AutoCombatPanel.css?raw';
 import switchCSS from 'UI/Components/GameSwitch.css?raw';
 
-const AutoCombat = new GUIComponent('AutoCombat', panelCSS + pickupCSS + css + switchCSS + lightThemeCSS + lightCSS + tabsCSS);
+const AutoCombat = new GUIComponent('AutoCombat', panelCSS + pickupCSS + css + switchCSS + lightThemeCSS + lightCSS + tabsCSS + headerCSS);
 AutoCombat.render = () => '';
 AutoCombat.needFocus = false;
 AutoCombat.nativeScrolling = true;

@@ -1,3 +1,4 @@
+import headerCSS from '../DesktopWindowHeader.css?raw';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 import { trackTabView } from './TabViewState.js';
 import { subscribeAdventureActions, clearAdventureActionFeedback } from './AdventureActionService.js';
@@ -20,7 +21,7 @@ import { loadAdventureControlBootstrap } from './AdventureControlService.js';
 import { notifyMonsterSpawnConfig, notifyMonsterSpawnResult } from './MonsterCatalogTab.js';
 
 const preferences = Preferences.get('GameTools', { tab: 'maps' }, 2.0);
-const GameTools = new GUIComponent('GameTools', cssText + itemCatalogCssText + gameSelectCssText + lightThemeCssText + buttonCssText + lightCssText + tabsCssText);
+const GameTools = new GUIComponent('GameTools', cssText + itemCatalogCssText + gameSelectCssText + lightThemeCssText + buttonCssText + lightCssText + tabsCssText + headerCSS);
 // Use the desktop theme scrollbars instead of the legacy RO image scrollbar.
 GameTools.nativeScrolling = true;
 const mountedTabs = new Map();
@@ -46,6 +47,16 @@ GameTools.render = () => htmlText;
 
 GameTools.onShortCut = function onShortCut(key) {
 	if (key.cmd === 'TOGGLE') this.toggle();
+};
+
+GameTools.onKeyDown = function onKeyDown(event) {
+	if (event.key !== 'Escape' || event.defaultPrevented || !this.__active || this._host.style.display === 'none') return;
+	if (this.getRoot().querySelector('.ui-confirm')) return;
+	const z = Number(this._host.style.zIndex);
+	if (Object.values(UIManager.components).some(component => component !== this && component.__active && component.needFocus && component._host?.style.display !== 'none' && Number(component._host?.style.zIndex) > z)) return;
+	event.preventDefault();
+	event.stopImmediatePropagation();
+	this.toggle();
 };
 
 GameTools.init = function init() {

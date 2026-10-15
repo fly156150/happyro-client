@@ -1,3 +1,4 @@
+import { bindDesktopDialogDrag } from '../DesktopDialogDrag.js';
 import { createAutoCombatPanel } from 'UI/Game/AutoCombatPanel.js';
 import { createPickupSettingsPanel } from 'UI/Game/PickupSettingsPanel.js';
 
@@ -9,13 +10,13 @@ export function createAutoCombatView(root, actions, pickup) {
 		</button>
 		<div class="combat-backdrop" hidden>
 			<section class="combat-dialog" role="dialog" aria-modal="true" aria-label="战斗辅助配置">
-				<header>
+				<header class="desktop-window-header"><h2 class="desktop-window-title">战斗辅助</h2><button type="button" class="desktop-window-close" data-close aria-label="关闭战斗辅助"></button></header>
+				<div class="combat-tabbar">
 				<div class="combat-tabs desktop-tab-group" role="tablist" aria-label="战斗辅助配置">
 					<button type="button" role="tab" id="combat-tab" aria-controls="combat-panel" aria-selected="true" data-tab="combat">自动战斗</button>
 					<button type="button" role="tab" id="pickup-tab" aria-controls="pickup-panel" aria-selected="false" tabindex="-1" data-tab="pickup">自动拾取</button>
 				</div>
-				<button type="button" data-close aria-label="关闭战斗辅助">关闭</button>
-				</header>
+				</div>
 				<div id="combat-panel" role="tabpanel" aria-labelledby="combat-tab" class="desktop-combat-panel">
 				<div class="combat-runtime"><strong>自动战斗</strong><button type="button" class="game-switch" role="switch" aria-label="自动战斗" data-toggle aria-checked="false"></button></div>
 					<div class="auto-config-body"></div>
@@ -28,6 +29,7 @@ export function createAutoCombatView(root, actions, pickup) {
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const backdrop = $('.combat-backdrop');
+	const restorePosition = bindDesktopDialogDrag($('.combat-dialog'), $('.desktop-window-header'), 'DesktopDialog.Position.AutoCombat', abort.signal);
 
 	let pickupEditor;
 	function finishClose() {
@@ -65,6 +67,7 @@ export function createAutoCombatView(root, actions, pickup) {
 		$('.desktop-pickup-panel').prepend($('.desktop-pickup-scroll > .pickup-enabled'));
 		selectTab('combat');
 		backdrop.hidden = false;
+		restorePosition();
 		root.getRootNode().host?.setAttribute('data-settings-open', '');
 		$('[data-settings]').setAttribute('aria-expanded', 'true');
 		update(actions.snapshot());
@@ -94,13 +97,6 @@ export function createAutoCombatView(root, actions, pickup) {
 	}
 	$('[data-settings]').onclick = open;
 	$('[data-close]').onclick = close;
-	backdrop.addEventListener(
-		'click',
-		event => {
-			if (event.target === backdrop) close();
-		},
-		{ signal: abort.signal }
-	);
 	root.addEventListener(
 		'keydown',
 		event => {

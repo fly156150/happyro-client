@@ -14,6 +14,20 @@ let _mode = 'create';
 GuildCompanion.onRequestCreateGuild = function onRequestCreateGuild() {};
 GuildCompanion.onRequestBreakGuild = function onRequestBreakGuild() {};
 
+GuildCompanion.onKeyDown = function onKeyDown(event) {
+	if (event.key !== 'Escape' || event.defaultPrevented || !this.__active || this._host.style.display === 'none') return;
+	const z = Number(this._host.style.zIndex);
+	if (Object.values(UIManager.components).some(component => component !== this && component.__active && component.needFocus && component._host?.style.display !== 'none' && Number(component._host?.style.zIndex) > z)) return;
+	event.preventDefault();
+	event.stopImmediatePropagation();
+	const nameWin = this._shadow.querySelector('.win.namebox');
+	if (_mode === 'create' && nameWin.classList.contains('visible')) {
+		nameWin.classList.remove('visible');
+	} else {
+		this.remove();
+	}
+};
+
 GuildCompanion.init = function init() {
 	const root = this._shadow;
 	this.draggable(root.querySelector('.companion .titlebar'));

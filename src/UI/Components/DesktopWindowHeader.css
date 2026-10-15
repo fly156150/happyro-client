@@ -1,0 +1,25 @@
+/* Shared desktop title bar, independent of the window contents. */
+:host .desktop-window-header {
+ position: relative; display: flex; align-items: center; justify-content: space-between;
+ box-sizing: border-box; flex: 0 0 30px; height: 30px; min-height: 30px;
+ padding: 0 8px 0 12px; gap: 8px; border: 0; border-radius: 8px 8px 0 0;
+ background: var(--desktop-surface); color: var(--desktop-text); cursor: move; touch-action: none;
+}
+:host .desktop-window-header .desktop-window-title {
+ margin: 0; padding: 0; font: bold 12px/30px Arial, sans-serif;
+}
+:host .desktop-window-header .desktop-window-close {
+ position: relative; inset: auto; flex: 0 0 20px; width: 20px; min-width: 20px;
+ height: 20px; min-height: 20px; margin: 0; padding: 0;
+ border: 1px solid transparent; border-radius: 4px; background: transparent; cursor: pointer;
+}
+:host .desktop-window-header .desktop-window-close:hover {
+ background: var(--desktop-hover); border-color: var(--desktop-border);
+}
+:host .desktop-window-header .desktop-window-close::before,
+:host .desktop-window-header .desktop-window-close::after {
+ content: ''; position: absolute; left: 8px; top: 4px; width: 1px; height: 9px;
+ background: #626c75; transform: rotate(45deg);
+}
+:host .desktop-window-header .desktop-window-close::after { transform: rotate(-45deg); }
+:host .desktop-window-header .desktop-window-close:focus-visible { outline: 2px solid #676e75; outline-offset: -2px; }

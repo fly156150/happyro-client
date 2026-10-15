@@ -1,7 +1,7 @@
 :host {
 	position: fixed !important;
 	right: 16px;
-	bottom: 24px;
+	bottom: 16px;
 	pointer-events: none;
 	color: #f4f0e6;
 	font:

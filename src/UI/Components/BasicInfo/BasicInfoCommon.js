@@ -39,6 +39,7 @@ import Quest from 'UI/Components/Quest/Quest.js';
 import Achievement from 'UI/Components/Achievement/Achievement.js';
 import Reputation from 'UI/Components/Reputation/Reputation.js';
 import GameTools from 'UI/Components/GameTools/GameTools.js';
+import { prepareDesktopMenuPosition } from 'UI/DesktopMenuPosition.js';
 
 export function createBasicInfo(config) {
 	const {
@@ -102,6 +103,17 @@ export function createBasicInfo(config) {
 	 * @param {string} key button identifier
 	 */
 	function dispatchButton(key) {
+		const windows = {
+			item: () => Inventory.getUI(),
+			info: () => infoOpensWinStats ? WinStats.getUI() : Equipment.getUI(),
+			equip: () => Equipment.getUI(), skill: () => SkillList.getUI(),
+			party: () => partyViaGetUI ? PartyFriends.getUI() : PartyFriends,
+			guild: () => Guild, chat: () => ChatRoomCreate, map: () => WorldMap, bank: () => Bank,
+			quest: () => Quest.getUI(), mail: () => Rodex, navigation: () => Navigation,
+			'game-tools': () => GameTools, attendance: () => CheckAttendance,
+			achievement: () => Achievement, repute: () => Reputation
+		};
+		const positionOpenedWindow = prepareDesktopMenuPosition(windows[key]?.());
 		switch (key) {
 			case 'item':
 				Inventory.getUI().toggle();
@@ -163,6 +175,7 @@ export function createBasicInfo(config) {
 				Reputation.toggle();
 				break;
 		}
+		positionOpenedWindow();
 	}
 
 	/**

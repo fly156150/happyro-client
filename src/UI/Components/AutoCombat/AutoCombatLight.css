@@ -84,3 +84,8 @@ button:focus-visible,
 
 /* Leave breathing room between settings navigation and its content. */
 .combat-dialog { row-gap: 16px; }
+
+/* The same title/close row as adventure tools; tabs remain a separate row. */
+.combat-dialog { padding: 0; gap: 0; overflow: hidden; }
+.combat-dialog > .combat-tabbar { flex: 0 0 auto; padding: 5px 10px 8px; border-bottom: 1px solid var(--desktop-divider); }
+.combat-dialog > :is(.desktop-combat-panel, .desktop-pickup-panel) { margin: 12px 16px 16px; min-height: 0; }

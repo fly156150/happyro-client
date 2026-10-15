@@ -145,6 +145,15 @@ Reputation.init = function init() {
  * Guard keyboard events when search input is focused
  */
 Reputation.onKeyDown = function onKeyDown(event) {
+	if (event.key === 'Escape') {
+		if (event.defaultPrevented || !this.__active || this._host.style.display === 'none') return;
+		const z = Number(this._host.style.zIndex);
+		if (Object.values(UIManager.components).some(component => component !== this && component.__active && component.needFocus && component._host?.style.display !== 'none' && Number(component._host?.style.zIndex) > z)) return;
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		onClose();
+		return;
+	}
 	if (Reputation.isEditableFocused()) {
 		event.stopImmediatePropagation();
 		return true;
