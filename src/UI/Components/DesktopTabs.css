@@ -11,7 +11,7 @@
  background: transparent; color: var(--desktop-muted); box-shadow: none;
  font: 12px/1.4 Arial, sans-serif; white-space: nowrap; cursor: pointer;
 }
-:host .desktop-tab-group[role='tablist'] > button:hover:not(:disabled) {
+:host .desktop-tab-group[role='tablist'] > button:hover:not(:disabled):not(.active):not([aria-selected='true']) {
  background: var(--desktop-hover); border-color: transparent;
 }
 :host .desktop-tab-group[role='tablist'] > button:is(.active, [aria-selected='true']) {

@@ -34,13 +34,34 @@
  outline-offset: 2px;
 }
 .game-tools-window[data-feedback-theme='desktop'] :is(.monster-pagination, .catalog-pagination) > button {
- width: 28px;
- min-width: 28px;
+ width: 34px;
+ min-width: 34px;
  padding: 0;
 }
 
-/* Compact footer actions leave breathing room inside the 36px action bar. */
-.game-tools-window[data-feedback-theme='desktop'] :is(.character-actions, .settings-footer, .summon-panel, .catalog-action-panel) > button {
- height: 24px;
- min-height: 24px;
+/* Share the character action height across desktop footers and list pagers. */
+.game-tools-window[data-feedback-theme='desktop'] {
+ --game-tools-footer-height: 42px;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-actions, .settings-footer, .summon-panel, .catalog-action-panel) {
+ padding-block: 6px;
+ align-items: center;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.character-actions, .settings-footer, .summon-panel, .catalog-action-panel) :is(input, select, .game-select-trigger) {
+ box-sizing: border-box;
+ height: 28px;
+ min-height: 28px;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.monster-pagination, .catalog-pagination) > button {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 24px;
+ line-height: 1;
+}
+
+.game-tools-window[data-feedback-theme='desktop'] :is(.monster-pagination, .catalog-pagination) > button > span {
+ display: block;
+ line-height: 1;
+ transform: translateY(-1px);
 }
