@@ -1576,3 +1576,7 @@
  box-shadow: none;
  border-color: #858b91;
 }
+
+.game-tools-window .settings-form .setting-number.is-disabled {
+	opacity: 0.55;
+}
