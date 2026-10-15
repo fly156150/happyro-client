@@ -95,7 +95,7 @@ export function openGameCompanions(kind, canOperate = () => true) {
 		if (['feed', 'rename', 'autofeed'].includes(action) && kind !== 'homunculus') return '佣兵不支持此操作';
 		if (
 			action === 'rename' &&
-			(info.bModified ||
+			((info.bModified & 1) ||
 				!value ||
 				new TextEncoder().encode(value).length > 23 ||
 				Array.from(value).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127))
@@ -119,6 +119,8 @@ export function openGameCompanions(kind, canOperate = () => true) {
 				gid: s.gid,
 				info: entity(kind) ? { ...s.info } : null,
 				allowed: allowed(),
+				// Homunculus flags use bit 0 for renamed; the other bits describe its state.
+				canRename: kind === 'homunculus' && allowed() && !(s.info?.bModified & 1),
 				pending: s.pending,
 				message: s.message,
 				messageKind: s.messageKind,

@@ -8,6 +8,7 @@ export function createCompanionsPanel(body, service) {
 		sectionTitle: '技能',
 		contentAttribute: 'data-skills'
 	});
+	body.dataset.companionKind = service.snapshot().kind;
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector);
 	let dismiss,
@@ -100,7 +101,7 @@ export function createCompanionsPanel(body, service) {
 		if (!s.allowed) cancel();
 		if (!nameDirty) $('[data-companion-name]').value = info?.szName || '';
 		$('[data-companion-name]').parentElement.hidden = s.kind !== 'homunculus';
-		$('[data-companion-name]').disabled = !s.allowed || Boolean(info?.bModified);
+		$('[data-companion-name]').disabled = !s.canRename;
 		const rows = info
 			? [
 					['名称', s.kind === 'homunculus' ? info.szName : info.name],
@@ -136,7 +137,7 @@ export function createCompanionsPanel(body, service) {
 			$('[data-info]').append(dt, dd);
 		}
 		for (const b of body.querySelectorAll('[data-action]'))
-			b.disabled = !s.allowed || (b.dataset.action === 'rename' && Boolean(info?.bModified));
+			b.disabled = !s.allowed || (b.dataset.action === 'rename' && !s.canRename);
 		const key = JSON.stringify(s.skills);
 		if (key !== skillKey) {
 			skillKey = key;
@@ -153,7 +154,7 @@ export function createCompanionsPanel(body, service) {
 				const description = document.createElement('span');
 				description.textContent = `${skill.name} · Lv.${skill.level} · ${skill.type ? '主动' : '被动'}`;
 				entry.append(description);
-				button.textContent = '学习一级';
+				button.textContent = skill.level ? '升级一级' : '学习一级';
 				button.disabled = !skill.learnable;
 				button.onclick = () => {
 					cancel();

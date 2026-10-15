@@ -48,3 +48,6 @@
  .companion-footer .inventory-actions > button {
  flex: 1 0 auto;
 }
+
+/* Mercenary skills have fixed levels; their phone menu has no learning action. */
+:host([data-phone-screen]) .panel [data-companion-kind='mercenary'] .companion-skill > button { display: none; }

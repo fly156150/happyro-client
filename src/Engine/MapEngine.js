@@ -78,6 +78,7 @@ import Refine from 'UI/Components/Refine/Refine.js';
 import Reputation from 'UI/Components/Reputation/Reputation.js';
 import PetInformations from 'UI/Components/PetInformations/PetInformations.js';
 import HomunInformations from 'UI/Components/HomunInformations/HomunInformations.js';
+import MercenaryInformations from 'UI/Components/MercenaryInformations/MercenaryInformations.js';
 import MapName from 'UI/Components/MapName/MapName.js';
 import Announce from 'UI/Components/Announce/Announce.js';
 import Navigation from 'UI/Components/Navigation/Navigation.js';
@@ -915,12 +916,18 @@ function onExitFail(pkt) {
 	ChatBox.addText(DB.getMessage(502), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 }
 
+function stopCompanionAI() {
+	HomunInformations.stopAI();
+	MercenaryInformations.stopAI();
+}
+
 /**
  * Server accept to disconnect us
  *
  * @param {object} pkt - PACKET.ZC.REFUSE_QUIT
  */
 function onExitSuccess() {
+	stopCompanionAI();
 	recovery.cancel();
 	if (PACKETVER.value >= 20170315 && Session.WebToken) {
 		ShortCut.saveToServer();
@@ -974,6 +981,7 @@ function onRestartAnswer(pkt) {
 		ChatBox.addText(DB.getMessage(502), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 	} else {
 		recovery.cancel();
+		stopCompanionAI();
 		stopAutoPickup();
 		WhisperBox.clearAll();
 		GuildEngine.guild_id = 0;
@@ -1393,6 +1401,7 @@ function onConfigUpdate(type, val) {
  * Go back from map-server to char-server
  */
 function prepareRecoveryLogin() {
+	stopCompanionAI();
 	mapLoadGeneration++;
 	Network.close();
 	Navigation.clear();
