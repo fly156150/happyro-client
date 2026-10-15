@@ -238,3 +238,37 @@
 	outline: 1px solid #ffe16b;
 	outline-offset: 1px;
 }
+
+#chatbox .input.with-emoticons .wrapper {
+	width: calc(100% - 160px);
+}
+#chatbox .input .emoticons {
+	position: absolute;
+	right: 25px;
+	top: 4px;
+	width: 22px;
+	height: 17px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	border: 1px solid #888;
+	border-radius: 3px;
+	background: #eee;
+	color: #333;
+	font: 17px/1 Arial, sans-serif;
+	cursor: pointer;
+}
+#chatbox .input .emoticons:hover {
+	background: #fff;
+}
+
+#chatbox .input .emoticons[hidden] {
+	display: none;
+}
+
+#chatbox .input .emoticons span {
+	display: block;
+	transform: translateY(-2px);
+}

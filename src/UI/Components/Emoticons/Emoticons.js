@@ -101,21 +101,13 @@ Emoticons.init = function init() {
 		}
 	);
 
-	// Delegated dblclick on canvas → play emoticon
-	contentEl.addEventListener('dblclick', event => {
+	// One click sends, except when selecting a command for a shortcut macro.
+	contentEl.addEventListener('click', event => {
 		const canvas = event.target.closest('canvas');
-		if (!canvas) return;
-		onPlayEmoticon(canvas);
-	});
-
-	// Delegated mousedown on canvas → select emoticon
-	contentEl.addEventListener('mousedown', event => {
-		const canvas = event.target.closest('canvas');
-		if (!canvas) return;
+		if (!canvas || event.detail > 1) return;
 		onSelectEmoticon(canvas);
 	});
 
-	root.querySelector('.prev').classList.add('disabled');
 	const closeBtn = root.querySelector('.close');
 	if (closeBtn) {
 		closeBtn.addEventListener('mousedown', e => e.stopImmediatePropagation());
@@ -167,20 +159,19 @@ Emoticons.movePage = function movePage(direction) {
 	const prevBtn = root.querySelector('.prev');
 	const nextBtn = root.querySelector('.next');
 
-	prevBtn.classList.remove('disabled');
-	nextBtn.classList.remove('disabled');
 
 	_page += direction;
 
 	if (_page <= 0) {
-		prevBtn.classList.add('disabled');
 		_page = 0;
 	}
 
 	if (_page >= TOTAL_PAGES) {
-		nextBtn.classList.add('disabled');
 		_page = TOTAL_PAGES;
 	}
+
+	prevBtn.disabled = _page === 0;
+	nextBtn.disabled = _page === TOTAL_PAGES;
 
 	const currentEl = root.querySelector('.current');
 	if (currentEl) {
@@ -195,6 +186,15 @@ Emoticons.movePage = function movePage(direction) {
  *
  * @param {object} key
  */
+Emoticons.onKeyDown = function onKeyDown(event) {
+	if (event.key !== 'Escape' || event.defaultPrevented || !this.__active || this._host.style.display === 'none') return;
+	const z = Number(this._host.style.zIndex);
+	if (Object.values(UIManager.components).some(component => component !== this && component.__active && component.needFocus && component._host?.style.display !== 'none' && Number(component._host?.style.zIndex) > z)) return;
+	event.preventDefault();
+	event.stopImmediatePropagation();
+	this._host.style.display = 'none';
+};
+
 Emoticons.onShortCut = function onShortCut(key) {
 	switch (key.cmd) {
 		case 'TOGGLE':
@@ -229,36 +229,16 @@ function getMovePageHandler(index) {
  * @param {HTMLCanvasElement} canvas
  */
 function onSelectEmoticon(canvas) {
-	const idx = canvas.getAttribute('data-index');
-	const cmd = EmoticonsDB.names[idx];
-	if (cmd && ShortCuts.ui.is(':visible')) {
-		if (ShortCuts.ui.find('.input_macro_focus').length) {
-			ShortCuts.ui
-				.find('.input_macro_focus')
-				.val('/' + cmd)
-				.select();
-			return;
-		}
+	const cmd = EmoticonsDB.names[canvas.dataset.index];
+	if (!cmd) return;
+	const macro = ShortCuts.__active && ShortCuts._host.style.display !== 'none'
+		? ShortCuts.getRoot().querySelector('.input_macro_focus') : null;
+	if (macro) {
+		macro.value = '/' + cmd;
+		macro.select();
+		return;
 	}
-
-	if (cmd) {
-		ChatBox.ui
-			.find('.input .message')
-			.html('/' + cmd)
-			.focus();
-	}
-}
-
-/**
- * Do an emoticon
- *
- * @param {HTMLCanvasElement} canvas
- */
-function onPlayEmoticon(canvas) {
-	const idx = canvas.getAttribute('data-index');
-	const cmd = EmoticonsDB.names[idx];
-
-	ChatBox.ui.find('.input .message').html('/' + cmd);
+	ChatBox.getRoot().querySelector('.input-chatbox').textContent = '/' + cmd;
 	ChatBox.submit();
 }
 

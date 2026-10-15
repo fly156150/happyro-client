@@ -27,6 +27,7 @@ import ContextMenu from 'UI/Components/ContextMenu/ContextMenu.js';
 import htmlText from './ChatBox.html?raw';
 import cssText from './ChatBox.css?raw';
 import Commands from 'Controls/ProcessCommand.js';
+import Platform from 'UI/Platform.js';
 import ChatBoxSettings from 'UI/Components/ChatBoxSettings/ChatBoxSettings.js';
 import Configs from 'Core/Configs.js';
 import EntityManager from 'Renderer/EntityManager.js';
@@ -177,6 +178,13 @@ ChatBox.tabs = [];
  */
 ChatBox.init = function init() {
 	const root = _root();
+	if (!Platform.isMobile) {
+		root.querySelector('.input').classList.add('with-emoticons');
+		const button = root.querySelector('.input .emoticons');
+		button.hidden = false;
+		button.addEventListener('mousedown', event => event.stopPropagation());
+		button.addEventListener('click', () => UIManager.getComponent('Emoticons').onShortCut({ cmd: 'TOGGLE' }));
+	}
 
 	if (!ContextMenu.__loaded) ContextMenu.prepare();
 	_heightIndex = _preferences.height - 1;
