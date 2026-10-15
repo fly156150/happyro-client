@@ -510,12 +510,18 @@
  border-top: 1px solid #52606d; margin-top: 0; padding-top: 6px;
 }
 
-/* Phone portrait: reduce allocation row height by 20% and result rows by 10%. */
+/* Phone allocation rows: landscape -10%; portrait +10% from the compact baseline. */
+:host([data-phone-screen][data-orientation='landscape']) .panel[data-view='attributes'] .attribute-row {
+ grid-template-rows: minmax(30.6px, auto); min-height: 39.6px; padding-block: 4.5px;
+}
+:host([data-phone-screen][data-orientation='landscape']) .panel[data-view='attributes'] .attribute-increments button {
+ height: 30.6px; min-height: 30.6px;
+}
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row {
- grid-template-rows: minmax(27.2px, auto); min-height: 35.2px; padding-block: 4px;
+ grid-template-rows: minmax(29.92px, auto); min-height: 38.72px; padding-block: 4.4px;
 }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button {
- height: 27.2px; min-height: 27.2px;
+ height: 29.92px; min-height: 29.92px;
 }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl { row-gap: 3.6px; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl > :is(dt, dd) {
@@ -596,7 +602,7 @@
  gap: 6px; border-top: 1px solid #52606d; padding-top: 6px; margin: 0;
 }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-toolbar > :is(select, .menu-select) { width: 100%; min-width: 0; }
-:host([data-phone-screen]) .panel[data-view='skills'] [data-skill-points] {
+:host([data-phone-screen]) .panel .point-counter {
  display: inline-flex; align-items: stretch; flex: 0 0 auto;
  height: var(--panel-control); box-sizing: border-box; margin: 0; padding: 0;
  border: 1px solid #65717b; border-radius: 6px; overflow: hidden; white-space: nowrap;
@@ -618,13 +624,13 @@
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] > .panel-body::after {
  content: ''; grid-row: 4; grid-column: 1 / -1; background: #52606d;
 }
-:host([data-phone-screen]) .panel[data-view='skills'] [data-skill-points] > span {
+:host([data-phone-screen]) .panel .point-counter > span {
  display: flex; align-items: center; justify-content: center; padding: 0 4px;
 }
-:host([data-phone-screen]) .panel[data-view='skills'] [data-skill-points] > span:first-child {
+:host([data-phone-screen]) .panel .point-counter > span:first-child {
  border-right: 1px solid #65717b; background: #ffffff0a;
 }
-:host([data-phone-screen]) .panel[data-view='skills'] [data-skill-points-value] {
+:host([data-phone-screen]) .panel .point-counter-value {
  min-width: 24px; font-variant-numeric: tabular-nums; color: #f5f2e9;
 }
 
@@ -704,3 +710,6 @@
  box-sizing: border-box; min-height: calc(var(--panel-control) + 7px);
  border-top: 1px solid #52606d; padding: 6px 0 0; margin: 0;
 }
+
+/* Keep tablet wording while phone counters use the compact skills presentation. */
+:host([data-phone-screen]) .panel .attribute-points-affix { display: none; }

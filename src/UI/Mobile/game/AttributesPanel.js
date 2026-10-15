@@ -3,7 +3,7 @@ import { allocationCost } from 'UI/Game/AttributeAllocation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 export function createAttributesPanel(body, actions, header) {
 	body.innerHTML =
-		'<div class="attribute-toolbar"><div class="attribute-tabs menu-tabs" role="group" aria-label="素质分类"></div></div><div class="attribute-layout" data-menu-layout="form"><section class="attribute-editor"><div class="attribute-allocation" aria-label="素质加点"></div></section><section class="attribute-results" aria-label="相关数值"><dl></dl></section></div><div class="attribute-footer"><strong data-attribute-points></strong><div class="attribute-plan-actions"><button type="button" class="point-reset-button" data-reset-points>重置素质点</button><button type="button" data-clear-plan>清除预加点</button><button type="button" data-apply-plan>确认</button></div></div>';
+		'<div class="attribute-toolbar"><div class="attribute-tabs menu-tabs" role="group" aria-label="素质分类"></div></div><div class="attribute-layout" data-menu-layout="form"><section class="attribute-editor"><div class="attribute-allocation" aria-label="素质加点"></div></section><section class="attribute-results" aria-label="相关数值"><dl></dl></section></div><div class="attribute-footer"><strong class="point-counter" data-attribute-points><span><span class="attribute-points-affix">剩余</span><span data-attribute-points-label></span><span class="attribute-points-affix">：</span></span><span class="point-counter-value" data-attribute-points-value></span></strong><div class="attribute-plan-actions"><button type="button" class="point-reset-button" data-reset-points>重置素质点</button><button type="button" data-clear-plan>清除预加点</button><button type="button" data-apply-plan>确认</button></div></div>';
 	const $ = selector => body.querySelector(selector);
 	const toolbar = $('.attribute-toolbar');
 	const layout = $('.attribute-layout');
@@ -126,8 +126,9 @@ export function createAttributesPanel(body, actions, header) {
 		}
 		const section = state[active];
 		const plannedCost = spent(active);
-		$('[data-attribute-points]').textContent =
-			`剩余${active === 'traits' ? '四转' : ''}素质点：${section.points === null ? '—' : section.points - (submitting ? 0 : plannedCost)}`;
+		$('[data-attribute-points-label]').textContent = active === 'traits' ? '四转素质点' : '素质点';
+		$('[data-attribute-points-value]').textContent =
+			section.points === null ? '—' : section.points - (submitting ? 0 : plannedCost);
 		$('[data-apply-plan]').disabled = submitting || !state.allowed || plannedCost === 0;
 		$('[data-reset-points]').disabled = submitting || !state.allowed;
 		$('[data-clear-plan]').disabled = submitting || state.pending || plannedCost === 0;
