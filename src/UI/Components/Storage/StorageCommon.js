@@ -18,7 +18,7 @@ import ItemType from 'DB/Items/ItemType.js';
 import Client from 'Core/Client.js';
 import Preferences from 'Core/Preferences.js';
 import Renderer from 'Renderer/Renderer.js';
-import Mouse from 'Controls/MouseEventHandler.js';
+import { bindStorageResize } from './StorageResize.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import UIManager from 'UI/UIManager.js';
 import GUIComponent from 'UI/GUIComponent.js';
@@ -67,6 +67,7 @@ export function createStorage(config) {
 	};
 
 	let _openFilters = {};
+	let _searchTerm = '';
 
 	const _preferences = Preferences.get(
 		'Storage',
@@ -114,7 +115,10 @@ export function createStorage(config) {
 
 		const extendBtn = root.querySelector('.footer .extend');
 		if (extendBtn) {
-			extendBtn.addEventListener('mousedown', () => onResize());
+			bindStorageResize(extendBtn, {
+				getRows: () => Math.round(parseFloat(root.querySelector('.container .content').style.height) / 32),
+				resize: resizeHeight, minimum: 8, maximum: 17
+			});
 		}
 
 		const closeBtn = root.querySelector('.footer .close');
@@ -130,7 +134,8 @@ export function createStorage(config) {
 		if (hasFilters) {
 			const filterButtons = root.querySelectorAll('.filter-buttons > button');
 			filterButtons.forEach(btn => {
-				btn.addEventListener('mousedown', () => onFilterWindowOpen(btn));
+				btn.addEventListener('mousedown', e => e.stopImmediatePropagation());
+				btn.addEventListener('click', () => onFilterWindowOpen(btn));
 				btn.addEventListener('mouseover', () => onFilterWindowHover(btn, root));
 				btn.addEventListener('mouseout', () => onFilterWindowHoverOut(root));
 			});
@@ -227,7 +232,7 @@ export function createStorage(config) {
 
 		_preferences.y = parseInt(this._host.style.top, 10);
 		_preferences.x = parseInt(this._host.style.left, 10);
-		_preferences.height = Math.floor((this._host.getBoundingClientRect().height - (31 + 19 - 30)) / 32);
+		_preferences.height = Math.round(parseFloat(root.querySelector('.container .content').style.height) / 32);
 		_preferences.save();
 
 		if (hasFilters) {
@@ -253,6 +258,7 @@ export function createStorage(config) {
 				_list.push(items[i]);
 			}
 		}
+		reorderVisibleItems();
 	};
 
 	Component.addItem = function addItem(item) {
@@ -263,6 +269,10 @@ export function createStorage(config) {
 			if (_openFilters[itemTab]) {
 				_openFilters[itemTab].addItem(item);
 			}
+		}
+
+		if (hasSearch && _openFilters[ItemType.SEARCH] && DB.getItemName(item).toLowerCase().includes(_searchTerm)) {
+			_openFilters[ItemType.SEARCH].addItem(item);
 		}
 
 		if (i > -1) {
@@ -278,6 +288,7 @@ export function createStorage(config) {
 		if (this.addItemSub(item)) {
 			_list.push(item);
 		}
+		reorderVisibleItems();
 	};
 
 	Component.addItemSub = function addItemSub(item) {
@@ -401,8 +412,9 @@ export function createStorage(config) {
 		}
 
 		if (hasSearch && (event.which === KEYS.ENTER || event.key === 'Enter')) {
-			if (typeof Component.onEnterPressed === 'function') {
-				Component.onEnterPressed();
+			if (this.getRoot().activeElement?.id === 'storage-search-input') {
+				event.preventDefault();
+				Component.onSearch();
 			}
 		}
 	};
@@ -414,14 +426,14 @@ export function createStorage(config) {
 			if (!searchInput) {
 				return;
 			}
-			const searchTerm = searchInput.value.toLowerCase();
+			_searchTerm = searchInput.value.trim().toLowerCase();
 
-			const filteredItems = _list.filter(item => {
-				return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
+			const filteredItems = orderedItems().filter(item => {
+				return DB.getItemName(item).toLowerCase().indexOf(_searchTerm) > -1;
 			});
 
 			if (!_openFilters[ItemType.SEARCH]) {
-				const newFilter = new StorageFilter(ItemType.SEARCH);
+				const newFilter = UIManager.addComponent(new StorageFilter(ItemType.SEARCH));
 				_openFilters[ItemType.SEARCH] = newFilter;
 
 				newFilter.onCloseCallback = function () {
@@ -434,40 +446,15 @@ export function createStorage(config) {
 					Component.transferItemToOtherUI(item);
 				};
 
+				newFilter.onStorageDrop = onDrop;
 				newFilter.append();
-				newFilter.setItems('Search', filteredItems, ItemType.SEARCH);
+				positionFilterWindow(newFilter);
+				newFilter.setItems('搜索结果', filteredItems, ItemType.SEARCH);
 			} else {
-				_openFilters[ItemType.SEARCH].setItems('Search', filteredItems, ItemType.SEARCH);
+				_openFilters[ItemType.SEARCH].setItems('搜索结果', filteredItems, ItemType.SEARCH);
+				_openFilters[ItemType.SEARCH].focus();
 			}
 		};
-	}
-
-	function onResize() {
-		const top = Component._host.offsetTop;
-		let lastHeight = 0;
-
-		function resizing() {
-			const extraY = 31 + 19 - 30;
-			let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-			h = Math.min(Math.max(h, 8), 17);
-
-			if (h === lastHeight) {
-				return;
-			}
-
-			resizeHeight(h);
-			lastHeight = h;
-		}
-
-		const _Interval = setInterval(resizing, 30);
-
-		const onMouseUp = event => {
-			if (event.which === 1) {
-				clearInterval(_Interval);
-				window.removeEventListener('mouseup', onMouseUp);
-			}
-		};
-		window.addEventListener('mouseup', onMouseUp);
 	}
 
 	function resizeHeight(height) {
@@ -491,6 +478,7 @@ export function createStorage(config) {
 	}
 
 	function onDrop(event) {
+		event.preventDefault();
 		let data;
 
 		try {
@@ -539,25 +527,32 @@ export function createStorage(config) {
 			content.innerHTML = '';
 		}
 
-		let list = _list;
+		const list = orderedItems();
+		for (const item of list) Component.addItemSub(item);
+		sortFilterWindows(list);
+	}
 
-		if (hasOrderBy) {
-			const orderBySelect = root.querySelector('.storage-order-by');
-			const orderBy = orderBySelect ? orderBySelect.value : 'BASE';
+	function orderedItems() {
+		const order = hasOrderBy ? Component.getRoot().querySelector('.storage-order-by').value : 'BASE';
+		if (order === 'BASE') return _list;
+		return _list.slice().sort((a, b) => {
+			const comparison = DB.getItemName(a).localeCompare(DB.getItemName(b));
+			return order === 'NAME_DESC' ? -comparison : comparison;
+		});
+	}
 
-			if (orderBy === 'NAME_ASC' || orderBy === 'NAME_DESC') {
-				list = _list.slice(0);
-				list.sort((a, b) => {
-					const nameA = DB.getItemName(a);
-					const nameB = DB.getItemName(b);
-					return orderBy === 'NAME_ASC' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-				});
-			}
+	function sortFilterWindows(items) {
+		for (const filter of Object.values(_openFilters)) filter.orderItems(items);
+	}
+
+	function reorderVisibleItems() {
+		const items = orderedItems();
+		const content = Component.getRoot().querySelector('.container .content');
+		for (const item of items) {
+			const element = content.querySelector(`.item[data-index="${item.index}"]`);
+			if (element) content.appendChild(element);
 		}
-
-		for (let i = 0, count = list.length; i < count; ++i) {
-			Component.addItemSub(list[i]);
-		}
+		sortFilterWindows(items);
 	}
 
 	function getItemIndexById(index) {
@@ -584,6 +579,20 @@ export function createStorage(config) {
 		event.preventDefault();
 	}
 
+	function positionFilterWindow(filter) {
+		const anchor = Component._host.getBoundingClientRect();
+		const rect = filter._host.getBoundingClientRect();
+		const gap = 8;
+		let left = anchor.right + gap;
+		if (left + rect.width > Renderer.width) {
+			left = anchor.left - rect.width - gap;
+			if (left < 0) left = anchor.left + 24;
+		}
+		const offset = (Object.keys(_openFilters).length - 1) * 24;
+		filter._host.style.left = `${Math.max(0, Math.min(left, Renderer.width - rect.width))}px`;
+		filter._host.style.top = `${Math.max(0, Math.min(anchor.top + offset, Renderer.height - rect.height))}px`;
+	}
+
 	function onFilterWindowOpen(button) {
 		const tabId = parseInt(button.getAttribute('data-tab-id'), 10);
 		const title = button.getAttribute('data-title') || '物品';
@@ -596,15 +605,9 @@ export function createStorage(config) {
 			return;
 		}
 
-		const filtered_list = [];
-		for (let i = 0, count = _list.length; i < count; ++i) {
-			const item = _list[i];
-			if (getItemTab(item) === tabId) {
-				filtered_list.push(item);
-			}
-		}
+		const filtered_list = orderedItems().filter(item => getItemTab(item) === tabId);
 
-		const newFilter = new StorageFilter(tabId);
+		const newFilter = UIManager.addComponent(new StorageFilter(tabId));
 		_openFilters[tabId] = newFilter;
 
 		newFilter.onCloseCallback = function () {
@@ -619,7 +622,9 @@ export function createStorage(config) {
 			Component.transferItemToOtherUI(item);
 		};
 
+		newFilter.onStorageDrop = onDrop;
 		newFilter.append();
+		positionFilterWindow(newFilter);
 		newFilter.setItems(title, filtered_list, tabId);
 	}
 

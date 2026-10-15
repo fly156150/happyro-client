@@ -10,56 +10,55 @@ import DB from 'DB/DBManager.js';
 import Client from 'Core/Client.js';
 import Preferences from 'Core/Preferences.js';
 import Renderer from 'Renderer/Renderer.js';
-import Mouse from 'Controls/MouseEventHandler.js';
+import { bindStorageResize } from '../StorageResize.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import 'UI/Elements/Elements.js';
 import ItemInfo from 'UI/Components/ItemInfo/ItemInfo.js';
 import htmlText from './StorageFilter.html?raw';
 import cssText from './StorageFilter.css?raw';
 
-function StorageFilter(tabId) {
-	const prefName = 'StorageFilter_' + tabId;
-	GUIComponent.call(this, prefName, cssText);
+class StorageFilter extends GUIComponent {
+	constructor(tabId) {
+		const prefName = 'StorageFilter_' + tabId;
+		super(prefName, cssText);
 
-	this.render = () => htmlText;
+		this.render = () => htmlText;
 
-	this.onRemove = function () {
-		const root = this.getRoot();
-		const content = root.querySelector('.content');
-		if (content) {
-			content.innerHTML = '';
-		}
-		this._list.length = 0;
+		this.onRemove = function () {
+			const root = this.getRoot();
+			const content = root.querySelector('.content');
+			if (content) {
+				content.innerHTML = '';
+			}
+			this._list.length = 0;
+			this._currentTabId = -1;
+
+			this._preferences.y = parseInt(this._host.style.top, 10);
+			this._preferences.x = parseInt(this._host.style.left, 10);
+			this._preferences.height = Math.floor(
+				(root.querySelector('.content') ? root.querySelector('.content').offsetHeight : 128) / 32
+			);
+			this._preferences.save();
+
+			if (typeof this.onCloseCallback === 'function') {
+				this.onCloseCallback();
+			}
+		};
+
+		this._list = [];
 		this._currentTabId = -1;
-
-		this._preferences.y = parseInt(this._host.style.top, 10);
-		this._preferences.x = parseInt(this._host.style.left, 10);
-		this._preferences.height = Math.floor(
-			(root.querySelector('.content') ? root.querySelector('.content').offsetHeight : 128) / 32
+		this._preferences = Preferences.get(
+			prefName,
+			{
+				x: 300 + tabId * 20,
+				y: 200 + tabId * 20,
+				height: 4
+			},
+			1.0
 		);
-		this._preferences.save();
-
-		if (typeof this.onCloseCallback === 'function') {
-			this.onCloseCallback();
-		}
-	};
-
-	this._list = [];
-	this._currentTabId = -1;
-	this._preferences = Preferences.get(
-		prefName,
-		{
-			x: 300 + tabId * 20,
-			y: 200 + tabId * 20,
-			height: 4
-		},
-		1.0
-	);
-	this.onCloseCallback = null;
+		this.onCloseCallback = null;
+	}
 }
-
-StorageFilter.prototype = Object.create(GUIComponent.prototype);
-StorageFilter.prototype.constructor = StorageFilter;
 
 StorageFilter.prototype.init = function init() {
 	const self = this;
@@ -75,7 +74,10 @@ StorageFilter.prototype.init = function init() {
 
 	const extendBtn = root.querySelector('.footer .extend');
 	if (extendBtn) {
-		extendBtn.addEventListener('mousedown', () => this.onResize());
+		bindStorageResize(extendBtn, {
+			getRows: () => Math.round(parseFloat(root.querySelector('.content').style.height) / 32),
+			resize: rows => this.resizeHeight(rows), minimum: 4, maximum: 10
+		});
 	}
 
 	this.resizeHeight(this._preferences.height);
@@ -116,6 +118,12 @@ StorageFilter.prototype.init = function init() {
 		});
 	}
 
+	this._host.addEventListener('dragover', event => {
+		event.preventDefault();
+		event.stopPropagation();
+	});
+	this._host.addEventListener('drop', event => this.onStorageDrop(event));
+
 	this.draggable('.titlebar');
 	this.ui.hide();
 };
@@ -127,7 +135,7 @@ StorageFilter.prototype.onAppend = function onAppend() {
 };
 
 StorageFilter.prototype.setItems = function setItems(title, items, tabId) {
-	this._list = items.slice(0);
+	this._list = items.map(item => ({ ...item }));
 	this._currentTabId = tabId;
 	const root = this.getRoot();
 	const titleEl = root.querySelector('.titlebar .text');
@@ -142,6 +150,19 @@ StorageFilter.prototype.setItems = function setItems(title, items, tabId) {
 	for (let i = 0, count = this._list.length; i < count; ++i) {
 		this.renderItem(this._list[i]);
 	}
+};
+
+// Reorder existing nodes so sorting preserves scroll position and loaded icons.
+StorageFilter.prototype.orderItems = function orderItems(items) {
+	const ranks = new Map(items.map((item, index) => [item.index, index]));
+	this._list.sort((a, b) => ranks.get(a.index) - ranks.get(b.index));
+	const content = this.getRoot().querySelector('.content');
+	const scrollTop = content.scrollTop;
+	for (const item of this._list) {
+		const element = content.querySelector(`.item[data-index="${item.index}"]`);
+		if (element) content.appendChild(element);
+	}
+	content.scrollTop = scrollTop;
 };
 
 StorageFilter.prototype.renderItem = function renderItem(item) {
@@ -233,11 +254,11 @@ StorageFilter.prototype.onItemDragStart = function onItemDragStart(event, itemEl
 	}
 
 	const img = new Image();
-	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	url = url.replace(/^"/, '').replace(/"$/, '');
-	img.src = url;
-
-	event.dataTransfer.setDragImage(img, 12, 12);
+	const match = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/);
+	if (match) {
+		img.src = match[1].replace(/^"/, '').replace(/"$/, '');
+		event.dataTransfer.setDragImage(img, 12, 12);
+	}
 	event.dataTransfer.setData(
 		'Text',
 		JSON.stringify(
@@ -287,34 +308,6 @@ StorageFilter.prototype.resizeHeight = function resizeHeight(height) {
 		content.style.height = `${height * 32}px`;
 	}
 	this._host.style.height = `${height * 32 + 17 + 19}px`;
-};
-
-StorageFilter.prototype.onResize = function onResize() {
-	const self = this;
-	const top = this._host.offsetTop;
-	let lastHeight = 0;
-	const extraY = 17 + 19;
-
-	function resizing() {
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-		h = Math.min(Math.max(h, 4), 10);
-
-		if (h === lastHeight) {
-			return;
-		}
-		self.resizeHeight(h);
-		lastHeight = h;
-	}
-
-	const _Interval = setInterval(resizing, 30);
-
-	const onMouseUp = event => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener('mouseup', onMouseUp);
-		}
-	};
-	window.addEventListener('mouseup', onMouseUp);
 };
 
 StorageFilter.prototype.getCurrentTab = function getCurrentTab() {

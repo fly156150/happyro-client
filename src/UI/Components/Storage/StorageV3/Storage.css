@@ -141,9 +141,10 @@
 	border-right: 1px solid #ccc;
 }
 #Storage .footer .extend {
-	position: absolute;
-	right: 0px;
-	bottom: 1px;
+	position: static;
+	flex: 0 0 13px;
+	align-self: flex-end;
+	cursor: ns-resize;
 	width: 13px;
 	height: 13px;
 	border: none;
@@ -151,13 +152,12 @@
 	background-color: transparent;
 }
 #Storage .footer .close {
-	position: absolute;
+	position: static;
+	flex: 0 0 38px;
 	border: none;
 	width: 38px;
 	min-width: 38px;
 	height: 18px;
-	bottom: 2px;
-	right: 10px;
 	background-repeat: no-repeat;
 	background-color: transparent;
 }
@@ -193,7 +193,9 @@
 #Storage .footer .item_num_display {
 	display: flex;
 	align-items: center;
-	padding-left: 3px;
+	padding-left: 0;
+	flex: 0 0 auto;
+	white-space: nowrap;
 }
 
 #Storage .footer .item_num {
@@ -217,18 +219,29 @@
 }
 
 /* Search */
+#Storage .footer .footer-controls {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	padding: 2px 4px 4px;
+}
 #Storage .footer .search-container {
 	display: flex;
 	align-items: center;
-	padding-left: 23px;
+	flex: 1;
+	min-width: 0;
+	gap: 4px;
 }
 
 #Storage .footer .search-input {
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	padding: 2px;
-	width: 87px;
-	height: 14px;
+	box-sizing: border-box;
+	flex: 1;
+	min-width: 0;
+	width: 0;
+	height: 18px;
 }
 
 #Storage .footer .search-button {
@@ -239,7 +252,8 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	border: none;
-	margin-left: 4px;
+	margin-left: 0;
+	flex: 0 0 38px;
 	cursor: pointer;
 }
 
@@ -267,6 +281,7 @@
 /* Keep translated footer labels on one line inside the compact buttons. */
 #Storage .footer .search-button,
 #Storage .footer .close {
+	box-sizing: border-box;
 	padding: 0 4px;
 	white-space: nowrap;
 }

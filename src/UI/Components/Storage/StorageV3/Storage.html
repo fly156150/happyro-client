@@ -34,7 +34,7 @@
 						<button
 							class="filter-use"
 							data-tab-id="0"
-							data-title="使用"
+							data-title="消耗品"
 							data-background="basic_interface/¼Òºñ-2.bmp"
 							data-down="basic_interface/¼Òºñ-1.bmp"
 							data-active="basic_interface/¼Òºñ-1.bmp"
@@ -102,29 +102,29 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						<div class="item_num_display">
-							<button class="item_num" data-background="inventory/icon_num.bmp"></button>
-							<span class="current">0</span><span class="divider">/</span><span class="limit">0</span>
-						</div>
-					</td>
-					<td>
-						<div class="search-container">
-							<input id="storage-search-input" type="text" class="search-input" />
+					<td colspan="3">
+						<div class="footer-controls">
+							<div class="item_num_display">
+								<button class="item_num" data-background="inventory/icon_num.bmp"></button>
+								<span class="current">0</span><span class="divider">/</span><span class="limit">0</span>
+							</div>
+							<div class="search-container">
+								<input id="storage-search-input" type="text" class="search-input" />
+								<ui-button
+									class="search-button"
+									bg="bt_search_normal.bmp"
+									hover="bt_search_over.bmp"
+									down="bt_search_press.bmp"
+								></ui-button>
+							</div>
 							<ui-button
-								class="search-button"
-								bg="bt_search_normal.bmp"
-								hover="bt_search_over.bmp"
-								down="bt_search_press.bmp"
+								class="close"
+								bg="btn_close.bmp"
+								hover="btn_close_a.bmp"
+								down="btn_close_b.bmp"
 							></ui-button>
+							<button class="extend" data-background="btn_resize.bmp"></button>
 						</div>
-						<ui-button
-							class="close"
-							bg="btn_close.bmp"
-							hover="btn_close_a.bmp"
-							down="btn_close_b.bmp"
-						></ui-button>
-						<button class="extend" data-background="btn_resize.bmp"></button>
 					</td>
 				</tr>
 			</tfoot>
