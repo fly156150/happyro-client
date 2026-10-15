@@ -5,7 +5,7 @@ vi.mock('Engine/SessionStorage.js',()=>({default:s.session}));
 vi.mock('Network/NetworkManager.js',()=>({default:{sendPacket:s.send}}));
 vi.mock('Network/PacketStructure.js',()=>({default:{CZ:new Proxy({}, {get:(t,k)=>t[k]||=(class{constructor(){this.packet=k;}})})}}));
 vi.mock('UI/Components/Inventory/Inventory.js',()=>({default:{getUI:()=>({list:s.inventory})}}));
-vi.mock('DB/DBManager.js',()=>({default:{getPetEvolutionByJob:()=>({9001:[{MaterialID:501,Amount:5}]}),getPetByEggID:()=>({PetString:'进化波利'}),getItemInfo:()=>({identifiedDisplayName:'红色药水'})}}));
+vi.mock('DB/DBManager.js',()=>({default:{getPetByJobID:()=>({AutoFeeding:s.autoFeedSupported}),getPetEvolutionByJob:()=>({9001:[{MaterialID:501,Amount:5}]}),getPetByEggID:()=>({PetString:'进化波利'}),getItemInfo:()=>({identifiedDisplayName:'红色药水'})}}));
 vi.mock('Renderer/EntityManager.js',()=>({default:{get:id=>s.entities.get(id),forEach:fn=>s.entities.forEach(fn)}}));
 vi.mock('../../src/UI/Game/GameSelection.js',()=>({openGameSelection:s.selection,selectionEntries:(ids,type)=>ids.map(id=>({id,type}))}));
 import {resetGamePet,updateGamePetInfo,updateGamePetState,updateGamePetAutoFeed,receiveGamePetResult,openGamePet,openGamePetEggs,openGamePetCapture,receiveGamePetCapture} from '../../src/UI/Game/GamePet.js';
@@ -13,7 +13,7 @@ import {clearInteraction,interactionSnapshot} from '../../src/UI/Game/ServerInte
 import {createPetPanel} from '../../src/UI/Mobile/game/PetPanel.js';
 const info={job:1002,szName:'波利',nLevel:10,nFullness:50,nRelationship:1000,ITID:0,bModified:0};
 function open(){const p=openGamePet();p.setOperationGuard(()=>true);return p;}
-beforeEach(()=>{vi.clearAllMocks();clearInteraction();s.session.Playing=true;s.session.petId=20;s.session.Entity={action:0,ACTION:{DIE:99}};s.entities.clear();s.entities.set(20,{});s.inventory=[{ITID:501,count:2},{ITID:501,count:3}];resetGamePet();updateGamePetState({type:0,GID:20});updateGamePetInfo(info);});
+beforeEach(()=>{vi.clearAllMocks();s.autoFeedSupported=true;clearInteraction();s.session.Playing=true;s.session.petId=20;s.session.Entity={action:0,ACTION:{DIE:99}};s.entities.clear();s.entities.set(20,{});s.inventory=[{ITID:501,count:2},{ITID:501,count:3}];resetGamePet();updateGamePetState({type:0,GID:20});updateGamePetInfo(info);});
 it('uses server hunger and intimacy, locks feed until its result and ignores other pets',()=>{const p=open();p.command('feed');p.command('feed');expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'COMMAND_PET',cSub:1}));updateGamePetInfo({...info,nFullness:60});expect(p.snapshot().pending).toBe('feed');updateGamePetState({type:2,GID:21,data:90});expect(p.snapshot().info.nFullness).toBe(60);receiveGamePetResult('feed',0);expect(p.snapshot().message).toContain('失败');expect(p.snapshot().allowed).toBe(true);updateGamePetState({type:2,GID:20,data:70});expect(p.snapshot().info.nFullness).toBe(70);});
 it('rechecks summed evolution materials and intimacy and waits for the evolution result',()=>{const p=open();expect(p.snapshot().evolutions[0].materials[0].owned).toBe(5);s.inventory[1].count=2;expect(p.command('evolve',9001)).toContain('不足');s.inventory[1].count=3;p.command('evolve',9001);p.command('evolve',9001);expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'PET_EVOLUTION',evolutionPetEggITID:9001}));expect(s.inventory[1].count).toBe(3);receiveGamePetResult('evolve',6);expect(p.snapshot().message).toBe('进化成功');});
 it('validates UTF-8 names and preserves accessory semantics instead of treating hairstyle as equipment',()=>{const p=open();expect(p.command('rename','汉'.repeat(8))).toContain('无效');p.command('rename','小波利');expect(s.send).toHaveBeenLastCalledWith(expect.objectContaining({packet:'RENAME_PET',szName:'小波利'}));updateGamePetInfo({...info,szName:'小波利',bModified:1});expect(p.command('rename','其他')).toContain('改名');updateGamePetState({type:5,GID:20,data:99});expect(p.snapshot().accessory).toBe(false);updateGamePetState({type:3,GID:20,data:99});expect(p.snapshot().accessory).toBe(true);p.command('unequip');expect(s.send).toHaveBeenLastCalledWith(expect.objectContaining({cSub:4}));p.command('autofeed');expect(p.snapshot().autoFeed).toBe(false);updateGamePetAutoFeed(1);expect(p.snapshot().autoFeed).toBe(true);});
@@ -22,3 +22,26 @@ it('uses explicit egg selection and revalidates captured monsters, with cancella
 it('requires confirmation and preserves the rename draft during status refresh',()=>{const p=open(),body=document.body.appendChild(document.createElement('div')),panel=createPetPanel(body,p);body.querySelector('[data-name]').value='草稿';body.querySelector('[data-name]').dispatchEvent(new Event('input'));updateGamePetState({type:2,GID:20,data:70});panel.update();expect(body.querySelector('[data-name]').value).toBe('草稿');body.querySelector('[data-action=feed]').click();expect(s.send).not.toHaveBeenCalled();body.querySelector('[data-confirm]').click();expect(s.send).toHaveBeenCalledOnce();});
 
 it("does not carry an old pet pending operation into a replacement pet",()=>{const p=open();p.command("feed");s.entities.set(21,{});s.session.petId=21;updateGamePetState({type:0,GID:21});updateGamePetInfo({...info,szName:"新宠物"});expect(p.snapshot()).toMatchObject({gid:21,pending:null,allowed:true});});
+
+it('uses Loyal intimacy and blocks evolution while an accessory is equipped',()=>{
+ const p=open();
+ updateGamePetInfo({...info,nRelationship:909});expect(p.snapshot().evolutions[0].ready).toBe(false);
+ updateGamePetInfo({...info,nRelationship:910});expect(p.snapshot().evolutions[0].ready).toBe(true);
+ updateGamePetState({type:3,GID:20,data:10013});expect(p.command('evolve',9001)).toContain('卸下');
+ expect(s.send).not.toHaveBeenCalled();
+ updateGamePetState({type:3,GID:20,data:0});p.command('evolve',9001);
+ expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'PET_EVOLUTION'}));
+});
+it('disables unsupported automatic feeding and reports its reason without sending',()=>{
+ s.autoFeedSupported=false;const p=open();
+ expect(p.snapshot().supportsAutoFeed).toBe(false);expect(p.command('autofeed')).toContain('不支持');
+ expect(s.send).not.toHaveBeenCalled();
+ const body=document.createElement('div');createPetPanel(body,p);
+ expect(body.querySelector('[data-action=autofeed]').disabled).toBe(true);
+});
+it('resets refresh feedback before each server response',()=>{
+ const p=open();p.refresh();updateGamePetInfo(info);
+ expect(p.snapshot().message).toBe('宠物状态已更新');
+ p.refresh();expect(p.snapshot().messageKind).toBe('pending');
+ updateGamePetInfo(info);expect(p.snapshot().message).toBe('宠物状态已更新');
+});

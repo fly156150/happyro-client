@@ -1,3 +1,4 @@
+import { PET_EVOLUTION_INTIMACY } from 'DB/Pets/PetRules.js';
 import { showToast } from 'UI/Components/Toast.js';
 import Platform from 'UI/Platform.js';
 import {
@@ -346,10 +347,10 @@ PetInformations.reqNameEdit = function reqNameEdit(name) {
 /**
  * Request a pet evolution
  * @param {number} baseJobID - The Job ID of the base pet
- * @throws {Error} If the pet's friendly level is less than 1000
+ * @throws {Error} If the pet's friendly level is less than the Loyal threshold
  */
 PetInformations.reqEvolution = function reqEvolution(baseJobID) {
-	if (Session.pet.friendly < 1000) {
+	if (Session.pet.friendly < PET_EVOLUTION_INTIMACY) {
 		ChatBox.addText(DB.getMessage(2576), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 		return;
 	} else {

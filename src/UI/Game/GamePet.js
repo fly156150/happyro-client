@@ -1,3 +1,4 @@
+import { PET_EVOLUTION_INTIMACY } from 'DB/Pets/PetRules.js';
 import Renderer from 'Renderer/Renderer.js';
 import Session from 'Engine/SessionStorage.js';
 import DB from 'DB/DBManager.js';
@@ -74,18 +75,26 @@ export function receiveGamePetResult(kind, result) {
 }
 function evolutions() {
 	const s = current();
-	return Object.entries(DB.getPetEvolutionByJob(s.info?.job) || {}).map(([egg, materials]) => ({
-		egg: Number(egg),
-		name: DB.getItemInfo(Number(egg)).identifiedDisplayName || `宠物蛋 #${egg}`,
-		materials: materials.map(m => ({
+	return Object.entries(DB.getPetEvolutionByJob(s.info?.job) || {}).map(([egg, materials]) => {
+		const requirements = materials.map(m => ({
 			id: m.MaterialID,
 			name: DB.getItemInfo(m.MaterialID).identifiedDisplayName,
 			count: m.Amount,
 			owned: Inventory.getUI()
 				.list.filter(i => i.ITID === m.MaterialID && !i.equipped)
 				.reduce((n, i) => n + itemQuantity(i), 0)
-		}))
-	}));
+		}));
+		return {
+			egg: Number(egg),
+			name: DB.getItemInfo(Number(egg)).identifiedDisplayName,
+			materials: requirements,
+			intimacyRequired: PET_EVOLUTION_INTIMACY,
+			ready:
+				s.info.nRelationship >= PET_EVOLUTION_INTIMACY &&
+				!s.accessory &&
+				requirements.every(m => m.owned >= m.count)
+		};
+	});
 }
 export function openGamePet(canOperate = () => true) {
 	if (!canOperate() || !Session.Playing || !Session.Entity || Session.Entity.action === Session.Entity.ACTION.DIE)
@@ -119,6 +128,7 @@ export function openGamePet(canOperate = () => true) {
 				message: s.message,
 				messageKind: s.messageKind,
 				autoFeed: s.autoFeed,
+				supportsAutoFeed: Boolean(DB.getPetByJobID(s.info?.job)?.AutoFeeding),
 				evolutions: exists() ? evolutions() : []
 			};
 		},
@@ -138,11 +148,12 @@ export function openGamePet(canOperate = () => true) {
 				send('RENAME_PET', { szName: name });
 			} else if (action === 'evolve') {
 				const evo = evolutions().find(e => e.egg === value);
-				if (s.info.nRelationship < 1000 || !evo || evo.materials.some(m => m.owned < m.count))
-					return '亲密度或进化材料不足';
+				if (s.accessory) return '请先卸下宠物饰品';
+				if (!evo?.ready) return '亲密度或进化材料不足';
 				s.pending = 'evolve';
 				send('PET_EVOLUTION', { evolutionPetEggITID: value });
 			} else if (action === 'autofeed') {
+				if (!DB.getPetByJobID(s.info.job)?.AutoFeeding) return '该宠物不支持自动喂食';
 				send('CONFIG', { Config: 2, Value: s.autoFeed ? 0 : 1 });
 			} else {
 				const command = { feed: 1, perform: 2, egg: 3, unequip: 4 }[action];
@@ -158,6 +169,8 @@ export function openGamePet(canOperate = () => true) {
 		refresh() {
 			if (!active() || !exists() || current().pending) return;
 			current().pending = 'refresh';
+			current().message = '已发送请求，以服务器状态为准';
+			current().messageKind = 'pending';
 			send('COMMAND_PET', { cSub: 0 });
 		},
 		close() {

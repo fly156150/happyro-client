@@ -220,6 +220,9 @@ PetInformations.setInformations = function setInformations(info) {
 		}
 	}
 
+	const autoFeed = root.querySelector('.pet_auto_feed');
+	if (autoFeed) autoFeed.disabled = !DB.getPetByJobID(info.job)?.AutoFeeding;
+
 	const cmdSelect = root.querySelector('.command');
 
 	// remove old evolution options

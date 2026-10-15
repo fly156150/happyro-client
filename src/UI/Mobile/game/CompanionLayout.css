@@ -51,3 +51,14 @@
 
 /* Mercenary skills have fixed levels; their phone menu has no learning action. */
 :host([data-phone-screen]) .panel [data-companion-kind='mercenary'] .companion-skill > button { display: none; }
+
+/* Pet requirements share the companion panels' spacing and readable value alignment. */
+:host([data-phone-screen]) .panel .pet-evolution-requirement {
+ display: flex; justify-content: space-between; gap: 12px; margin: 0; padding: 7px 0;
+ border-bottom: 1px solid #35414d;
+}
+:host([data-phone-screen]) .panel .pet-evolution-requirement strong { white-space: nowrap; font-weight: normal; }
+:host([data-phone-screen]) .panel .pet-evolution-requirement.is-missing strong,
+:host([data-phone-screen]) .panel .pet-evolution-accessory { color: #f6d9a5; }
+:host([data-phone-screen]) .panel [data-evolution] > h3 { margin: 0 0 6px; font-size: inherit; }
+:host([data-phone-screen]) .panel [data-evolution] > button { margin-top: 10px; }
