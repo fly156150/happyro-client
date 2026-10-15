@@ -431,11 +431,18 @@
 	white-space: pre-line;
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-item-filters {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(80px, 30%);
+	align-items: center;
+	gap: 6px;
 	flex-shrink: 0;
 	padding-bottom: 6px;
 }
-:host([data-menu-density]) .panel[data-view='mail'] .mail-item-filters > :is(select, .menu-select) {
+:host([data-menu-density]) .panel[data-view='mail'] .mail-item-filters > :is(input, select, .menu-select) {
+	box-sizing: border-box;
+	min-width: 0;
 	width: 100%;
+	height: var(--panel-control);
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-item-list {
 	display: grid;
@@ -578,4 +585,11 @@
 	justify-content: center;
 	padding-block: 0;
 	font: 22px/1 Arial, sans-serif;
+}
+
+/* Short mail actions share the width of four-character actions on phones. */
+:host([data-phone-screen]) .panel[data-view='mail']
+ :is(.mail-actions, .mail-write-row, .mail-field, .mail-attachment-summary) > button {
+ min-width: calc(4em + 20px);
+ padding-inline: 10px;
 }

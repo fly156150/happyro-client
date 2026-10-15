@@ -14,7 +14,8 @@ export function createMailPanel(body, service) {
 		review = null;
 	let dismiss,
 		quantityDialog = null,
-		itemCategory = 'all';
+		itemCategory = 'all',
+		itemTerm = '';
 	const controls = new Map();
 	const node = (parent, tag, className, text) => {
 		const element = document.createElement(tag);
@@ -131,6 +132,18 @@ export function createMailPanel(body, service) {
 			clearReview();
 		});
 		const filters = node(list, 'div', 'mail-item-filters');
+		const search = node(filters, 'input', 'mail-item-search');
+		search.type = 'search';
+		search.placeholder = '搜索物品名称或 ID';
+		search.setAttribute('aria-label', '搜索附件物品');
+		search.value = itemTerm;
+		search.oninput = () => { itemTerm = search.value; };
+		search.onchange = () => {
+			list.querySelector('.mail-item-list')?.scrollTo(0, 0);
+			render();
+			update();
+		};
+		controls.set(search, false);
 		const category = node(filters, 'select', '');
 		category.setAttribute('aria-label', '附件物品分类');
 		for (const [value, label] of [
@@ -150,14 +163,16 @@ export function createMailPanel(body, service) {
 			update();
 		};
 		const inventory = node(list, 'div', 'mail-rows mail-item-list');
+		const query = itemTerm.trim().toLocaleLowerCase();
 		const items = state.inventory.filter(
 			item =>
-				itemCategory === 'all' ||
+				(!query || item.name.toLocaleLowerCase().includes(query) || String(item.ID).includes(query)) &&
+				(itemCategory === 'all' ||
 				(itemCategory === 'card'
 					? item.type === ItemType.CARD
 					: itemCategory === 'other'
 						? item.category === 'other' && item.type !== ItemType.CARD
-						: item.category === itemCategory)
+						: item.category === itemCategory))
 		);
 		for (const item of items) {
 			const row = button(inventory, '', () => addAttachment(item));
@@ -167,7 +182,7 @@ export function createMailPanel(body, service) {
 			setListItemIcon(row, item);
 			setListItemText(row, item.name, `×${item.count}`);
 		}
-		if (!items.length) para(inventory, '该分类暂无可添加物品', 'mail-empty');
+		if (!items.length) para(inventory, query ? '没有匹配的物品' : '该分类暂无可添加物品', 'mail-empty');
 		const form = node(detail, 'div', 'mail-form');
 		field(form, '收件人', state.draft.receiver, value => service.change('receiver', value));
 		button(form.lastElementChild, '校验', () => service.validate());
