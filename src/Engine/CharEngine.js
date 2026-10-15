@@ -28,6 +28,7 @@ import JoystickUI from 'UI/Components/JoystickUI/JoystickUI.js';
 import CharSelect from 'UI/Components/CharSelect/CharSelect.js';
 import CharCreate from 'UI/Components/CharCreate/CharCreate.js';
 import Player from 'Renderer/Entity/Player.js';
+import { validateSocialText } from 'Utils/SocialText.js';
 
 // Load modules
 // Version Dependent UIs
@@ -546,6 +547,12 @@ function onCharCreationRequest(name, Str, Agi, Vit, Int, Dex, Luk, hair, color, 
 	name = name.trim();
 	if (!name) {
 		UIManager.showMessageBox('请输入角色名', 'ok');
+		return;
+	}
+
+	const error = validateSocialText({ name });
+	if (error) {
+		UIManager.showMessageBox(error, 'ok');
 		return;
 	}
 
