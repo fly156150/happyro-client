@@ -14,7 +14,7 @@ export function createPetPanel(body, service) {
 	let dismiss,
 		lastPet = null,
 		evoKey = '',
-		lastMessage = '',
+		lastMessage = service.snapshot().message || '',
 		nameDirty = false;
 	function cancel() {
 		dismiss?.();

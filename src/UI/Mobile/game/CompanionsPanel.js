@@ -15,7 +15,7 @@ export function createCompanionsPanel(body, service) {
 		nameDirty = false,
 		learning = null,
 		skillKey = '',
-		lastMessage = '';
+		lastMessage = service.snapshot().message || '';
 	const labels = {
 		feed: '喂食',
 		rename: '改名',
