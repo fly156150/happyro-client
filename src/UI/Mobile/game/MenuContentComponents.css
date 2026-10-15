@@ -634,45 +634,33 @@
 
 /* Phone portrait browsing menus use framed details above lists and bottom filters. */
 .portrait-menu-placeholder { display: none; }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='quests'], [data-view='social']) > .panel-body {
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) > .panel-body {
  display: grid; grid-template-columns: minmax(0, 1fr);
  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto; gap: 6px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) .inventory-layout,
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] :is(.interaction-columns, .interaction-column) { display: contents; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .interaction-column-title { display: none; }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='quests'], [data-view='social']) :is(.inventory-list, .inventory-detail, .quest-detail-content) {
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) .inventory-layout { display: contents; }
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) :is(.inventory-list, .inventory-detail, .quest-detail-content) {
  box-sizing: border-box; min-height: 0; min-width: 0; overflow-y: auto;
  border: 1px solid #52606d; border-radius: 10px; padding: 8px; background: #19212a;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='quests'], [data-view='social']) .inventory-list {
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) .inventory-list {
  grid-row: 2; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 6px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='social']) .inventory-detail,
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='social']) .inventory-detail,
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .quest-detail-content { grid-row: 1; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .inventory-detail { display: contents; }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='quests'], [data-view='social']) :is(.skills-toolbar, .container-toolbar) {
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) :is(.skills-toolbar, .container-toolbar) {
  grid-row: 3; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px;
  border-top: 1px solid #52606d; padding-top: 6px; margin: 0;
 }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .skills-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-toolbar > input { grid-row: 1; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-filters { grid-row: 2; padding: 0; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .interaction-footer,
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .quest-actions {
- grid-row: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px;
- box-sizing: border-box; min-height: calc(var(--panel-control) + 7px);
- border-top: 1px solid #52606d; padding: 6px 0 0; margin: 0;
-}
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-capacity { flex: 1 0 100%; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-quantity { flex: 1; width: auto; min-width: 0; }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='quests']) .portrait-menu-placeholder { display: inline-flex; }
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests']) .portrait-menu-placeholder { display: inline-flex; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] > .panel-body { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-form {
  border: 0; border-radius: 0; padding: 0; margin: 8px 0;
 }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-form > button { justify-self: end; width: auto; }
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='cart'], [data-view='quests']) :is(.interaction-footer, .quest-actions) > button {
+:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests']) :is(.interaction-footer, .quest-actions) > button {
  height: var(--panel-control); min-height: var(--panel-control); margin: 0; padding: 3px 6px;
 }
 
@@ -687,7 +675,6 @@
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] :is(.social-management, .social-empty) { grid-column: 1 / -1; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-role-field > span { display: none; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-role-field > input { width: 100%; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-quantity-group { width: auto; flex: 1; }
 
 /* Consistent social fields in both touch orientations. */
 .panel[data-view='social'] .social-role-field > span { display: none; }
@@ -704,3 +691,16 @@
 :host([data-orientation='portrait']) .panel[data-view='selection'] .equipment-selection .interaction-footer { order: 3; }
 
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .inventory-list[data-social-type='party'] { grid-template-columns: minmax(0, 1fr); }
+
+/* The cart has the same quantity controls as storage; keep one stable action row. */
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .interaction-footer {
+ display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px; padding: 6px 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-quantity-group { width: 100%; height: var(--interaction-control); }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .container-quantity-group > button { flex-basis: 32px; width: 32px; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .interaction-footer > button { height: var(--interaction-control); min-height: var(--interaction-control); margin: 0; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .quest-actions {
+ grid-row: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px;
+ box-sizing: border-box; min-height: calc(var(--panel-control) + 7px);
+ border-top: 1px solid #52606d; padding: 6px 0 0; margin: 0;
+}
