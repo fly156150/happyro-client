@@ -20,7 +20,7 @@ it('switches four categories without mixing system and combat messages',()=>{
  choose('all');expect(log.children.length).toBe(3);
 });
 it('shows private unread only outside the dialogue categories and clears it on viewing',()=>{
- choose('battle');preview.update([...messages,{id:4,channel:'private',text:'你好'}]);
+ choose('battle');preview.update([...messages,{id:4,channel:'private',text:'你好',incomingPrivate:true}]);
  const dot=root.querySelector('[data-preview-category="dialogue"] b');expect(dot.hidden).toBe(false);
  choose('dialogue');expect(dot.hidden).toBe(true);expect(log.textContent).toContain('你好');
  choose('battle');preview.update([...messages,{id:5,channel:'battle',text:'伤害'}]);expect(dot.hidden).toBe(true);

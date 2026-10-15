@@ -955,7 +955,7 @@ function onEntityTalk(pkt) {
 	type = ChatBox.TYPE.PUBLIC;
 	const entity = EntityManager.get(pkt.GID);
 
-	ChatBox.addText(pkt.msg, type, ChatBox.FILTER.PUBLIC_CHAT, null, false);
+	ChatBox.addText(pkt.msg, type, ChatBox.FILTER.PUBLIC_CHAT);
 
 	if (entity) {
 		pkt.msg = pkt.msg.replace(

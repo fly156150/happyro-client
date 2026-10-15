@@ -8,6 +8,7 @@
  * @author Vincent Thibault
  */
 
+import { createChatContent } from 'UI/Game/ChatContent.js';
 import { publishChatMessage, clearChatFeed } from 'UI/Game/ChatFeed.js';
 import DB from 'DB/DBManager.js';
 import Renderer from 'Renderer/Renderer.js';
@@ -1252,30 +1253,20 @@ function extractChatMessage(inputEl) {
 /**
  * Add text to chatbox
  */
-ChatBox.addText = function addText(text, colorType, filterType, color, override) {
-	text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, function (match) {
-		const item = DB.parseItemLink(match);
-		const span = `<span data-item="${match}" class="item-link" style="color:#FFFF63;">&lt;${item.name}&gt;</span>`;
-		override = true;
-		return span;
-	});
-
-	// Auto-detect client-generated HTML (nickname links in whispers)
-	if (!override && /<span\s+class="nickname-link"/.test(text)) {
-		override = true;
-	}
+ChatBox.addText = function addText(text, colorType, filterType, color) {
+	const content = createChatContent(text, link => DB.parseItemLink(link));
+	const html = content.childElementCount > 0;
 
 	if (isNaN(filterType)) {
 		filterType = ChatBox.FILTER.PUBLIC_LOG;
 	}
 
-	publishChatMessage({ text, html: !!override, colorType, filterType });
+	publishChatMessage({ text: html ? content.innerHTML : content.textContent, html, colorType, filterType });
 	_messageBuffer.push({
-		text: text,
+		content,
 		colorType: colorType,
 		filterType: filterType,
-		color: color,
-		override: override
+		color: color
 	});
 
 	if (!_rafScheduled) {
@@ -1326,13 +1317,8 @@ function flushMessageBuffer() {
 
 		messagesByTab[TabNum].forEach(msg => {
 			const color = msg.color || getColorForType(msg.colorType);
-			const div = document.createElement('div');
+			const div = msg.content.cloneNode(true);
 			div.style.color = color;
-			if (!msg.override) {
-				div.textContent = msg.text;
-			} else {
-				div.innerHTML = msg.text;
-			}
 			fragment.appendChild(div);
 		});
 
@@ -1560,11 +1546,13 @@ ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
 	const url = window.URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
 
 	ChatBox.addText(
-		`聊天记录 [${ChatBox.tabs[ChatBox.activeTab].name}] ${date} 可通过<a style="color:#F88" download="ChatHistory [${ChatBox.tabs[ChatBox.activeTab].name}] (${date.replace('/', '-')}).html" href="${url}" target="_blank">点击此处</a>保存。`,
+		[
+			`聊天记录 [${ChatBox.tabs[ChatBox.activeTab].name}] ${date} 可通过`,
+			{ kind: 'download', text: '点击此处', url, filename: `ChatHistory [${ChatBox.tabs[ChatBox.activeTab].name}] (${date.replace('/', '-')}).html` },
+			'保存。'
+		],
 		ChatBox.TYPE.PUBLIC,
-		ChatBox.FILTER.PUBLIC_LOG,
-		null,
-		true
+		ChatBox.FILTER.PUBLIC_LOG
 	);
 };
 

@@ -65,7 +65,7 @@ function onPlayerMessage(pkt) {
 		return;
 	}
 
-	ChatBox.addText(pkt.msg, ChatBox.TYPE.PUBLIC | ChatBox.TYPE.SELF, ChatBox.FILTER.PUBLIC_CHAT, null, false);
+	ChatBox.addText(pkt.msg, ChatBox.TYPE.PUBLIC | ChatBox.TYPE.SELF, ChatBox.FILTER.PUBLIC_CHAT);
 
 	if (Session.Entity) {
 		pkt.msg = pkt.msg.replace(
