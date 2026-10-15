@@ -39,3 +39,12 @@
 :host([data-menu-density][data-orientation='portrait']) .panel .companion-layout {
  grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
 }
+
+/* Phone rename fields use their placeholder and accessible name instead of a duplicate caption. */
+:host([data-phone-screen]) .panel .companion-name > span { display: none; }
+
+/* Fill each wrapped action row while retaining the available space for its labels. */
+:host([data-phone-screen]) .panel:is([data-view='pet'], [data-view='companions']:has(.companion-name:not([hidden])))
+ .companion-footer .inventory-actions > button {
+ flex: 1 0 auto;
+}
