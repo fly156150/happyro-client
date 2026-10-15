@@ -8,6 +8,7 @@
  */
 
 import DB from 'DB/DBManager.js';
+import { validateMailRecipient, validateMailContent } from 'Utils/MailText.js';
 import ChatBox from 'UI/Components/ChatBox/ChatBox.js';
 import Session from 'Engine/SessionStorage.js';
 import MonsterTable from 'DB/Monsters/MonsterTable.js';
@@ -30,6 +31,7 @@ const WriteRodex = new GUIComponent('WriteRodex', cssText);
 WriteRodex.list = [];
 WriteRodex.receiver = null;
 WriteRodex.tax = 0;
+let pendingRecipient = null;
 
 /**
  * @var {Preferences} structure
@@ -63,6 +65,7 @@ WriteRodex.onAppend = function onAppend() {
 	// Bind buttons
 	root.querySelector('.right .close').addEventListener('click', onClickClose);
 	root.querySelector('.send').addEventListener('click', onClickSend);
+	root.querySelector('.name').addEventListener('input', invalidateRecipient);
 	root.querySelector('.value').addEventListener('input', WriteRodex.updateTax);
 
 	const rodexTop = Rodex._host ? parseInt(Rodex._host.style.top, 10) || 0 : 0;
@@ -77,6 +80,7 @@ WriteRodex.onAppend = function onAppend() {
 WriteRodex.initData = function initData(pkt) {
 	const root = _root();
 
+	pendingRecipient = null;
 	WriteRodex.receiver = null;
 	WriteRodex.CharID = 0;
 	WriteRodex.list = [];
@@ -117,6 +121,15 @@ WriteRodex.initData = function initData(pkt) {
 
 WriteRodex.characterInfo = function characterInfo(pkt) {
 	const root = _root();
+	const nameInput = root.querySelector('.name');
+	if (
+		!pendingRecipient ||
+		nameInput.value.trim() !== pendingRecipient ||
+		!pkt.name ||
+		pkt.name.toLowerCase() !== pendingRecipient.toLowerCase()
+	)
+		return;
+	pendingRecipient = null;
 	const text = `Lv${pkt.level}<br>${MonsterTable[pkt.Job]}<br>${pkt.CharID}`;
 
 	root.querySelector('.validate-name').style.display = 'none';
@@ -125,10 +138,8 @@ WriteRodex.characterInfo = function characterInfo(pkt) {
 	baloon.innerHTML = text;
 	baloon.style.display = '';
 
-	const nameInput = root.querySelector('.name');
-	nameInput.type = 'none';
-
-	WriteRodex.receiver = pkt.name !== undefined ? pkt.name : nameInput.value;
+	nameInput.value = pkt.name;
+	WriteRodex.receiver = pkt.name;
 	WriteRodex.CharID = pkt.CharID;
 };
 
@@ -136,6 +147,7 @@ function onClickClose(e) {
 	e.stopImmediatePropagation();
 	const root = _root();
 
+	pendingRecipient = null;
 	WriteRodex.receiver = null;
 	root.querySelector('.name').value = '';
 	root.querySelector('.title-text').value = '';
@@ -155,10 +167,7 @@ function onClickSend(e) {
 	e.stopImmediatePropagation();
 	const root = _root();
 
-	if (
-		WriteRodex.receiver == null ||
-		(typeof WriteRodex.receiver === 'string' && WriteRodex.receiver.trim().length === 0)
-	) {
+	if (!WriteRodex.receiver || root.querySelector('.name').value.trim() !== WriteRodex.receiver) {
 		ChatBox.addText(DB.getMessage(2611), ChatBox.TYPE.INFO_MAIL, ChatBox.FILTER.PUBLIC_LOG);
 		return;
 	}
@@ -173,20 +182,17 @@ function onClickSend(e) {
 		return;
 	}
 
-	const title =
-		root
-			.querySelector('.title-text')
-			.value.replace(/^(\$|\%)/, '')
-			.replace(/\t/g, '')
-			.substring(0, 23) + String.fromCharCode(0);
-	const body =
-		root
-			.querySelector('.content-text')
-			.value.replace(/^(\$|\%)/, '')
-			.replace(/\t/g, '')
-			.substring(0, 499) + String.fromCharCode(0);
-	const Titlelength = title.length;
-	const Bodylength = body.length;
+	const titleText = root.querySelector('.title-text').value;
+	const bodyText = root.querySelector('.content-text').value;
+	const error = validateMailContent(titleText, bodyText);
+	if (error) {
+		ChatBox.addText(error, ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
+		return;
+	}
+	const title = titleText + '\0';
+	const body = bodyText + '\0';
+	const Titlelength = new TextEncoder().encode(title).length;
+	const Bodylength = new TextEncoder().encode(body).length;
 	const CharID = WriteRodex.CharID;
 	WriteRodex.requestSendRodex(receiver, sender, zeny, Titlelength, Bodylength, CharID, title, body);
 	WriteRodex.requestCancelWriteRodex();
@@ -348,11 +354,27 @@ function prettifyZeny(value) {
 	return out;
 }
 
+function invalidateRecipient() {
+	pendingRecipient = null;
+	WriteRodex.receiver = null;
+	WriteRodex.CharID = 0;
+	const root = _root();
+	root.querySelector('.validate-name').style.display = '';
+	root.querySelector('.baloon').style.display = 'none';
+}
+
 function onClickValidateName(e) {
 	e.stopImmediatePropagation();
 	const root = _root();
-	const name = root.querySelector('.name').value;
-	WriteRodex.validateName(name.replace(/^(\$|\%)/, '').replace(/\t/g, ''));
+	const name = root.querySelector('.name').value.trim();
+	invalidateRecipient();
+	const error = validateMailRecipient(name);
+	if (error) {
+		ChatBox.addText(error, ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
+		return;
+	}
+	pendingRecipient = name;
+	WriteRodex.validateName(name);
 }
 
 /**

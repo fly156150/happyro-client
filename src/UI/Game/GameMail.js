@@ -1,4 +1,5 @@
 import Session from 'Engine/SessionStorage.js';
+import { validateMailRecipient, validateMailContent } from 'Utils/MailText.js';
 import Network from 'Network/NetworkManager.js';
 import PACKET from 'Network/PacketStructure.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
@@ -131,8 +132,9 @@ export function openGameMail(canOperate = () => true) {
 		validate() {
 			if (!allowed() || !writing) return;
 			const name = draft.receiver.trim();
-			if (!name || bytes(name) > 23 || /[\0\t\r\n]/.test(name)) {
-				setMessage('收件人姓名无效（最多 23 字节）', 'error');
+			const error = validateMailRecipient(name);
+			if (error) {
+				setMessage(error, 'error');
 				return;
 			}
 			recipient = null;
@@ -169,13 +171,8 @@ export function openGameMail(canOperate = () => true) {
 		review() {
 			if (!allowed() || !writing) return { error: '当前无法发送' };
 			if (!recipient || recipient.name !== draft.receiver.trim()) return { error: '请先校验收件人' };
-			if (
-				!draft.title.trim() ||
-				bytes(draft.title) > 39 ||
-				bytes(draft.body) > 499 ||
-				/[\0]/.test(draft.title + draft.body)
-			)
-				return { error: '标题最多 39 字节，正文最多 499 字节，标题不能为空' };
+			const error = validateMailContent(draft.title, draft.body);
+			if (error) return { error };
 			if (!Number.isInteger(draft.zeny) || draft.zeny < 0 || draft.zeny > 2147483647)
 				return { error: '附件金额无效' };
 			const fee = attachments.length * 2500 + Math.floor(draft.zeny * 0.02);
