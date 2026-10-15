@@ -4040,7 +4040,8 @@ PACKET.CZ.REQ_TRADE_BUYING_STORE = function PACKET_CZ_REQ_TRADE_BUYING_STORE() {
 };
 PACKET.CZ.REQ_TRADE_BUYING_STORE.prototype.build = function () {
 	const ver = this.getPacketVersion();
-	const len = 2 + 2 + 4 + 4 + this.itemList.length * 6; // ver[2] = -1
+	const itemLength = PACKETVER.value >= 20181121 ? 8 : 6;
+	const len = 2 + 2 + 4 + 4 + this.itemList.length * itemLength; // ver[2] = -1
 	const pkt = new BinaryWriter(len);
 	let i, count;
 
@@ -4051,7 +4052,8 @@ PACKET.CZ.REQ_TRADE_BUYING_STORE.prototype.build = function () {
 
 	for (i = 0, count = this.itemList.length; i < count; ++i) {
 		pkt.writeUShort(this.itemList[i].index);
-		pkt.writeUShort(this.itemList[i].ITID);
+		if (PACKETVER.value >= 20181121) pkt.writeULong(this.itemList[i].ITID);
+		else pkt.writeUShort(this.itemList[i].ITID);
 		pkt.writeShort(this.itemList[i].count);
 	}
 

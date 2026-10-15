@@ -5,11 +5,13 @@ import { setListItemText, setListItemIcon } from './ListItemText.js';
 
 export function createVendingPanel(body, service) {
 	const initial = service.snapshot();
-	interactionColumns(body, [
-		{ title: initial.owned ? '在售商品' : '可选商品', className: 'inventory-list' },
+	body.dataset.vendingOwned = String(Boolean(initial.owned));
+	const layout = interactionColumns(body, [
+		{ title: initial.owned ? (initial.mode === 'buy' ? '收购商品' : '在售商品') : '可选商品', className: 'inventory-list' },
 		{ title: initial.owned ? '成交记录' : '摊位清单', content: '<div data-order></div>' },
 		{ title: '物品说明与定价', className: 'inventory-detail', content: '<div data-selected></div>' }
 	]);
+	for (const [index, section] of ['items', 'order', 'detail'].entries()) layout.children[index].dataset.vendingSection = section;
 	const fields = document.createElement('div');
 	fields.dataset.fields = '';
 	fields.className = 'interaction-toolbar';
@@ -85,6 +87,9 @@ export function createVendingPanel(body, service) {
 		);
 	};
 	function update() {
+		const phone = body.getRootNode().host.hasAttribute('data-phone-screen');
+		layout.children[2].querySelector('.interaction-column-title').textContent =
+			phone && initial.owned ? '物品详情' : '物品说明与定价';
 		const state = service.snapshot();
 		$('[data-cancel]').disabled = Boolean(state.pending);
 		status.textContent = state.pending
@@ -195,6 +200,7 @@ export function createVendingPanel(body, service) {
 		if ($('[data-revert-vending]')) $('[data-revert-vending]').hidden = !draft?.dirty();
 		const order = $('[data-order]');
 		const orderKey = JSON.stringify([
+			phone,
 			state.owned,
 			state.order,
 			state.owned ? state.items : null,
@@ -209,8 +215,9 @@ export function createVendingPanel(body, service) {
 				const log = document.createElement('p');
 				log.textContent =
 					state.mode === 'buy'
-						? `剩余预算：${state.budget ?? '—'} Z\n${state.log.join('\n')}`
-						: state.log.join('\n');
+						? `剩余预算：${state.budget ?? '—'} Z\n${state.log.join('\n') || (phone ? '暂无成交记录' : '')}`
+						: state.log.join('\n') || (phone ? '暂无成交记录' : '');
+				log.className = 'vending-transactions';
 				order.append(log);
 			}
 			for (const row of state.owned ? [] : state.order) {

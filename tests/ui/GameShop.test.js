@@ -4,7 +4,7 @@ const s = vi.hoisted(() => ({ items: [], session: { Playing: true, zeny: 100, En
 vi.mock('UI/Components/Inventory/Inventory.js', () => ({ default: { getUI: () => ({ list: s.items, getItemByIndex: index => s.items.find(item => item.index === index), npcsalelock: s.lock }) } }));
 vi.mock('Engine/SessionStorage.js', () => ({ default: s.session }));
 vi.mock('UI/Game/GameInventory.js', () => ({ createGameInventory: () => ({ describe: item => ({ index: item.index, ID: item.ITID, count: item.count || 1, name: '物品' }) }) }));
-import { openGameShop, finishGameShop } from '../../src/UI/Game/GameShop.js';
+import { openGameShop, finishGameShop, closePlayerShop } from '../../src/UI/Game/GameShop.js';
 import { clearInteraction, interactionSnapshot } from '../../src/UI/Game/ServerInteraction.js';
 beforeEach(() => { clearInteraction(); s.session.Playing = true; s.session.zeny = 100; s.session.Entity.action = 0; s.lock = false; s.items = [{ index: 3, ITID: 501, count: 5, PlaceETCTab: 0 }]; });
 it('checks quantity, order total and blocks duplicates without changing money or items', () => {
@@ -64,4 +64,19 @@ it('retains sold item details after the server removes inventory entries',()=>{
  const shop=openGameShop('sell',[{index:3,ITID:501,price:10}],vi.fn(),vi.fn());
  shop.set(3,501,5);shop.submit();s.items=[];finishGameShop('成功',true);
  expect(interactionSnapshot()).toMatchObject({title:'出售成功',resultItems:[{name:'物品',count:5}]});
+});
+
+it('invalidates only the matching player storefront and blocks stale order submission', () => {
+ const send = vi.fn();
+ const shop = openGameShop('buy', [{ITID: 501, price: 10, qty: 2}], send, vi.fn(), {type: 'player-vending', owner: 2000002});
+ shop.set(0, 501, 1);
+ closePlayerShop(2000003);
+ expect(interactionSnapshot()?.kind).toBe('shop');
+ closePlayerShop(2000002);
+ expect(interactionSnapshot()).toMatchObject({kind: 'notice', lines: ['摊位已关闭，请重新选择摊位']});
+ shop.submit();
+ expect(send).not.toHaveBeenCalled();
+ openGameShop('buy', [{ITID: 501, price: 10}], send, vi.fn());
+ closePlayerShop(2000002);
+ expect(interactionSnapshot()?.kind).toBe('shop');
 });

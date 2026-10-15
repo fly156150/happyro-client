@@ -9,6 +9,7 @@
 /**
  * Load dependencies
  */
+import { closePlayerShop } from 'UI/Game/GameShop.js';
 import CombatDiagnostics from 'Core/CombatDiagnostics.js';
 import DB from 'DB/DBManager.js';
 import { localizeEntityName } from './EntityName.js';
@@ -2516,6 +2517,7 @@ function onEntityDestroyRoom(pkt) {
 		return;
 	}
 
+	closePlayerShop(pkt.makerAID);
 	const entity = EntityManager.get(pkt.makerAID);
 	if (entity) {
 		entity.room.remove();

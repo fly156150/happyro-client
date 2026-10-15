@@ -161,6 +161,7 @@ export function openGameShop(mode, offers, submit, quit, options = {}) {
 		kind: 'shop',
 		title: options.title || (mode === 'buy' ? '购买物品' : '出售物品'),
 		shopType: options.type || mode,
+		shopOwner: options.owner,
 		token,
 		service,
 		close: service.close
@@ -178,4 +179,11 @@ export function finishGameShop(message, success) {
 		close: () => clearInteraction('notice')
 	});
 	return true;
+}
+
+/** Invalidate an open player catalog when its owner removes the store. */
+export function closePlayerShop(owner) {
+	const current = interactionSnapshot();
+	if (current?.kind === 'shop' && current.shopOwner === owner)
+		finishGameShop('摊位已关闭，请重新选择摊位', false);
 }

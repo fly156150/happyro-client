@@ -10,6 +10,11 @@ vi.mock('Network/PacketStructure.js',()=>({default:{CZ:new Proxy({}, {get:(targe
 import {openVendingSetup,setOwnedVending,updateOwnedVending,showOwnedVending,resetGameVending,finishOwnedBuying} from '../../src/UI/Game/GameVending.js';
 import {clearInteraction,interactionSnapshot} from '../../src/UI/Game/ServerInteraction.js';
 import {createVendingPanel} from '../../src/UI/Mobile/game/VendingPanel.js';
+function panelBody() {
+ const host=document.body.appendChild(document.createElement('div'));
+ host.setAttribute('data-phone-screen','');
+ return host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
+}
 beforeEach(()=>{vi.clearAllMocks();clearInteraction();resetGameVending();s.session.Playing=true;s.session.zeny=1000;s.items=[{index:2,ITID:501,type:0,IsIdentified:1,count:5}];s.cart=[{index:3,ITID:501,type:0,IsIdentified:1,count:8,slot:{card1:0}}];});
 it('checks cart quantity, identity and slot count before sending an opening request once',()=>{
  const t=openVendingSetup('sell',1),item=t.snapshot().items[0];expect(t.set(3,item.identity,9,100)).toContain('变化');expect(t.set(3,item.identity,2,100)).toBe('');s.cart[0].slot.card1=4001;expect(t.submit('商店',0)).toContain('变化');expect(s.send).not.toHaveBeenCalled();s.cart[0].slot.card1=0;t.submit('商店',0);t.submit('商店',0);expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'REQ_OPENSTORE2',result:1,storeName:'商店',storeList:[{index:3,ITID:501,count:2,price:100}]}));expect(s.cart[0].count).toBe(8);
@@ -23,12 +28,12 @@ it('keeps owned stock updated while hidden and sends close once; auto close remo
  setOwnedVending('buy',{itemList:[]});finishOwnedBuying();expect(showOwnedVending()).toBe(false);
 });
 it('requires reviewing an order before opening and preserves native text input during updates',()=>{
- const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);t.set(3,t.snapshot().items[0].identity,2,10);const body=document.body.appendChild(document.createElement('div')),panel=createVendingPanel(body,t);body.querySelector('[data-title]').value='我的店';panel.update();expect(body.querySelector('[data-title]').value).toBe('我的店');body.querySelector('[data-submit]').click();expect(s.send).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();expect(s.send).toHaveBeenCalledOnce();
+ const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);t.set(3,t.snapshot().items[0].identity,2,10);const body=panelBody(),panel=createVendingPanel(body,t);body.querySelector('[data-title]').value='我的店';panel.update();expect(body.querySelector('[data-title]').value).toBe('我的店');body.querySelector('[data-submit]').click();expect(s.send).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();expect(s.send).toHaveBeenCalledOnce();
 });
 it('automatically closes a sold-out vending store and retains the sale receipt',()=>{
  setOwnedVending('sell',{itemList:[{index:3,ITID:501,count:2,price:10}]});updateOwnedVending(3,2);expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'REQ_CLOSESTORE'}));expect(showOwnedVending()).toBe(false);expect(interactionSnapshot().title).toBe('商品已售完');
 });
 
-it('keeps draft amount and price inputs while item artwork loads',()=>{const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);const original=t.snapshot;let icon='';t.snapshot=()=>{const state=original();state.items=state.items.map(item=>({...item,icon}));return state;};const body=document.body.appendChild(document.createElement('div')),panel=createVendingPanel(body,t);body.querySelector('.inventory-list button').click();const amount=body.querySelector('[aria-label="数量"]'),price=body.querySelector('[aria-label="单价"]');amount.value='2';price.value='30';icon='icon.png';panel.update();expect(body.querySelector('[aria-label="数量"]')).toBe(amount);expect(price.value).toBe('30');});
+it('keeps draft amount and price inputs while item artwork loads',()=>{const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);const original=t.snapshot;let icon='';t.snapshot=()=>{const state=original();state.items=state.items.map(item=>({...item,icon}));return state;};const body=panelBody(),panel=createVendingPanel(body,t);body.querySelector('.inventory-list button').click();const amount=body.querySelector('[aria-label="数量"]'),price=body.querySelector('[aria-label="单价"]');amount.value='2';price.value='30';icon='icon.png';panel.update();expect(body.querySelector('[aria-label="数量"]')).toBe(amount);expect(price.value).toBe('30');});
 
 it('allows stackable ammunition in buying-store candidates when the database permits it',()=>{s.items[0].type=10;const t=openVendingSetup('buy',1);expect(t.snapshot().items).toHaveLength(1);});

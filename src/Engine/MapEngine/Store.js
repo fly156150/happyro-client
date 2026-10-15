@@ -464,7 +464,7 @@ function onVendingStoreList(_pkt) {
 			_pkt.itemList.map(item => ({ ...item, qty: item.count })),
 			submit,
 			() => {},
-			{ type: 'player-vending', title: '玩家售卖摊位', requestOnly: true }
+			{ type: 'player-vending', title: '玩家售卖摊位', requestOnly: true, owner: _pkt.AID }
 		);
 	else NpcStore.onSubmit = submit;
 }
@@ -517,6 +517,7 @@ function onBuyingStoreList(_pkt) {
 		});
 		openGameShop('sell', offers, submit, () => {}, {
 			type: 'player-buying',
+			owner: _pkt.AID,
 			title: '出售给玩家收购摊位',
 			limitToOffer: true,
 			maxTotal: _pkt.limitZeny
