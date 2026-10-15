@@ -150,7 +150,9 @@ export function openGameRefinement(kind) {
 			resultId++;
 			messageKind = pkt.result === 0 ? 'success' : 'error';
 			message =
-				['强化成功', '强化失败', '强化失败，精炼等级降低', '装备损坏', '装备受到保护'][pkt.result] ||
+				(kind === 'refine'
+					? ['精炼成功', '精炼失败，装备损毁', '精炼失败，精炼等级降低', '精炼失败，装备保留']
+					: ['评级成功', '评级失败', '评级失败，精炼等级降低', '评级失败，装备损毁', '装备受到保护'])[pkt.result] ||
 				`强化结果：${pkt.result}`;
 			return true;
 		}

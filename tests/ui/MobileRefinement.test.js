@@ -16,7 +16,7 @@ function ready(kind='refine'){
 it('rejects equipment changes and combined material/blacksmith blessing shortage, sends once without local mutation',()=>{
  const service=ready();expect(service.confirm(0,3)).toContain('不足');state.items[1].count=4;state.items[0].worn=true;expect(service.confirm(0,3)).toContain('变化');state.items[0].worn=false;
  expect(service.confirm(0,3)).toBe('');expect(service.confirm(0,3)).toContain('变化');expect(state.send).toHaveBeenLastCalledWith(expect.objectContaining({type:'REQ_REFINING',index:2,itemId:6635,blacksmithBlessing:3}));expect(state.send).toHaveBeenCalledTimes(2);expect(state.items[1].count).toBe(4);
- expect(finishRefinement('refine',{itemIndex:3,result:0})).toBe(false);expect(finishRefinement('refine',{itemIndex:2,result:0})).toBe(true);expect(service.snapshot().message).toBe('强化成功');
+ expect(finishRefinement('refine',{itemIndex:3,result:0})).toBe(false);expect(finishRefinement('refine',{itemIndex:2,result:0})).toBe(true);expect(service.snapshot().message).toBe('精炼成功');
 });
 it('aggregates grade materials with blessings and rechecks currency and grade before requesting',()=>{
  const service=ready('grade');expect(service.confirm(0,1)).toContain('不足');state.items[1].count=4;state.session.zeny=99;expect(service.confirm(0,1)).toContain('不足');state.session.zeny=100;state.items[0].enchantgrade=1;expect(service.confirm(0,1)).toContain('变化');state.items[0].enchantgrade=0;
@@ -50,4 +50,15 @@ it('does not send zero-base-chance grade requests which the server rejects silen
  updateRefinementMaterials('grade',{index:2,success_chance:0,blessing_info:{id:6635,amount:1,max_blessing:1,bonus:10},materialList:[{itemId:6635,amount:1,price:100}]});
  expect(service.confirm(0,1)).toBe('此装备当前无法评级');
  expect(state.send).toHaveBeenCalledTimes(1);expect(service.snapshot().pending).toBe(false);
+});
+
+it.each([
+ ['refine',0,'精炼成功'],['refine',1,'精炼失败，装备损毁'],
+ ['refine',2,'精炼失败，精炼等级降低'],['refine',3,'精炼失败，装备保留'],
+ ['grade',0,'评级成功'],['grade',1,'评级失败'],['grade',2,'评级失败，精炼等级降低'],
+ ['grade',3,'评级失败，装备损毁'],['grade',4,'装备受到保护']
+])('maps %s result %i to its own protocol message', (kind,result,message)=>{
+ const service=ready(kind);
+ expect(finishRefinement(kind,{itemIndex:2,result})).toBe(true);
+ expect(service.snapshot()).toMatchObject({message,pending:false,messageKind:result===0?'success':'error'});
 });
