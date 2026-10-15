@@ -50,3 +50,13 @@ it('mobile HUD with a closed backdrop does not block pickup', () => {
  const hud = document.createElement('div'); hud.id = 'MobileGameHUD'; const shadow = hud.attachShadow({ mode: 'open' }); shadow.innerHTML = '<div class="backdrop" hidden><div class="panel"></div></div>'; document.body.append(hud);
  startAutoPickup(); vi.advanceTimersByTime(200); expect(state.items[0].onMouseDown).toHaveBeenCalledOnce();
 });
+
+it.each(['blur','visibilitychange'])('releases a lost movement hold on %s and resumes only when visible', event => {
+ startAutoPickup();notifyGameInput('move-start');
+ vi.spyOn(document,'hidden','get').mockReturnValue(true);
+ (event==='blur'?window:document).dispatchEvent(new Event(event));
+ vi.advanceTimersByTime(2000);expect(state.items[0].onMouseDown).not.toHaveBeenCalled();
+ vi.spyOn(document,'hidden','get').mockReturnValue(false);
+ document.dispatchEvent(new Event('visibilitychange'));
+ vi.advanceTimersByTime(200);expect(state.items[0].onMouseDown).toHaveBeenCalledOnce();
+});

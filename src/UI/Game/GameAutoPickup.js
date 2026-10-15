@@ -107,9 +107,14 @@ export function startAutoPickup() {
 		if (!hasAutomationCombat()) controller.tick();
 	}, 200);
 	const settingsChanged = () => controller.cancel();
-	const blur = () => controller.manual('action');
+	// Focus loss can swallow mouseup; release the movement hold as well as cancelling pickup.
+	const blur = () => controller.manual('move-end');
+	const visibilityChanged = () => {
+		if (document.hidden) blur();
+	};
 	window.addEventListener('happyro-pickup-settings', settingsChanged);
 	window.addEventListener('blur', blur);
+	document.addEventListener('visibilitychange', visibilityChanged);
 	const disconnect = onConnectionEnd(stopAutoPickup);
 	runtime = {
 		destroy() {
@@ -122,6 +127,7 @@ export function startAutoPickup() {
 			disconnect();
 			window.removeEventListener('happyro-pickup-settings', settingsChanged);
 			window.removeEventListener('blur', blur);
+			document.removeEventListener('visibilitychange', visibilityChanged);
 		}
 	};
 }
