@@ -1,3 +1,4 @@
+import { allowSocialText } from './SocialText.js';
 /**
  * Engine/MapEngine/Friends.js
  *
@@ -59,6 +60,7 @@ class FriendEngine {
 	 * @param {string} name
 	 */
 	static addFriend(name) {
+		if (!allowSocialText({ name })) return false;
 		const pkt = new PACKET.CZ.ADD_FRIENDS();
 		pkt.name = name;
 

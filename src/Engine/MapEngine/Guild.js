@@ -1,3 +1,4 @@
+import { allowSocialText } from './SocialText.js';
 import Platform from 'UI/Platform.js';
 /**
  * Engine/MapEngine/Group.js
@@ -272,6 +273,7 @@ class GuildEngine {
 	 * @param {string} guild name
 	 */
 	static createGuild(name) {
+		if (!allowSocialText({ name })) return false;
 		const pkt = new PACKET.CZ.REQ_MAKE_GUILD();
 		pkt.GID = Session.GID;
 		pkt.GName = name;
@@ -285,6 +287,7 @@ class GuildEngine {
 	 * @param {string} guild name
 	 */
 	static breakGuild(name) {
+		if (!allowSocialText({ name })) return false;
 		const pkt = new PACKET.CZ.REQ_DISORGANIZE_GUILD();
 		pkt.key = name;
 
@@ -297,6 +300,7 @@ class GuildEngine {
 	 * @param {Array} positions
 	 */
 	static requestPositionUpdate(positions) {
+		if (!positions.every(position => allowSocialText({ name: position.posName }))) return false;
 		const pkt = new PACKET.CZ.REG_CHANGE_GUILD_POSITIONINFO();
 		pkt.memberList = positions;
 
@@ -322,6 +326,7 @@ class GuildEngine {
 	 * @param {string} content
 	 */
 	static requestNoticeUpdate(subject, content) {
+		if (!allowSocialText({ subject, notice: content })) return false;
 		const pkt = new PACKET.CZ.GUILD_NOTICE();
 		pkt.GDID = GuildEngine.guild_id;
 		pkt.subject = subject;
@@ -378,6 +383,7 @@ class GuildEngine {
 	 * @param {string} reason for the leave
 	 */
 	static requestLeave(AID, GID, reason) {
+		if (!allowSocialText({ reason })) return false;
 		const pkt = new PACKET.CZ.REQ_LEAVE_GUILD();
 		pkt.GDID = GuildEngine.guild_id;
 		pkt.AID = AID;
@@ -395,6 +401,7 @@ class GuildEngine {
 	 * @param {string} reason to expel
 	 */
 	static requestMemberExpel(AID, GID, reason) {
+		if (!allowSocialText({ reason })) return false;
 		const pkt = new PACKET.CZ.REQ_BAN_GUILD();
 		pkt.GDID = GuildEngine.guild_id;
 		pkt.AID = AID;

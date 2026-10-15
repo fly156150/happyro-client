@@ -56,3 +56,18 @@ it('checks party membership and current leadership for invites, expulsion, leade
  service.act('inviteParty',{name:'新人'});service.act('leadParty',{AID:77});service.act('expelParty',{AID:77});expect(state.inviteParty).toHaveBeenCalledExactlyOnceWith(0,'新人');expect(state.leadParty).toHaveBeenCalledExactlyOnceWith(77);expect(state.expelParty).toHaveBeenCalledExactlyOnceWith(77,'队员');
  service.act('partyOptions',{exp:9,pickup:0,division:0});expect(state.options).not.toHaveBeenCalled();service.act('partyOptions',{exp:1,pickup:0,division:1});expect(state.options).toHaveBeenCalledExactlyOnceWith(1,0,1);service.act('leaveParty');expect(state.leaveParty).toHaveBeenCalledOnce();
 });
+
+it('rejects UTF-8 overflow before creating a party and accepts a name fitting 23 bytes',()=>{
+ const service=createGameSocial(()=>true);
+ expect(service.act('createParty',{name:'a'+'中'.repeat(8)})).toContain('23 字节');
+ expect(state.createParty).not.toHaveBeenCalled();
+ const name='ab'+'中'.repeat(7);
+ expect(service.act('createParty',{name})).toBe('已请求，等待服务器回复');
+ expect(state.createParty).toHaveBeenCalledWith(name,0,0);
+});
+it('rejects oversized announcements and reasons without truncating or sending them',()=>{
+ const service=createGameSocial(()=>true);
+ expect(service.act('guildNotice',{subject:'中'.repeat(20),notice:''})).toContain('59 字节');
+ expect(service.act('guildNotice',{subject:'标题',notice:'中'.repeat(40)})).toContain('119 字节');
+ expect(service.act('leaveGuild',{reason:'中'.repeat(14)})).toContain('39 字节');
+});

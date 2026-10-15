@@ -1,3 +1,4 @@
+import { SOCIAL_TEXT_LIMITS, validateSocialText } from 'Utils/SocialText.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
@@ -19,7 +20,7 @@ export function createSocialPanel(body, service, whisper) {
 			return [snapshot.options.exp_share, snapshot.options.item_share, snapshot.options.item_sharing_type];
 		if (action === 'guildNotice') return [snapshot.guild?.notice.subject, snapshot.guild?.notice.notice];
 		if (action === 'editGuildPosition') {
-			const p = snapshot.guild?.positions.find(p => p.positionID === data.position);
+			const p = snapshot.guild?.positions.find(position => position.positionID === data.position);
 			return [p?.posName, p?.payRate, p?.right & 17];
 		}
 		if (action === 'guildPosition')
@@ -83,7 +84,12 @@ export function createSocialPanel(body, service, whisper) {
 			if (options) for (const [id, text] of options) input.add(new Option(text, id));
 			else {
 				if (type !== 'textarea') input.type = type;
-				input.maxLength = name === 'notice' ? 120 : name === 'subject' ? 60 : name === 'reason' ? 40 : 24;
+				if (SOCIAL_TEXT_LIMITS[name]) {
+					input.maxLength = SOCIAL_TEXT_LIMITS[name];
+					input.addEventListener('input', () => {
+						input.setCustomValidity(validateSocialText({ [name]: input.value }));
+					});
+				}
 			}
 			input.value = value;
 			inputs[name] = input;

@@ -1,3 +1,4 @@
+import { allowSocialText } from './SocialText.js';
 /**
  * Engine/MapEngine/Group.js
  *
@@ -75,6 +76,7 @@ class GroupEngine {
 	 * @param {string} party name
 	 */
 	static onRequestCreationEasy(name) {
+		if (!allowSocialText({ name })) return false;
 		if (Session.hasParty) {
 			return;
 		}
@@ -94,6 +96,7 @@ class GroupEngine {
 	 * @param {number} option 2
 	 */
 	static onRequestCreation(name, pickupRule, divisionRule) {
+		if (!allowSocialText({ name })) return false;
 		if (Session.hasParty) {
 			return;
 		}
@@ -113,6 +116,7 @@ class GroupEngine {
 	 * @param {string} pseudo
 	 */
 	static onRequestInvitation(AID, pseudo) {
+		if (!allowSocialText({ name: pseudo })) return false;
 		if (!Session.hasParty || !Session.isPartyLeader) {
 			return;
 		}

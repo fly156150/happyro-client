@@ -1,3 +1,4 @@
+import { validateSocialText } from 'Utils/SocialText.js';
 import DB from 'DB/DBManager.js';
 import SkillInfo from 'DB/Skills/SkillInfo.generated.js';
 import { canExecuteSkill } from 'UI/Components/SkillList/SkillUse.js';
@@ -54,12 +55,31 @@ export function createGameSocial(canOperate, shortcuts) {
 		const state = snapshot();
 		if (!state.allowed) return '当前不能操作';
 		const name = String(data.name || '').trim();
+		const textFields = {};
+		if (
+			[
+				'addFriend',
+				'createParty',
+				'inviteParty',
+				'createGuild',
+				'breakGuild',
+				'inviteGuild',
+				'editGuildPosition',
+				'guildAlliance',
+				'guildHostility'
+			].includes(action)
+		)
+			textFields.name = name;
+		if (action === 'guildNotice') Object.assign(textFields, { subject: data.subject, notice: data.notice });
+		if (action === 'leaveGuild' || action === 'expelGuild') textFields.reason = data.reason;
+		const textError = validateSocialText(textFields);
+		if (textError) return textError;
 		const friend = state.friends.find(f => f.AID === data.AID && f.GID === data.GID);
 		const member = state.party.find(m => m.AID === data.AID);
 		const guildMember = state.guild?.members.find(m => m.AID === data.AID && m.GID === data.GID);
 		switch (action) {
 			case 'addFriend':
-				if (!name || name.length > 24) return '请输入有效角色名';
+				if (!name) return '请输入有效角色名';
 				FriendEngine.addFriend(name);
 				break;
 			case 'removeFriend':
@@ -67,11 +87,11 @@ export function createGameSocial(canOperate, shortcuts) {
 				FriendEngine.removeFriend(state.friends.indexOf(friend));
 				break;
 			case 'createParty':
-				if (state.hasParty || !name || name.length > 24) return '无法创建队伍，请检查名称';
+				if (state.hasParty || !name) return '无法创建队伍，请检查名称';
 				GroupEngine.onRequestCreation(name, Number(data.pickup) || 0, Number(data.division) || 0);
 				break;
 			case 'inviteParty':
-				if (!state.leader || !state.hasParty || !name || name.length > 24) return '只有队长可以邀请有效角色';
+				if (!state.leader || !state.hasParty || !name) return '只有队长可以邀请有效角色';
 				GroupEngine.onRequestInvitation(0, name);
 				break;
 			case 'leaveParty':
@@ -90,12 +110,12 @@ export function createGameSocial(canOperate, shortcuts) {
 				GroupEngine.onRequestInfoUpdate(data.exp, data.pickup, data.division);
 				break;
 			case 'createGuild':
-				if (state.guild || !name || name.length > 24) return '无法创建公会，请检查名称';
+				if (state.guild || !name) return '无法创建公会，请检查名称';
 				GuildEngine.createGuild(name);
 				break;
 			case 'leaveGuild':
 				if (!state.guild || state.master) return '公会会长不能直接离会';
-				GuildEngine.requestLeave(Session.AID, Session.GID, String(data.reason || '').slice(0, 40));
+				GuildEngine.requestLeave(Session.AID, Session.GID, String(data.reason || ''));
 				break;
 			case 'breakGuild':
 				if (!state.master || name !== state.guildName) return '请确认完整公会名称';
@@ -113,19 +133,12 @@ export function createGameSocial(canOperate, shortcuts) {
 			}
 			case 'guildNotice':
 				if (!state.master) return '仅会长可修改公告';
-				GuildEngine.requestNoticeUpdate(
-					String(data.subject || '').slice(0, 60),
-					String(data.notice || '').slice(0, 120)
-				);
+				GuildEngine.requestNoticeUpdate(String(data.subject || ''), String(data.notice || ''));
 				break;
 			case 'expelGuild':
 				if (!(state.master || state.rights & 0x10) || !guildMember || guildMember.AID === Session.AID)
 					return '成员或权限已变化';
-				GuildEngine.requestMemberExpel(
-					guildMember.AID,
-					guildMember.GID,
-					String(data.reason || '').slice(0, 40)
-				);
+				GuildEngine.requestMemberExpel(guildMember.AID, guildMember.GID, String(data.reason || ''));
 				break;
 			case 'learnGuildSkill': {
 				const skill = state.guildSkills.find(entry => entry.SKID === data.id);
@@ -153,7 +166,6 @@ export function createGameSocial(canOperate, shortcuts) {
 					!state.master ||
 					!position ||
 					!name ||
-					name.length > 24 ||
 					!Number.isInteger(data.tax) ||
 					data.tax < 0 ||
 					data.tax > 50 ||
