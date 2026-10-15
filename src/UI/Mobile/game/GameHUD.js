@@ -13,7 +13,7 @@ import { graphicsFields, settingsSnapshot, saveGameSettings } from 'UI/Game/Game
 import { requestGameBank } from 'UI/Game/GameBank.js';
 import { showOwnedVending } from 'UI/Game/GameVending.js';
 import { createGameSocial } from 'UI/Game/GameSocial.js';
-import { createGameChat, chatChannel } from 'UI/Game/GameChat.js';
+import { createGameChat, chatChannel, isIncomingPrivateMessage } from 'UI/Game/GameChat.js';
 import { createGameQuests } from 'UI/Game/GameQuests.js';
 import { createGameContainers } from 'UI/Game/GameContainers.js';
 import EntityManager from 'Renderer/EntityManager.js';
@@ -252,7 +252,12 @@ HUD.onAppend = function () {
 		},
 		pickTapTarget: (x, y) => {
 			const hit = Commands.pickSceneEntity(x, y);
-			return hit && [hit.constructor.TYPE_ITEM, hit.constructor.TYPE_NPC, hit.constructor.TYPE_NPC2].includes(hit.objecttype) ? hit : null;
+			return hit &&
+				[hit.constructor.TYPE_ITEM, hit.constructor.TYPE_NPC, hit.constructor.TYPE_NPC2].includes(
+					hit.objecttype
+				)
+				? hit
+				: null;
 		},
 		tap: (x, y, pressedTarget) => {
 			if (pressedTarget && EntityManager.get(pressedTarget.GID) !== pressedTarget) return;
@@ -304,9 +309,20 @@ HUD.onAppend = function () {
 	unsubscribe = subscribeChatFeed(messages => {
 		view.setMessages(
 			messages.map(message => {
-				if (!message.html) return { id: message.id, text: message.text, channel: chatChannel(message) };
+				if (!message.html)
+					return {
+						id: message.id,
+						text: message.text,
+						channel: chatChannel(message),
+						incomingPrivate: isIncomingPrivateMessage(message)
+					};
 				const parsed = new DOMParser().parseFromString(message.text, 'text/html');
-				return { id: message.id, text: parsed.body.textContent || '', channel: chatChannel(message) };
+				return {
+					id: message.id,
+					text: parsed.body.textContent || '',
+					channel: chatChannel(message),
+					incomingPrivate: isIncomingPrivateMessage(message)
+				};
 			})
 		);
 	});

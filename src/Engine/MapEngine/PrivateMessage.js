@@ -93,14 +93,14 @@ function onPrivateMessageSent(pkt) {
 						user +
 						'</span> ] : ' +
 						msg,
-					ChatBox.TYPE.PRIVATE,
+					ChatBox.TYPE.PRIVATE | ChatBox.TYPE.SELF,
 					ChatBox.FILTER.WHISPER
 				);
 			}
 		}
 	} else {
 		const errorMsg = '(' + user + ') : ' + DB.getMessage(147 + pkt.result);
-		ChatBox.addText(errorMsg, ChatBox.TYPE.PRIVATE, ChatBox.FILTER.WHISPER);
+		ChatBox.addText(errorMsg, ChatBox.TYPE.ERROR, ChatBox.FILTER.WHISPER);
 	}
 
 	ChatBox.PrivateMessageStorage.nick = '';

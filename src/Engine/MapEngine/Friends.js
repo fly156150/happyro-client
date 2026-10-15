@@ -128,7 +128,7 @@ class FriendEngine {
 			}
 		}
 
-		ChatBox.addText('[ 致好友 ]：' + pkt.msg, ChatBox.TYPE.PRIVATE, ChatBox.FILTER.WHISPER);
+		ChatBox.addText('[ 致好友 ]：' + pkt.msg, ChatBox.TYPE.PRIVATE | ChatBox.TYPE.SELF, ChatBox.FILTER.WHISPER);
 	}
 }
 /**

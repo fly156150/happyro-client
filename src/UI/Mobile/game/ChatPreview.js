@@ -105,18 +105,19 @@ export function createChatPreview(root) {
 	configure(Interface);
 	return {
 		configure,
-		update(next, { read = false } = {}) {
+		update(next, { read = false, visible = true } = {}) {
+			const readingPreview =
+				visible &&
+				log.clientHeight > 0 &&
+				!container.classList.contains('collapsed') &&
+				(category === 'all' || category === 'dialogue');
 			if (!next.length) {
 				lastId = 0;
 				privateUnread = false;
 			}
-			if (
-				next.some(message => message.id > lastId && message.channel === 'private') &&
-				(category === 'battle' || category === 'system' || container.classList.contains('collapsed'))
-			)
+			if (next.some(message => message.id > lastId && message.incomingPrivate) && !readingPreview)
 				privateUnread = true;
-			if (read || (!container.classList.contains('collapsed') && (category === 'all' || category === 'dialogue')))
-				privateUnread = false;
+			if (read || readingPreview) privateUnread = false;
 			lastId = next.at(-1)?.id || 0;
 			messages = next;
 			updateTabs();

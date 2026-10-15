@@ -257,12 +257,13 @@ ${menuNavigationCSS}</style>${html}`;
 		if (notify) interaction?.close?.();
 	}
 	function updateMessages() {
-		if (currentPanel === 'chat') unreadChat = 0;
+		const readingPrivate = currentPanel === 'chat' && ['all', 'private'].includes(chatFilter);
+		if (readingPrivate) unreadChat = 0;
 		for (const badge of root.querySelectorAll('[data-chat-unread]')) {
 			badge.hidden = !unreadChat;
 			badge.textContent = unreadChat > 99 ? '99+' : String(unreadChat);
 		}
-		chatPreview.update(messages, { read: currentPanel === 'chat' });
+		chatPreview.update(messages, { read: readingPrivate, visible: !currentPanel });
 		chatPanel?.update(messages);
 	}
 	function details(entries) {
@@ -806,8 +807,8 @@ ${menuNavigationCSS}</style>${html}`;
 		setMessages(next) {
 			if (!next.length) unreadChat = 0;
 			const lastId = messages.at(-1)?.id || 0;
-			if (currentPanel !== 'chat')
-				unreadChat += next.filter(m => m.id > lastId && m.channel === 'private').length;
+			if (currentPanel !== 'chat' || !['all', 'private'].includes(chatFilter))
+				unreadChat += next.filter(m => m.id > lastId && m.incomingPrivate).length;
 			messages = next;
 			updateMessages();
 		},

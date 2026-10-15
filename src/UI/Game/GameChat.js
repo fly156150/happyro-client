@@ -14,13 +14,22 @@ export function chatChannel(message) {
 		].includes(message.filterType)
 	)
 		return 'battle';
-	const type = message.colorType || 0;
-	if (type & ChatBox.TYPE.PRIVATE) return 'private';
-	if (type & ChatBox.TYPE.PARTY) return 'party';
-	if (type & ChatBox.TYPE.GUILD) return 'guild';
-	if (type & ChatBox.TYPE.CLAN) return 'clan';
-	if (message.filterType === ChatBox.FILTER.PUBLIC_CHAT) return 'public';
+	const channels = {
+		[ChatBox.FILTER.WHISPER]: 'private',
+		[ChatBox.FILTER.PARTY]: 'party',
+		[ChatBox.FILTER.GUILD]: 'guild',
+		[ChatBox.FILTER.CLAN]: 'clan',
+		[ChatBox.FILTER.PUBLIC_CHAT]: 'public'
+	};
+	if (Object.hasOwn(channels, message.filterType)) return channels[message.filterType];
 	return 'system';
+}
+export function isIncomingPrivateMessage(message) {
+	return (
+		chatChannel(message) === 'private' &&
+		Boolean(message.colorType & ChatBox.TYPE.PRIVATE) &&
+		!(message.colorType & (ChatBox.TYPE.SELF | ChatBox.TYPE.ERROR))
+	);
 }
 export function createGameChat(send, canOperate, sendEmotion) {
 	let lastEmotion = -Infinity;
