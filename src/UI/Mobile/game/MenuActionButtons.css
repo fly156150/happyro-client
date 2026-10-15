@@ -8,7 +8,7 @@
 :host([data-phone-screen][data-menu-density]) .panel:is([data-view='inventory'], [data-view='equipment']) :is(.inventory-actions, .equipment-actions) > button,
 :host([data-phone-screen][data-menu-density]) .panel:is([data-view='pet'], [data-view='companions']) .companion-footer button,
 :host([data-phone-screen][data-menu-density]) .panel[data-view='social'] .inventory-detail > button,
-:host([data-phone-screen][data-menu-density]) .panel[data-view='shop'] .shop-footer > button,
+:host([data-phone-screen][data-menu-density]) .panel[data-view='shop'] .shop-footer .shop-actions > button,
 :host([data-phone-screen][data-menu-density]) .panel .attribute-plan-actions > button,
 :host([data-phone-screen][data-menu-density]) .panel .pickup-picker :is(.pickup-picker-actions > button, [data-search]),
 :host([data-phone-screen][data-menu-density]) .panel[data-view='mail'] :is(.mail-actions, .mail-write-row, .mail-field, .mail-attachment-summary) > button {

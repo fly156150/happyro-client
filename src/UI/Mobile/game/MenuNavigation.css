@@ -97,3 +97,13 @@
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header > .panel-navigation {
  min-height: var(--npc-control);
 }
+
+/* Navigation stays compact while giving both labels the same touch width. */
+:host([data-phone-screen]) :is(.panel-navigation, .adventure-header) > button {
+ box-sizing: border-box;
+ width: 44px;
+ min-width: 44px;
+ flex: 0 0 44px;
+ padding-inline: 0;
+ white-space: nowrap;
+}

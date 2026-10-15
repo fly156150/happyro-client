@@ -6,7 +6,7 @@ import { setListItemText } from './ListItemText.js';
 /** Move quantities between the catalogue and order; submit through the original service. */
 export function createShopPanel(body, service) {
 	body.innerHTML =
-		'<div class="shop-layout" data-menu-layout="shop"><section class="shop-catalog"><h3>商品列表</h3><div class="inventory-list shop-catalog-list" aria-label="商店物品"></div></section><div class="shop-transfer"></div><section class="shop-order"><h3>待购买物品</h3><div class="inventory-list shop-order-list" aria-label="待交易物品"></div></section><section class="inventory-detail" aria-label="物品详情">请选择物品查看说明</section></div><div class="shop-footer"><span class="shop-summary"></span></div>';
+		'<div class="shop-layout" data-menu-layout="shop"><section class="shop-catalog"><h3>商品列表</h3><div class="inventory-list shop-catalog-list" aria-label="商店物品"></div></section><div class="shop-transfer"></div><section class="shop-order"><h3>待购买物品</h3><div class="inventory-list shop-order-list" aria-label="待交易物品"></div></section><section class="inventory-detail" aria-label="物品详情">请选择物品查看说明</section></div><div class="shop-footer"><span class="shop-summary"><span data-balance></span><span class="shop-summary-separator"> · </span><span data-total></span></span><div class="shop-actions"></div></div>';
 	const $ = selector => body.querySelector(selector);
 	const feedback = createFeedback(body);
 	const lists = [new Map(), new Map()];
@@ -93,7 +93,7 @@ export function createShopPanel(body, service) {
 	const clear = button('清空', () => {
 		if (service.clear()) update();
 	});
-	$('.shop-footer').append(submit, clear);
+	$('.shop-actions').append(submit, clear);
 	const emptyNodes = ['商店暂无商品', '尚未选择物品'].map((label, index) => {
 		const empty = document.createElement('p');
 		empty.className = 'shop-empty';
@@ -145,8 +145,11 @@ export function createShopPanel(body, service) {
 		state = service.snapshot();
 		const order = state.items.filter(item => item.quantity);
 		const selling = state.mode === 'sell';
-		$('.shop-summary').textContent =
-			`余额：${state.money} ${currency()} · ${selling ? '出售' : '购买'}合计：${state.total} ${currency()}`;
+		const phone = body.getRootNode().host.hasAttribute('data-phone-screen');
+		const money = phone ? state.money.toLocaleString('en-US') : state.money;
+		const total = phone ? state.total.toLocaleString('en-US') : state.total;
+		$('[data-balance]').textContent = `余额：${money} ${currency()}`;
+		$('[data-total]').textContent = `${phone ? '' : selling ? '出售' : '购买'}合计：${total} ${currency()}`;
 		$('.shop-catalog h3').textContent = selling ? '可出售物品' : '商品列表';
 		$('.shop-order h3').textContent = selling ? '待出售物品' : '待购买物品';
 		submit.textContent = selling ? '出售' : '购买';

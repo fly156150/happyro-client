@@ -98,3 +98,27 @@
 :host([data-menu-density='spacious']) .panel[data-view='shop'] .ui-confirm:has(.quantity-stepper) {
 	--menu-dialog-width: 532.4px;
 }
+
+.shop-actions { display: contents; }
+/* Keep each amount intact; move actions together when the summary needs the row. */
+:host([data-phone-screen]) .panel[data-view='shop'] .shop-footer {
+ flex-wrap: wrap;
+}
+:host([data-phone-screen]) .panel[data-view='shop'] .shop-summary {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 2px 12px;
+ flex: 1 1 0;
+ min-width: min-content;
+}
+:host([data-phone-screen]) .panel[data-view='shop'] .shop-summary > :is([data-balance], [data-total]) {
+ white-space: nowrap;
+ font-variant-numeric: tabular-nums;
+}
+:host([data-phone-screen]) .panel[data-view='shop'] .shop-summary-separator { display: none; }
+:host([data-phone-screen]) .panel[data-view='shop'] .shop-actions {
+ display: flex;
+ flex: 0 0 auto;
+ gap: var(--panel-gap);
+ margin-left: auto;
+}
