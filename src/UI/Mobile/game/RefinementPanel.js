@@ -140,7 +140,7 @@ export function createRefinementPanel(body, service) {
 			chance.textContent =
 				state.kind === 'refine'
 					? `成功率：${material?.chance ?? 0}%`
-					: `成功率：${Math.min(10000, (state.offer.success_chance || 0) + Number(blessing.value) * (state.offer.blessing_info?.bonus || 0)) / 100}% · 失败降级：${material?.downgrade || 0} · 可能损坏：${material?.breakable ? '是' : '否'}`;
+					: `成功率：${Math.min(100, (state.offer.success_chance || 0) + Number(blessing.value) * (state.offer.blessing_info?.bonus || 0))}% · 失败降级：${material?.downgrade || 0} · 可能损坏：${material?.breakable ? '是' : '否'}`;
 			confirm.textContent = '下一步';
 		}
 		materials.onchange = details;

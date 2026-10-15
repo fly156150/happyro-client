@@ -88,6 +88,13 @@ export function openGameRefinement(kind) {
 			return '';
 		},
 		materials(type, pkt) {
+			if (type === 'grade' && kind === 'grade' && current() && selected && pending && !offer && pkt.index === -1) {
+				pending = false;
+				selected = null;
+				messageKind = 'error';
+				message = '此装备无法评级，请选择其他装备';
+				return true;
+			}
 			if (type !== kind || !current() || !selected || (pkt.itemIndex ?? pkt.index) !== selected.index)
 				return false;
 			offer = pkt;
@@ -108,6 +115,7 @@ export function openGameRefinement(kind) {
 				if (blessing + (material.itemId === 6635 ? (material.amount ?? 1) : 0) > count(6635))
 					return '铁匠的祝福不足';
 			} else {
+				if (!offer.success_chance) return '此装备当前无法评级';
 				const info = offer.blessing_info;
 				if (
 					blessing > (info?.max_blessing || 0) ||
