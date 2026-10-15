@@ -189,6 +189,29 @@ NpcMenu.setMenu = function setMenu(menu, gid) {
 	}
 };
 
+/** Place NPC choices beside their visible dialogue after append restores drag position. */
+NpcMenu.positionByDialogue = function positionByDialogue(dialogue) {
+	if (!dialogue.__active || !dialogue._host?.isConnected || dialogue._host.style.display === 'none') return;
+	const anchor = dialogue.getRoot().querySelector('#NpcBox').getBoundingClientRect();
+	const menu = this.getRoot().querySelector('#NpcMenu').getBoundingClientRect();
+	const gap = 8;
+	let left = anchor.left;
+	let top = anchor.bottom + gap;
+	if (top + menu.height > Renderer.height) {
+		top = anchor.top;
+		left = anchor.right + gap;
+		if (left + menu.width > Renderer.width) {
+			left = anchor.left - menu.width - gap;
+			if (left < 0) {
+				left = anchor.left;
+				top = anchor.top - menu.height - gap;
+			}
+		}
+	}
+	this._host.style.left = `${Math.max(0, Math.min(left, Renderer.width - menu.width))}px`;
+	this._host.style.top = `${Math.max(0, Math.min(top, Renderer.height - menu.height))}px`;
+};
+
 /**
  * Submit an index
  */

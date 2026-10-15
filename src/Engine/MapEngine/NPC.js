@@ -117,6 +117,7 @@ function onDynamicNPCCreateRequest(pkt) {
 function onMenuAppear(pkt) {
 	NpcMenu.append();
 	NpcMenu.setMenu(pkt.msg, pkt.NAID);
+	NpcMenu.positionByDialogue(NpcBox);
 
 	NpcMenu.onSelectMenu = function onSelectMenu(NAID, index) {
 		NpcMenu.remove();
