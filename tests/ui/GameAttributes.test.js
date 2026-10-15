@@ -4,7 +4,7 @@ vi.mock('Engine/SessionStorage.js', () => ({ default: s.session }));
 vi.mock('Network/NetworkManager.js', () => ({ default: { sendPacket: s.send } }));
 vi.mock('Network/PacketStructure.js', () => ({ default: { CZ: { STATUS_CHANGE: class {} } } }));
 vi.mock('DB/Jobs/JobPropertyTable.js', () => ({ default: { 1: {}, 4258: { isFourthClass: true } } }));
-vi.mock('UI/Components/GameTools/AdventureControlService.js', () => ({ maintainCurrentCharacter: s.maintain, loadCurrentCharacter: vi.fn(async () => ({max_stats:{str:32767,agi:32767,vit:32767}, traits:{maximums:{pow:110}}})) }));
+vi.mock('UI/Components/GameTools/AdventureControlService.js', () => ({ maintainCurrentCharacter: s.maintain, loadCharacterAllocationLimits: vi.fn(async () => ({base:{str:32767,agi:32767,vit:32767}, traits:{pow:110}})) }));
 import { createGameAttributes } from '../../src/UI/Game/GameAttributes.js';
 import { characterStatValues, updateCharacterStat, recordCharacterStatResult } from '../../src/UI/Game/CharacterStats.js';
 import { pointResetState, resetCharacterPoints } from '../../src/UI/Game/GamePointReset.js';
@@ -204,4 +204,33 @@ it('keeps header categories functional and removes them when the panel closes', 
  finish(); await Promise.resolve(); panel.update();
  expect(body.textContent).toBe('新的菜单');
  expect(header.querySelector('.panel-navigation')).not.toBeNull();
+});
+
+it('allocates beyond 400 using the full server cost and keeps zero cost capped', async () => {
+ updateCharacterStat(s.session.Entity, 'str', 400);
+ updateCharacterStat(s.session.Entity, 'str3', 256);
+ updateCharacterStat(s.session.Entity, 'statuspoint', 1000);
+ const service = createGameAttributes(() => true); await service.prepare();
+ const body = document.body.appendChild(document.createElement('div'));
+ createAttributesPanel(body, service);
+ expect(body.querySelector('[data-attribute=str] button').disabled).toBe(false);
+ body.querySelector('[data-attribute=str] button').click();
+ expect(body.querySelector('[data-attribute=str] .attribute-value').textContent).toContain('400 → 401');
+ s.send.mockImplementation(packet => {
+  updateCharacterStat(s.session.Entity, 'str', 401);
+  updateCharacterStat(s.session.Entity, 'statuspoint', 744);
+  recordCharacterStatResult(s.session.Entity, packet.statusID, true);
+ });
+ await service.apply('base', {str:1}, service.snapshot().base);
+ expect(characterStatValues(s.session.Entity)).toMatchObject({str:401, statuspoint:744});
+ updateCharacterStat(s.session.Entity, 'str', 32767); updateCharacterStat(s.session.Entity, 'str3', 0);
+ expect(service.snapshot().base.rows[0].canAdd).toBe(false);
+});
+
+it('rejects an over-cap trait plan before spending any points', async () => {
+ updateCharacterStat(s.session.Entity, 'pow', 108); updateCharacterStat(s.session.Entity, 'trait_point', 100);
+ const service = createGameAttributes(() => true); await service.prepare();
+ await expect(service.apply('traits', {pow:10}, service.snapshot().traits)).rejects.toThrow('超出可用范围');
+ expect(s.send).not.toHaveBeenCalled();
+ expect(characterStatValues(s.session.Entity)).toMatchObject({pow:108, trait_point:100});
 });

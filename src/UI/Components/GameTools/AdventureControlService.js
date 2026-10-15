@@ -48,6 +48,10 @@ export function loadCurrentCharacter() {
 	return request('/character');
 }
 
+export function loadCharacterAllocationLimits() {
+	return request('/character/allocation-limits');
+}
+
 export function maintainCurrentCharacter(type, payload) {
 	return request('/character/commands', {
 		method: 'POST',

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import Session from '../../src/Engine/SessionStorage.js';
 import {
+	loadCharacterAllocationLimits,
 	grantAdventureItem,
 	loadAdventureControlBootstrap,
 	maintainCurrentCharacter,
@@ -80,4 +81,15 @@ describe('adventure control service', () => {
 		const body = JSON.parse(fetchMock.mock.calls[0][1].body);
 		expect(body).toMatchObject({ target: { type: 'self' }, item_id: 501, amount: 3 });
 	});
+});
+
+it('reads normal allocation limits through the authenticated read-only endpoint', async () => {
+ Session.AID = 2000001; Session.GID = 150002; Session.WebToken = 'session-token';
+ const limits = {base:{str:32767},traits:{pow:110}};
+ const fetchMock = vi.fn().mockResolvedValue({ok:true,json:async()=>({data:limits})});
+ vi.stubGlobal('fetch',fetchMock);
+ try {
+  await expect(loadCharacterAllocationLimits()).resolves.toEqual(limits);
+  expect(fetchMock).toHaveBeenCalledWith('/api/adventure-tools/character/allocation-limits',expect.objectContaining({headers:expect.objectContaining({'X-HappyRO-Character-ID':'150002'})}));
+ } finally { vi.unstubAllGlobals(); }
 });

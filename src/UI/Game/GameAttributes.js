@@ -1,5 +1,5 @@
 import { allocationCost } from './AttributeAllocation.js';
-import { loadCurrentCharacter } from 'UI/Components/GameTools/AdventureControlService.js';
+import { loadCharacterAllocationLimits } from 'UI/Components/GameTools/AdventureControlService.js';
 import Session from 'Engine/SessionStorage.js';
 import Network from 'Network/NetworkManager.js';
 import PACKET from 'Network/PacketStructure.js';
@@ -71,7 +71,7 @@ export function createGameAttributes(canOperate) {
 					bonus,
 					cost: cost ?? null,
 					maximum: enabled
-						? ((fields === baseFields ? limits?.max_stats?.[key] : limits?.traits?.maximums?.[key]) ?? null)
+						? ((fields === baseFields ? limits?.base?.[key] : limits?.traits?.[key]) ?? null)
 						: null,
 					canAdd: Boolean(
 						allowed &&
@@ -131,7 +131,7 @@ export function createGameAttributes(canOperate) {
 			snapshot();
 			const entity = owner,
 				job = entity?._job ?? entity?.job;
-			const data = await loadCurrentCharacter();
+			const data = await loadCharacterAllocationLimits();
 			if (Session.Entity === entity && (entity?._job ?? entity?.job) === job) {
 				limits = data;
 				limitsJob = job;
