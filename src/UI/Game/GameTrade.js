@@ -1,4 +1,5 @@
 import Session from 'Engine/SessionStorage.js';
+import DB from 'DB/DBManager.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import { createGameInventory } from './GameInventory.js';
 import { itemQuantity } from './InventoryItems.js';
@@ -22,7 +23,10 @@ export function openGameTrade(name, callbacks) {
 		owned() && guard() && Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE;
 	const inventory = createGameInventory(allowed);
 	const eligible = item =>
-		item && !item.equipped && !Inventory.getUI().equipswitchlist.some(entry => entry.index === item.index);
+		item &&
+			!item.equipped &&
+			!(item.IsDamaged && DB.getPetByEggID(item.ITID)) &&
+			!Inventory.getUI().equipswitchlist.some(entry => entry.index === item.index);
 	const service = {
 		setOperationGuard: value => {
 			guard = value;
