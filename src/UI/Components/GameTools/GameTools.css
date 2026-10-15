@@ -1374,7 +1374,7 @@
 	--character-label-width:calc(2em + 13px);
 }
 .game-tools-window .character-attributes-tab .progression-form {
-	--character-label-width:calc(4em + 13px);
+	--character-label-width:calc(5em + 13px);
 }
 .game-tools-window .character-attributes-tab .management-form.progression-form {
 	grid-template-columns:repeat(auto-fit, minmax(min(190px, 100%), 1fr));
@@ -1545,7 +1545,10 @@
 
 /* Desktop adventure tools retain square controls and compact form rows. */
 .game-tools-window[data-feedback-theme='desktop'] .character-attributes-tab .management-form.progression-form {
- grid-template-columns: repeat(4, minmax(0, 1fr));
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.game-tools-window[data-feedback-theme='desktop'] .character-attributes-tab .progression-form > label:nth-child(3) {
+ grid-column: 1;
 }
 .game-tools-window[data-feedback-theme='desktop'] .settings-grid .game-select {
  width: 132px;
@@ -1579,4 +1582,9 @@
 
 .game-tools-window .settings-form .setting-number.is-disabled {
 	opacity: 0.55;
+}
+
+.game-tools-window .character-attributes-tab .progression-form input:disabled {
+	opacity: .5;
+	cursor: not-allowed;
 }

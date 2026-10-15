@@ -162,17 +162,18 @@ function mount(container, context = {}) {
 
 	function renderDetail() {
 		const selectedJob = jobs.find(job => job.id === selectedJobId);
-		const displayedJobId = context.mobile ? snapshot.job_id : selectedJobId;
+		const displayedJobId = snapshot.job_id;
 		const displayedJobName = getJobDisplayName(displayedJobId, `职业 ${displayedJobId}`);
 		const detail = container.querySelector('.character-detail');
 		detail.innerHTML = `
 			<div class="character-detail-scroll">
-				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${context.mobile && selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
+				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
 				</section>
 				<section><h4>等级与点数</h4><form data-form="progression" class="management-form progression-form">
 					<label><span>基础等级</span><input name="base_level" type="number" min="1" max="${snapshot.max_base_level}" value="${snapshot.base_level}" required></label>
 					<label><span>职业等级</span><input name="job_level" type="number" min="1" max="${snapshot.max_job_level}" value="${snapshot.job_level}" required></label>
 					<label><span>素质点</span><input name="status_points" type="number" min="0" max="${snapshot.max_status_points}" value="${snapshot.status_points}" required></label>
+					<label><span>四转素质点</span><input name="trait_points" type="number" min="0" max="${snapshot.traits.max_points}" value="${snapshot.traits.points}" ${snapshot.traits.enabled ? '' : 'disabled'} required></label>
 					<label><span>技能点</span><input name="skill_points" type="number" min="0" max="${snapshot.max_skill_points}" value="${snapshot.skill_points}" required></label>
 					<div class="management-form-actions"><button type="submit">应用</button><button type="button" data-action="skills-reset">重置技能</button><button type="button" data-action="skills-learn-all">学满技能</button></div>
 				</form></section>
@@ -204,12 +205,12 @@ function mount(container, context = {}) {
 		detail.querySelector('[data-form="progression"]').addEventListener('submit', event => {
 			event.preventDefault();
 			if (!event.currentTarget.reportValidity()) return;
-			const changes = changedValues(event.currentTarget, snapshot);
+			const changes = changedValues(event.currentTarget, { ...snapshot, trait_points: snapshot.traits.points });
 			const levels = Object.fromEntries(
 				Object.entries(changes).filter(([key]) => ['base_level', 'job_level'].includes(key))
 			);
 			const points = Object.fromEntries(
-				Object.entries(changes).filter(([key]) => ['status_points', 'skill_points'].includes(key))
+				Object.entries(changes).filter(([key]) => ['status_points', 'skill_points', 'trait_points'].includes(key))
 			);
 			const commands = [];
 			if (Object.keys(levels).length) commands.push({ type: 'character.progression.update', payload: levels });
