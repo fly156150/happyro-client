@@ -1,3 +1,4 @@
+import menuActionButtonsCSS from './MenuActionButtons.css?raw';
 import companionLayoutCSS from './CompanionLayout.css?raw';
 import menuNavigationCSS from './MenuNavigation.css?raw';
 import menuContentComponentsCSS from './MenuContentComponents.css?raw';
@@ -79,7 +80,8 @@ ${menuPortraitCSS}
 ${menuContentLayoutCSS}
 ${menuContentComponentsCSS}
 ${companionLayoutCSS}
-${menuNavigationCSS}</style>${html}`;
+${menuNavigationCSS}
+${menuActionButtonsCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const orientationHint = Preferences.get('OrientationHint', { dismissed: false }, 1.0);

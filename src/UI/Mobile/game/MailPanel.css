@@ -586,10 +586,3 @@
 	padding-block: 0;
 	font: 22px/1 Arial, sans-serif;
 }
-
-/* Short mail actions share the width of four-character actions on phones. */
-:host([data-phone-screen]) .panel[data-view='mail']
- :is(.mail-actions, .mail-write-row, .mail-field, .mail-attachment-summary) > button {
- min-width: calc(4em + 20px);
- padding-inline: 10px;
-}
