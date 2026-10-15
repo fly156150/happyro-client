@@ -14,9 +14,9 @@ button,
  color: var(--desktop-text);
  box-shadow: none;
 }
-button:hover:not(:disabled),
+button:not(.combat-launcher):hover:not(:disabled),
 .pickup-picker button:hover:not(:disabled) { background: var(--desktop-hover); border-color: var(--desktop-focus-border); }
-button:active:not(:disabled),
+button:not(.combat-launcher):active:not(:disabled),
 .pickup-picker button:active:not(:disabled) { background: var(--desktop-pressed); }
 button:disabled { opacity: .55; }
 button:focus-visible,
@@ -24,7 +24,8 @@ button:focus-visible,
 .pickup-picker input:focus-visible { outline-color: #676e75; }
 .combat-dialog input:focus-visible { outline: none; border-color: var(--desktop-focus-border); }
 .combat-launcher {
- background: linear-gradient(#fafbfc, #e8ecef);
+ background-color: #e8ecef;
+ background-image: linear-gradient(#ffffff99, #ffffff00);
  border-color: #b7bfc6;
  border-radius: 10px;
  color: #58636d;
@@ -41,9 +42,7 @@ button:focus-visible,
  box-shadow: 0 10px 28px #0003, 0 1px 4px #0001;
 }
 .combat-dialog > header { padding-bottom: 10px; border-bottom: 1px solid var(--desktop-divider); }
-.combat-tabs { flex: 0 1 auto; margin-right: auto; padding: 3px; border: 1px solid #d9dde1; border-radius: 6px; gap: 3px; background: #e9edf0; }
-.combat-tabs button { border: 1px solid transparent; border-radius: 4px; padding: 7px 16px; color: #626c75; background: transparent; }
-.combat-tabs [aria-selected='true'] { background: var(--desktop-card); color: #303b44; border-color: #d4d9de; box-shadow: 0 1px 3px #0001; }
+.combat-dialog > header .combat-tabs.desktop-tab-group { margin-right: auto; }
 .combat-runtime,
 .combat-dialog .desktop-pickup-panel > .pickup-enabled { background: #eceff1; border-color: var(--desktop-divider); border-radius: 6px; }
 .combat-dialog :is(.auto-range-settings, .auto-teleport-settings, .auto-species-card, .auto-skill-card),
@@ -78,9 +77,9 @@ button:focus-visible,
 .combat-dialog .ui-confirm .ui-confirm-actions button:hover:not(:disabled) { background: var(--desktop-hover); border-color: var(--desktop-focus-border); }
 .combat-dialog .ui-confirm .ui-confirm-actions button:focus-visible { outline-color: #676e75; }
 
-.combat-launcher:hover:not(:disabled) { background: #fafbfc; border-color: #929fa9; color: #374b5a; }
+.combat-launcher:hover:not(:disabled) { background-color: #fafbfc; border-color: #929fa9; color: #374b5a; }
 .combat-launcher:active:not(:disabled),
-.combat-launcher[aria-expanded='true'] { background: #e2e8ec; border-color: #929fa9; box-shadow: inset 0 1px 3px #0001; }
+.combat-launcher[aria-expanded='true'] { background-color: #e2e8ec; border-color: #929fa9; box-shadow: inset 0 1px 3px #0001; }
 @media (prefers-reduced-motion: reduce) { .combat-launcher { transition: none; } }
 
 /* Leave breathing room between settings navigation and its content. */

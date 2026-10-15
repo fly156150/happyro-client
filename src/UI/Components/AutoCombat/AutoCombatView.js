@@ -10,7 +10,7 @@ export function createAutoCombatView(root, actions, pickup) {
 		<div class="combat-backdrop" hidden>
 			<section class="combat-dialog" role="dialog" aria-modal="true" aria-label="战斗辅助配置">
 				<header>
-				<div class="combat-tabs" role="tablist" aria-label="战斗辅助配置">
+				<div class="combat-tabs desktop-tab-group" role="tablist" aria-label="战斗辅助配置">
 					<button type="button" role="tab" id="combat-tab" aria-controls="combat-panel" aria-selected="true" data-tab="combat">自动战斗</button>
 					<button type="button" role="tab" id="pickup-tab" aria-controls="pickup-panel" aria-selected="false" tabindex="-1" data-tab="pickup">自动拾取</button>
 				</div>

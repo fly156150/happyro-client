@@ -25,18 +25,8 @@
 .game-tools-window[data-feedback-theme='desktop'] .close::before,
 .game-tools-window[data-feedback-theme='desktop'] .close::after { left: 8px; top: 4px; background: #626c75; }
 .game-tools-window[data-feedback-theme='desktop'] .tab-list {
- flex-basis: 42px; padding: 5px 10px 8px; gap: 3px; align-items: center;
+ flex: 0 0 auto; padding: 5px 10px 8px; align-items: center;
  background: var(--desktop-surface); border-color: var(--desktop-divider);
-}
-.game-tools-window[data-feedback-theme='desktop'] .tab-button {
- height: 28px; margin-bottom: 0;
- border: 1px solid transparent; border-radius: var(--desktop-radius);
- background: #e9edf0; color: var(--desktop-muted);
-}
-.game-tools-window[data-feedback-theme='desktop'] .tab-button:hover { background: var(--desktop-hover); }
-.game-tools-window[data-feedback-theme='desktop'] .tab-button.active {
- background: var(--desktop-card); color: var(--desktop-text);
- border-color: var(--desktop-border); box-shadow: 0 1px 3px #0001;
 }
 .game-tools-window[data-feedback-theme='desktop'] :is(.tab-content, .management-tab, .character-detail, .settings-scroll) { background: var(--desktop-surface); }
 .game-tools-window[data-feedback-theme='desktop'] .tab-content { border-radius: 0 0 8px 8px; }

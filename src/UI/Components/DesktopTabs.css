@@ -1,0 +1,23 @@
+/* Desktop segmented navigation shared by adventure tools and combat settings. */
+:host .desktop-tab-group[role='tablist'] {
+ display: inline-flex; flex: 0 1 auto; align-items: center; gap: 3px;
+ width: max-content; max-width: 100%; padding: 3px; margin: 0;
+ box-sizing: border-box; border: 1px solid #d9dde1; border-radius: var(--desktop-panel-radius);
+ background: #e9edf0;
+}
+:host .desktop-tab-group[role='tablist'] > button {
+ flex: 0 0 auto; box-sizing: border-box; height: 30px; min-width: 64px; margin: 0; padding: 0 14px;
+ border: 1px solid transparent; border-radius: var(--desktop-radius);
+ background: transparent; color: var(--desktop-muted); box-shadow: none;
+ font: 12px/1.4 Arial, sans-serif; white-space: nowrap; cursor: pointer;
+}
+:host .desktop-tab-group[role='tablist'] > button:hover:not(:disabled) {
+ background: var(--desktop-hover); border-color: transparent;
+}
+:host .desktop-tab-group[role='tablist'] > button:is(.active, [aria-selected='true']) {
+ background: var(--desktop-card); color: var(--desktop-text);
+ border-color: #d4d9de; box-shadow: 0 1px 3px #0001;
+}
+:host .desktop-tab-group[role='tablist'] > button:focus-visible {
+ outline: 2px solid #676e75; outline-offset: -2px;
+}
