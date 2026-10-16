@@ -640,6 +640,23 @@ export const fourthJobEffectResources = {
 	IQ_JUDGE: {
 		effectId: ['4ig_judge/judge_start/judge_start', '4ig_judge/judge/judge', '4ig_judge/judge_aura/judge_aura']
 	},
+	TR_MYSTIC_SYMPHONY: {
+		beginCastEffectId: 'mysticsymphony/mysticsymphony_cast/mysticsymphony_cast',
+		successEffectId: 'mysticsymphony/mysticsymphony/mysticsymphony'
+	},
+	TR_KVASIR_SONATA: {
+		beginCastEffectId: ['4tr_kvasirsonata/kvasirsonata_cast/kvasirsonata_cast', '4tr_kvasirsonata/kvasirsonata_cast_bottom/kvasirsonata_cast_bottom'],
+		successEffectId: '4tr_kvasirsonata/kvasirsonata/kvasirsonata'
+	},
+	TR_NIPELHEIM_REQUIEM: {
+		beginCastEffectId: 'nipelheim/nipelheim_cast/nipelheim_cast',
+		successEffectId: 'nipelheim/nipelheim/nipelheim'
+	},
+	TR_PRON_MARCH: {
+		beginCastEffectId: ['pronmarch/pronmarch_cast/pronmarch_cast', 'pronmarch/pronmarch_cast_bottom/pronmarch_cast_bottom'],
+		successEffectId: 'pronmarch/pronmarch/pronmarch'
+	},
+	TR_METALIC_FURY: { hitEffectId: 'metalicfury/metalicfury/metalicfury' },
 	TR_ROSEBLOSSOM: {
 		beginCastEffectId: [
 			'roseblossom/roseblossom_cast/roseblossom_cast',

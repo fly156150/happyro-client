@@ -50,6 +50,16 @@ describe('fourth-job explicit skill effects', () => {
 		expect(strike.effectId).toBeUndefined();
 	});
 
+	it('registers performer activations separately from victim damage', () => {
+		for (const name of ['TR_MYSTIC_SYMPHONY', 'TR_KVASIR_SONATA', 'TR_NIPELHEIM_REQUIEM', 'TR_PRON_MARCH']) {
+			const effect = fourthJobSkillEffects[SK[name]];
+			expect(effect.beginCastEffectId, name).toBeDefined();
+			expect(effect.successEffectId, name).toBeDefined();
+			expect(effect.effectId, name).toBeUndefined();
+		}
+		expect(fourthJobSkillEffects[SK.TR_METALIC_FURY].hitEffectId).toBeDefined();
+	});
+
 	it('keeps official floor layers behind entities and separates cross-slash impact', () => {
 		const cast = fourthJobRenderEffects[fourthJobSkillEffects[SK.WH_WILD_WALK].beginCastEffectId];
 		expect(cast.map(layer => layer.renderBeforeEntities)).toEqual([false, true]);
