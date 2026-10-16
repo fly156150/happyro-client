@@ -31,7 +31,7 @@ import AttackEffect from 'DB/Monsters/AttackEffectTable.js';
 import Sound from 'Audio/SoundManager.js';
 import Events from 'Core/Events.js';
 import Guild from 'Engine/MapEngine/Guild.js';
-import { isFalconTargetAttackSkill } from 'Engine/MapEngine/FalconSkillMotion.js';
+import { moveSkillCompanions } from 'Engine/MapEngine/CompanionSkillMotion.js';
 import Session from 'Engine/SessionStorage.js';
 import Network from 'Network/NetworkManager.js';
 import PACKETVER from 'Network/PacketVerManager.js';
@@ -1547,39 +1547,7 @@ function onEntityUseSkillToAttack(pkt) {
 			}
 		}
 
-		if (srcEntity.falcon) {
-			if (isFalconTargetAttackSkill(pkt.SKID)) {
-				srcEntity.falcon.action = srcEntity.action;
-				srcEntity.falcon.walk.speed = 35;
-
-				srcEntity.falcon.walkToNonWalkableGround(
-					srcEntity.falcon.position[0],
-					srcEntity.falcon.position[1],
-					dstEntity.position[0],
-					dstEntity.position[1],
-					0,
-					true,
-					true
-				);
-			}
-		}
-
-		if (srcEntity.wug) {
-			if (pkt.SKID == SkillId.RA_WUGSTRIKE || pkt.SKID == SkillId.RA_WUGBITE) {
-				srcEntity.wug.action = srcEntity.action;
-				srcEntity.wug.walk.speed = 35;
-
-				srcEntity.wug.walkToNonWalkableGround(
-					srcEntity.wug.position[0],
-					srcEntity.wug.position[1],
-					dstEntity.position[0],
-					dstEntity.position[1],
-					1,
-					false,
-					true
-				);
-			}
-		}
+		moveSkillCompanions(srcEntity, dstEntity, pkt.SKID);
 	}
 
 	if (dstEntity) {

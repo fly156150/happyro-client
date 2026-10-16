@@ -1,3 +1,4 @@
+import { requestTalkieMessage, showTalkieMessage } from './TalkieBox.js';
 import { openMonsterInformation } from 'UI/Game/GameMonsterInformation.js';
 import Platform from 'UI/Platform.js';
 import { openGameSelection, selectionEntries } from 'UI/Game/GameSelection.js';
@@ -773,7 +774,16 @@ Guild.onUseSkill =
  * @param {number} position x
  * @param {number} position y
  */
-SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos(id, level, x, y) {
+SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos(id, level, x, y, contents) {
+	if (id === SkillId.HT_TALKIEBOX && contents === undefined) {
+		const caster = Session.Entity;
+		const map = Session.mapState;
+		void requestTalkieMessage().then(message => {
+			if (message !== null && caster === Session.Entity && map === Session.mapState)
+				onUseSkillToPos(id, level, x, y, message);
+		});
+		return;
+	}
 	let entity;
 	let range;
 
@@ -822,7 +832,10 @@ SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos(id, level, x, y)
 		return;
 	}
 	let pkt;
-	if (PACKETVER.value >= 20190904) {
+	if (id === SkillId.HT_TALKIEBOX) {
+		pkt = new PACKET.CZ.USE_SKILL_TOGROUNDMoreInfo();
+		pkt.contents = contents;
+	} else if (PACKETVER.value >= 20190904) {
 		pkt = new PACKET.CZ.USE_SKILL_TOGROUND3();
 	} else if (PACKETVER.value >= 20180307) {
 		pkt = new PACKET.CZ.USE_SKILL_TOGROUND2();
@@ -1021,6 +1034,7 @@ export default function SkillEngine() {
 	Network.hookPacket(PACKET.ZC.MILLENNIUMSHIELD, onMillenniumShield);
 	Network.hookPacket(PACKET.ZC.SKILL_POSTDELAY, onSetSkillDelay);
 	Network.hookPacket(PACKET.ZC.STARSKILL, onTaekwonMission);
+	Network.hookPacket(PACKET.ZC.TALKBOX_CHATCONTENTS, packet => showTalkieMessage(packet, EntityManager));
 	Network.hookPacket(PACKET.ZC.MSG_SKILL, onMessageSkill);
 	Network.hookPacket(PACKET.ZC.MONSTER_INFO, onSense);
 	Network.hookPacket(PACKET.ZC.DEVOTIONLIST, onDevotionList);

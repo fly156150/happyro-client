@@ -6611,7 +6611,7 @@ PACKET.ZC.ACK_REQMAKINGITEM.size = 6;
 // 0x191
 PACKET.ZC.TALKBOX_CHATCONTENTS = function PACKET_ZC_TALKBOX_CHATCONTENTS(fp, end) {
 	this.AID = fp.readULong();
-	this.contents = fp.readBinaryString(80);
+	this.contents = fp.readString(80);
 };
 PACKET.ZC.TALKBOX_CHATCONTENTS.size = 86;
 
