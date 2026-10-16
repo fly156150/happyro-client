@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 
@@ -14,7 +15,7 @@ export function createBankPanel(body, service) {
 		content.className = 'bank-amount-field';
 		const row = document.createElement('div');
 		row.className = 'bank-amount-controls';
-		const input = document.createElement('input');
+		const input = createMenuField();
 		input.type = 'number';
 		input.inputMode = 'numeric';
 		input.dataset.amount = '';

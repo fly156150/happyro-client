@@ -102,3 +102,42 @@
 样式顺序固定为：业务基础样式 → 共享外框与控件 → 方向相关样式 → `MenuContentLayout.css` → `MenuContentComponents.css`。公共文件只维护布局协议；专属规则在组件文件中调整，避免让新组件隐式继承其它业务的图片或按钮样式。本轮重构保留原有断点、选择器权重、尺寸与视觉值。
 
 手机端冒险工具物品页的顶部搜索栏固定两行：第一行搜索，第二行类型、子类和发放 Zeny。`AdventureTools.js` 依据屏幕短边小于 600 CSS 像素设置局部 `data-phone-screen` 标记，仅用于该搜索栏；平板窄分屏与软键盘不会因此套用手机规则，窗口尺寸及其它内容继续遵循共用布局。
+
+## 样式职责与复用
+
+移动菜单的样式按以下顺序加载，后面的菜单规则只负责内容排列，不重新定义公共控件高度。
+
+| 文件 | 职责 |
+| --- | --- |
+| `MenuLayout.css` | 视口、密度、字号及尺寸变量 |
+| `MenuChrome.css` | 标题栏、底栏高度、按钮组与内容区边界 |
+| `MenuFeatureStyles.js` 与各 `*MenuLayout.css` | 各菜单横竖屏排列、滚动区域与业务内容 |
+| `MenuBottomTabs.css` | 底部标签行的分隔线与对称留白 |
+| `MenuFormControls.js` / `.css` | 普通表单控件创建、尺寸及同行按钮 |
+| `MobileModalInput.css` | 键盘编辑器、数量确认弹窗的独立尺寸 |
+
+冒险工具使用共享的桌面业务 DOM，通过 `AdventureMenuLayout.css` 在移动宿主内适配，不在桌面样式中增加移动断点。
+
+### 底栏和操作组
+
+- 实际底栏标记 `menu-footer`，仅这一层负责高度与上下 padding；嵌套的 `menu-action-group` 不再贡献第二份底栏留白。
+- 普通操作使用 `menu-footer--trailing`；左侧点数、右侧按钮采用 `menu-footer--split`，右侧组使用 `menu-action-group--trailing`。
+- 邮件竖屏将外层设为 `display: contents`，实际底栏标记在 `menu-footer--portrait` 上；横屏仍由外层 `menu-footer` 负责。
+- 添加好友、邀请入队等依赖输入的按钮留在 `menu-form-row` 内，退出、删除等独立操作才进入底栏。
+- 不用具体菜单名称扩充公共底栏选择器，也不把所有 `inventory-actions` 都当成底栏。
+
+### 底部标签行
+
+- `menu-bottom-tabs` 表示底部标签行；`menu-bottom-tabs--portrait` 仅竖屏启用，`menu-bottom-tabs--phone-portrait` 仅手机竖屏启用。
+- 公共组件负责标签上下各 6px 的内留白，并抵消紧邻底栏前的容器间距；业务文件只负责 `order` 或 `grid-row`。
+- 社交横竖屏使用底部标签；装备竖屏使用底部标签；设置仅手机竖屏使用底部标签。不要把这些布局条件合并为一个设备条件。
+
+### 表单控件
+
+- 普通字段通过 `createMenuField()` 创建，静态模板使用 `data-menu-control="field"`；普通字段独立边框与圆角由公共样式负责。
+- 连体框的输入段使用 `createMenuField('input', 'segment')`，保留组件自身的拼接边框；不要给输入段加普通字段外框。
+- 普通菜单控件共用 `--panel-control`（compact 30px、spacious 44px），同一行的操作按钮在 `menu-form-row` 内共享高度。
+- 宽度、输入验证、事件处理由业务菜单负责。多行文本、文件选择、复选框、滑块及确认弹窗不套用普通字段边框规则。
+- 下拉选中项使用单行省略，展开列表仍可显示完整文本。列表项、图标按钮不当作表单按钮统一尺寸。
+
+新增规则前先确认归属；替换旧实现时同时删除旧规则，不通过增加选择器层级长期叠加修补。

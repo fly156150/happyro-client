@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { interactionColumns, interactionReview, interactionFooter, inputDraft } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -16,7 +17,7 @@ export function createTradePanel(body, service) {
 			title: '物品与金额',
 			className: 'inventory-detail trade-editor',
 			content:
-				'<label class="interaction-field">交易金额<input data-money type="number" min="0" step="1" value="0"></label><div class="interaction-inline-actions"><button data-send-money>设置金额</button><button data-revert-money>撤销金额</button></div><div data-picker></div>'
+				'<label class="interaction-field">交易金额<input data-menu-control="field" data-money type="number" min="0" step="1" value="0"></label><div class="interaction-inline-actions"><button data-send-money>设置金额</button><button data-revert-money>撤销金额</button></div><div data-picker></div>'
 		}
 	]);
 	const feedback = createFeedback(body);
@@ -153,7 +154,7 @@ export function createTradePanel(body, service) {
 			if (item) {
 				const text = document.createElement('p');
 				text.textContent = item.description;
-				const input = document.createElement('input');
+				const input = createMenuField();
 				quantityInput = input;
 				input.type = 'number';
 				input.required = true;

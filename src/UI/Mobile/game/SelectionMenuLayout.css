@@ -1,0 +1,18 @@
+/* Selection menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='selection'] .equipment-filters {
+ width: calc((100% - 12px) / 2);
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='selection'] .inventory-layout {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 12px;
+}
+
+.panel[data-view] .equipment-selection .ui-confirm-body > p:empty {
+ display: none;
+}
+
+.panel[data-view] .equipment-selection .interaction-review-summary:first-child {
+ border-top: 0;
+ padding-top: 0;
+}

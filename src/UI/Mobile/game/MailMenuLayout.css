@@ -1,0 +1,15 @@
+/* Mail menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .mail-footer .mail-pagination {
+ min-height: 0;
+ padding-block: 0;
+ border-top: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='mail'] .mail-footer-actions {
+ margin: 0;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='mail'] .mail-pagination {
+ order: 2;
+ margin: 0;
+}

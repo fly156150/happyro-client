@@ -1,0 +1,17 @@
+/* Quests menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation]) .panel[data-view='quests'] > .panel-body {
+ gap: 6px;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='quests'] .quest-actions {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: flex-end;
+ gap: 6px;
+ border-top: 1px solid #52606d;
+ margin: 0;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='quests'] .inventory-detail {
+ padding-bottom: 8px;
+}

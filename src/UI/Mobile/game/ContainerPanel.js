@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
 import { interactionFooter } from './InteractionPanel.js';
@@ -16,16 +17,16 @@ const itemTypes = {
 const labels = { inventory: '背包', storage: '仓库', cart: '手推车' };
 export function createContainerPanel(body, actions, initialSource) {
 	body.innerHTML =
-		'<div class="container-toolbar"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
+		'<div class="container-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
 	const primary = initialSource;
 	const isCart = primary === 'cart';
 	body.classList.add('warehouse-body');
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector);
 	const { footer, status } = interactionFooter(body);
-	const sourceSelect = document.createElement('select');
+	const sourceSelect = createMenuField('select');
 	sourceSelect.setAttribute('aria-label', '物品所在位置');
-	const category = document.createElement('select');
+	const category = createMenuField('select');
 	category.setAttribute('aria-label', '物品分类');
 	for (const [key, text] of [
 		['all', '全部'],
@@ -43,12 +44,12 @@ export function createContainerPanel(body, actions, initialSource) {
 	const sourceField = document.createElement('div');
 	sourceField.className = 'container-source';
 	sourceField.append(sourceSelect);
-	const search = document.createElement('input');
+	const search = createMenuField();
 	search.type = 'search';
 	search.placeholder = '搜索名称或物品 ID';
 	search.setAttribute('aria-label', `搜索${labels[primary]}物品`);
 	const modes = document.createElement('div');
-	modes.className = 'storage-modes';
+	modes.className = 'storage-modes menu-form-row';
 	{
 		for (const [value, title] of [
 			[primary, '取出'],
@@ -64,7 +65,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		}
 	}
 	const filters = document.createElement('div');
-	filters.className = 'container-filters';
+	filters.className = 'container-filters menu-form-row';
 	filters.append(modes, sourceField, category);
 	const subtype = createItemSubtypeFilter(() => {
 		update();
@@ -116,7 +117,7 @@ export function createContainerPanel(body, actions, initialSource) {
 			.forEach(node => node.remove());
 		transferDestination = null;
 		$('.inventory-detail').textContent = '点击物品查看详情和选择数量';
-		const amount = document.createElement('input');
+		const amount = createMenuField('input', 'segment');
 		amount.type = 'number';
 		amount.value = '1';
 		amount.disabled = true;
@@ -156,7 +157,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		const description = document.createElement('p');
 		description.textContent = item.description;
 		description.className = 'item-description';
-		const amount = document.createElement('input');
+		const amount = createMenuField('input', 'segment');
 		amount.type = 'number';
 		amount.inputMode = 'numeric';
 		amount.className = 'container-amount';
@@ -167,7 +168,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		amount.value = '1';
 		const operation = source === primary ? '取出' : '存入';
 		amount.setAttribute('aria-label', `${operation}数量`);
-		const destination = document.createElement('select');
+		const destination = createMenuField('select');
 		destination.setAttribute('aria-label', '转移到');
 		transferDestination = destination;
 		for (const target of targets()) destination.add(new Option(labels[target], target));

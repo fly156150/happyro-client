@@ -757,7 +757,6 @@
 	align-items: center;
 	gap: 8px;
 	flex: none;
-	padding: 10px 2px 4px;
 	border-top: 1px solid #465461;
 }
 .skills-footer > strong {
@@ -1169,38 +1168,6 @@
 	padding: 0 12px;
 }
 
-/* Center footer contents within equal top/bottom spacing, including subgrid rows. */
-:host([data-menu-density='spacious']) .panel .attribute-footer,
-:host([data-menu-density='spacious']) .panel .skills-layout :is(.skills-footer, .inventory-actions) {
-	align-items: center;
-	align-content: center;
-	padding-block: 8px;
-}
-:host([data-menu-density='spacious']) .panel :is(.skills-reset, .attribute-plan-actions) {
-	display: flex;
-	align-items: center;
-}
-:host([data-menu-density='spacious'])
-	.panel
-	:is(.attribute-footer, .skills-footer, .skills-layout .inventory-actions)
-	button {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 1.2;
-}
-
-/* Include the owning body's bottom space in the footer instead of padding it twice. */
-:host([data-menu-density='spacious']) .panel:is([data-view='attributes'], [data-view='skills']) > .panel-body {
-	padding-bottom: 0;
-}
-:host([data-menu-density='spacious']) .panel .skills-layout > section {
-	padding-bottom: 0;
-}
-:host([data-menu-density='spacious']) .panel .attribute-footer,
-:host([data-menu-density='spacious']) .panel .skills-layout :is(.skills-footer, .inventory-actions) {
-	padding-block: 16px;
-}
 :host([data-menu-density='spacious']) .panel .attribute-increments button {
 	width: 56px;
 	min-width: 56px;

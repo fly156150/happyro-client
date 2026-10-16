@@ -1,0 +1,66 @@
+/* Social menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs {
+ display: flex;
+ min-width: 0;
+ gap: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs > button {
+ flex: 1;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer {
+ display: flex;
+ justify-content: flex-end;
+ gap: 6px;
+ border-top: 1px solid #52606d;
+ margin: 0;
+ flex-wrap: wrap;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] > .panel-body {
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-tabs {
+ grid-row: 3;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-footer {
+ grid-row: 4;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer-actions {
+ display: contents;
+}
+
+.panel[data-view='social'] .social-form:empty {
+ display: none;
+}
+
+.panel[data-view='social'] .social-party-heading {
+ display: flex;
+ align-items: center;
+ justify-content: flex-start;
+ gap: 8px;
+ margin: 0 0 8px;
+ padding: 6px 8px;
+ border-left: 3px solid #ceaa70;
+ border-radius: 3px;
+ background: #2b3540;
+ color: #ffe1ae;
+ font-size: var(--panel-heading);
+ font-weight: 600;
+}
+
+.panel[data-view='social'] .social-party-heading > span {
+ min-width: 0;
+ overflow-wrap: anywhere;
+}
+
+.panel[data-view='social'] .social-party-heading > small {
+ color: #f5f2e9;
+ flex-shrink: 0;
+ font-size: var(--panel-label);
+ font-weight: normal;
+}

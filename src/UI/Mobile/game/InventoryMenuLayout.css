@@ -1,0 +1,62 @@
+/* Inventory menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-toolbar {
+ grid-template-columns: repeat(6, minmax(0, 1fr));
+ column-gap: var(--panel-gap);
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='inventory'] .inventory-search {
+ display: block;
+ width: 100%;
+ min-width: 0;
+ box-sizing: border-box;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-layout {
+ grid-template-rows: minmax(0, 1fr) auto;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-detail {
+ display: contents;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] :is(.inventory-item-description, .inventory-empty-message) {
+ grid-column: 2;
+ grid-row: 1;
+ min-height: 0;
+ overflow: auto;
+ box-sizing: border-box;
+ padding: var(--panel-gap);
+ border: 1px solid #52606d;
+ border-radius: 10px;
+ background: #19212a;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-list {
+ grid-row: 1;
+ grid-column: 1;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-actions {
+ grid-row: 2;
+ grid-column: 1 / -1;
+ justify-content: flex-end;
+ border-top: 1px solid #52606d;
+ margin: 0;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-empty-actions {
+ display: flex;
+}
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-search {
+ grid-column: 4 / 7;
+}
+
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='inventory'] .inventory-search {
+ grid-column: 1 / -1;
+ grid-row: 1;
+}
+
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='inventory'] .inventory-toolbar > :is(select, .menu-select) {
+ grid-row: 2;
+}

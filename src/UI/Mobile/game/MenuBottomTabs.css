@@ -1,0 +1,25 @@
+/* Bottom tabs own equal inner spacing. Placement remains a feature decision. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .menu-bottom-tabs:not(.menu-bottom-tabs--portrait):not(.menu-bottom-tabs--phone-portrait),
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--portrait,
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--phone-portrait {
+ --menu-tab-spacing: 6px;
+ display: flex;
+ width: 100%;
+ flex-shrink: 0;
+ align-items: center;
+ border-top: 1px solid #52606d;
+ padding-block: var(--menu-tab-spacing);
+ margin: 0;
+ box-sizing: border-box;
+}
+/* Collapse only the gap before the following footer: tab padding owns that space. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .menu-bottom-tabs:not(.menu-bottom-tabs--portrait):not(.menu-bottom-tabs--phone-portrait) + .menu-footer,
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--portrait ~ .menu-footer,
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--phone-portrait ~ .menu-footer {
+ margin-top: -6px;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view] :has(> .menu-bottom-tabs:not(.menu-bottom-tabs--portrait):not(.menu-bottom-tabs--phone-portrait)),
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view] :has(> .menu-bottom-tabs--portrait),
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] :has(> .menu-bottom-tabs--phone-portrait) {
+ row-gap: 6px;
+}

@@ -209,7 +209,7 @@
 }
 
 /* Category controls share spacing and grouped increments across touch layouts. */
-:host([data-menu-density]) .panel .settings-form > .settings-tabs { margin-bottom: 4px; }
+
 :host([data-menu-density]) .panel > header.has-attribute-tabs > h2 {
  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
  overflow: hidden; clip-path: inset(50%);
@@ -528,16 +528,10 @@
  min-height: 19.8px; padding-block: 0.9px;
 }
 
-/* Two filters occupy the left half, sharing the same 6px center gutter as sorting. */
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-toolbar {
- grid-template-columns: repeat(2, minmax(0, calc(25% - 4.5px))) minmax(0, 1fr);
- column-gap: 6px;
-}
-
 /* Portrait equipment categories sit between browsing content and actions. */
 :host([data-menu-density][data-orientation='portrait']) .panel[data-view='equipment'] :is(.equipment-layout, .equipment-stats) { order: 1; }
 :host([data-menu-density][data-orientation='portrait']) .panel[data-view='equipment'] .equipment-tabs {
- order: 2; border-top: 1px solid #52606d; padding-top: 6px; margin: 0;
+ order: 2;
 }
 :host([data-menu-density][data-orientation='portrait']) .panel[data-view='equipment'] .equipment-actions { order: 3; }
 
@@ -616,7 +610,6 @@
  min-width: 24px; font-variant-numeric: tabular-nums; color: #f5f2e9;
 }
 
-
 /* Phone portrait browsing menus use framed details above lists and bottom filters. */
 .portrait-menu-placeholder { display: none; }
 :host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests'], [data-view='social']) > .panel-body {
@@ -648,7 +641,6 @@
 :host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='quests']) :is(.interaction-footer, .quest-actions) > button {
  height: var(--panel-control); min-height: var(--panel-control); margin: 0; padding: 3px 6px;
 }
-
 
 /* Explicit list rules stay scoped to their own menus. */
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .inventory-list { grid-template-columns: minmax(0, 1fr); }

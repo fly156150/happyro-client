@@ -1,0 +1,16 @@
+/* Companion menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .companion-footer {
+ align-items: stretch;
+ margin: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view] .companion-footer .inventory-actions {
+ flex: 0 0 auto;
+ border: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='companions'] [data-companion-kind='mercenary'] .companion-footer {
+ flex-direction: row;
+ justify-content: flex-end;
+ align-items: center;
+}

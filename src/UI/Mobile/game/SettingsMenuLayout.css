@@ -1,0 +1,49 @@
+/* Settings menu layout; loaded after shared chrome. */
+.panel[data-view] .settings-form .settings-field input[type='range'] {
+ appearance: auto;
+ -webkit-appearance: auto;
+ touch-action: pan-y;
+ cursor: pointer;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-section {
+ padding-block: 6px;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-field {
+ box-sizing: border-box;
+ min-height: calc(var(--panel-control) + 12px);
+ padding-block: 6px;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-field.settings-last-row {
+ border-bottom-color: transparent;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-footer {
+ display: flex;
+ align-items: center;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-actions {
+ width: 100%;
+ align-items: center;
+ justify-content: flex-end;
+}
+
+.panel[data-view] .settings-actions button {
+ flex: 0 0 auto;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-tabs {
+ order: 1;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-footer {
+ order: 2;
+}
+
+/* Top tabs keep their existing separation; bottom-tab spacing is owned centrally. */
+:host([data-menu-density]) .panel .settings-form > .settings-tabs {
+ margin-bottom: 4px;
+}

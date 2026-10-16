@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -68,7 +69,7 @@ export function createMaterialsPanel(body, service) {
 		form.className = 'interaction-form';
 		const label = document.createElement('label');
 		label.textContent = '数量';
-		input = document.createElement('input');
+		input = createMenuField();
 		input.type = 'number';
 		input.min = 0;
 		input.step = 1;

@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import NpcNameTable from 'DB/NpcNameTable.js';
 import { formatNPCMarkup } from 'Utils/RagnarokText.js';
 
@@ -46,7 +47,7 @@ export function createNPCPanel(body, state) {
 		content.append(list);
 	}
 	const footer = document.createElement('div');
-	footer.className = 'npc-actions';
+	footer.className = 'npc-actions menu-footer';
 	body.append(content, footer);
 	updateNPCCutin(body, state);
 	function button(parent, label, respond) {
@@ -78,7 +79,7 @@ export function createNPCPanel(body, state) {
 	if (['number', 'text'].includes(state.mode)) {
 		const form = document.createElement('form');
 		form.className = 'npc-input-form';
-		const input = document.createElement('input');
+		const input = createMenuField();
 		input.type = 'text';
 		input.inputMode = state.mode === 'number' ? 'numeric' : 'text';
 		input.setAttribute('aria-label', state.mode === 'number' ? '输入数字' : '输入文字');

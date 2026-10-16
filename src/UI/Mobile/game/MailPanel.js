@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
@@ -18,7 +19,7 @@ export function createMailPanel(body, service) {
 		itemTerm = '';
 	const controls = new Map();
 	const node = (parent, tag, className, text) => {
-		const element = document.createElement(tag);
+		const element = ['input', 'select'].includes(tag) ? createMenuField(tag) : document.createElement(tag);
 		element.className = className;
 		if (text !== undefined) element.textContent = text;
 		parent.append(element);
@@ -26,18 +27,18 @@ export function createMailPanel(body, service) {
 	};
 	body.replaceChildren();
 	const feedback = createFeedback(body);
-	const toolbar = node(body, 'div', 'mail-toolbar');
+	const toolbar = node(body, 'div', 'mail-toolbar menu-form-row');
 	const layout = node(body, 'div', 'mail-layout');
 	layout.dataset.menuLayout = 'split';
 	const list = node(layout, 'section', 'mail-browser');
 	const pane = node(layout, 'section', 'mail-pane');
 	const detail = node(pane, 'div', 'mail-detail');
-	const footer = node(body, 'div', 'mail-footer');
-	const pagination = node(footer, 'div', 'mail-pagination');
-	const detailFooter = node(footer, 'div', 'mail-actions mail-footer-actions');
+	const footer = node(body, 'div', 'mail-footer menu-footer');
+	const pagination = node(footer, 'div', 'mail-pagination menu-action-group');
+	const detailFooter = node(footer, 'div', 'mail-actions mail-footer-actions menu-footer--portrait menu-form-row');
 	const para = (parent, text, className = 'mail-note') => node(parent, 'p', className, text);
 	const heading = (parent, text) => node(parent, 'h3', 'mail-heading', text);
-	const actions = parent => node(parent, 'div', 'mail-actions');
+	const actions = parent => node(parent, 'div', 'mail-actions menu-form-row');
 	const button = (parent, label, action, disabled = false) => {
 		const element = node(parent, 'button', '', label);
 		element.type = 'button';
@@ -54,7 +55,7 @@ export function createMailPanel(body, service) {
 		dismiss = null;
 	};
 	const field = (parent, label, value, oninput, type = 'text') => {
-		const row = node(parent, 'label', 'mail-field');
+		const row = node(parent, 'label', 'mail-field menu-form-row');
 		node(row, 'span', '', label);
 		const input = node(row, type === 'textarea' ? 'textarea' : 'input', '');
 		if (type !== 'textarea') input.type = type;
@@ -131,7 +132,7 @@ export function createMailPanel(body, service) {
 			service.cancelCompose();
 			clearReview();
 		});
-		const filters = node(list, 'div', 'mail-item-filters');
+		const filters = node(list, 'div', 'mail-item-filters menu-form-row');
 		const search = node(filters, 'input', 'mail-item-search');
 		search.type = 'search';
 		search.placeholder = '搜索物品名称或 ID';

@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { menuDensity } from './MenuLayout.js';
 import { showToast } from 'UI/Components/Toast.js';
@@ -42,7 +43,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		form.className = 'settings-form';
 		form.onsubmit = event => event.preventDefault();
 		const tabs = document.createElement('div');
-		tabs.className = 'settings-tabs menu-tabs';
+		tabs.className = 'settings-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--phone-portrait';
 		tabs.setAttribute('role', 'group');
 		tabs.setAttribute('aria-label', '设置分类');
 		const content = document.createElement('div');
@@ -81,7 +82,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		};
 		const displayKeys = ['quality', 'fpslimit', 'performanceMode', 'viewArea', 'cursor', 'pixelPerfectSprites'];
 		for (const [key, label, range, max, step] of service.fields) {
-			const input = document.createElement(Array.isArray(range) ? 'select' : 'input');
+			const input = createMenuField(Array.isArray(range) ? 'select' : 'input');
 			input.dataset.setting = key;
 			if (Array.isArray(range)) {
 				for (const value of range) {
@@ -107,7 +108,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			};
 			field(displayKeys.includes(key) ? '画面' : '特效', key === 'quality' ? '渲染比例（%）' : label, input);
 		}
-		const previewLines = document.createElement('select');
+		const previewLines = createMenuField('select');
 		previewLines.dataset.setting = 'chatPreviewLines';
 		for (const value of [2, 3, 4, 5, 6, 7, 8]) {
 			const option = document.createElement('option');
@@ -124,7 +125,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			apply('interface', settingKey(), previewLines);
 		};
 		field('画面', '聊天行数', previewLines);
-		const previewTabs = document.createElement('input');
+		const previewTabs = createMenuField();
 		previewTabs.type = 'checkbox';
 		previewTabs.dataset.setting = 'chatPreviewTabs';
 		previewTabs.checked = draft.interface.chatPreviewTabs;
@@ -132,7 +133,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			apply('interface', 'chatPreviewTabs', previewTabs);
 		};
 		field('画面', '显示聊天分类标签', previewTabs);
-		const duration = document.createElement('input');
+		const duration = createMenuField();
 		duration.type = 'number';
 		duration.min = 1;
 		duration.max = 10;
@@ -147,7 +148,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			['BGM', '背景音乐'],
 			['Sound', '音效']
 		]) {
-			const enabled = document.createElement('input');
+			const enabled = createMenuField();
 			enabled.type = 'checkbox';
 			enabled.checked = draft.audio[key].play;
 			enabled.dataset.audio = key;
@@ -156,7 +157,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 				service.audio(key, draft.audio[key]);
 			};
 			field('声音', name, enabled);
-			const volume = document.createElement('input');
+			const volume = createMenuField();
 			volume.type = 'range';
 			volume.setAttribute('aria-label', name + '音量');
 			volume.min = 0;
@@ -190,9 +191,9 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		}
 
 		const footer = document.createElement('div');
-		footer.className = 'settings-footer';
+		footer.className = 'settings-footer menu-footer';
 		const buttons = document.createElement('div');
-		buttons.className = 'settings-actions';
+		buttons.className = 'settings-actions menu-action-group menu-action-group--trailing';
 		for (const [label, action] of [
 			[
 				'恢复默认',

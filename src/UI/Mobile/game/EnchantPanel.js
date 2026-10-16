@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
 import { interactionColumns, interactionReview, interactionFooter } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -71,7 +72,7 @@ export function createEnchantPanel(body, service) {
 			detail.textContent = '请选择装备';
 			return;
 		}
-		const select = document.createElement('select');
+		const select = createMenuField('select');
 		select.setAttribute('aria-label', '附魔方式');
 		select.add(new Option('请选择附魔方式', ''));
 		for (const choice of state.choices) select.add(new Option(choice.name, choice.key));

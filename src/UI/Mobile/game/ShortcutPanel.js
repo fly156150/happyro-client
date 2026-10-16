@@ -26,7 +26,7 @@ export function createShortcutPanel(body, actions) {
 					<button type="submit" data-save-slot aria-live="polite"></button>
 					<button type="button" data-cancel-choice>取消选择</button>
 				</form>
-				<div class="shortcut-clear"><button type="button" data-clear-slot>清空当前位置</button>
+				<div class="shortcut-clear menu-footer"><button type="button" data-clear-slot>清空当前位置</button>
 				</div>
 
 			</section>

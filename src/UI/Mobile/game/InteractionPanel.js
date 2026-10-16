@@ -25,7 +25,7 @@ export function interactionReview(lines, summary, warning = '') {
 }
 export function interactionFooter(body) {
 	const footer = document.createElement('div');
-	footer.className = 'interaction-footer';
+	footer.className = 'interaction-footer menu-footer';
 	const status = document.createElement('span');
 	status.className = 'interaction-status';
 	status.setAttribute('role', 'status');

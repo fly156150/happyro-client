@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
@@ -6,7 +7,7 @@ import { createPointResetControl } from './PointResetControl.js';
 
 export function createSkillsPanel(body, actions) {
 	body.innerHTML =
-		'<div class="skills-toolbar"><select aria-label="转职分类"><option value="all">全部转职</option></select><select aria-label="技能分类"><option value="all">全部技能</option><option value="active">已学主动</option><option value="passive">已学被动</option><option value="locked">未学习</option></select></div><div class="inventory-layout skills-layout" data-menu-layout="split"><section class="skills-browser"><div class="inventory-list" aria-label="技能列表"></div></section><section class="inventory-detail inventory-item-detail" aria-label="技能详情"></section></div><div class="skills-footer"><strong class="point-counter" data-skill-points><span>技能点</span><span class="point-counter-value" data-skill-points-value></span></strong><div class="skills-footer-buttons"><div class="skills-reset"></div><div class="skills-action-slot"></div></div></div>';
+		'<div class="skills-toolbar menu-form-row"><select aria-label="转职分类"><option value="all">全部转职</option></select><select aria-label="技能分类"><option value="all">全部技能</option><option value="active">已学主动</option><option value="passive">已学被动</option><option value="locked">未学习</option></select></div><div class="inventory-layout skills-layout" data-menu-layout="split"><section class="skills-browser"><div class="inventory-list" aria-label="技能列表"></div></section><section class="inventory-detail inventory-item-detail" aria-label="技能详情"></section></div><div class="skills-footer menu-footer menu-footer--split"><strong class="point-counter" data-skill-points><span>技能点</span><span class="point-counter-value" data-skill-points-value></span></strong><div class="skills-footer-buttons menu-action-group menu-action-group--trailing"><div class="skills-reset"></div><div class="skills-action-slot"></div></div></div>';
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),
 		detail = $('.inventory-detail');
@@ -44,7 +45,7 @@ export function createSkillsPanel(body, actions) {
 			hint.className = 'skills-empty-message';
 			hint.textContent = '点击技能查看说明、学习或设置快捷键';
 			const ops = document.createElement('div');
-			ops.className = 'inventory-actions skills-empty-actions';
+			ops.className = 'inventory-actions skills-empty-actions menu-action-group';
 			ops.append(disabledAction('学习一级'), disabledAction('设置快捷键'));
 			detail.replaceChildren(hint);
 			$('.skills-action-slot').replaceChildren(ops);
@@ -71,15 +72,15 @@ export function createSkillsPanel(body, actions) {
 		content.className = 'inventory-item-description';
 		content.append(title, summary);
 		const ops = document.createElement('div');
-		ops.className = 'inventory-actions';
+		ops.className = 'inventory-actions menu-action-group';
 		ops.append(learn);
 		if (skill.active) {
 			const bind = button('设置快捷键', () => {
-				const level = document.createElement('select');
+				const level = createMenuField('select');
 				level.setAttribute('aria-label', '等级');
 				for (let i = 1; i <= skill.level; i++) level.add(new Option(`Lv.${i}`, String(i)));
 				level.value = String(skill.level);
-				const slot = document.createElement('select');
+				const slot = createMenuField('select');
 				slot.setAttribute('aria-label', '位置');
 				const page = actions.shortcuts();
 				for (let i = 0; i < page.total; i++)

@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { SOCIAL_TEXT_LIMITS, validateSocialText } from 'Utils/SocialText.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -5,7 +6,7 @@ import { setListItemText } from './ListItemText.js';
 
 export function createSocialPanel(body, service, whisper) {
 	body.innerHTML =
-		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="社交列表"></div><section class="inventory-detail" aria-label="社交详情"></section></div><nav class="social-tabs menu-tabs" aria-label="社交分类"><button type="button" data-social-tab="friends" aria-pressed="true">好友</button><button type="button" data-social-tab="party" aria-pressed="false">队伍</button><button type="button" data-social-tab="guild" aria-pressed="false">公会</button></nav><div class="social-footer"><div class="social-footer-actions"></div><button type="button" data-refresh>刷新公会</button></div>';
+		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="社交列表"></div><section class="inventory-detail" aria-label="社交详情"></section></div><nav class="social-tabs menu-tabs menu-bottom-tabs" aria-label="社交分类"><button type="button" data-social-tab="friends" aria-pressed="true">好友</button><button type="button" data-social-tab="party" aria-pressed="false">队伍</button><button type="button" data-social-tab="guild" aria-pressed="false">公会</button></nav><div class="social-footer menu-footer menu-footer--trailing"><div class="social-footer-actions"></div><button type="button" data-refresh>刷新公会</button></div>';
 	const $ = selector => body.querySelector(selector),
 		detail = $('.inventory-detail'),
 		list = $('.inventory-list');
@@ -71,7 +72,7 @@ export function createSocialPanel(body, service, whisper) {
 	}
 	function form(title, fields, submit, confirm = false, autoSave = false) {
 		const f = document.createElement('form');
-		f.className = 'social-form';
+		f.className = 'social-form menu-form-row';
 		const inputs = {};
 		for (const [name, label, type = 'text', value = '', options] of fields) {
 			const l = document.createElement('label');
@@ -79,7 +80,7 @@ export function createSocialPanel(body, service, whisper) {
 			caption.textContent = label;
 			if (!options && type === 'text') l.className = 'social-role-field';
 			l.append(caption);
-			const input = document.createElement(options ? 'select' : type === 'textarea' ? 'textarea' : 'input');
+			const input = createMenuField(options ? 'select' : type === 'textarea' ? 'textarea' : 'input');
 			input.setAttribute('aria-label', label);
 			if (!options && type === 'text') input.placeholder = label;
 			if (options) for (const [id, text] of options) input.add(new Option(text, id));
@@ -368,8 +369,8 @@ export function createSocialPanel(body, service, whisper) {
 			}
 			if (state.master) {
 				const upload = document.createElement('form');
-				upload.className = 'social-form';
-				const file = document.createElement('input');
+				upload.className = 'social-form menu-form-row';
+				const file = createMenuField();
 				file.type = 'file';
 				file.accept = '.bmp,.gif,image/bmp,image/gif';
 				file.setAttribute('aria-label', '公会徽章文件');

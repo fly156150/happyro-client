@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -16,7 +17,7 @@ const itemTypes = {
 /** Touch-only inventory presentation. Actions receive inventory indices, never DOM-derived item data. */
 export function createInventoryPanel(body, actions) {
 	body.innerHTML =
-		'<div class="inventory-toolbar"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
+		'<div class="inventory-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
 	const $ = selector => body.querySelector(selector);
 	const list = $('.inventory-list'),
 		detail = $('.inventory-detail');
@@ -26,7 +27,7 @@ export function createInventoryPanel(body, actions) {
 		binding = false,
 		dismiss;
 	const buttons = new Map();
-	const sort = document.createElement('select');
+	const sort = createMenuField('select');
 	sort.setAttribute('aria-label', '背包排序');
 	for (const [key, name] of [
 		['index', '原始顺序'],
@@ -53,7 +54,7 @@ export function createInventoryPanel(body, actions) {
 		node.className = 'inventory-placeholder-action';
 		return node;
 	}
-	const category = document.createElement('select');
+	const category = createMenuField('select');
 	category.setAttribute('aria-label', '背包分类');
 	for (const [key, label] of [
 		['all', '全部'],
@@ -78,7 +79,7 @@ export function createInventoryPanel(body, actions) {
 		render();
 		list.scrollTop = 0;
 	};
-	const search = document.createElement('input');
+	const search = createMenuField();
 	search.type = 'search';
 	search.className = 'inventory-search';
 	search.placeholder = '搜索名称或物品 ID';
@@ -97,7 +98,7 @@ export function createInventoryPanel(body, actions) {
 			hint.className = 'inventory-empty-message';
 			hint.textContent = '点击物品查看详情和操作';
 			const ops = document.createElement('div');
-			ops.className = 'inventory-actions inventory-empty-actions';
+			ops.className = 'inventory-actions inventory-empty-actions menu-footer menu-footer--trailing';
 			ops.append(...['使用', '设置快捷键', '丢弃'].map(disabledAction));
 			detail.replaceChildren(hint, ops);
 			return;
@@ -139,7 +140,7 @@ export function createInventoryPanel(body, actions) {
 		}
 		media.append(metadata);
 		const ops = document.createElement('div');
-		ops.className = 'inventory-actions';
+		ops.className = 'inventory-actions menu-footer menu-footer--trailing';
 		if (item.action) {
 			const label = { use: '使用', equip: '穿戴', unequip: '卸下', card: '镶嵌卡片' }[item.action];
 			const perform = () => {
@@ -211,7 +212,7 @@ export function createInventoryPanel(body, actions) {
 		binding = true;
 		const warning = document.createElement('p');
 		warning.textContent = `确认丢弃「${item.name}」？`;
-		const input = document.createElement('input');
+		const input = createMenuField();
 		input.type = 'number';
 		input.min = '1';
 		input.max = String(Math.min(item.count, 65535));
@@ -260,7 +261,7 @@ export function createInventoryPanel(body, actions) {
 	}
 	function chooseBinding(item) {
 		binding = true;
-		const select = document.createElement('select');
+		const select = createMenuField('select');
 		select.setAttribute('aria-label', '位置');
 		const page = actions.shortcuts();
 		for (let i = 0; i < page.total; i++)

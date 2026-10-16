@@ -1,3 +1,4 @@
+import { createMenuField } from './MenuFormControls.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
 import { interactionColumns, interactionReview, interactionFooter } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -88,7 +89,7 @@ export function createRefinementPanel(body, service) {
 		}
 		const warning = document.createElement('p');
 		warning.textContent = '强化会消耗材料与 Z，失败可能降低等级或损坏装备。';
-		const materials = document.createElement('select');
+		const materials = createMenuField('select');
 		materials.setAttribute('aria-label', '强化材料');
 		for (const material of state.materials) materials.add(new Option(material.name, material.index));
 		const cost = document.createElement('p');
@@ -97,7 +98,7 @@ export function createRefinementPanel(body, service) {
 			materials.value = previous.material;
 		materials.disabled = !state.allowed;
 		const chance = document.createElement('p');
-		const blessing = document.createElement('input');
+		const blessing = createMenuField();
 		blessing.type = 'number';
 		blessing.min = '0';
 		blessing.step = '1';

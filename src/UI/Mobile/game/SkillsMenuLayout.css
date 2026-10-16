@@ -1,0 +1,73 @@
+/* Skills menu layout; loaded after shared chrome. */
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-layout {
+ grid-template-rows: minmax(0, 1fr);
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-layout > section {
+ grid-row: auto;
+ display: flex;
+ flex-direction: column;
+ padding-bottom: 8px;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: space-between;
+ gap: 6px;
+ margin: 0;
+ padding-inline: 2px;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer > [data-skill-points] {
+ order: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-reset {
+ order: 1;
+ padding: 0;
+ min-height: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-action-slot {
+ order: 2;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer .inventory-actions {
+ display: flex;
+ flex-wrap: nowrap;
+ border: 0;
+ padding: 0;
+ min-height: 0;
+ margin: 0;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] > .panel-body {
+ grid-template-columns: minmax(0, 1fr);
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-layout > section {
+ display: contents;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-footer {
+ grid-row: 4;
+ grid-column: 1;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer > * {
+ flex: 0 0 auto;
+ align-self: center;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer-buttons {
+ flex-wrap: wrap;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer-buttons button {
+ width: auto;
+ padding: 3px 8px;
+ font-size: var(--panel-label);
+ white-space: nowrap;
+}

@@ -10,8 +10,9 @@
  padding-block: 3px;
  padding-inline: 8px;
 }
+/* Only ordinary fields get an individual outline. Compound segments keep theirs. */
 :host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
- :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not([type='file']), select, .game-select-trigger):not(:where(.ui-confirm *, .container-quantity-group *, .quantity-stepper *, .setting-number *, .management-form *, .input-affix *)) {
+ :is(input[data-menu-control='field']:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not([type='file']), select[data-menu-control='field'], .game-select-trigger):not(:where(.ui-confirm *)) {
  border: 1px solid #657584;
  border-radius: 6px;
 }
@@ -22,8 +23,7 @@
 }
 /* Buttons beside fields use the field height; list items and icon buttons do not. */
 :host([data-menu-density][data-orientation]) .panel[data-view]
- :is(.inventory-toolbar, .container-toolbar, .container-filters, .storage-modes, .skills-toolbar,
- .mail-toolbar, .mail-actions, .mail-field, .mail-item-filters, .social-form, .companion-name, .container-quantity-group)
+ .menu-form-row
  > button:not(:where(.ui-confirm *)) {
  box-sizing: border-box;
  height: var(--panel-control);
