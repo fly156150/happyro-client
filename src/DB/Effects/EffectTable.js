@@ -1,3 +1,4 @@
+import { sorcererRenderEffects } from '../Skills/SorcererEffects.js';
 import { assassinRenderEffects } from '../Skills/AssassinEffects.js';
 import { crusaderRenderEffects } from '../Skills/CrusaderEffects.js';
 /**
@@ -74,6 +75,7 @@ export default {
 	...mechanicRenderEffects,
 	...knightRenderEffects,
 	...wizardRenderEffects,
+	...sorcererRenderEffects,
 	...crusaderRenderEffects,
 	...assassinRenderEffects,
 	...servantWeaponRenderEffects,

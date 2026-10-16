@@ -564,12 +564,17 @@ export const fourthJobEffectResources = {
 		],
 		effectId: 'activity_burn/activity_burn/activity_burn'
 	},
+	EM_TERRA_DRIVE: {
+		beginCastEffectId: ['terradrive/terradrive_cast/terradrive_cast', 'terradrive/terradrive_cast_bottom/terradrive_cast_bottom'],
+		groundCastEffectId: ['terradrive/terradrive/terradrive', 'terradrive/terradrive_bottom/terradrive_bottom'],
+		hitEffectId: 'terradrive/terradrive_hit/terradrive_hit'
+	},
 	EM_DIAMOND_STORM: {
 		beginCastEffectId: [
 			'diamond_storm/diamond_storm_cast/diamond_storm_cast',
 			'diamond_storm/diamond_storm_cast_bottom/diamond_storm_cast_bottom'
 		],
-		effectId: [
+		groundCastEffectId: [
 			'diamond_storm/diamond_storm/diamond_storm',
 			'diamond_storm/diamond_storm_bottom/diamond_storm_bottom'
 		],
@@ -598,35 +603,35 @@ export const fourthJobEffectResources = {
 	},
 	EM_ELEMENTAL_BUSTER: { beginCastEffectId: 'elemental_buster/elemental_buster_cast/elemental_buster_cast' },
 	EM_ELEMENTAL_BUSTER_FIRE: {
-		effectId: [
+		successEffectId: [
 			'elemental_buster/elemental_buster/elemental_buster_fire/elemental_buster_fire',
 			'elemental_buster/elemental_buster/elemental_buster_fire_bottom/elemental_buster_fire_bottom'
 		],
 		hitEffectId: 'elemental_buster/elemental_buster_hit/elemental_buster_fire_hit/elemental_buster_fire_hit'
 	},
 	EM_ELEMENTAL_BUSTER_WATER: {
-		effectId: [
+		successEffectId: [
 			'elemental_buster/elemental_buster/elemental_buster_water/elemental_buster_water',
 			'elemental_buster/elemental_buster/elemental_buster_water_bottom/elemental_buster_water_bottom'
 		],
 		hitEffectId: 'elemental_buster/elemental_buster_hit/elemental_buster_water_hit/elemental_buster_water_hit'
 	},
 	EM_ELEMENTAL_BUSTER_WIND: {
-		effectId: [
+		successEffectId: [
 			'elemental_buster/elemental_buster/elemental_buster_wind/elemental_buster_wind',
 			'elemental_buster/elemental_buster/elemental_buster_wind_bottom/elemental_buster_wind_bottom'
 		],
 		hitEffectId: 'elemental_buster/elemental_buster_hit/elemental_buster_wind_hit/elemental_buster_wind_hit'
 	},
 	EM_ELEMENTAL_BUSTER_GROUND: {
-		effectId: [
+		successEffectId: [
 			'elemental_buster/elemental_buster/elemental_buster_land/elemental_buster_land',
 			'elemental_buster/elemental_buster/elemental_buster_land_bottom/elemental_buster_land_bottom'
 		],
 		hitEffectId: 'elemental_buster/elemental_buster_hit/elemental_buster_land_hit/elemental_buster_land_hit'
 	},
 	EM_ELEMENTAL_BUSTER_POISON: {
-		effectId: [
+		successEffectId: [
 			'elemental_buster/elemental_buster/elemental_buster_poison/elemental_buster_poison',
 			'elemental_buster/elemental_buster/elemental_buster_poison_bottom/elemental_buster_poison_bottom'
 		],
