@@ -35,6 +35,21 @@ describe('fourth-job explicit skill effects', () => {
 		}
 	});
 
+	it('routes Abyss Chaser area starts once and keeps impacts separate', () => {
+		const dagger = fourthJobSkillEffects[SK.ABC_ABYSS_DAGGER];
+		expect(dagger.successEffectId).toBeDefined();
+		expect(dagger.hitEffectId).toBeDefined();
+		expect(dagger.effectId).toBeUndefined();
+		const rush = fourthJobSkillEffects[SK.ABC_UNLUCKY_RUSH];
+		expect(rush.successEffectIdOnCaster).toBeDefined();
+		expect(rush.hitEffectId).toBeDefined();
+		expect(rush.effectId).toBeUndefined();
+		const strike = fourthJobSkillEffects[SK.ABC_ABYSS_STRIKE];
+		expect(strike.groundCastEffectId).toBeDefined();
+		expect(strike.hitEffectId).toBeDefined();
+		expect(strike.effectId).toBeUndefined();
+	});
+
 	it('keeps official floor layers behind entities and separates cross-slash impact', () => {
 		const cast = fourthJobRenderEffects[fourthJobSkillEffects[SK.WH_WILD_WALK].beginCastEffectId];
 		expect(cast.map(layer => layer.renderBeforeEntities)).toEqual([false, true]);

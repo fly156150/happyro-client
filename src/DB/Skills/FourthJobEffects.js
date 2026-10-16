@@ -458,11 +458,11 @@ export const fourthJobEffectResources = {
 		]
 	},
 	ABC_ABYSS_DAGGER: {
-		effectId: 'abyss_dagger/abyss_dagger/abyss_dagger',
+		successEffectId: 'abyss_dagger/abyss_dagger/abyss_dagger',
 		hitEffectId: 'abyss_dagger/abyss_dagger_hit/abyss_dagger_hit'
 	},
 	ABC_UNLUCKY_RUSH: {
-		effectId: 'unlucky_rush/unlucky_rush_cast/unlucky_rush_cast',
+		successEffectIdOnCaster: 'unlucky_rush/unlucky_rush_cast/unlucky_rush_cast',
 		hitEffectId: 'unlucky_rush/unlucky_rush_hit/unlucky_rush_hit'
 	},
 	ABC_CHAIN_REACTION_SHOT: {
@@ -492,7 +492,7 @@ export const fourthJobEffectResources = {
 			'abyss_strike/abyss_strike_cast/abyss_strike_cast',
 			'abyss_strike/abyss_strike_cast_bottom/abyss_strike_cast_bottom'
 		],
-		effectId: [
+		groundCastEffectId: [
 			'abyss_strike/abyss_strike/abyss_strike',
 			'abyss_strike/abyss_strike_bottom/abyss_strike_bottom',
 			'abyss_strike/abyss_strike_ground/abyss_strike_ground',
