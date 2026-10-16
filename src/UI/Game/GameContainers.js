@@ -1,5 +1,8 @@
 import { createItemPreviewLoader } from './ItemPreview.js';
 import Session from 'Engine/SessionStorage.js';
+import Network from 'Network/NetworkManager.js';
+import PACKET from 'Network/PacketStructure.js';
+import StatusConst from 'DB/Status/StatusState.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import Equipment from 'UI/Components/Equipment/Equipment.js';
 import Storage from 'UI/Components/Storage/Storage.js';
@@ -14,6 +17,25 @@ const identity = item =>
 export function createGameContainers(canOperate) {
 	const inventory = createGameInventory(canOperate);
 	const loadPreview = createItemPreviewLoader();
+	let cartRemoval = null;
+	const ridingOptions =
+		StatusConst.EffectState.FALCON |
+		StatusConst.EffectState.RIDING |
+		StatusConst.EffectState.DRAGON1 |
+		StatusConst.EffectState.DRAGON2 |
+		StatusConst.EffectState.DRAGON3 |
+		StatusConst.EffectState.DRAGON4 |
+		StatusConst.EffectState.DRAGON5 |
+		StatusConst.EffectState.MADOGEAR;
+	function cartRemovalState() {
+		if (cartRemoval?.owner !== Session.Entity) cartRemoval = null;
+		if (cartRemoval?.pending) {
+			if (!Session.Entity?.hasCart) cartRemoval = { owner: Session.Entity, success: true, message: '已卸下手推车' };
+			else if (Date.now() - cartRemoval.started >= 5000)
+				cartRemoval = { owner: Session.Entity, success: false, message: '未能卸下手推车，请重试' };
+		} else if (cartRemoval?.success && Session.Entity?.hasCart) cartRemoval = null;
+		return cartRemoval;
+	}
 	function available() {
 		return canOperate() && Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE;
 	}
@@ -35,17 +57,28 @@ export function createGameContainers(canOperate) {
 		return Inventory.getUI().list.filter(item => !item.equipped && !worn.has(item.index));
 	}
 	return {
+		removeCart() {
+			if (!available() || !Session.Entity?.hasCart) return '当前没有可卸下的手推车';
+			if (cartRemovalState()?.pending || interactionSnapshot()?.storageTransfer?.pending) return '请稍后重试';
+			// This protocol removes riding attachments before carts; do not dismiss another attachment.
+			if (Session.Entity.effectState & ridingOptions) return '请先解除坐骑或猎鹰，再卸下手推车';
+			cartRemoval = { owner: Session.Entity, pending: true, started: Date.now() };
+			Network.sendPacket(new PACKET.CZ.REQ_CARTOFF());
+			return null;
+		},
 		preview(source, index, id, expectedIdentity) {
 			const item = raw(source).find(item => item.index === index && item.ITID === id && identity(item) === expectedIdentity);
 			return item ? loadPreview(item) : Promise.resolve(null);
 		},
 		snapshot(source) {
 			const containers = sources();
+			const removal = cartRemovalState();
 			return {
+				cartRemoval: removal,
 				containers,
 				storageCapacity: containers.includes('storage') ? Storage.getUI().getCapacity() : null,
 				allowed: Boolean(available() && containers.includes(source)),
-				pending: Boolean(interactionSnapshot()?.storageTransfer?.pending),
+				pending: Boolean(interactionSnapshot()?.storageTransfer?.pending || removal?.pending),
 				transferStatus: storageTransferStatus(),
 				transferSucceeded: interactionSnapshot()?.storageTransfer?.success === true,
 				items: containers.includes(source)
@@ -54,11 +87,12 @@ export function createGameContainers(canOperate) {
 							.filter(item => item.count > 0)
 					: [],
 				capacity:
-					source === 'storage' ? Storage.getUI().getCapacity() : source === 'cart' ? Cart.capacity : null
+					source === 'storage' ? Storage.getUI().getCapacity() : source === 'cart' && containers.includes('cart') ? Cart.capacity : null
 			};
 		},
 		transfer(source, destination, index, id, count, expectedIdentity) {
 			const containers = sources();
+			if (cartRemovalState()?.pending) return '请稍后重试';
 			if (interactionSnapshot()?.storageTransfer?.pending) return storageTransferStatus();
 			if (
 				!available() ||

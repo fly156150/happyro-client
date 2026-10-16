@@ -33,6 +33,16 @@ export function createEquipmentPanel(body, actions) {
 		statSections.set(key, list);
 	}
 	const message = createFeedback(body);
+	let lastRemoval = actions.snapshot().attachment.removal;
+	const removeAttachment = button('', () => {
+		const { mask, label } = state.attachment;
+		if (!mask) return;
+		dismiss?.();
+		dismiss = confirmAction(body, `${label}？再次使用需重新租用或召唤。`, () => {
+			message(actions.removeAttachment(mask), 'error');
+			update();
+		});
+	});
 	function select(slot) {
 		selected = slot.key;
 		dismiss?.();
@@ -258,6 +268,14 @@ export function createEquipmentPanel(body, actions) {
 			}
 		}
 		renderDetail();
+		removeAttachment.textContent = state.attachment.label;
+		removeAttachment.hidden = !state.attachment.mask;
+		removeAttachment.disabled = Boolean(state.attachment.removal?.pending);
+		if (!removeAttachment.isConnected) $('.equipment-actions').append(removeAttachment);
+		if (state.attachment.removal !== lastRemoval) {
+			lastRemoval = state.attachment.removal;
+			if (lastRemoval?.message) message(lastRemoval.message, lastRemoval.success ? 'success' : 'error');
+		}
 	}
 	function update() {
 		state = actions.snapshot();

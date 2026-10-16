@@ -30,3 +30,8 @@
  min-width: 0;
 }
 
+/* Quantity on its own row; transfer and detach remain distinct, right-aligned actions. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer { grid-template-columns: minmax(0, 1fr) auto auto; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer > .container-quantity-group { grid-column: 1 / -1; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer > .container-transfer-submit { grid-column: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer > .container-remove-cart { grid-column: 3; }

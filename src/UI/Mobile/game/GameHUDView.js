@@ -577,6 +577,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 					snapshot: actions.containerSnapshot,
 					preview: actions.containerPreview,
 					transfer: actions.transferItem,
+					removeCart: actions.removeCart,
 					setCapacity: capacity =>
 						text(
 							'h2',
@@ -643,6 +644,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (panel === 'equipment')
 			equipmentPanel = createEquipmentPanel(body, {
 				snapshot: actions.equipmentSnapshot,
+				removeAttachment: actions.equipmentRemoveAttachment,
 				preview: actions.inventoryPreview,
 				act: actions.equipmentAct
 			});

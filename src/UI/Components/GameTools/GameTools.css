@@ -1588,3 +1588,8 @@
 	opacity: .5;
 	cursor: not-allowed;
 }
+
+.character-riding-list { display: grid; gap: 8px; }
+.character-riding-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--desktop-border, #465461); border-radius: var(--desktop-radius, 6px); }
+.character-riding-row p { margin: 4px 0 0; }
+.character-riding-row .management-form-actions { grid-column: auto; margin: 0; }

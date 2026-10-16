@@ -153,7 +153,7 @@ HUD.onAppend = function () {
 	quests = createGameQuests(() => modal && !previousFreeze);
 	attributes = createGameAttributes(() => modal && !previousFreeze);
 	skills = createGameSkills(() => modal && !previousFreeze, shortcuts);
-	equipment = createEquipmentController(inventory, () => characterStats(Session.Entity));
+	equipment = createEquipmentController(inventory, () => characterStats(Session.Entity), () => modal && !previousFreeze);
 	view = createGameHUDView(HUD.getRoot(), {
 		cancelSceneInput,
 		openAdventureTools: back => AdventureTools.openFromMenu(back),
@@ -201,12 +201,14 @@ HUD.onAppend = function () {
 		containerSnapshot: source => containers.snapshot(source),
 		containerPreview: (...args) => containers.preview(...args),
 		transferItem: (...args) => containers.transfer(...args),
+		removeCart: () => containers.removeCart(),
 		attributes,
 		skillsReset: () => skills.reset(),
 		skillsSnapshot: () => skills.snapshot(),
 		skillsLearn: (...args) => skills.learn(...args),
 		skillsBind: (...args) => skills.bind(...args),
 		equipmentSnapshot: () => equipment.snapshot(),
+		equipmentRemoveAttachment: mask => equipment.removeAttachment(mask),
 		equipmentAct: (...args) => equipment.act(...args),
 		inventorySnapshot: () => inventory.snapshot(),
 		inventoryPreview: (...args) => inventory.preview(...args),

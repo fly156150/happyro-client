@@ -2,6 +2,7 @@ import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
 import { interactionFooter } from './InteractionPanel.js';
+import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
 
@@ -82,6 +83,15 @@ export function createContainerPanel(body, actions, initialSource) {
 		transferDestination = null,
 		state;
 	const nodes = new Map();
+	let lastCartRemoval = actions.snapshot(primary).cartRemoval;
+	const removeCart = isCart ? button('卸下手推车', () => {
+		confirmAction(body, '卸下手推车？车内物品会保留，重新使用需向 NPC 租用。', () => {
+			const error = actions.removeCart();
+			if (error) feedback(error, 'error');
+			update();
+		});
+	}) : null;
+	if (removeCart) removeCart.className = 'container-remove-cart';
 	function button(text, fn) {
 		const node = document.createElement('button');
 		node.type = 'button';
@@ -128,7 +138,9 @@ export function createContainerPanel(body, actions, initialSource) {
 		const all = button('全部数量', () => {});
 		const transfer = button(source === primary ? '确认取出' : '确认存入', () => {});
 		all.disabled = transfer.disabled = true;
+		transfer.classList.add('container-transfer-submit');
 		footer.append(quantityGroup(amount, all), transfer);
+		if (removeCart) footer.append(removeCart);
 	}
 	sourceSelect.onchange = () => {
 		source = sourceSelect.value;
@@ -246,11 +258,18 @@ export function createContainerPanel(body, actions, initialSource) {
 			const quantity = footer.querySelector('.container-quantity');
 			quantity.replaceWith(quantityGroup(amount, all));
 		}
+		transfer.classList.add('container-transfer-submit');
 		footer.append(transfer);
+		if (removeCart) footer.append(removeCart);
 		update();
 	}
 	function update() {
 		state = actions.snapshot(source);
+		if (isCart && !state.containers.includes('cart') && source !== 'cart') {
+			source = 'cart';
+			reset();
+			state = actions.snapshot(source);
+		}
 		if (source !== primary && !state.containers.includes(source) && state.containers.includes('inventory')) {
 			source = 'inventory';
 			reset();
@@ -260,6 +279,10 @@ export function createContainerPanel(body, actions, initialSource) {
 			state.transferStatus,
 			state.pending ? 'pending' : state.transferSucceeded ? 'success' : 'error'
 		);
+		if (isCart && state.cartRemoval !== lastCartRemoval) {
+			lastCartRemoval = state.cartRemoval;
+			if (lastCartRemoval?.message) feedback(lastCartRemoval.message, lastCartRemoval.success ? 'success' : 'error');
+		}
 		for (const tab of modes.children) {
 			tab.setAttribute('aria-pressed', String((source === primary) === (tab.dataset.mode === primary)));
 			tab.disabled = !state.allowed || state.pending;
@@ -334,7 +357,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		if (visible.length) empty?.remove();
 		else
 			empty.textContent = unavailable
-				? `${labels[source]}当前不可用`
+				? (isCart ? '未租用手推车，请向卡普拉员工租用' : `${labels[source]}当前不可用`)
 				: state.items.length
 					? '没有符合条件的物品'
 					: '这里没有可转移的物品';
@@ -357,6 +380,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		}
 		for (const node of footer.querySelectorAll('button'))
 			node.disabled = !state.allowed || state.pending || unavailable || !transferDestination?.value;
+		if (removeCart) removeCart.disabled = !state.allowed || state.pending || !state.containers.includes('cart');
 		for (const node of body.querySelectorAll(
 			'.inventory-detail button, .inventory-detail input, .inventory-detail select, .container-amount, .container-transfer-target select'
 		))
