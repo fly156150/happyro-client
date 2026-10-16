@@ -42,4 +42,25 @@ describe('fourth-job packet effect stages', () => {
   EffectManager.spamSkill(SK.NW_MIDNIGHT_FALLEN, 2, null, 1200, 1);
   expect(spam).not.toHaveBeenCalled();
  });
+ it('plays Dancing Knife activation once without replaying it for periodic victims', () => {
+  const spam = vi.spyOn(EffectManager, 'spam').mockImplementation(() => {});
+  EffectManager.spamSkill(SK.SHC_DANCING_KNIFE, 1, null, 1000, 1);
+  EffectManager.spamSkillSuccess(SK.SHC_DANCING_KNIFE, 1, 1000, 1);
+  expect(spam).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
+   effectId: fourthJobSkillEffects[SK.SHC_DANCING_KNIFE].successEffectId,
+   ownerAID: 1
+  }));
+  spam.mockClear();
+  for (const tick of [1300, 1600, 1900]) {
+   for (const victim of [2, 3, 4]) {
+    EffectManager.spamSkill(SK.SHC_DANCING_KNIFE, victim, null, tick, 1);
+    EffectManager.spamSkillHit(SK.SHC_DANCING_KNIFE, victim, tick, 1);
+   }
+  }
+  expect(spam).toHaveBeenCalledTimes(9);
+  expect(spam.mock.calls.every(([effect]) =>
+   effect.effectId === fourthJobSkillEffects[SK.SHC_DANCING_KNIFE].hitEffectId
+  )).toBe(true);
+ });
+
 });

@@ -292,7 +292,7 @@ export const fourthJobEffectResources = {
 	},
 	SHC_SHADOW_EXCEED: { effectId: 'shadow_exceed/shadow_exceed/shadow_exceed' },
 	SHC_DANCING_KNIFE: {
-		effectIdOnCaster: 'dancing_knife/dancing_knife_cast/dancing_knife_cast',
+		successEffectId: 'dancing_knife/dancing_knife_cast/dancing_knife_cast',
 		hitEffectId: 'dancing_knife/dancing_knife_hit/dancing_knife_hit'
 	},
 	SHC_SAVAGE_IMPACT: { hitEffectId: 'savage_impact/savage_impact_hit/savage_impact_hit' },

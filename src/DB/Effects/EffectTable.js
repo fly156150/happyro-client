@@ -1,3 +1,4 @@
+import { assassinRenderEffects } from '../Skills/AssassinEffects.js';
 import { crusaderRenderEffects } from '../Skills/CrusaderEffects.js';
 /**
  * @module DB/Effects/EffectTable
@@ -74,6 +75,7 @@ export default {
 	...knightRenderEffects,
 	...wizardRenderEffects,
 	...crusaderRenderEffects,
+	...assassinRenderEffects,
 	...servantWeaponRenderEffects,
 	...fourthJobGroundEffects,
 	/// Common parameters
