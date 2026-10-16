@@ -14,7 +14,6 @@ const reasons = {
 	riding_conflict: '请先解除当前坐骑',
 	riding_insufficient_zeny: 'Zeny 不足'
 };
-const cost = row => row.ticket ? '手推车免费使用券 ×1' : row.fee ? `${row.fee.toLocaleString()} Zeny` : '免费';
 export function renderCharacterRiding(rows, pending) {
 	return `<section class="character-riding"><h4>骑乘与随行</h4><div class="character-riding-list">${rows.length ? rows.map(row => {
 		const action = actions[row.kind];
@@ -28,5 +27,5 @@ export function ridingConfirmation(row) {
 		if (row.kind === 'mado') return '确认解除魔导机甲驾驶？';
 		return `确认从${names[row.kind]}上下来？`;
 	}
-	return `确认${actions[row.kind].enable}${names[row.kind]}？${row.ticket ? '将消耗手推车免费使用券 ×1。' : row.fee ? `需支付 ${cost(row)}。` : '本次免费。'}`;
+	return `确认${actions[row.kind].enable}${names[row.kind]}？${row.ticket ? '将消耗手推车免费使用券 ×1。' : row.fee ? `需支付 ${row.fee.toLocaleString()} Zeny。` : ''}`;
 }
