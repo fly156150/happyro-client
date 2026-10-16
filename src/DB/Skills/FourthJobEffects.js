@@ -252,7 +252,8 @@ export const fourthJobEffectResources = {
 		effectId: '4wh_calumitygale/calumitygale/calumitygale'
 	},
 	DK_SERVANTWEAPON: {
-		beginCastEffectId: 'servantweapon/servantweapon_cast/servantweapon_cast'
+		beginCastEffectId: 'servantweapon/servantweapon_cast/servantweapon_cast',
+		successEffectId: { files: 'servantweapon/servantweapon/servantweapon', attachedEntity: true }
 	},
 	DK_SERVANTWEAPON_ATK: {
 		beforeHitEffectId: {
@@ -268,7 +269,11 @@ export const fourthJobEffectResources = {
 		]
 	},
 	DK_SERVANT_W_SIGN: { effectId: 'servant_sign/servant_sign_down/servant_sign_down' },
-	DK_SERVANT_W_PHANTOM: { hitEffectId: 'servant_phantom/servant_phantom_hit/servant_phantom_hit' },
+	DK_SERVANT_W_PHANTOM: {
+		// The server acknowledges the jump even when there is no marked target to damage.
+		successEffectId: 'servant_phantom/servant_phantom_down/servant_phantom_down',
+		hitEffectId: 'servant_phantom/servant_phantom_hit/servant_phantom_hit'
+	},
 	DK_SERVANT_W_DEMOL: { hitEffectId: 'servant_demolition/servant_demolition_hit/servant_demolition_hit' },
 	DK_CHARGINGPIERCE: { effectId: 'new_chargingpierce/new_chargingpierce_cast/new_chargingpierce_cast' },
 	DK_HACKANDSLASHER: {
@@ -721,12 +726,6 @@ export const fourthJobStatusEffectResources = {
 			'BIOLO/BO_MYSTERY_POWDER/mistery_powder_loop/mistery_powder_loop',
 			'BIOLO/BO_MYSTERY_POWDER/mistery_powder_loop_bottom/mistery_powder_loop_bottom'
 		],
-		attachedEntity: true,
-		repeat: true
-	},
-	[StatusConst.SERVANTWEAPON]: {
-		name: 'SERVANTWEAPON',
-		files: 'servantweapon/servantweapon/servantweapon',
 		attachedEntity: true,
 		repeat: true
 	}

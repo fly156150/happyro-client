@@ -8,6 +8,7 @@
  */
 
 import RainWeatherEffect from 'Renderer/Effects/RainWeather.js';
+import { servantWeaponRenderEffects } from '../Skills/ServantWeaponEffects.js';
 import { knightRenderEffects } from '../Skills/KnightEffects.js';
 import { mechanicRenderEffects } from '../Skills/MechanicEffects.js';
 import { fourthJobRenderEffects } from '../Skills/FourthJobEffects.js';
@@ -69,6 +70,7 @@ export default {
 	...fourthJobRenderEffects,
 	...mechanicRenderEffects,
 	...knightRenderEffects,
+	...servantWeaponRenderEffects,
 	...fourthJobGroundEffects,
 	/// Common parameters
 	///

@@ -33,7 +33,7 @@ const buff = color => [
 
 export const knightRenderEffects = {
 	'knight:ignition': [
-		str('new_ignitionbreak/new_ignitionbreak/new_ignitionbreak'),
+		str('new_ignitionbreak/new_ignitionbreak/new_ignitionbreak', { wav: 'effect/wl_jackfrost' }),
 		str('new_ignitionbreak/new_ignitionbreak_bottom/new_ignitionbreak_bottom', { renderBeforeEntities: true })
 	],
 	'knight:wind': [
@@ -62,9 +62,13 @@ export const knightRenderEffects = {
 		ring('white', { angle: 90, zOffset: 0.1, sizeEnd: 330, duration: 800 }),
 		ring('blue', { sizeEnd: 180, duration: 500 })
 	],
-	'knight:howl': [str('dragon_h')],
+	'knight:howl': [str('dragon_h', { wav: 'dragon_h' })],
 	'knight:relax': buff('green'),
 	'knight:deathbound': buff('purple'),
+	'knight:deathbound-trigger': [
+		ring('purple', { duration: 350, sizeStart: 20, sizeEnd: 180 }),
+		ring('white', { duration: 250, sizeStart: 90, sizeEnd: 15 })
+	],
 	'knight:crush': buff('red'),
 	'knight:refresh': buff('white'),
 	'knight:giant': buff('red'),
@@ -91,7 +95,9 @@ export const knightSkillEffects = {
 	[SK.RK_PHANTOMTHRUST]: { successEffectIdOnCaster: 'knight:phantom' },
 	[SK.RK_STORMBLAST]: success('storm'),
 	[SK.RK_DRAGONHOWLING]: success('howl'),
-	[SK.RK_DEATHBOUND]: success('deathbound'),
+	// Reflection arrives as a damage notification targeting the defender.
+	// Keep its burst separate from the successful activation flash.
+	[SK.RK_DEATHBOUND]: { ...success('deathbound'), hitEffectId: 'knight:deathbound-trigger' },
 	[SK.RK_CRUSHSTRIKE]: success('crush'),
 	[SK.RK_REFRESH]: success('refresh'),
 	[SK.RK_GIANTGROWTH]: success('giant'),

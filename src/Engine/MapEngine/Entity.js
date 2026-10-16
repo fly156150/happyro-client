@@ -1,3 +1,4 @@
+import { servantWeaponEffectIds } from 'DB/Skills/ServantWeaponEffects.js';
 /**
  * Engine/MapEngine/Entity.js
  *
@@ -316,6 +317,7 @@ function onEntityVanish(pkt) {
 			EffectConst.EF_CHOOKGI3,
 			EffectConst.EF_CHOOKGI_N
 		]); // Spirit spheres
+		EffectManager.remove(null, pkt.GID, servantWeaponEffectIds);
 		EffectManager.remove(null, pkt.GID, [
 			EffectConst.EF_CHOOKGI_FIRE,
 			EffectConst.EF_CHOOKGI_WIND,
@@ -1900,7 +1902,6 @@ function onEntityStatusChange(pkt) {
 
 	// TODO: add other status
 	switch (pkt.index) {
-		case StatusConst.SERVANTWEAPON:
 		case StatusConst.FIRE_CHARM_POWER:
 		case StatusConst.WATER_CHARM_POWER:
 		case StatusConst.WIND_CHARM_POWER:

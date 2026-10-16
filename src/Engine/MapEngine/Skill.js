@@ -12,6 +12,7 @@ import { openGameSelection, selectionEntries } from 'UI/Game/GameSelection.js';
 /**
  * Load dependencies
  */
+import { isServantWeaponJob, servantWeaponEffectIds } from 'DB/Skills/ServantWeaponEffects.js';
 import DB from 'DB/DBManager.js';
 import UIManager from 'UI/UIManager.js';
 import SkillId from 'DB/Skills/SkillConst.js';
@@ -885,6 +886,15 @@ SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos(id, level, x, y)
 
 function onSpiritSphere(pkt) {
 	EffectManager.remove(null, pkt.AID, [228, 504, 629, 833]);
+	EffectManager.remove(null, pkt.AID, servantWeaponEffectIds);
+	const owner = EntityManager.get(pkt.AID);
+	if (owner && isServantWeaponJob(owner._job)) {
+		const count = Math.max(0, Math.min(servantWeaponEffectIds.length, pkt.num));
+		for (let index = 0; index < count; index++) {
+			EffectManager.spam({ effectId: servantWeaponEffectIds[index], ownerAID: pkt.AID, startTick: Renderer.tick });
+		}
+		return;
+	}
 
 	if (pkt.num > 0) {
 		const entity = EntityManager.get(pkt.AID);
@@ -917,13 +927,13 @@ function onMillenniumShield(pkt) {
 	// Remove existing millennium shield effects
 	EffectManager.remove(null, pkt.AID, [749]);
 
-	if (pkt.num > 0 && pkt.state > 0) {
+	// The server sends state=0; the shield count determines whether to show the effect.
+	if (pkt.num > 0) {
 		const entity = EntityManager.get(pkt.AID);
 		if (entity) {
 			const EF_Init_Par = {
 				effectId: EffectConst.EF_MILSHIELD_STR,
-				ownerAID: pkt.AID,
-				spiritNum: pkt.num
+				ownerAID: pkt.AID
 			};
 
 			EffectManager.spam(EF_Init_Par);
