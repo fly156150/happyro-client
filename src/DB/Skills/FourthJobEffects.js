@@ -379,6 +379,10 @@ export const fourthJobEffectResources = {
 			'rain_of_crystal/rain_of_crystal_casting_bottom/rain_of_crystal_casting_bottom'
 		]
 	},
+	CD_DILECTIO_HEAL: {
+		beginCastEffectId: ['new_dilectioheal/new_dilectioheal_cast/new_dilectioheal_cast', 'new_dilectioheal/new_dilectioheal_cast_bottom/new_dilectioheal_cast_bottom'],
+		effectId: ['new_dilectioheal/new_dilectioheal_target/new_dilectioheal_target', 'new_dilectioheal/new_dilectioheal_target_bottom/new_dilectioheal_target_bottom']
+	},
 	CD_MEDIALE_VOTUM: { effectId: 'medialevotum/medialevotum/medialevotum' },
 	CD_ARGUTUS_VITA: { effectId: 'argutusvita/argutusvita/argutusvita' },
 	CD_ARGUTUS_TELUM: { effectId: 'argutustelum/argutustelum/argutustelum' },
@@ -387,7 +391,8 @@ export const fourthJobEffectResources = {
 	CD_EFFLIGO: { hitEffectId: 'effligo/effligo_hit/effligo_hit' },
 	CD_COMPETENTIA: { effectId: 'competentia/competentia/competentia' },
 	CD_PNEUMATICUS_PROCELLA: {
-		beginCastEffectId: 'pneumaticusprocella/pneumaticusprocella_cast/pneumaticusprocella_cast'
+		beginCastEffectId: 'pneumaticusprocella/pneumaticusprocella_cast/pneumaticusprocella_cast',
+		hitEffectId: 'pneumaticusprocella/pneumaticusprocella_target/pneumaticusprocella_target'
 	},
 	CD_RELIGIO: { effectId: 'religio/religio/religio' },
 	CD_BENEDICTUM: { effectId: 'benedictum/benedictum/benedictum' },

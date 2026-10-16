@@ -12225,7 +12225,7 @@ export default {
 	719: [
 		{
 			//EF_FORESTLIGHT5	   Renovatio (light beam)
-			wav: 'effect/ab_renovation'
+			wav: 'effect/ab_renovatio'
 		}
 	],
 	//720: [{}],	//EF_SOULBREAKER3	   Yellow version of Soul Breaker
@@ -15604,6 +15604,11 @@ export default {
 			attachedEntity: true
 		}
 	],
+
+	'priest:secrament': [{
+		type: 'STR', file: 'new_secrament/new_secrament/new_secrament',
+		texturePath: 'new_secrament/new_secrament/', attachedEntity: true
+	}],
 
 	ef_duplelight: [
 		{

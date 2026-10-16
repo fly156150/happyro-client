@@ -3,6 +3,11 @@ import SU from './SkillUnitConst.js';
 // Paths verified against the deployed kRO GRF. These are zone layers, not
 // cast/hit animations: their lifetime belongs to the server's skill unit.
 export const fourthJobGroundResources = {
+	UNT_PNEUMATICUS_PROCELLA: [
+		['pneumaticusprocella/pneumaticusprocella/pneumaticusprocella_1', false],
+		['pneumaticusprocella/pneumaticusprocella/pneumaticusprocella_2', false],
+		['pneumaticusprocella/pneumaticusprocella/pneumaticusprocella_3', false]
+	],
 	UNT_RAIN_OF_CRYSTAL: [
 		['rain_of_crystal/rain_of_crystal_attack/rain_of_crystal_attack', false],
 		['rain_of_crystal/rain_of_crystal_attack_bottom/rain_of_crystal_attack_bottom', true]
