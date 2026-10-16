@@ -583,9 +583,7 @@ function onListWinItem(ptk) {
 		openGameMaterials(ptk.Type, ItemListWindowSelection.onItemListWindowSelected);
 		return;
 	}
-	if (!ptk.Type) {
-		ItemListWindowSelection.append();
-	}
+	ItemListWindowSelection.open(ptk.Type);
 }
 
 /**

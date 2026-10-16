@@ -756,6 +756,12 @@ export const fourthJobStatusEffectResources = {
 	}
 };
 
+// Ground ticks have distinct server skill IDs; only reuse the victim impact.
+for (const element of ['WATER', 'GROUND', 'WIND', 'FIRE']) {
+	const name = `BO_ACIDIFIED_ZONE_${element}`;
+	fourthJobEffectResources[`${name}_ATK`] = { hitEffectId: fourthJobEffectResources[name].hitEffectId };
+}
+
 export const fourthJobSkillEffects = {};
 export const fourthJobRenderEffects = {};
 export const fourthJobStatusEffects = {};

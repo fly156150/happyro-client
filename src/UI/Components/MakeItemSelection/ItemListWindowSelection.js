@@ -61,6 +61,15 @@ function _sanitizeHtml(str) {
  * Store Convert Items items
  */
 ItemListWindowSelection.list = [];
+ItemListWindowSelection.type = 0;
+
+ItemListWindowSelection.open = function open(type) {
+	this.type = type;
+	this.append();
+	const title = type === 0 ? '材料转换' : type === 1 ? '元素分析：纯矿转原石' : '元素分析：原石转纯矿';
+	this.setTitle(title);
+	ConvertItems.setTitle(title);
+};
 
 /**
  * Initialize UI
@@ -138,7 +147,7 @@ ItemListWindowSelection.onAppend = function OnAppend() {
 ItemListWindowSelection.setList = function setList(listItems) {
 	const root = ItemListWindowSelection.getRoot();
 	root.querySelector('.container .content').innerHTML = '';
-	this.list = listItems;
+	this.list = listItems.map(item => ({ ...item }));
 
 	for (let i = 0, count = listItems.length; i < count; ++i) {
 		this.addItem(listItems[i]);
@@ -243,7 +252,7 @@ function resizeHeight(height) {
  */
 ItemListWindowSelection.setTitle = function setTitle(title) {
 	const root = ItemListWindowSelection.getRoot();
-	const text = root.querySelector('.head .text');
+	const text = root.querySelector('.titlebar .text');
 	if (text) {
 		text.textContent = title;
 	}
