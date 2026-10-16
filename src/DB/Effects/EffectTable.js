@@ -1,3 +1,4 @@
+import { monkRenderEffects } from '../Skills/MonkEffects.js';
 import { geneticRenderEffects } from '../Skills/GeneticEffects.js';
 import { sorcererRenderEffects } from '../Skills/SorcererEffects.js';
 import { assassinRenderEffects } from '../Skills/AssassinEffects.js';
@@ -72,6 +73,7 @@ const GravityEffects = SongEffects.GravityEffects;
 const EvillandEffects = SongEffects.EvillandEffects;
 
 export default {
+	...monkRenderEffects,
 	...geneticRenderEffects,
 	...fourthJobRenderEffects,
 	...mechanicRenderEffects,
