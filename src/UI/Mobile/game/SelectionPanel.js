@@ -111,9 +111,12 @@ export function createSelectionPanel(body, service) {
 				`选择：${entry.name}`,
 				state.warning || ''
 			);
+			if (state.equipment) {
+				content.prepend(content.querySelector('.interaction-review-summary'));
+			}
 			confirmAction(
 				body,
-				`确认选择「${entry.name}」？`,
+				state.equipment ? '' : `确认选择「${entry.name}」？`,
 				() => {
 					feedback(service.choose(entry.id, chosen), 'error');
 				},

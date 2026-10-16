@@ -119,3 +119,19 @@ export function saveGameSettings(draft) {
 		? '已保存，像素完美需刷新生效'
 		: '设置已保存';
 }
+
+/** Apply audio controls immediately without saving unrelated graphics drafts. */
+export function saveGameAudio(key, value) {
+ if (!['BGM', 'Sound'].includes(key) || typeof value?.play !== 'boolean' || !Number.isFinite(value.volume) || value.volume < 0 || value.volume > 1) return;
+ const wasPlaying = Audio[key].play;
+ Object.assign(Audio[key], value);
+ Audio.save();
+ if (key === 'Sound') {
+  Sound.setVolume(value.volume);
+  if (!value.play) Sound.stop();
+ } else {
+  BGM.setVolume(value.volume);
+  if (!value.play) BGM.stop();
+  else if (!wasPlaying && BGM.filename) BGM.play(BGM.filename);
+ }
+}

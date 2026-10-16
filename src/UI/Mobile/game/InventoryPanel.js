@@ -78,7 +78,13 @@ export function createInventoryPanel(body, actions) {
 		render();
 		list.scrollTop = 0;
 	};
-	$('.inventory-toolbar').append(category, subtype.select, sort);
+	const search = document.createElement('input');
+	search.type = 'search';
+	search.className = 'inventory-search';
+	search.placeholder = '搜索名称或物品 ID';
+	search.setAttribute('aria-label', '搜索背包物品');
+	search.oninput = () => { render(); list.scrollTop = 0; };
+	$('.inventory-toolbar').append(category, subtype.select, sort, search);
 	function renderDetail() {
 		const item = state.find(entry => entry.index === selected?.index && entry.ID === selected?.ID);
 		if (!item) {
@@ -297,7 +303,8 @@ export function createInventoryPanel(body, actions) {
 				itemTypes[category.value]?.includes(item.type)
 		);
 		subtype.update(categoryItems, category.value);
-		const filtered = categoryItems.filter(item => subtype.matches(item));
+		const query = search.value.trim().toLocaleLowerCase();
+		const filtered = categoryItems.filter(item => subtype.matches(item) && (!query || item.name.toLocaleLowerCase().includes(query) || String(item.ID).includes(query)));
 		filtered.sort((a, b) =>
 			sort.value === 'name'
 				? a.name.localeCompare(b.name, 'zh-CN')

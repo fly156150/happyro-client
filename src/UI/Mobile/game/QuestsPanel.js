@@ -3,7 +3,7 @@ import { setListItemText } from './ListItemText.js';
 
 export function createQuestsPanel(body, actions) {
 	body.innerHTML =
-		'<div class="skills-toolbar"><select aria-label="任务分类"><option value="all">全部任务</option><option value="1">进行中</option><option value="0">已暂停</option><option value="2">已完成</option></select></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="任务列表"></div><section class="inventory-detail" aria-label="任务详情"></section></div>';
+		'<div class="skills-toolbar"><select aria-label="任务分类"><option value="all">全部任务</option><option value="1">进行中</option><option value="0">已暂停</option><option value="2">已完成</option></select></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="任务列表"></div><section class="inventory-detail" aria-label="任务详情"></section></div><div class="quest-actions"></div>';
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),
@@ -59,9 +59,9 @@ export function createQuestsPanel(body, actions) {
 		detailKey = key;
 		const content = document.createElement('div');
 		content.className = 'quest-detail-content';
-		const operations = document.createElement('div');
-		operations.className = 'quest-actions';
-		detail.replaceChildren(content, operations);
+		const operations = $('.quest-actions');
+		operations.replaceChildren();
+		detail.replaceChildren(content);
 		if (!q) {
 			content.textContent = '点击任务查看目标、进度和奖励';
 			const placeholder = document.createElement('button');

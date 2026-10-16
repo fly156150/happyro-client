@@ -1,13 +1,13 @@
 /* One dropdown theme for menus and adventure tools. */
 :is(.panel .menu-select, .mobile-adventure .game-select) .game-select-trigger {
-	height: 28px;
-	min-height: 28px;
+	height: var(--panel-control);
+	min-height: var(--panel-control);
 	padding: 3px 7px;
 	border: 1px solid #7e8c99;
 	border-radius: 5px;
 	background: #394753;
 	color: #f5f2e9;
-	font-size: 12px;
+	font-size: var(--panel-text);
 }
 :is(.panel .menu-select, .mobile-adventure .game-select) .game-select-trigger i {
 	border-top-color: #bac4cd;
@@ -21,14 +21,14 @@
 	background: #19212a;
 }
 :is(.panel .menu-select, .mobile-adventure .game-select) .game-select-option {
-	min-height: 28px;
+	min-height: var(--panel-control);
 	padding: 4px 7px;
 	border: 0;
 	border-bottom: 1px solid #35414d;
 	border-radius: 0;
 	background: #19212a;
 	color: #f5f2e9;
-	font-size: 12px;
+	font-size: var(--panel-text);
 }
 :is(.panel .menu-select, .mobile-adventure .game-select) .game-select-option.selected {
 	background: #57452c;
@@ -69,7 +69,7 @@
 :is(.panel .menu-select, .mobile-adventure .game-select),
 .mobile-adventure .settings-form .game-select {
 	height: auto;
-	min-height: 28px;
+	min-height: var(--panel-control);
 }
 
 /* Shortcut choices expand to their text instead of wrapping inside the field width. */

@@ -5,11 +5,12 @@ import { setListItemText } from './ListItemText.js';
 
 export function createSocialPanel(body, service, whisper) {
 	body.innerHTML =
-		'<div class="skills-toolbar"><select aria-label="社交分类"><option value="friends">好友</option><option value="party">队伍</option><option value="guild">公会</option></select><button type="button" data-refresh>刷新公会</button></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="社交列表"></div><section class="inventory-detail" aria-label="社交详情"></section></div>';
+		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="社交列表"></div><section class="inventory-detail" aria-label="社交详情"></section></div><nav class="social-tabs menu-tabs" aria-label="社交分类"><button type="button" data-social-tab="friends" aria-pressed="true">好友</button><button type="button" data-social-tab="party" aria-pressed="false">队伍</button><button type="button" data-social-tab="guild" aria-pressed="false">公会</button></nav><div class="social-footer"><div class="social-footer-actions"></div><button type="button" data-refresh>刷新公会</button></div>';
 	const $ = selector => body.querySelector(selector),
 		detail = $('.inventory-detail'),
 		list = $('.inventory-list');
-	let state,
+	let category = 'friends',
+		state,
 		selected = null,
 		lastKey = '',
 		listKey = '';
@@ -99,11 +100,24 @@ export function createSocialPanel(body, service, whisper) {
 		const send = document.createElement('button');
 		send.type = 'submit';
 		send.textContent = title;
-		if (!autoSave) f.append(send);
+		const footerAction = (category === 'friends' || category === 'party') && fields.length === 0;
+		if (!autoSave) {
+			if (footerAction) {
+				send.type = 'button';
+				send.onclick = () => f.requestSubmit();
+				$('.social-footer-actions').append(send);
+				const updateEnabled = () => {
+					send.disabled = !state.allowed || Object.values(inputs).some(input => !input.value.trim() || !input.validity.valid);
+				};
+				f.addEventListener('input', updateEnabled);
+				f.addEventListener('change', updateEnabled);
+				updateEnabled();
+			} else f.append(send);
+		}
 		f.onsubmit = e => {
 			e.preventDefault();
 			const values = Object.fromEntries(Object.entries(inputs).map(([name, node]) => [name, node.value]));
-			if (confirm) confirmAction(f, `确认${title}？`, () => submit(values));
+			if (confirm) confirmAction(footerAction ? body : f, `确认${title}？`, () => submit(values));
 			else submit(values);
 		};
 		if (autoSave)
@@ -112,11 +126,20 @@ export function createSocialPanel(body, service, whisper) {
 		detail.append(f);
 		return f;
 	}
+	function syncFooter() {
+		if (category === 'guild') return;
+		const actions = $('.social-footer-actions');
+		if (!actions.querySelector('button:not(:disabled)')) {
+			const empty = button('无操作', () => {});
+			empty.disabled = true;
+			actions.replaceChildren(empty);
+		}
+	}
 	function identity(member) {
 		return `${member.AID}:${member.GID || 0}`;
 	}
 	function render() {
-		const type = $('select').value;
+		const type = category;
 		list.dataset.socialType = type;
 		$('[data-refresh]').hidden = type !== 'guild';
 		$('[data-refresh]').disabled = !state.allowed || !state.guild;
@@ -166,6 +189,7 @@ export function createSocialPanel(body, service, whisper) {
 			member,
 			state.allowed,
 			state.hasParty,
+			state.partyName,
 			state.leader,
 			state.options,
 			state.master,
@@ -180,12 +204,26 @@ export function createSocialPanel(body, service, whisper) {
 		if (key === lastKey) return;
 		lastKey = key;
 		detail.replaceChildren();
+		$('.social-footer-actions').replaceChildren();
+		if (type === 'party' && state.hasParty) {
+			const heading = document.createElement('h3');
+			heading.className = 'social-party-heading';
+			const name = document.createElement('span');
+			name.textContent = state.partyName;
+			heading.append(name);
+			if (state.leader) {
+				const role = document.createElement('small');
+				role.textContent = '队长';
+				heading.append(role);
+			}
+			detail.append(heading);
+		}
 		if (member) {
 			const name = member.Name || member.characterName || member.CharName;
-			detail.append(
-				paragraph(name),
-				button('私聊', () => whisper(name))
-			);
+			detail.append(paragraph(name));
+			const chat = button('私聊', () => whisper(name));
+			chat.disabled = !state.allowed;
+			(type === 'guild' ? detail : $('.social-footer-actions')).append(chat);
 			if (type === 'friends') {
 				detail.append(paragraph(member.State === 0 ? '在线' : '离线'));
 				form('删除好友', [], () => act('removeFriend', member), true);
@@ -224,13 +262,13 @@ export function createSocialPanel(body, service, whisper) {
 						true
 					);
 			}
+			syncFooter();
 			return;
 		}
 		if (type === 'friends') form('添加好友', [['name', '角色名']], values => act('addFriend', values));
 		if (type === 'party') {
 			if (!state.hasParty) form('创建队伍', [['name', '队伍名']], values => act('createParty', values), true);
 			else {
-				detail.append(paragraph(state.leader ? '你是队长' : '你是队员'));
 				if (state.leader) {
 					form('邀请入队', [['name', '邀请角色名']], values => act('inviteParty', values));
 					form(
@@ -433,6 +471,7 @@ export function createSocialPanel(body, service, whisper) {
 				form('解散公会', [['name', '输入完整公会名称']], values => act('breakGuild', values), true);
 			} else form('退出公会', [['reason', '离会原因']], values => act('leaveGuild', values), true);
 		}
+		syncFooter();
 	}
 	function update() {
 		state = service.snapshot();
@@ -448,11 +487,14 @@ export function createSocialPanel(body, service, whisper) {
 		}
 		render();
 	}
-	$('select').onchange = () => {
+	for (const tab of body.querySelectorAll('[data-social-tab]')) tab.onclick = () => {
+		category = tab.dataset.socialTab;
+		for (const item of body.querySelectorAll('[data-social-tab]'))
+			item.setAttribute('aria-pressed', String(item === tab));
 		selected = null;
 		lastKey = '';
 		listKey = '';
-		if ($('select').value === 'guild') service.refreshGuild();
+		if (category === 'guild') service.refreshGuild();
 		update();
 	};
 	$('[data-refresh]').onclick = () => service.refreshGuild();

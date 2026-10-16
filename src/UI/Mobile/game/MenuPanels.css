@@ -489,10 +489,10 @@
 
 /* Compact forms and the shared catalog dropdown for every mobile menu. */
 .panel-body input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']) {
-	height: 28px;
-	min-height: 28px;
-	font-size: 12px;
-	padding: 3px 6px;
+	height: var(--panel-control);
+	min-height: var(--panel-control);
+	font-size: var(--panel-text);
+	padding: var(--panel-control-padding);
 	box-sizing: border-box;
 }
 .panel-body textarea {
@@ -905,27 +905,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-}
-
-/* Share the footer row height without changing the original controls. */
-.panel .skills-layout {
-	grid-template-rows: minmax(0, 1fr) auto;
-}
-.panel .skills-layout > section {
-	display: grid;
-	grid-row: 1 / span 2;
-	grid-template-rows: subgrid;
-	row-gap: 8px;
-}
-.panel .skills-layout :is(.skills-footer, .inventory-actions) {
-	margin-top: 0;
-	padding-top: 4px;
-	padding-bottom: 0;
-}
-.panel .skills-layout :is(.skills-reset > button, .inventory-actions > button) {
-	min-height: 28px;
-	padding-top: 3px;
-	padding-bottom: 3px;
 }
 
 /* Chat preview and conversation panel. */

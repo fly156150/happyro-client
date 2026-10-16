@@ -2,7 +2,7 @@ import { confirmAction } from 'UI/Components/Confirmation.js';
 import { menuDensity } from './MenuLayout.js';
 import { showToast } from 'UI/Components/Toast.js';
 
-/** Graphics and audio settings use a draft until saved. */
+/** Valid edits apply immediately; incomplete numeric input stays in its field. */
 export function createSettingsPanel(body, service, initialSection = '画面') {
 	let draft = service.snapshot();
 	let activeSection = initialSection;
@@ -15,7 +15,28 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 	if (!host) window.addEventListener('resize', resize);
 	const notify = message =>
 		showToast(body, message, message === '设置已保存' || message.startsWith('已保存，') ? 'success' : 'error');
+	function apply(group, key, input) {
+		if (input.type === 'number' && (input.value === '' || !input.validity.valid)) return;
+		const value = input.type === 'checkbox' ? input.checked : Number(input.value);
+		const next = service.snapshot();
+		next[group][key] = value;
+		const message = service.save(next);
+		if (message === '设置已保存' || message.startsWith('已保存，')) {
+			draft[group][key] = value;
+			if (message !== '设置已保存') notify(message);
+		} else notify(message);
+	}
+	// Mark every field in the final grid row, including multi-column tablet layouts.
+	const rowObserver = new ResizeObserver(entries => {
+		for (const { target: section } of entries) {
+			if (section.hidden) continue;
+			const rows = [...section.querySelectorAll('.settings-field')];
+			const lastTop = Math.max(...rows.map(row => row.offsetTop));
+			for (const row of rows) row.classList.toggle('settings-last-row', row.offsetTop === lastTop);
+		}
+	});
 	function render() {
+		rowObserver.disconnect();
 		body.replaceChildren();
 		const form = document.createElement('form');
 		form.className = 'settings-form';
@@ -82,7 +103,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 				input.inputMode = 'decimal';
 			}
 			input.oninput = () => {
-				draft.graphics[key] = input.type === 'checkbox' ? input.checked : Number(input.value);
+				apply('graphics', key, input);
 			};
 			field(displayKeys.includes(key) ? '画面' : '特效', key === 'quality' ? '渲染比例（%）' : label, input);
 		}
@@ -100,8 +121,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		};
 		updateScene();
 		previewLines.oninput = () => {
-			draft.interface[settingKey()] = Number(previewLines.value);
-			service.preview?.(draft.interface);
+			apply('interface', settingKey(), previewLines);
 		};
 		field('画面', '聊天行数', previewLines);
 		const previewTabs = document.createElement('input');
@@ -109,8 +129,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		previewTabs.dataset.setting = 'chatPreviewTabs';
 		previewTabs.checked = draft.interface.chatPreviewTabs;
 		previewTabs.oninput = () => {
-			draft.interface.chatPreviewTabs = previewTabs.checked;
-			service.preview?.(draft.interface);
+			apply('interface', 'chatPreviewTabs', previewTabs);
 		};
 		field('画面', '显示聊天分类标签', previewTabs);
 		const duration = document.createElement('input');
@@ -121,7 +140,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		duration.dataset.setting = 'toastDuration';
 		duration.value = draft.interface.toastDuration;
 		duration.oninput = () => {
-			draft.interface.toastDuration = Number(duration.value);
+			apply('interface', 'toastDuration', duration);
 		};
 		field('画面', '通知显示时长（秒）', duration);
 		for (const [key, name] of [
@@ -134,16 +153,19 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 			enabled.dataset.audio = key;
 			enabled.oninput = () => {
 				draft.audio[key].play = enabled.checked;
+				service.audio(key, draft.audio[key]);
 			};
 			field('声音', name, enabled);
 			const volume = document.createElement('input');
 			volume.type = 'range';
+			volume.setAttribute('aria-label', name + '音量');
 			volume.min = 0;
 			volume.max = 100;
 			volume.step = 1;
 			volume.value = draft.audio[key].volume * 100;
 			volume.oninput = () => {
 				draft.audio[key].volume = Number(volume.value) / 100;
+				service.audio(key, draft.audio[key]);
 			};
 			const row = field('声音', name + '音量', volume);
 			row.classList.add('settings-volume');
@@ -172,12 +194,6 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		const buttons = document.createElement('div');
 		buttons.className = 'settings-actions';
 		for (const [label, action] of [
-			[
-				'保存',
-				() => {
-					notify(service.save({ ...draft, pickup: service.snapshot().pickup }));
-				}
-			],
 			[
 				'恢复默认',
 				() => {
@@ -211,10 +227,12 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		footer.append(buttons);
 		form.append(footer);
 		body.append(form);
+		for (const { section } of sections.values()) rowObserver.observe(section);
 	}
 	render();
 	return () => {
 		observer.disconnect();
+		rowObserver.disconnect();
 		window.removeEventListener('resize', resize);
 		service.preview?.(service.snapshot().interface);
 	};

@@ -66,6 +66,7 @@ export function createPartyFriends(config) {
 	 * @var {Array} party list
 	 */
 	const _party = [];
+	let _partyName = '';
 
 	/**
 	 * @var {Object} party setup
@@ -341,6 +342,7 @@ export function createPartyFriends(config) {
 		const root = _root();
 
 		_party.length = 0;
+		_partyName = '';
 		_friends.length = 0;
 
 		if (renewalParty) {
@@ -467,6 +469,7 @@ export function createPartyFriends(config) {
 	Component.getSocialSnapshot = () => ({
 		friends: _friends.map(friend => ({ ...friend })),
 		party: _party.map(member => ({ ...member })),
+		partyName: _partyName,
 		options: { ..._options }
 	});
 
@@ -610,6 +613,7 @@ export function createPartyFriends(config) {
 		 * Add members to party
 		 */
 		Component.setParty = function setParty(name, members) {
+			_partyName = name;
 			const root = _root();
 
 			const partyName = root.querySelector('.partyname');
@@ -848,6 +852,7 @@ export function createPartyFriends(config) {
 				_detachedMembers = {};
 
 				_party.length = 0;
+				_partyName = '';
 
 				const partyContent = root.querySelector('.content .party');
 				if (partyContent) partyContent.innerHTML = '';
@@ -986,6 +991,7 @@ export function createPartyFriends(config) {
 		 * @param {Array} member list
 		 */
 		Component.setParty = function setParty(name, members) {
+			_partyName = name;
 			const root = _root();
 
 			const partyName = root.querySelector('.partyname');
@@ -1114,6 +1120,7 @@ export function createPartyFriends(config) {
 
 			if (AID === Session.AID) {
 				_party.length = 0;
+				_partyName = '';
 
 				const partyContent = root.querySelector('.content .party');
 				if (partyContent) partyContent.innerHTML = '';

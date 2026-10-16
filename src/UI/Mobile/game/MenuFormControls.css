@@ -1,0 +1,43 @@
+/* Menu forms share dimensions; dialogs and multiline editors own their sizing. */
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+ :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not([type='file']), select, .game-select-trigger):not(:where(.ui-confirm *)) {
+ box-sizing: border-box;
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ max-height: var(--panel-control);
+ font-size: var(--panel-text);
+ line-height: normal;
+ padding-block: 3px;
+ padding-inline: 8px;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+ :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not([type='file']), select, .game-select-trigger):not(:where(.ui-confirm *, .container-quantity-group *, .quantity-stepper *, .setting-number *, .management-form *, .input-affix *)) {
+ border: 1px solid #657584;
+ border-radius: 6px;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure) .game-select-trigger > span {
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+}
+/* Buttons beside fields use the field height; list items and icon buttons do not. */
+:host([data-menu-density][data-orientation]) .panel[data-view]
+ :is(.inventory-toolbar, .container-toolbar, .container-filters, .storage-modes, .skills-toolbar,
+ .mail-toolbar, .mail-actions, .mail-field, .mail-item-filters, .social-form, .companion-name, .container-quantity-group)
+ > button:not(:where(.ui-confirm *)) {
+ box-sizing: border-box;
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ padding-block: 3px;
+ font-size: var(--panel-text);
+ line-height: normal;
+}
+/* Quantity segments retain their shared borders and fit the group height. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .container-quantity-group > :is(input, button) {
+ height: 100%;
+ min-height: 0;
+ max-height: none;
+}

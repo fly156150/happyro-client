@@ -1,3 +1,5 @@
+import menuFormControlsCSS from './MenuFormControls.css?raw';
+import menuChromeCSS from './MenuChrome.css?raw';
 import menuActionButtonsCSS from './MenuActionButtons.css?raw';
 import vendingCSS from './VendingPanel.css?raw';
 import companionLayoutCSS from './CompanionLayout.css?raw';
@@ -83,7 +85,7 @@ ${menuContentComponentsCSS}
 ${companionLayoutCSS}
 ${menuNavigationCSS}
 ${menuActionButtonsCSS}
-${vendingCSS}</style>${html}`;
+${vendingCSS}${menuChromeCSS}${menuFormControlsCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const orientationHint = Preferences.get('OrientationHint', { dismissed: false }, 1.0);

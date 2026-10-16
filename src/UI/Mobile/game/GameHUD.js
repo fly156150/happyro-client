@@ -9,7 +9,7 @@ import { createGameAutoCombatRuntime } from 'UI/Game/GameAutoCombatRuntime.js';
 import { openGameCompanions } from 'UI/Game/GameCompanions.js';
 import { openGamePet } from 'UI/Game/GamePet.js';
 import { openGameMail, gameMailUnread } from 'UI/Game/GameMail.js';
-import { graphicsFields, settingsSnapshot, saveGameSettings } from 'UI/Game/GameSettings.js';
+import { graphicsFields, settingsSnapshot, saveGameSettings, saveGameAudio } from 'UI/Game/GameSettings.js';
 import { requestGameBank } from 'UI/Game/GameBank.js';
 import { showOwnedVending } from 'UI/Game/GameVending.js';
 import { createGameSocial } from 'UI/Game/GameSocial.js';
@@ -186,7 +186,8 @@ HUD.onAppend = function () {
 		settings: {
 			fields: graphicsFields,
 			snapshot: settingsSnapshot,
-			save: saveGameSettings
+			save: saveGameSettings,
+			audio: saveGameAudio
 		},
 		openCompanion: kind => openGameCompanions(kind, () => modal && !previousFreeze),
 		openPet: () => openGamePet(() => modal && !previousFreeze),

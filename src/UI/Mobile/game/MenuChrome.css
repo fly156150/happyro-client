@@ -1,0 +1,420 @@
+/* One touch-menu chrome contract, shared by HUD and adventure tools. */
+:host([data-menu-density]) {
+ --menu-footer-padding: 6px;
+ --menu-footer-height: calc(var(--panel-control) + 2 * var(--menu-footer-padding) + 1px);
+ --menu-header-padding: 6px;
+}
+:host([data-menu-density='spacious']) {
+ --menu-footer-padding: 16px;
+ --menu-header-padding: 12px;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure) {
+ --game-tools-footer-height: var(--menu-footer-height);
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+ :is(.attribute-footer, .social-footer, .skills-footer, .inventory-actions, .equipment-actions, .shortcut-clear, .quest-actions, .interaction-footer, .settings-footer,
+ .shop-footer, .npc-actions, .companion-footer, .mail-footer, .mail-browser-footer, .mail-pagination,
+ .character-actions, .catalog-action-panel, .summon-panel, .catalog-pagination, .monster-pagination) {
+ box-sizing: border-box;
+ min-height: var(--menu-footer-height);
+ height: auto;
+ flex: 0 0 auto;
+ padding-block: var(--menu-footer-padding);
+ align-items: center;
+ align-content: center;
+}
+/* Nested action groups belong to their owning footer; do not add a second bar. */
+:host([data-menu-density][data-orientation]) .panel[data-view]
+ :is(.companion-footer, .skills-footer, .interaction-footer, .shop-footer, .mail-footer, .npc-actions) .inventory-actions {
+ min-height: 0;
+ padding-block: 0;
+ margin-block: 0;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+ :is(.attribute-footer, .social-footer, .skills-footer, .inventory-actions, .equipment-actions, .shortcut-clear, .quest-actions, .interaction-footer, .settings-footer,
+ .shop-footer, .npc-actions, .companion-footer, .mail-footer, .mail-browser-footer, .mail-pagination,
+ .character-actions, .catalog-action-panel, .summon-panel, .catalog-pagination, .monster-pagination) button:not(.game-select-option) {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ box-sizing: border-box;
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ line-height: 1.2;
+ margin-block: 0;
+}
+/* Footers own bottom padding, rather than accumulating it with the body. */
+:host([data-menu-density][data-orientation]) .panel[data-view] > .panel-body:has(
+ > :is(.social-footer, .skills-footer, .quest-actions, .attribute-footer, .equipment-actions, .inventory-actions, .interaction-footer, .shop-footer, .npc-actions, .companion-footer, .mail-footer, .mail-layout, .settings-form, .inventory-layout, .shortcut-layout)) {
+ padding-bottom: 0;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view] > header, .mobile-adventure .adventure-header) {
+ box-sizing: border-box;
+ min-height: calc(var(--panel-control) + 2 * var(--menu-header-padding) + 1px);
+ padding-block: var(--menu-header-padding);
+ align-items: center;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view] > header, .mobile-adventure .adventure-header)
+ :is(.panel-navigation, .menu-tabs, .attribute-toolbar, .adventure-tabs) {
+ align-self: center;
+ align-items: center;
+ margin-block: 0;
+ padding-block: 0;
+ --menu-tab-height: var(--panel-control);
+}
+:host([data-menu-density][data-orientation]) .adventure-header > button {
+ align-self: center;
+ margin-block: 0;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view] header .panel-navigation {
+ display: flex;
+ align-items: center;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view] .shortcut-browser {
+ display: grid;
+ grid-template-rows: auto minmax(0, 1fr);
+ align-content: stretch;
+ gap: 4px;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view] .shortcut-filters {
+ margin-block: 0;
+ padding-block: 0;
+ align-self: stretch;
+ align-items: center;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view] .shortcut-choices {
+ margin-top: 0;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='selection'] .equipment-filters {
+ width: calc((100% - 12px) / 2);
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='selection'] .inventory-layout {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 12px;
+}
+.panel[data-view] .equipment-selection .ui-confirm-body > p:empty { display: none; }
+.panel[data-view] .equipment-selection .interaction-review-summary:first-child {
+ border-top: 0;
+ padding-top: 0;
+}
+.panel[data-view] .settings-form .settings-field input[type='range'] {
+ appearance: auto;
+ -webkit-appearance: auto;
+ touch-action: pan-y;
+ cursor: pointer;
+}
+
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure) button[hidden] { display: none; }
+/* A companion footer may contain two action rows; each uses the same control height. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .companion-footer {
+ align-items: stretch;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view] :is(.inventory-detail, .shortcut-editor):has(> :is(.inventory-actions, .quest-actions, .shortcut-clear)) {
+ padding-bottom: 0;
+}
+/* Pagination inside the mail footer must not contribute a second footer's padding. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .mail-footer .mail-pagination {
+ min-height: 0;
+ padding-block: 0;
+ border-top: 0;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+ :is(.ui-confirm-actions, .pickup-picker > footer) {
+ box-sizing: border-box;
+ min-height: var(--menu-footer-height);
+ padding-block: var(--menu-footer-padding);
+ align-items: center;
+ align-content: center;
+}
+:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+ :is(.ui-confirm-actions, .pickup-picker > footer) button {
+ box-sizing: border-box;
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ line-height: 1.2;
+}
+/* Phone portrait picker flattens its footer; the action row owns the spacing. */
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .pickup-picker .pickup-picker-actions {
+ min-height: var(--menu-footer-height);
+ box-sizing: border-box;
+ padding-block: var(--menu-footer-padding);
+ align-items: center;
+}
+
+/* Keep the final settings row clear of the section's outer border. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-section {
+ padding-block: 6px;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-field {
+ box-sizing: border-box;
+ min-height: calc(var(--panel-control) + 12px);
+ padding-block: 6px;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-field.settings-last-row {
+ border-bottom-color: transparent;
+}
+
+/* These bars were block containers: alignment requires a flex formatting context. */
+:host([data-menu-density][data-orientation]) .panel[data-view] :is(.shortcut-clear, .settings-footer) {
+ display: flex;
+ align-items: center;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-actions {
+ width: 100%;
+ align-items: center;
+}
+
+/* A single destructive reset action keeps the standard trailing alignment. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .settings-actions { justify-content: flex-end; }
+.panel[data-view] .settings-actions button { flex: 0 0 auto; }
+
+/* Shared action rows use one padding owner, even when their parent is flattened. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .companion-footer .inventory-actions {
+ flex: 0 0 auto;
+ border: 0;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='companions'] [data-companion-kind='mercenary'] .companion-footer {
+ flex-direction: row;
+ justify-content: flex-end;
+ align-items: center;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='mail'] .mail-footer-actions {
+ margin: 0;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-footer-actions {
+ box-sizing: border-box;
+ min-height: var(--menu-footer-height);
+ padding-block: var(--menu-footer-padding);
+ align-items: center;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='mail'] .mail-pagination {
+ order: 2;
+ margin: 0;
+}
+/* Skills have a real shared footer instead of three independent grid fragments. */
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-layout {
+ grid-template-rows: minmax(0, 1fr);
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-layout > section {
+ grid-row: auto;
+ display: flex;
+ flex-direction: column;
+ padding-bottom: 8px;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: space-between;
+ gap: 6px;
+ margin: 0;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer > [data-skill-points] { order: 0; }
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-reset { order: 1; padding: 0; min-height: 0; }
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-action-slot { order: 2; }
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer .inventory-actions {
+ display: flex;
+ flex-wrap: nowrap;
+ border: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] > .panel-body {
+ grid-template-columns: minmax(0, 1fr);
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-layout > section { display: contents; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-footer { grid-row: 4; grid-column: 1; }
+
+
+/* Quest operations stay outside both independently scrolling content panels. */
+:host([data-menu-density][data-orientation]) .panel[data-view='quests'] > .panel-body {
+ gap: 6px;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='quests'] .quest-actions {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: flex-end;
+ gap: 6px;
+ border-top: 1px solid #52606d;
+ margin: 0;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='quests'] .inventory-detail {
+ padding-bottom: 8px;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs {
+ display: flex;
+ width: 100%;
+ min-width: 0;
+ gap: 0;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs > button { flex: 1; }
+/* Companion content already has a gap; the footer must not add an outer margin. */
+:host([data-menu-density][data-orientation]) .panel[data-view] .companion-footer { margin: 0; }
+/* Adventure uses shared desktop markup, but touch dimensions are owned here. */
+:host([data-menu-density][data-orientation]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer) {
+ box-sizing: border-box;
+ flex: 0 0 auto;
+ height: auto;
+ min-height: var(--menu-footer-height);
+ padding-block: var(--menu-footer-padding);
+ align-items: center;
+}
+:host([data-menu-density][data-orientation]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer) :is(button:not(.game-select-option), input, select) {
+ box-sizing: border-box;
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ margin-block: 0;
+}
+/* Phone portrait pagers live in the search row, not in the action footer. */
+:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure.game-tools-window
+ :is(.catalog-pagination, .monster-pagination) {
+ min-height: 0;
+ height: 100%;
+ padding-block: 0;
+}
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-tabs {
+ order: 1;
+ width: 100%;
+ flex-shrink: 0;
+ border-top: 1px solid #52606d;
+ padding-top: 6px;
+ margin: 6px 0 0;
+}
+
+/* Social follows equipment: framed content, full-width categories, then actions. */
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs {
+ flex-shrink: 0;
+ border-top: 1px solid #52606d;
+ padding-top: 6px;
+ margin: 0;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer {
+ display: flex;
+ justify-content: flex-end;
+ gap: 6px;
+ border-top: 1px solid #52606d;
+ margin: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] > .panel-body {
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-tabs { grid-row: 3; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-footer { grid-row: 4; }
+
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-footer {
+ order: 2;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer-actions {
+ display: contents;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer {
+ flex-wrap: wrap;
+}
+.panel[data-view='social'] .social-form:empty { display: none; }
+/* Bottom category rows: 6px above controls, with the parent's 6px gap below. */
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='equipment'] > .panel-body,
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] > .panel-body,
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form {
+ row-gap: 6px;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='equipment'] .equipment-tabs,
+:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs,
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-tabs {
+ align-items: center;
+ padding-block: 6px 0;
+ margin-block: 0;
+}
+
+.panel[data-view='social'] .social-party-heading {
+ display: flex;
+ align-items: center;
+ justify-content: flex-start;
+ gap: 8px;
+ margin: 0 0 8px;
+ padding: 6px 8px;
+ border-left: 3px solid #ceaa70;
+ border-radius: 3px;
+ background: #2b3540;
+ color: #ffe1ae;
+ font-size: var(--panel-heading);
+ font-weight: 600;
+}
+.panel[data-view='social'] .social-party-heading > span { min-width: 0; overflow-wrap: anywhere; }
+.panel[data-view='social'] .social-party-heading > small { color: #f5f2e9; flex-shrink: 0; font-size: var(--panel-label); font-weight: normal; }
+
+/* Landscape inventory: full-width actions below the two framed content panes. */
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-toolbar {
+ grid-template-columns: repeat(6, minmax(0, 1fr));
+ column-gap: var(--panel-gap);
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='inventory'] .inventory-search {
+ display: block;
+ width: 100%;
+ min-width: 0;
+ box-sizing: border-box;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-layout {
+ grid-template-rows: minmax(0, 1fr) auto;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-detail { display: contents; }
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] :is(.inventory-item-description, .inventory-empty-message) {
+ grid-column: 2;
+ grid-row: 1;
+ min-height: 0;
+ overflow: auto;
+ box-sizing: border-box;
+ padding: var(--panel-gap);
+ border: 1px solid #52606d;
+ border-radius: 10px;
+ background: #19212a;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-list { grid-row: 1; grid-column: 1; }
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-actions {
+ grid-row: 2;
+ grid-column: 1 / -1;
+ justify-content: flex-end;
+ border-top: 1px solid #52606d;
+ margin: 0;
+}
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-empty-actions { display: flex; }
+
+:host([data-menu-density][data-orientation='landscape']) .panel[data-view='inventory'] .inventory-search {
+ grid-column: 4 / 7;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='inventory'] .inventory-search {
+ grid-column: 1 / -1;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer > * {
+ flex: 0 0 auto;
+ align-self: center;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer .inventory-actions {
+ padding: 0;
+ min-height: 0;
+ margin: 0;
+}
+
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer-buttons {
+ display: flex;
+ align-items: center;
+ justify-content: flex-end;
+ flex-wrap: wrap;
+ gap: 6px;
+ margin-left: auto;
+}
+:host([data-menu-density][data-orientation]) .panel[data-view='skills'] .skills-footer-buttons button {
+ width: auto;
+ padding: 3px 8px;
+ font-size: var(--panel-label);
+ white-space: nowrap;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='inventory'] .inventory-search {
+ grid-row: 1;
+}
+:host([data-menu-density][data-orientation='portrait']) .panel[data-view='inventory'] .inventory-toolbar > :is(select, .menu-select) {
+ grid-row: 2;
+}

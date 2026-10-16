@@ -209,7 +209,7 @@
 }
 
 /* Category controls share spacing and grouped increments across touch layouts. */
-:host([data-menu-density]) .panel .settings-form > .settings-tabs { margin-bottom: 8px; }
+:host([data-menu-density]) .panel .settings-form > .settings-tabs { margin-bottom: 4px; }
 :host([data-menu-density]) .panel > header.has-attribute-tabs > h2 {
  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
  overflow: hidden; clip-path: inset(50%);
@@ -541,11 +541,7 @@
 }
 :host([data-menu-density][data-orientation='portrait']) .panel[data-view='equipment'] .equipment-actions { order: 3; }
 
-/* Inventory and equipment share the same compact portrait action-row geometry. */
-:host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='inventory'], [data-view='equipment']) .inventory-actions {
- box-sizing: border-box; min-height: calc(var(--panel-control) + 7px);
- margin: 0; padding: 6px 0 0; align-items: center; gap: 6px;
-}
+/* Action-row geometry is owned by MenuChrome.css. */
 :host([data-phone-screen][data-orientation='portrait']) .panel:is([data-view='inventory'], [data-view='equipment']) .inventory-actions > button {
  box-sizing: border-box; height: var(--panel-control); min-height: var(--panel-control); margin: 0;
  padding: var(--panel-control-padding);
@@ -583,12 +579,12 @@
 }
 
 /* Phone portrait skills: details, list, filters, points and a stable action row. */
-.skills-placeholder-action, .skills-empty-actions { display: none; }
+.skills-placeholder-action { display: inline-flex; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] > .panel-body {
- display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
- grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto 1px auto; gap: 6px;
+ display: grid; grid-template-columns: minmax(0, 1fr);
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto; gap: 6px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] :is(.skills-layout, .skills-layout > section, .skills-footer) { display: contents; }
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] :is(.skills-layout, .skills-layout > section) { display: contents; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] :is(.inventory-item-description, .skills-empty-message, .inventory-list) {
  grid-column: 1 / -1; min-height: 0; min-width: 0; overflow-y: auto;
  box-sizing: border-box; border: 1px solid #52606d; border-radius: 10px; padding: 8px; background: #19212a;
@@ -608,22 +604,8 @@
  border: 1px solid #65717b; border-radius: 6px; overflow: hidden; white-space: nowrap;
  background: #19212a; font-weight: 400;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-reset {
- grid-row: 5; grid-column: 2; justify-self: end; align-self: center;
-}
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .inventory-actions {
- display: flex; flex-wrap: nowrap; grid-row: 5; grid-column: 3; justify-content: flex-start; align-items: center;
- gap: 6px; margin: 0; padding: 0; border: 0;
-}
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] :is(.skills-reset, .inventory-actions) > button {
- flex: 0 0 auto; box-sizing: border-box; height: var(--panel-control); min-height: var(--panel-control);
- padding: 3px 4px; margin: 0; font-size: var(--panel-label);
-}
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] .skills-placeholder-action { display: inline-flex; align-items: center; justify-content: center; }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] > .panel-body::after {
- content: ''; grid-row: 4; grid-column: 1 / -1; background: #52606d;
-}
 :host([data-phone-screen]) .panel .point-counter > span {
  display: flex; align-items: center; justify-content: center; padding: 0 4px;
 }
@@ -634,9 +616,6 @@
  min-width: 24px; font-variant-numeric: tabular-nums; color: #f5f2e9;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='skills'] [data-skill-points] {
- grid-row: 5; grid-column: 1; justify-self: end;
-}
 
 /* Phone portrait browsing menus use framed details above lists and bottom filters. */
 .portrait-menu-placeholder { display: none; }
@@ -670,8 +649,6 @@
  height: var(--panel-control); min-height: var(--panel-control); margin: 0; padding: 3px 6px;
 }
 
-:host([data-phone-screen][data-orientation='landscape']) .panel[data-view='skills'] .skills-footer > [data-skill-points] { order: 1; }
-:host([data-phone-screen][data-orientation='landscape']) .panel[data-view='skills'] .skills-footer > .skills-reset { order: 2; }
 
 /* Explicit list rules stay scoped to their own menus. */
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .inventory-list { grid-template-columns: minmax(0, 1fr); }
@@ -707,8 +684,7 @@
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='cart'] .interaction-footer > button { height: var(--interaction-control); min-height: var(--interaction-control); margin: 0; }
 :host([data-phone-screen][data-orientation='portrait']) .panel[data-view='quests'] .quest-actions {
  grid-row: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px;
- box-sizing: border-box; min-height: calc(var(--panel-control) + 7px);
- border-top: 1px solid #52606d; padding: 6px 0 0; margin: 0;
+ border-top: 1px solid #52606d; margin: 0;
 }
 
 /* Keep tablet wording while phone counters use the compact skills presentation. */
