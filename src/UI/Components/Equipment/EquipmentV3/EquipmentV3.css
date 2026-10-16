@@ -195,24 +195,32 @@
 #EquipmentV3 .cartitems {
 	position: absolute;
 	top: 65px;
-	left: 14px;
-	width: 36px;
-	height: 36px;
+	left: 5px;
+	width: 46px;
+	height: 20px;
 	background-repeat: no-repeat;
 	background-color: transparent;
+	padding: 0 4px;
 	border: none;
 	display: none;
+	font-size: 12px;
+	white-space: nowrap;
+	line-height: 18px;
 }
 #EquipmentV3 .removeOption {
 	position: absolute;
 	top: 90px;
-	left: 12px;
-	width: 36px;
-	height: 36px;
+	left: 5px;
+	width: 46px;
+	height: 20px;
 	background-repeat: no-repeat;
 	background-color: transparent;
+	padding: 0 4px;
 	border: none;
 	display: none;
+	font-size: 12px;
+	white-space: nowrap;
+	line-height: 18px;
 }
 
 #EquipmentV3 .footer {

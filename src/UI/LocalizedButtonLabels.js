@@ -1,4 +1,13 @@
 const BUTTON_LABELS = Object.freeze({
+	'btn_items_off.bmp': '物品',
+	'btn_off.bmp': '解除',
+	'btn_status_off.bmp': '素质',
+	'btn_equip_off.bmp': '装备',
+	'btn_skill_off.bmp': '技能',
+	'btn_option_off.bmp': '设置',
+	'btn_friend_off.bmp': '好友',
+	'btn_map_off.bmp': '地图',
+	'btn_dialog_off.bmp': '聊天',
 	'btn_ok.bmp': '确定',
 	'btn_cancel.bmp': '取消',
 	'btn_close.bmp': '关闭',
