@@ -308,14 +308,14 @@ export const fourthJobEffectResources = {
 		]
 	},
 	MT_AXE_STOMP: {
-		effectId: [
+		successEffectId: [
 			'new_axe_stomp/new_axe_stomp/new_axe_stomp',
 			'new_axe_stomp/new_axe_stomp_bottom/new_axe_stomp_bottom'
 		],
 		hitEffectId: 'new_axe_stomp/new_axe_stomp_hit/new_axe_stomp_hit'
 	},
 	MT_RUSH_QUAKE: {
-		effectId: [
+		successEffectId: [
 			'new_rush_quake/new_rush_quake/new_rush_quake',
 			'new_rush_quake/new_rush_quake_bottom/new_rush_quake'
 		],

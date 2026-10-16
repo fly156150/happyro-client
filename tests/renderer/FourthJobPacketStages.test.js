@@ -31,6 +31,23 @@ Object.assign(SkillEffect, fourthJobSkillEffects);
 afterEach(() => vi.restoreAllMocks());
 
 describe('fourth-job packet effect stages', () => {
+ it.each(['MT_AXE_STOMP', 'MT_RUSH_QUAKE'])('plays %s activation once and preserves each victim hit', name => {
+  const spam = vi.spyOn(EffectManager, 'spam').mockImplementation(() => {});
+  const id = SK[name];
+  EffectManager.spamSkill(id, 1, null, 1000, 1);
+  EffectManager.spamSkillSuccess(id, 1, 1000, 1);
+  expect(spam).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
+   effectId: fourthJobSkillEffects[id].successEffectId
+  }));
+  spam.mockClear();
+  for (const victim of [2, 3, 4]) {
+   EffectManager.spamSkill(id, victim, null, 1100, 1);
+   EffectManager.spamSkillHit(id, victim, 1100, 1);
+  }
+  expect(spam).toHaveBeenCalledTimes(3);
+  expect(spam.mock.calls.every(([effect]) => effect.effectId === fourthJobSkillEffects[id].hitEffectId)).toBe(true);
+ });
+
  it('draws Midnight Fallen at the ground notification position, without replaying it on damage', () => {
   const spam = vi.spyOn(EffectManager, 'spam').mockImplementation(() => {});
   EffectManager.spamSkill(SK.NW_MIDNIGHT_FALLEN, 1, [120, 130, 0], 1000, 1);
