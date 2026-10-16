@@ -1,3 +1,4 @@
+import { crusaderSkillEffects } from './CrusaderEffects.js';
 import { wizardSkillEffects } from './WizardEffects.js';
 import { knightSkillEffects } from './KnightEffects.js';
 import { mechanicSkillEffects } from './MechanicEffects.js';
@@ -1162,5 +1163,5 @@ SkillEffect[SK.GD_RESTORE] = {}; //Restoration
 SkillEffect[SK.GD_EMERGENCYCALL] = {}; //Urgent Call
 SkillEffect[SK.GD_ITEMEMERGENCYCALL] = {}; //Item Emergency Call
 
-Object.assign(SkillEffect, fourthJobSkillEffects, wizardSkillEffects);
+Object.assign(SkillEffect, fourthJobSkillEffects, wizardSkillEffects, crusaderSkillEffects);
 export default SkillEffect;

@@ -1,3 +1,4 @@
+import { crusaderRenderEffects } from '../Skills/CrusaderEffects.js';
 /**
  * @module DB/Effects/EffectTable
  *
@@ -72,6 +73,7 @@ export default {
 	...mechanicRenderEffects,
 	...knightRenderEffects,
 	...wizardRenderEffects,
+	...crusaderRenderEffects,
 	...servantWeaponRenderEffects,
 	...fourthJobGroundEffects,
 	/// Common parameters
