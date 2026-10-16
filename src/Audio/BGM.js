@@ -12,6 +12,7 @@
 
 import Client from 'Core/Client.js';
 import Preferences from 'Preferences/Audio.js';
+import Platform from 'UI/Platform.js';
 
 let _playToken = 0;
 
@@ -24,6 +25,30 @@ class BGM {
 	static extension = 'mp3';
 	static isInit = false;
 	static audio = document.createElement('audio');
+	static context = null;
+	static gain = null;
+
+	/** Mobile media-element volume is system-controlled; use an audio gain instead. */
+	static prepareOutput() {
+		if (!Platform.isMobile || BGM.context) return;
+		BGM.audio.crossOrigin = 'anonymous';
+		BGM.context = new AudioContext({ latencyHint: 'playback' });
+		const source = BGM.context.createMediaElementSource(BGM.audio);
+		BGM.gain = BGM.context.createGain();
+		BGM.gain.gain.value = BGM.volume;
+		source.connect(BGM.gain);
+		BGM.gain.connect(BGM.context.destination);
+		BGM.audio.volume = 1;
+	}
+
+	static activate() {
+		if (!Platform.isMobile || document.hidden || !Preferences.BGM.play) return;
+		BGM.prepareOutput();
+		if (BGM.context.state !== 'running') {
+			BGM.context.resume().catch(error => console.warn('[BGM] Cannot resume audio:', error));
+		}
+	}
+
 
 	// Cache to persist playback position when switching BGMs
 	static cache = {
@@ -92,6 +117,7 @@ class BGM {
 	 */
 	static play(filename) {
 		if (!filename) return;
+		BGM.activate();
 		if (filename.match(/bgm/i)) {
 			filename = filename.match(/\w+\.mp3/i)?.toString();
 			if (!filename) return;
@@ -138,8 +164,9 @@ class BGM {
 		const isSameBGM = BGM.cache.filename === BGM.filename;
 		const targetTime = isSameBGM ? BGM.cache.currentTime : 0;
 
+		BGM.prepareOutput();
 		BGM.audio.src = url;
-		BGM.audio.volume = BGM.volume;
+		BGM.audio.volume = BGM.gain ? 1 : BGM.volume;
 
 		// Restore playback position if the BGM is the same
 		BGM.audio.currentTime = targetTime;
@@ -177,11 +204,25 @@ class BGM {
 		Preferences.BGM.volume = volume;
 		Preferences.save();
 
-		BGM.audio.volume = volume;
+		BGM.prepareOutput();
+		if (BGM.gain) {
+			BGM.gain.gain.value = volume;
+			BGM.activate();
+		} else BGM.audio.volume = volume;
 	}
 }
 
 /**
  * Export
  */
+// Capture still receives gestures consumed by menu controls inside shadow roots.
+document.addEventListener('pointerup', () => BGM.activate(), true);
+document.addEventListener('keydown', () => BGM.activate(), true);
+document.addEventListener('visibilitychange', () => {
+	if (BGM.context && !document.hidden) BGM.activate();
+});
+window.addEventListener('pageshow', () => {
+	if (BGM.context) BGM.activate();
+});
+
 export default BGM;

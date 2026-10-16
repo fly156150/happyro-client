@@ -54,6 +54,7 @@ class SoundManager {
 		Preferences.Sound.volume = Math.max(0, Math.min(volume, 1));
 		Preferences.save();
 		player.setVolume(Preferences.Sound.play ? Preferences.Sound.volume : 0);
+		if (Preferences.Sound.play && !document.hidden) player.activate();
 	}
 }
 
