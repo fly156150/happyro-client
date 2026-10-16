@@ -1,4 +1,5 @@
 import DB from 'DB/DBManager.js';
+import ItemType from 'DB/Items/ItemType.js';
 import Client from 'Core/Client.js';
 
 /** Inventory and storage use the same collection image and optional card illustration. */
@@ -11,7 +12,7 @@ export function createItemPreviewLoader() {
 	return async item => {
 		const info = DB.getItemInfo(item.ITID);
 		const resource = item.IsIdentified ? info.identifiedResourceName : info.unidentifiedResourceName;
-		const illustration = item.IsIdentified && info.illustResourcesName;
+		const illustration = item.type === ItemType.CARD && item.IsIdentified && info.illustResourcesName;
 		const [image, art] = await Promise.all([
 			resource ? load(`${DB.INTERFACE_PATH}collection/${resource}.bmp`) : '',
 			illustration ? load(`${DB.INTERFACE_PATH}cardbmp/${illustration}.bmp`) : ''
