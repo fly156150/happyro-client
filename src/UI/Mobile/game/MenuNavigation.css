@@ -77,11 +77,11 @@
 :host([data-menu-density]) .chat-preview.without-tabs [data-chat-collapse] { border-radius: 6px 6px 0 0; }
 
 /* NPC headers have no tabs: center their actions within symmetric vertical padding. */
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='npc'] > header {
  padding-block: 4px;
  align-items: center;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header > .panel-navigation {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='npc'] > header > .panel-navigation {
  align-self: center;
  margin-bottom: 0;
 }
@@ -94,7 +94,7 @@
 }
 
 /* Reserve the action row even while the server hides the NPC close button. */
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='npc'] > header > .panel-navigation {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='npc'] > header > .panel-navigation {
  min-height: var(--npc-control);
 }
 

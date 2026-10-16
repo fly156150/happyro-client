@@ -10,11 +10,11 @@
  --menu-header-padding: 12px;
 }
 
-:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure) {
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view], .mobile-adventure) {
  --game-tools-footer-height: var(--menu-footer-height);
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view]
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view]
  .menu-footer {
  box-sizing: border-box;
  min-height: var(--menu-footer-height);
@@ -25,13 +25,13 @@
  align-content: center;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .menu-footer .menu-action-group {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-footer .menu-action-group {
  min-height: 0;
  padding-block: 0;
  margin-block: 0;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view]
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view]
  :is(.menu-footer, .menu-action-group, .menu-footer--portrait) button:not(.game-select-option) {
  display: inline-flex;
  align-items: center;
@@ -43,18 +43,18 @@
  margin-block: 0;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] > .panel-body:has(.menu-footer) {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] > .panel-body:has(.menu-footer) {
  padding-bottom: 0;
 }
 
-:host([data-menu-density][data-orientation]) :is(.panel[data-view] > header, .mobile-adventure .adventure-header) {
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view] > header, .mobile-adventure .adventure-header) {
  box-sizing: border-box;
  min-height: calc(var(--panel-control) + 2 * var(--menu-header-padding) + 1px);
  padding-block: var(--menu-header-padding);
  align-items: center;
 }
 
-:host([data-menu-density][data-orientation]) :is(.panel[data-view] > header, .mobile-adventure .adventure-header)
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view] > header, .mobile-adventure .adventure-header)
  :is(.panel-navigation, .menu-tabs, .attribute-toolbar, .adventure-tabs) {
  align-self: center;
  align-items: center;
@@ -63,25 +63,25 @@
  --menu-tab-height: var(--panel-control);
 }
 
-:host([data-menu-density][data-orientation]) .adventure-header > button {
+:host([data-menu-density][data-menu-arrangement]) .adventure-header > button {
  align-self: center;
  margin-block: 0;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] header .panel-navigation {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] header .panel-navigation {
  display: flex;
  align-items: center;
 }
 
-:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure) button[hidden] {
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view], .mobile-adventure) button[hidden] {
  display: none;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] :is(.inventory-detail, .shortcut-editor):has(> .menu-footer) {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] :is(.inventory-detail, .shortcut-editor):has(> .menu-footer) {
  padding-bottom: 0;
 }
 
-:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view], .mobile-adventure)
  :is(.ui-confirm-actions, .pickup-picker > footer) {
  box-sizing: border-box;
  min-height: var(--menu-footer-height);
@@ -90,7 +90,7 @@
  align-content: center;
 }
 
-:host([data-menu-density][data-orientation]) :is(.panel[data-view], .mobile-adventure)
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view], .mobile-adventure)
  :is(.ui-confirm-actions, .pickup-picker > footer) button {
  box-sizing: border-box;
  height: var(--panel-control);
@@ -98,7 +98,7 @@
  line-height: 1.2;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .pickup-picker .pickup-picker-actions {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .pickup-picker .pickup-picker-actions {
  min-height: var(--menu-footer-height);
  box-sizing: border-box;
  padding-block: var(--menu-footer-padding);
@@ -106,23 +106,23 @@
 }
 
 /* Action placement is explicit and independent of the feature name. */
-:host([data-menu-density][data-orientation]) .panel[data-view] .menu-footer--trailing {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-footer--trailing {
  display: flex;
  justify-content: flex-end;
 }
-:host([data-menu-density][data-orientation]) .panel[data-view] .menu-footer--split {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-footer--split {
  display: flex;
  flex-wrap: wrap;
  justify-content: space-between;
 }
-:host([data-menu-density][data-orientation]) .panel[data-view] .menu-action-group--trailing {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-action-group--trailing {
  display: flex;
  align-items: center;
  justify-content: flex-end;
  gap: 6px;
  margin-left: auto;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view] .menu-footer--portrait {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view] .menu-footer--portrait {
  box-sizing: border-box;
  min-height: var(--menu-footer-height);
  padding-block: var(--menu-footer-padding);

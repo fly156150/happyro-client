@@ -8,7 +8,7 @@ import { setListItemText } from './ListItemText.js';
 export function createShortcutPanel(body, actions) {
 	let index, selected, dismiss;
 	body.innerHTML = `
-		<div class="shortcut-pages"><button type="button" data-page-step="-1" aria-label="上一组快捷键">‹</button><div class="slot-picker" role="group" aria-label="选择快捷键"></div><button type="button" data-page-step="1" aria-label="下一组快捷键">›</button></div>
+		<div class="shortcut-pages" data-menu-pagination><button type="button" data-page-step="-1" aria-label="上一组快捷键">‹</button><div class="slot-picker" role="group" aria-label="选择快捷键"></div><button type="button" data-page-step="1" aria-label="下一组快捷键">›</button></div>
 		<div class="shortcut-layout" data-menu-layout="split">
 			<section class="shortcut-browser">
 				<div class="shortcut-filters">
@@ -23,8 +23,8 @@ export function createShortcutPanel(body, actions) {
 				<form class="shortcut-config" hidden>
 					<div class="shortcut-selected"><img alt="" data-choice-icon><strong data-choice></strong></div>
 					<label class="shortcut-level">施放等级 <select aria-label="技能等级"></select></label>
-					<button type="submit" data-save-slot aria-live="polite"></button>
-					<button type="button" data-cancel-choice>取消选择</button>
+					<button type="submit" data-menu-button="action" data-save-slot aria-live="polite"></button>
+					<button type="button" data-menu-button="action" data-cancel-choice>取消选择</button>
 				</form>
 				<div class="shortcut-clear menu-footer"><button type="button" data-clear-slot>清空当前位置</button>
 				</div>

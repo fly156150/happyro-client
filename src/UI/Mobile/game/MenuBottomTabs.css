@@ -1,7 +1,6 @@
 /* Bottom tabs own equal inner spacing. Placement remains a feature decision. */
-:host([data-menu-density][data-orientation]) .panel[data-view] .menu-bottom-tabs:not(.menu-bottom-tabs--portrait):not(.menu-bottom-tabs--phone-portrait),
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--portrait,
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--phone-portrait {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-bottom-tabs:not(.menu-bottom-tabs--stacked),
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .menu-bottom-tabs--stacked {
  --menu-tab-spacing: 6px;
  display: flex;
  width: 100%;
@@ -13,13 +12,11 @@
  box-sizing: border-box;
 }
 /* Collapse only the gap before the following footer: tab padding owns that space. */
-:host([data-menu-density][data-orientation]) .panel[data-view] .menu-bottom-tabs:not(.menu-bottom-tabs--portrait):not(.menu-bottom-tabs--phone-portrait) + .menu-footer,
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--portrait ~ .menu-footer,
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .menu-bottom-tabs--phone-portrait ~ .menu-footer {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-bottom-tabs:not(.menu-bottom-tabs--stacked) + .menu-footer,
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .menu-bottom-tabs--stacked ~ .menu-footer {
  margin-top: -6px;
 }
-:host([data-menu-density][data-orientation]) .panel[data-view] :has(> .menu-bottom-tabs:not(.menu-bottom-tabs--portrait):not(.menu-bottom-tabs--phone-portrait)),
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view] :has(> .menu-bottom-tabs--portrait),
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] :has(> .menu-bottom-tabs--phone-portrait) {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] :has(> .menu-bottom-tabs:not(.menu-bottom-tabs--stacked)),
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] :has(> .menu-bottom-tabs--stacked) {
  row-gap: 6px;
 }

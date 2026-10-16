@@ -1,9 +1,9 @@
 /* Quests menu layout; loaded after shared chrome. */
-:host([data-menu-density][data-orientation]) .panel[data-view='quests'] > .panel-body {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='quests'] > .panel-body {
  gap: 6px;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view='quests'] .quest-actions {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='quests'] .quest-actions {
  display: flex;
  flex-wrap: wrap;
  justify-content: flex-end;
@@ -12,6 +12,6 @@
  margin: 0;
 }
 
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view='quests'] .inventory-detail {
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='quests'] .inventory-detail {
  padding-bottom: 8px;
 }

@@ -1,23 +1,23 @@
 /* Shortcut menu layout; loaded after shared chrome. */
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view] .shortcut-browser {
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view] .shortcut-browser {
  display: grid;
  grid-template-rows: auto minmax(0, 1fr);
  align-content: stretch;
  gap: 4px;
 }
 
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view] .shortcut-filters {
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view] .shortcut-filters {
  margin-block: 0;
  padding-block: 0;
  align-self: stretch;
  align-items: center;
 }
 
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view] .shortcut-choices {
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view] .shortcut-choices {
  margin-top: 0;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .shortcut-clear {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .shortcut-clear {
  display: flex;
  align-items: center;
 }

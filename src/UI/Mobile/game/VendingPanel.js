@@ -88,9 +88,8 @@ export function createVendingPanel(body, service) {
 		);
 	};
 	function update() {
-		const phone = body.getRootNode().host.hasAttribute('data-phone-screen');
 		layout.children[2].querySelector('.interaction-column-title').textContent =
-			phone && initial.owned ? '物品详情' : '物品说明与定价';
+			initial.owned ? '物品详情' : '物品说明与定价';
 		const state = service.snapshot();
 		$('[data-cancel]').disabled = Boolean(state.pending);
 		status.textContent = state.pending
@@ -201,7 +200,6 @@ export function createVendingPanel(body, service) {
 		if ($('[data-revert-vending]')) $('[data-revert-vending]').hidden = !draft?.dirty();
 		const order = $('[data-order]');
 		const orderKey = JSON.stringify([
-			phone,
 			state.owned,
 			state.order,
 			state.owned ? state.items : null,
@@ -216,8 +214,8 @@ export function createVendingPanel(body, service) {
 				const log = document.createElement('p');
 				log.textContent =
 					state.mode === 'buy'
-						? `剩余预算：${state.budget ?? '—'} Z\n${state.log.join('\n') || (phone ? '暂无成交记录' : '')}`
-						: state.log.join('\n') || (phone ? '暂无成交记录' : '');
+						? `剩余预算：${state.budget ?? '—'} Z\n${state.log.join('\n') || '暂无成交记录'}`
+						: state.log.join('\n') || '暂无成交记录';
 				log.className = 'vending-transactions';
 				order.append(log);
 			}

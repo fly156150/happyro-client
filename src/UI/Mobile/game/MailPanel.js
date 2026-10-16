@@ -35,6 +35,7 @@ export function createMailPanel(body, service) {
 	const detail = node(pane, 'div', 'mail-detail');
 	const footer = node(body, 'div', 'mail-footer menu-footer');
 	const pagination = node(footer, 'div', 'mail-pagination menu-action-group');
+	pagination.setAttribute('data-menu-pagination', '');
 	const detailFooter = node(footer, 'div', 'mail-actions mail-footer-actions menu-footer--portrait menu-form-row');
 	const para = (parent, text, className = 'mail-note') => node(parent, 'p', className, text);
 	const heading = (parent, text) => node(parent, 'h3', 'mail-heading', text);

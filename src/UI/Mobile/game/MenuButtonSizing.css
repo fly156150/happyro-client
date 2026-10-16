@@ -1,0 +1,134 @@
+/* Shared button roles for tablet menus. Phone geometry stays in its existing rules.
+ * Loaded after feature styles so feature layout never determines button metrics.
+ */
+:host(:not([data-phone-screen])[data-menu-density]) {
+ --menu-action-min-width: calc(4em + 24px);
+ --menu-action-padding-inline: 12px;
+ --menu-navigation-min-width: 64px;
+ --menu-pager-width: var(--panel-control);
+ --menu-step-width: var(--panel-control);
+}
+
+/* Text actions: natural width, consistent inset, no accidental equal stretching. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view] button[data-menu-button='action']:not([hidden]),
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ :is(.menu-footer, .menu-action-group, .social-form, .companion-skill, .interaction-form, .mail-write-row, .mail-field, .mail-attachment-summary, .ui-confirm-actions, .pickup-picker-actions) button:not([hidden]):not(:where(.menu-select *, .game-select *, .container-quantity-group *, .quantity-stepper *, [data-menu-pagination] *, .menu-tabs *)),
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view] .pickup-picker [data-search]:not([hidden]),
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer, .management-form-actions, .ui-confirm-actions) button:not([hidden]):not(:where(.game-select *)) {
+ box-sizing: border-box;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ flex: 0 0 auto;
+ width: auto;
+ min-width: var(--menu-action-min-width);
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ padding: 0 var(--menu-action-padding-inline);
+ font-size: var(--panel-text);
+ line-height: 1.2;
+ white-space: nowrap;
+}
+
+/* Navigation and tabs share text centering, but tabs keep their feature widths. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ :is(.panel-navigation, .adventure-header) > button:not([hidden]) {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ flex: 0 0 auto;
+ min-width: var(--menu-navigation-min-width);
+ padding: 0 var(--menu-action-padding-inline);
+ font-size: var(--panel-text);
+ line-height: 1.2;
+ white-space: nowrap;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ :is(.panel, .mobile-adventure) .menu-tabs > button:not([hidden]) {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ padding-block: 0;
+ padding-inline: var(--menu-action-padding-inline);
+ line-height: 1.2;
+}
+
+/* Paging arrows use square touch targets across HUD and adventure menus. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ :is(.panel[data-view], .mobile-adventure)
+ [data-menu-pagination] > button:not([hidden]) {
+ box-sizing: border-box;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ flex: 0 0 var(--menu-pager-width);
+ width: var(--menu-pager-width);
+ min-width: var(--menu-pager-width);
+ height: var(--panel-control);
+ min-height: var(--panel-control);
+ padding: 0;
+ font-size: 22px;
+ line-height: 1;
+}
+
+/* Quantity segments keep their joined borders and a flexible number field. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ .panel:is([data-view='storage'], [data-view='cart']) .container-quantity-group {
+ width: clamp(264px, 32vw, 352px);
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ .panel:is([data-view='storage'], [data-view='cart']) .container-quantity-group > button:not([hidden]) {
+ box-sizing: border-box;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ flex: 0 0 var(--menu-step-width);
+ width: var(--menu-step-width);
+ min-width: var(--menu-step-width);
+ padding: 0;
+ font-size: var(--panel-text);
+ line-height: 1;
+}
+
+/* Explicit column groups fill their cells; ordinary action rows stay content-sized. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ .character-detail-scroll [data-menu-action-layout] > button:not([hidden]) {
+ width: 100%;
+ min-width: 0;
+}
+
+/* Job actions align with progression columns instead of wrapping full-width flex items. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ .character-detail-scroll [data-menu-action-layout='job'] {
+ display: grid;
+ grid-template-columns: repeat(4, minmax(0, 1fr));
+ gap: 6px 8px;
+ width: 100%;
+ min-width: 0;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ .character-detail-scroll [data-menu-action-layout='job'] > button {
+ white-space: normal;
+ overflow-wrap: anywhere;
+ height: auto;
+ min-height: var(--panel-control);
+ padding-block: 6px;
+}
+
+/* The compact paging target displays an arrow, never a full text label. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-page-label {
+ display: none;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-page-symbol {
+ display: inline;
+ font-size: inherit;
+ line-height: 1;
+}
+
+/* Pet and homunculus action rows fill available width on both touch devices. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ .panel:is([data-view='pet'], [data-view='companions']:has(.companion-name:not([hidden])))
+ .companion-footer .inventory-actions > button:not([hidden]) {
+ flex: 1 0 auto;
+}

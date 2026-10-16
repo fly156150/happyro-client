@@ -1,4 +1,4 @@
-/* Orientation controls viewport height and the pickup dialog, never content columns. */
+/* Physical orientation controls window height; only stacked phone menus rearrange picker actions. */
 :host([data-orientation='portrait']) {
 	--menu-standard-height: 100%;
 	--menu-edge-y: 2dvh;
@@ -12,30 +12,36 @@
 :host([data-orientation='portrait'][data-menu-density='spacious']) .panel .pickup-picker {
 	width: min(var(--menu-picker-width), calc(100vw - 48px));
 }
-:host([data-orientation='portrait']) .panel .pickup-picker > footer {
+:host([data-menu-arrangement='stacked']) .panel .pickup-picker > footer {
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.3fr);
 	justify-items: stretch;
 	gap: 8px;
 }
-:host([data-orientation='portrait']) .panel .pickup-picker [data-selected] {
+:host([data-menu-arrangement='stacked']) .panel .pickup-picker [data-selected] {
 	grid-column: 1 / 4;
 	grid-row: 1;
 }
-:host([data-orientation='portrait']) .panel .pickup-picker [data-page] {
+:host([data-menu-arrangement='stacked']) .panel .pickup-picker [data-page] {
 	grid-column: 4;
 	grid-row: 1;
 	text-align: right;
 }
-:host([data-orientation='portrait']) .panel .pickup-picker :is(.pickup-pagination, .pickup-picker-actions) {
+:host([data-menu-arrangement='stacked']) .panel .pickup-picker :is(.pickup-pagination, .pickup-picker-actions) {
 	display: contents;
 }
-:host([data-orientation='portrait']) .panel .pickup-picker > footer button {
+:host([data-menu-arrangement='stacked']) .panel .pickup-picker > footer button {
 	grid-row: 2;
 	min-width: 0;
 	min-height: var(--panel-control);
 	padding: var(--panel-control-padding);
 	font-size: var(--panel-label, 13px);
 }
-:host([data-orientation='portrait']) .panel .pickup-picker > footer span {
+:host([data-menu-arrangement='stacked']) .panel .pickup-picker > footer span {
 	font-size: var(--panel-label, 13px);
+}
+
+/* Tablet portrait grows the workspace without changing columns or control density. */
+:host(:not([data-phone-screen])[data-orientation='portrait']) {
+	--menu-standard-height: 90%;
+	--menu-edge-y: 24px;
 }

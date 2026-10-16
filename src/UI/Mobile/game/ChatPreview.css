@@ -136,3 +136,10 @@
 :host([data-menu-density='spacious']) .chat-preview-tabs button {
 	padding-inline: 10px;
 }
+
+/* Tablet preview uses measured space to the left of the actual combat dock. */
+:host(:not([data-phone-screen])[data-menu-density]) .chat-preview:not(.collapsed) {
+ width: var(--chat-preview-available-width, 240px);
+ min-width: 0;
+ grid-template-columns: 44px minmax(0, 1fr);
+}

@@ -1,15 +1,15 @@
 /* Social menu layout; loaded after shared chrome. */
-:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='social'] .social-tabs {
  display: flex;
  min-width: 0;
  gap: 0;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-tabs > button {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='social'] .social-tabs > button {
  flex: 1;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='social'] .social-footer {
  display: flex;
  justify-content: flex-end;
  gap: 6px;
@@ -18,19 +18,19 @@
  flex-wrap: wrap;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] > .panel-body {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='social'] > .panel-body {
  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-tabs {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='social'] .social-tabs {
  grid-row: 3;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='social'] .social-footer {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='social'] .social-footer {
  grid-row: 4;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view='social'] .social-footer-actions {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='social'] .social-footer-actions {
  display: contents;
 }
 

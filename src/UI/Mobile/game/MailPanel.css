@@ -476,51 +476,51 @@
 :host([data-menu-density]) .panel[data-view='mail'] .mail-item-list > .mail-empty {
 	grid-column: 1 / -1;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] > .panel-body {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] > .panel-body {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto auto;
 	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto auto;
 }
-:host([data-menu-density][data-orientation='portrait'])
+:host([data-menu-density][data-menu-arrangement='stacked'])
 	.panel[data-view='mail']
 	:is(.mail-layout, .mail-pane, .mail-toolbar, .mail-footer) {
 	display: contents;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-detail {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-detail {
 	grid-row: 1;
 	grid-column: 1 / -1;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-browser {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-browser {
 	grid-row: 2;
 	grid-column: 1 / -1;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-search {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-search {
 	grid-row: 3;
 	grid-column: 1;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
 	grid-row: 3;
 	grid-column: 2;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-pagination {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-pagination {
 	grid-row: 3;
 	grid-column: 3;
 	margin: 0;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-write-row {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-write-row {
 	grid-row: 4;
 	grid-column: 1 / -1;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-footer-actions {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-footer-actions {
 	grid-row: 5;
 	grid-column: 1 / -1;
 	border-top: 1px solid #52606d;
 	padding-top: 6px;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] > [data-mail-writing='true'] {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] > [data-mail-writing='true'] {
 	grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto auto;
 }
-:host([data-menu-density][data-orientation='portrait'])
+:host([data-menu-density][data-menu-arrangement='stacked'])
 	.panel[data-view='mail']
 	[data-mail-writing='true']
 	.mail-toolbar {
@@ -528,13 +528,13 @@
 	grid-row: 3;
 	grid-column: 1 / -1;
 }
-:host([data-menu-density][data-orientation='portrait'])
+:host([data-menu-density][data-menu-arrangement='stacked'])
 	.panel[data-view='mail']
 	[data-mail-writing='true']
 	.mail-footer-actions {
 	grid-row: 4;
 }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] .mail-item-filters {
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-item-filters {
 	order: 1;
 	padding: 6px 0 0;
 	margin-top: 6px;
@@ -542,25 +542,25 @@
 }
 
 /* Phone portrait mailbox controls fill two aligned rows. */
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] > .panel-body {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] > .panel-body {
  grid-template-columns: minmax(0, 1fr) auto;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-pagination { grid-column: 2; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-pagination { grid-column: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
  grid-row: 4; grid-column: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-toolbar .mail-actions > :is(select, .menu-select, button) {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-toolbar .mail-actions > :is(select, .menu-select, button) {
  width: 100%; min-width: 0;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-write-row { grid-column: 2; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-write-row > button { width: 100%; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-field {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-write-row { grid-column: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-write-row > button { width: 100%; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-field {
  grid-template-columns: minmax(0, 1fr);
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-field:has(button) {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-field:has(button) {
  grid-template-columns: minmax(0, 1fr) auto;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-field > span { grid-column: 1 / -1; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-field > span { grid-column: 1 / -1; }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-list {
  border: 1px solid #52606d; border-radius: 6px; margin-top: 6px; overflow: hidden;
 }
@@ -574,12 +574,12 @@
  box-sizing: border-box; height: auto; min-height: 48px; max-height: none; overflow: hidden;
 }
 :host([data-menu-density]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-toolbar { display: none; }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] > [data-mail-writing='true'] { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; }
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] [data-mail-writing='true'] .mail-footer-actions { grid-row: 3; }
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] > [data-mail-writing='true'] { grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) auto; }
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] [data-mail-writing='true'] .mail-footer-actions { grid-row: 3; }
 
-:host([data-menu-density][data-orientation='portrait']) .panel[data-view='mail'] [data-mail-writing='true'] .mail-toolbar { display: none; }
+:host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='mail'] [data-mail-writing='true'] .mail-toolbar { display: none; }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='mail'] .mail-pagination > button {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-pagination > button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;

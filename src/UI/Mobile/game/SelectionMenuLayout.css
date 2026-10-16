@@ -1,9 +1,9 @@
 /* Selection menu layout; loaded after shared chrome. */
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view='selection'] .equipment-filters {
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='selection'] .equipment-filters {
  width: calc((100% - 12px) / 2);
 }
 
-:host([data-menu-density][data-orientation='landscape']) .panel[data-view='selection'] .inventory-layout {
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='selection'] .inventory-layout {
  grid-template-columns: repeat(2, minmax(0, 1fr));
  gap: 12px;
 }

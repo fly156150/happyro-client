@@ -34,75 +34,75 @@
 .portrait-chat-button {
 	display: none;
 }
-:host([data-orientation='portrait']) .profile-actions {
+:host([data-menu-arrangement='stacked']) .profile-actions {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 4px;
 }
-:host([data-orientation='portrait']) .portrait-chat-button {
+:host([data-menu-arrangement='stacked']) .portrait-chat-button {
 	display: block;
 }
-:host([data-orientation='portrait']) .chat-preview,
-:host([data-orientation='portrait']) .chat-preview:not(.collapsed) {
+:host([data-menu-arrangement='stacked']) .chat-preview,
+:host([data-menu-arrangement='stacked']) .chat-preview:not(.collapsed) {
 	display: none;
 }
-:host([data-orientation='portrait']) .profile meter {
+:host([data-menu-arrangement='stacked']) .profile meter {
 	height: 14px;
 }
-:host([data-orientation='portrait']) .profile meter::-webkit-meter-inner-element {
+:host([data-menu-arrangement='stacked']) .profile meter::-webkit-meter-inner-element {
 	position: relative;
 	display: block;
 	height: 100%;
 }
-:host([data-orientation='portrait']) .profile meter::-webkit-meter-bar {
+:host([data-menu-arrangement='stacked']) .profile meter::-webkit-meter-bar {
 	top: 0;
 }
-:host([data-orientation='portrait']) .profile label > span {
+:host([data-menu-arrangement='stacked']) .profile label > span {
 	font-size: 10px;
 	line-height: 14px;
 }
 
-:host([data-orientation='portrait']) .profile-actions button {
+:host([data-menu-arrangement='stacked']) .profile-actions button {
 	min-width: 0;
 	padding: 4px 2px;
 	white-space: nowrap;
 }
-:host([data-orientation='portrait']) .profile-actions [data-status-icons] {
+:host([data-menu-arrangement='stacked']) .profile-actions [data-status-icons] {
 	display: none;
 }
 
-:host([data-orientation='portrait']) {
+:host([data-menu-arrangement='stacked']) {
 	--portrait-map-width: 115.2px;
 	--portrait-map-canvas: 105.6px;
 	--portrait-profile-width: 188px;
 }
-:host([data-orientation='portrait'][data-menu-density='spacious']) {
+:host([data-menu-arrangement='stacked'][data-menu-density='spacious']) {
 	--portrait-map-width: 172.8px;
 	--portrait-map-canvas: 153.6px;
 	--portrait-profile-width: 320px;
 }
-:host([data-orientation='portrait']) .map {
+:host([data-menu-arrangement='stacked']) .map {
 	width: var(--portrait-map-width);
 }
-:host([data-orientation='portrait']) .map canvas {
+:host([data-menu-arrangement='stacked']) .map canvas {
 	width: var(--portrait-map-canvas);
 	height: var(--portrait-map-canvas);
 }
-:host([data-orientation='portrait']) .top-left {
+:host([data-menu-arrangement='stacked']) .top-left {
 	width: min(var(--portrait-profile-width), calc(100% - var(--portrait-map-width) - 36px));
 }
 
 /* Phone portrait opens the full chat window from the compact corner launcher. */
 .portrait-chat-launch { display: none; }
-:host([data-phone-screen][data-orientation='portrait']) .portrait-chat-launch {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .portrait-chat-launch {
  display: block; position: absolute; pointer-events: auto;
  left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom));
  width: 40px; height: 36px; padding: 0;
 }
-:host([data-phone-screen][data-orientation='portrait']) .portrait-chat-button { display: none; }
-:host([data-phone-screen][data-orientation='portrait']) .profile-actions {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .portrait-chat-button { display: none; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .profile-actions {
  display: flex; align-items: flex-start; gap: 8px;
 }
-:host([data-phone-screen][data-orientation='portrait']) .profile-actions button {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .profile-actions button {
  flex: 0 0 auto; min-height: 30px; padding: 4px 9px;
 }

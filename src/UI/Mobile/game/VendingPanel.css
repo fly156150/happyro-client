@@ -1,20 +1,20 @@
-/* Phone storefronts retain the shared framed panels and pinned actions. */
-:host([data-phone-screen]) .panel[data-view='vending'] .vending-transactions {
+/* Touch storefronts retain the shared framed panels and pinned actions. */
+:host([data-menu-density]) .panel[data-view='vending'] .vending-transactions {
  margin: 0;
  white-space: pre-line;
 }
-:host([data-phone-screen]) .panel[data-view='vending'] .interaction-column-title {
+:host([data-menu-density]) .panel[data-view='vending'] .interaction-column-title {
  color: #f6d9a5;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending']
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
  [data-vending-owned='true'] .interaction-columns {
  grid-template-columns: minmax(0, 1fr);
  grid-template-rows: minmax(0, .9fr) minmax(0, 1.2fr) minmax(0, .7fr);
  overflow: hidden;
 }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending']
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
  [data-vending-owned='true'] [data-vending-section='detail'] { grid-row: 1; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending']
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
  [data-vending-owned='true'] [data-vending-section='items'] { grid-row: 2; }
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending']
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
  [data-vending-owned='true'] [data-vending-section='order'] { grid-row: 3; }

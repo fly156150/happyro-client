@@ -167,7 +167,7 @@ function mount(container, context = {}) {
 		const detail = container.querySelector('.character-detail');
 		detail.innerHTML = `
 			<div class="character-detail-scroll">
-				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
+				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions" data-menu-action-layout="job"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
 				</section>
 				<section><h4>等级与点数</h4><form data-form="progression" class="management-form progression-form">
 					<label><span>基础等级</span><input name="base_level" type="number" min="1" max="${snapshot.max_base_level}" value="${snapshot.base_level}" required></label>
@@ -175,17 +175,17 @@ function mount(container, context = {}) {
 					<label><span>素质点</span><input name="status_points" type="number" min="0" max="${snapshot.max_status_points}" value="${snapshot.status_points}" required></label>
 					<label><span>四转素质点</span><input name="trait_points" type="number" min="0" max="${snapshot.traits.max_points}" value="${snapshot.traits.points}" ${snapshot.traits.enabled ? '' : 'disabled'} required></label>
 					<label><span>技能点</span><input name="skill_points" type="number" min="0" max="${snapshot.max_skill_points}" value="${snapshot.skill_points}" required></label>
-					<div class="management-form-actions"><button type="submit">应用</button><button type="button" data-action="skills-reset">重置技能</button><button type="button" data-action="skills-learn-all">学满技能</button></div>
+					<div class="management-form-actions" data-menu-action-layout="columns"><button type="submit">应用</button><button type="button" data-action="skills-reset">重置技能</button><button type="button" data-action="skills-learn-all">学满技能</button></div>
 				</form></section>
 				<section><h4>基础属性 <small>剩余 ${snapshot.status_points} 点</small></h4><form data-form="stats" class="management-form stat-form">
 					${statFields.map(([key, label]) => `<label><span>${label}</span><input name="${key}" type="number" min="1" max="${snapshot.max_stats?.[key] ?? snapshot.max_stat}" value="${snapshot[key]}" required></label>`).join('')}
-					<div class="management-form-actions"><button type="submit">应用</button><button type="button" data-action="stats-reset">重置</button></div>
+					<div class="management-form-actions" data-menu-action-layout="columns"><button type="submit">应用</button><button type="button" data-action="stats-reset">重置</button></div>
 				</form></section>
 				${
 					snapshot.traits.enabled
 						? `<section><h4>${context.mobile ? '四转属性' : '四转特性'} <small>剩余 ${snapshot.traits.points} 点</small></h4><form data-form="traits" class="management-form stat-form">
 					${traitFields.map(([key, label]) => `<label><span>${label}</span><input name="${key}" type="number" min="0" max="${snapshot.traits.maximums[key]}" value="${snapshot.traits.values[key]}" required></label>`).join('')}
-					<div class="management-form-actions"><button type="submit">应用</button><button type="button" data-action="traits-reset">重置</button></div>
+					<div class="management-form-actions" data-menu-action-layout="columns"><button type="submit">应用</button><button type="button" data-action="traits-reset">重置</button></div>
 					${context.mobile ? '' : '<small>直接设置特性值，不受当前特性点限制，不消耗剩余点数。</small>'}
 				</form></section>`
 						: context.mobile

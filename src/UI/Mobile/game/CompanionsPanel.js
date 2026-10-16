@@ -138,7 +138,7 @@ export function createCompanionsPanel(body, service) {
 		}
 		for (const b of body.querySelectorAll('[data-action]'))
 			b.disabled = !s.allowed || (b.dataset.action === 'rename' && !s.canRename);
-		const key = JSON.stringify(s.skills);
+		const key = JSON.stringify([s.kind, s.skills]);
 		if (key !== skillKey) {
 			skillKey = key;
 			$('[data-skills]').replaceChildren();
@@ -148,20 +148,22 @@ export function createCompanionsPanel(body, service) {
 				$('[data-skills]').append(empty);
 			}
 			for (const skill of s.skills) {
-				const entry = document.createElement('div'),
-					button = document.createElement('button');
+				const entry = document.createElement('div');
 				entry.className = 'companion-skill';
 				const description = document.createElement('span');
 				description.textContent = `${skill.name} · Lv.${skill.level} · ${skill.type ? '主动' : '被动'}`;
 				entry.append(description);
-				button.textContent = skill.level ? '升级一级' : '学习一级';
-				button.disabled = !skill.learnable;
-				button.onclick = () => {
-					cancel();
-					learning = { id: skill.SKID, level: skill.level + 1, gid: s.gid };
-					review(`确认将「${skill.name}」升至 Lv.${skill.level + 1}？`);
-				};
-				entry.append(button);
+				if (s.kind === 'homunculus') {
+					const button = document.createElement('button');
+					button.textContent = skill.level ? '升级一级' : '学习一级';
+					button.disabled = !skill.learnable;
+					button.onclick = () => {
+						cancel();
+						learning = { id: skill.SKID, level: skill.level + 1, gid: s.gid };
+						review(`确认将「${skill.name}」升至 Lv.${skill.level + 1}？`);
+					};
+					entry.append(button);
+				}
 				$('[data-skills]').append(entry);
 			}
 		}

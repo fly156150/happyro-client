@@ -145,11 +145,10 @@ export function createShopPanel(body, service) {
 		state = service.snapshot();
 		const order = state.items.filter(item => item.quantity);
 		const selling = state.mode === 'sell';
-		const phone = body.getRootNode().host.hasAttribute('data-phone-screen');
-		const money = phone ? state.money.toLocaleString('en-US') : state.money;
-		const total = phone ? state.total.toLocaleString('en-US') : state.total;
+		const money = state.money.toLocaleString('en-US');
+		const total = state.total.toLocaleString('en-US');
 		$('[data-balance]').textContent = `余额：${money} ${currency()}`;
-		$('[data-total]').textContent = `${phone ? '' : selling ? '出售' : '购买'}合计：${total} ${currency()}`;
+		$('[data-total]').textContent = `合计：${total} ${currency()}`;
 		$('.shop-catalog h3').textContent = selling ? '可出售物品' : '商品列表';
 		$('.shop-order h3').textContent = selling ? '待出售物品' : '待购买物品';
 		submit.textContent = selling ? '出售' : '购买';

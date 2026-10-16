@@ -5,7 +5,10 @@ export function menuDensity(width, height) {
 }
 export function updateMenuLayout(host, width, height) {
 	// Physical screen size keeps narrow tablet windows and keyboards out of phone-only rules.
-	host.toggleAttribute('data-phone-screen', Math.min(screen.width, screen.height) < 600);
-	host.dataset.menuDensity = menuDensity(width, height);
+	const phone = Math.min(screen.width, screen.height) < 600;
+	host.toggleAttribute('data-phone-screen', phone);
+	host.dataset.menuDensity = phone ? menuDensity(width, height) : 'spacious';
 	host.dataset.orientation = width < height ? 'portrait' : 'landscape';
+	// Tablets keep the same workspace in both orientations; only phones stack panes.
+	host.dataset.menuArrangement = phone && width < height ? 'stacked' : 'wide';
 }

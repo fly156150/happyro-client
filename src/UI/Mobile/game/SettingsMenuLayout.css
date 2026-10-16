@@ -6,26 +6,26 @@
  cursor: pointer;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .settings-section {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .settings-section {
  padding-block: 6px;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .settings-field {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .settings-field {
  box-sizing: border-box;
  min-height: calc(var(--panel-control) + 12px);
  padding-block: 6px;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .settings-field.settings-last-row {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .settings-field.settings-last-row {
  border-bottom-color: transparent;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .settings-footer {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .settings-footer {
  display: flex;
  align-items: center;
 }
 
-:host([data-menu-density][data-orientation]) .panel[data-view] .settings-actions {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .settings-actions {
  width: 100%;
  align-items: center;
  justify-content: flex-end;
@@ -35,11 +35,11 @@
  flex: 0 0 auto;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-tabs {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .settings-form > .settings-tabs {
  order: 1;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .panel[data-view] .settings-form > .settings-footer {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .settings-form > .settings-footer {
  order: 2;
 }
 

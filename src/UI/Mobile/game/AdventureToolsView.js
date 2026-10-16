@@ -14,16 +14,21 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		content = $('.adventure-content'),
 		back = $('[data-back]');
 	const abort = new AbortController();
-	let wide = $('.mobile-adventure').clientWidth >= 600;
-	const resize = new ResizeObserver(entries => {
-		wide = entries[0].contentRect.width >= 600;
-		back.hidden = wide || !detail;
-	});
-	resize.observe($('.mobile-adventure'));
 	let active = null,
 		cleanup,
 		tabView,
 		detail = false;
+	const host = root.getRootNode().host;
+	const windowElement = $('.mobile-adventure');
+	// Tablet wide layouts keep both panes even below the phone's catalog breakpoint.
+	const showsBothPanes = () =>
+		(!host.hasAttribute('data-phone-screen') && host.dataset.menuArrangement === 'wide') ||
+		windowElement.clientWidth >= 600;
+	const updateBack = () => { back.hidden = showsBothPanes() || !detail; };
+	const resize = new ResizeObserver(updateBack);
+	resize.observe(windowElement);
+	const layout = new MutationObserver(updateBack);
+	layout.observe(host, { attributes: true, attributeFilter: ['data-menu-arrangement', 'data-phone-screen'] });
 	const scrolls = new Map();
 	let savedItem = null;
 	let availableTabs = tabs;
@@ -65,7 +70,6 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		scrolls.clear();
 
 		content.hidden = false;
-		back.hidden = false;
 		for (const button of navigation.querySelectorAll('[data-tool]'))
 			button.setAttribute('aria-selected', String(button.dataset.tool === tab.id));
 		content.className = 'adventure-content';
@@ -83,7 +87,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			savedItem = null;
 			content.classList.toggle('show-detail', detail);
 			back.textContent = '返回列表';
-			back.hidden = wide || !detail;
+			updateBack();
 			content.firstElementChild.dispatchEvent(new Event('game-tools-reset-feedback'));
 			tabView.restore();
 			return;
@@ -96,7 +100,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			detail = true;
 			content.classList.add('show-detail');
 			back.textContent = '选择职业';
-			back.hidden = wide;
+			updateBack();
 		}
 	}
 	function setTabs(nextTabs) {
@@ -126,7 +130,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			detail = true;
 			content.classList.add('show-detail');
 			back.textContent = '返回列表';
-			back.hidden = wide;
+			updateBack();
 		},
 		{ signal: abort.signal }
 	);
@@ -147,6 +151,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		destroy() {
 			abort.abort();
 			resize.disconnect();
+			layout.disconnect();
 			disposeTab();
 			discardSavedItem();
 			root.replaceChildren();

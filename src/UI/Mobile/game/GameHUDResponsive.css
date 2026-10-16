@@ -280,23 +280,23 @@
 	top: 0;
 }
 
-:host([data-orientation='landscape']) {
+:host([data-menu-arrangement='wide']) {
 	--landscape-map-width: 115.2px;
 	--landscape-map-canvas: 105.6px;
 }
 @media (max-height: 360px) {
-	:host([data-orientation='landscape']) {
+	:host([data-menu-arrangement='wide']) {
 		--landscape-map-canvas: 91.2px;
 	}
 }
-:host([data-orientation='landscape'][data-menu-density='spacious']) {
+:host([data-menu-arrangement='wide'][data-menu-density='spacious']) {
 	--landscape-map-width: 172.8px;
 	--landscape-map-canvas: 153.6px;
 }
-:host([data-orientation='landscape']) .map {
+:host([data-menu-arrangement='wide']) .map {
 	width: var(--landscape-map-width);
 }
-:host([data-orientation='landscape']) .map canvas {
+:host([data-menu-arrangement='wide']) .map canvas {
 	width: var(--landscape-map-canvas);
 	height: var(--landscape-map-canvas);
 }

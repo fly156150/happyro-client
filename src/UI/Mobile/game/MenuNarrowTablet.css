@@ -1,0 +1,100 @@
+/* A narrow tablet workspace keeps its content columns; only control rows wrap.
+ * Query the menu window, not physical orientation or keyboard height.
+ */
+@container menu-window (width < 560px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ :is(.menu-footer, .menu-action-group, .skills-footer .inventory-actions, .mail-footer-actions, .mail-toolbar > .mail-actions, .storage-modes, .container-filters) {
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  row-gap: 6px;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ :is(.skills-footer-buttons, .skills-action-slot, .menu-footer > label, .menu-footer > .menu-action-group) {
+  min-width: 0;
+  max-width: 100%;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ .warehouse-body .container-toolbar {
+  grid-template-columns: minmax(0, 1fr);
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ .container-filters > :is(.menu-select, select, .container-source) {
+  flex: 1 1 100px;
+  min-width: 0;
+  max-width: 100%;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ .container-filters > .storage-modes {
+  flex-basis: 100%;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ .panel:is([data-view='storage'], [data-view='cart']) .container-quantity-group {
+  box-sizing: border-box;
+  flex: 0 1 100%;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] .inventory-toolbar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] .inventory-search {
+  grid-column: 1 / -1;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='selection'] .equipment-filters {
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-toolbar {
+  flex-wrap: wrap;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-toolbar > .mail-search {
+  flex-basis: 100%;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-item-filters {
+  grid-template-columns: minmax(0, 1fr);
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer, .catalog-toolbar, .monster-toolbar) {
+  flex-wrap: wrap;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  row-gap: 6px;
+ }
+ /* Keep tab/navigation controls reachable without consuming content height. */
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ :is(.panel[data-view] > header, .mobile-adventure .adventure-header) {
+  min-width: 0;
+  overflow-x: auto;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ :is(.panel[data-view] > header, .mobile-adventure .adventure-header) .menu-tabs {
+  flex-shrink: 0;
+ }
+}
+
+/* Adventure's old narrow mode hides the list after selection. Tablets retain both panes. */
+@container menu-window (width < 600px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ :is(.catalog-layout, .monster-layout, .character-layout) {
+  display: grid;
+  grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ :is(.catalog-browser, .monster-browser, .character-job-browser, .catalog-detail, .monster-detail, .character-detail) {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ :is(.catalog-toolbar, .monster-toolbar) {
+  display: flex;
+  flex-wrap: wrap;
+ }
+}

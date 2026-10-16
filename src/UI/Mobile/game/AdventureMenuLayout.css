@@ -1,5 +1,5 @@
 /* Mobile pagers use the same controls as HUD footers. */
-:host([data-menu-density][data-orientation]) .mobile-adventure :is(.catalog-pagination, .monster-pagination) {
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure :is(.catalog-pagination, .monster-pagination) {
  box-sizing: border-box;
  flex: 0 0 auto;
  height: auto;
@@ -7,7 +7,7 @@
  padding-block: var(--menu-footer-padding);
  align-items: center;
 }
-:host([data-menu-density][data-orientation]) .mobile-adventure
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure
  :is(.catalog-pagination, .monster-pagination, .catalog-action-panel, .summon-panel, .character-actions, .settings-footer) button:not(.game-select-option) {
  display: inline-flex;
  align-items: center;
@@ -19,7 +19,7 @@
  margin-block: 0;
 }
 /* Adventure menu layout; loaded after shared chrome. */
-:host([data-menu-density][data-orientation]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
  :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer) {
  box-sizing: border-box;
  flex: 0 0 auto;
@@ -29,7 +29,7 @@
  align-items: center;
 }
 
-:host([data-menu-density][data-orientation]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
  :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer) :is(button:not(.game-select-option), input, select) {
  box-sizing: border-box;
  height: var(--panel-control);
@@ -37,7 +37,7 @@
  margin-block: 0;
 }
 
-:host([data-phone-screen][data-orientation='portrait']) .mobile-adventure.game-tools-window
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
  :is(.catalog-pagination, .monster-pagination) {
  min-height: 0;
  height: 100%;
@@ -45,7 +45,7 @@
 }
 
 /* Ordinary catalog fields are adapted here; shared compound fields keep their borders. */
-:host([data-menu-density][data-orientation]) .mobile-adventure
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure
  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not([type='file']):not(:where(.ui-confirm *, .setting-number *, .management-form *)) {
  border: 1px solid #657584;
  border-radius: 6px;

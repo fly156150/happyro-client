@@ -43,7 +43,7 @@ export function createSettingsPanel(body, service, initialSection = '画面') {
 		form.className = 'settings-form';
 		form.onsubmit = event => event.preventDefault();
 		const tabs = document.createElement('div');
-		tabs.className = 'settings-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--phone-portrait';
+		tabs.className = 'settings-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--stacked';
 		tabs.setAttribute('role', 'group');
 		tabs.setAttribute('aria-label', '设置分类');
 		const content = document.createElement('div');

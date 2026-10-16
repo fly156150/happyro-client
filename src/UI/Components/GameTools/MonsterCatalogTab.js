@@ -154,7 +154,7 @@ function mount(container, context = {}) {
 			<section class="monster-browser">
 				<div class="monster-summary">正在加载魔物资料...</div>
 				<div class="monster-list"></div>
-				<div class="monster-pagination">
+				<div class="monster-pagination" data-menu-pagination>
 					<button class="page-prev" type="button" aria-label="上一页"><span aria-hidden="true">‹</span></button>
 					<span class="page-label"></span>
 					<button class="page-next" type="button" aria-label="下一页"><span aria-hidden="true">›</span></button>
