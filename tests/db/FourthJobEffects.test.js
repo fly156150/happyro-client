@@ -84,8 +84,10 @@ describe('fourth-job explicit skill effects', () => {
 		expect(mysteryStatus.map(layer => layer.renderBeforeEntities)).toEqual([false, true]);
 		expect(StatusConst.MAX).toBeGreaterThan(StatusConst.MYSTERY_POWDER);
 
-		const servantStatus = fourthJobRenderEffects[fourthJobStatusEffects[StatusConst.SERVANTWEAPON]];
-		expect(servantStatus).toMatchObject([{ attachedEntity: true, repeat: true }]);
+		// Servant weapon count notifications own the orbiting weapons.
+		expect(fourthJobStatusEffects[StatusConst.SERVANTWEAPON]).toBeUndefined();
+		const servantCast = fourthJobRenderEffects[fourthJobSkillEffects[SK.DK_SERVANTWEAPON].successEffectId];
+		expect(servantCast.every(layer => layer.attachedEntity && !layer.repeat)).toBe(true);
 
 		const servantShot = fourthJobRenderEffects[fourthJobSkillEffects[SK.DK_SERVANTWEAPON_ATK].beforeHitEffectId];
 		expect(servantShot).toHaveLength(2);

@@ -341,18 +341,33 @@ export const fourthJobEffectResources = {
 		hitEffectId: 'mystery_illusion/mystery_illusion_hit/mystery_illusion_hit'
 	},
 	AG_VIOLENT_QUAKE: {
-		beginCastEffectId: 'violentquake/violentquake_cast/violentquake_cast',
+		beginCastEffectId: 'violentquake/violentquake_cast/violentquake_cast'
+	},
+	AG_VIOLENT_QUAKE_ATK: {
+		groundCastEffectId: 'violentquake/violentquake/violentquake_01',
 		hitEffectId: 'violentquake/violentquake_hit/violentquake_hit'
 	},
 	AG_SOUL_VC_STRIKE: { hitEffectId: 'soul_vc_strike/soul_vc_strike_hit/soul_vc_strike_hit' },
 	AG_STRANTUM_TREMOR: { hitEffectId: 'strantumtremor/strantumtremor_hit/strantumtremor_hit' },
-	AG_ALL_BLOOM: { hitEffectId: 'allbloom/allbloom_hit/allbloom_hit' },
+	AG_ALL_BLOOM: { beginCastEffectId: 'allbloom/allbloom_cast/allbloom_cast' },
+	AG_ALL_BLOOM_ATK: {
+		groundCastEffectId: 'allbloom/allbloom_bomb/allbloom_bomb01',
+		hitEffectId: 'allbloom/allbloom_hit/allbloom_hit'
+	},
+	AG_ALL_BLOOM_ATK2: {
+		groundCastEffectId: 'allbloom/allbloom_bomb/allbloom_bomb02',
+		hitEffectId: 'allbloom/allbloom_hit/allbloom_hit'
+	},
 	AG_CRYSTAL_IMPACT: { hitEffectId: 'crystal_impact/crystal_impact_hit/crystal_impact_hit' },
 	AG_TORNADO_STORM: { hitEffectId: 'tornadostorm/tornadostorm_hit/tornadostorm_hit' },
 	AG_ASTRAL_STRIKE: {
 		beginCastEffectId: 'astralstrike/astralstrike_cast/astralstrike_cast',
-		hitEffectId: 'astralstrike/astralstrike/astralstrike'
+		groundCastEffectId: 'astralstrike/astralstrike/astralstrike'
 	},
+	AG_ASTRAL_STRIKE_ATK: { hitEffectId: 'astralstrike/astralstrike_sub_1/astralstrike_sub_1' },
+	AG_CRIMSON_ARROW_ATK: { hitEffectId: 'crimsonarrow/crimsonarrow_hit/crimsonarrow_hit' },
+	AG_CRYSTAL_IMPACT_ATK: { hitEffectId: 'crystal_impact/crystal_impact_hit/crystal_impact_hit' },
+	AG_DESTRUCTIVE_HURRICANE_CLIMAX: { hitEffectId: 'destructive_hurricane/destructive_hurricane_hit/destructive_hurricane_hit' },
 	AG_CLIMAX: { effectId: 'climax/climax/climax' },
 	AG_ROCK_DOWN: { hitEffectId: 'rockdown/rockdown_hit/rockdown_hit' },
 	AG_STORM_CANNON: { hitEffectId: 'stormcannon/stormcannon/stormcannon' },

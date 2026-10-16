@@ -1,3 +1,5 @@
+import { syncWhiteImprison } from './WizardBodyState.js';
+import { updateWarlockSpheres } from './WarlockSphereState.js';
 import { servantWeaponEffectIds } from 'DB/Skills/ServantWeaponEffects.js';
 /**
  * Engine/MapEngine/Entity.js
@@ -154,6 +156,7 @@ function onEntitySpam(pkt) {
 		}
 	}
 
+	syncWhiteImprison(entity, EffectManager);
 	localizeEntityName(entity);
 
 	if (pkt.effectState & StatusState.EffectState.FALCON && DB.isHunter(pkt.job)) {
@@ -2098,7 +2101,7 @@ function onEntityStatusChange(pkt) {
 			} else {
 				entity.Summon1 = 0;
 			}
-			updateWarlockSpheres(entity);
+			updateWarlockSpheres(entity, EffectManager);
 			break;
 
 		case StatusConst.SUMMON2:
@@ -2107,7 +2110,7 @@ function onEntityStatusChange(pkt) {
 			} else {
 				entity.Summon2 = 0;
 			}
-			updateWarlockSpheres(entity);
+			updateWarlockSpheres(entity, EffectManager);
 			break;
 
 		case StatusConst.SUMMON3:
@@ -2116,7 +2119,7 @@ function onEntityStatusChange(pkt) {
 			} else {
 				entity.Summon3 = 0;
 			}
-			updateWarlockSpheres(entity);
+			updateWarlockSpheres(entity, EffectManager);
 			break;
 
 		case StatusConst.SUMMON4:
@@ -2125,7 +2128,7 @@ function onEntityStatusChange(pkt) {
 			} else {
 				entity.Summon4 = 0;
 			}
-			updateWarlockSpheres(entity);
+			updateWarlockSpheres(entity, EffectManager);
 			break;
 
 		case StatusConst.SUMMON5:
@@ -2134,7 +2137,7 @@ function onEntityStatusChange(pkt) {
 			} else {
 				entity.Summon5 = 0;
 			}
-			updateWarlockSpheres(entity);
+			updateWarlockSpheres(entity, EffectManager);
 			break;
 
 		case StatusConst.STEALTHFIELD:
@@ -2340,24 +2343,6 @@ function onEntityStatusChange(pkt) {
 	}
 }
 
-//Warlock sphere summons update
-function updateWarlockSpheres(entity) {
-	if (entity.Summon1 || entity.Summon2 || entity.Summon3 || entity.Summon4 || entity.Summon5) {
-		const EF_Init_Par = {
-			effectId: 'temporary_warlock_sphere',
-			ownerAID: entity.GID,
-			persistent: false
-		};
-
-		EffectManager.spam(EF_Init_Par);
-
-		entity.WarlockSpheres = true;
-	} else if (entity.WarlockSpheres) {
-		EffectManager.remove(null, entity.GID, 'temporary_warlock_sphere');
-		entity.WarlockSpheres = false;
-	}
-}
-
 /**
  * Update player option
  *
@@ -2380,6 +2365,7 @@ function onEntityOptionChange(pkt) {
 	);
 
 	entity.bodyState = pkt.bodyState;
+	syncWhiteImprison(entity, EffectManager);
 	entity.healthState = pkt.healthState;
 	entity.effectState = pkt.effectState;
 	entity.isPKModeON = pkt.isPKModeON;

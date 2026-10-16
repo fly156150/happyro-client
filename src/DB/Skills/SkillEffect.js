@@ -1,3 +1,4 @@
+import { wizardSkillEffects } from './WizardEffects.js';
 import { knightSkillEffects } from './KnightEffects.js';
 import { mechanicSkillEffects } from './MechanicEffects.js';
 /**
@@ -676,7 +677,7 @@ SkillEffect[SK.RK_FIGHTINGSPIRIT] = knightSkillEffects[SK.RK_FIGHTINGSPIRIT];
 SkillEffect[SK.RK_ABUNDANCE] = knightSkillEffects[SK.RK_ABUNDANCE];
 SkillEffect[SK.RK_PHANTOMTHRUST] = knightSkillEffects[SK.RK_PHANTOMTHRUST];
 // WL Warlock
-SkillEffect[SK.WL_WHITEIMPRISON] = { effectId: 802 }; //White Imprison
+SkillEffect[SK.WL_WHITEIMPRISON] = {}; // Body state drives White Imprison and its removal.
 SkillEffect[SK.WL_SOULEXPANSION] = {}; //Soul Expansion
 SkillEffect[SK.WL_FROSTMISTY] = { effectId: 726 }; //Frosty Misty
 SkillEffect[SK.WL_JACKFROST] = { effectId: 'ef_jackfrost', groundEffectId: 801 }; //Jack Frost
@@ -686,7 +687,7 @@ SkillEffect[SK.WL_SIENNAEXECRATE] = { effectId: 'ef_siennaexecrate' }; //Sienna 
 SkillEffect[SK.WL_STASIS] = { effectId: 799 }; //Stasis
 SkillEffect[SK.WL_DRAINLIFE] = {}; //Drain Life
 SkillEffect[SK.WL_CRIMSONROCK] = { effectId: 727 }; //Crimson Rock
-SkillEffect[SK.WL_HELLINFERNO] = { groundEffectId: 728, effectId: 800 }; //Hell Inferno
+SkillEffect[SK.WL_HELLINFERNO] = { successEffectId: 728 }; //Hell Inferno: one target cast, followed by fire/dark damage packets
 SkillEffect[SK.WL_COMET] = {}; //Comet
 SkillEffect[SK.WL_CHAINLIGHTNING] = {}; //Chain Lightning
 SkillEffect[SK.WL_CHAINLIGHTNING_ATK] = { effectId: 734 }; //Chain Lightning Attack
@@ -1161,5 +1162,5 @@ SkillEffect[SK.GD_RESTORE] = {}; //Restoration
 SkillEffect[SK.GD_EMERGENCYCALL] = {}; //Urgent Call
 SkillEffect[SK.GD_ITEMEMERGENCYCALL] = {}; //Item Emergency Call
 
-Object.assign(SkillEffect, fourthJobSkillEffects);
+Object.assign(SkillEffect, fourthJobSkillEffects, wizardSkillEffects);
 export default SkillEffect;

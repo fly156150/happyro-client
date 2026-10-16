@@ -28,6 +28,12 @@ export const fourthJobGroundResources = {
 		['strantumtremor/strantumtremor/strantumtremor', false],
 		['strantumtremor/strantumtremor_bottom/strantumtremor_bottom', true]
 	],
+	UNT_VIOLENT_QUAKE: [
+		['violentquake/violentquake_bottom/violentquake_bottom', true]
+	],
+	UNT_ASTRAL_STRIKE: [
+		['astralstrike/astralstrike_bottom/astralstrike_bottom', true]
+	],
 	UNT_ALL_BLOOM: [
 		['allbloom/allbloom/allbloom', false],
 		['allbloom/allbloom_bottom/allbloom_bottom', true]

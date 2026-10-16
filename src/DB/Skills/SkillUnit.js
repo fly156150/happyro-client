@@ -94,6 +94,8 @@ SkillUnit[SU.UNT_CLUSTERBOMB] = 'ef_trap_3_cluster';
 SkillUnit[SU.UNT_REVERBERATION] = EC.EF_BOT_REVERB;
 SkillUnit[SU.UNT_SEVERE_RAINSTORM] = EC.EF_NONE; // Todo
 SkillUnit[SU.UNT_FIREWALK] = EC.EF_FIREWALL2;
+// Floral Flare Road uses the native persistent fire-tile renderer.
+SkillUnit[SU.UNT_FLORAL_FLARE_ROAD] = EC.EF_FIREWALL2;
 SkillUnit[SU.UNT_ELECTRICWALK] = EC.EF_SHOCKWAVE2;
 SkillUnit[SU.UNT_NETHERWORLD] = EC.EF_BOT_REVERB2;
 SkillUnit[SU.UNT_PSYCHIC_WAVE] = EC.EF_NONE; // Todo
