@@ -1,3 +1,5 @@
+import container from './ContainerMenuLayout.css?raw';
+import attributes from './AttributesMenuLayout.css?raw';
 import skills from './SkillsMenuLayout.css?raw';
 import inventory from './InventoryMenuLayout.css?raw';
 import social from './SocialMenuLayout.css?raw';
@@ -8,4 +10,4 @@ import shortcut from './ShortcutMenuLayout.css?raw';
 import selection from './SelectionMenuLayout.css?raw';
 import quests from './QuestsMenuLayout.css?raw';
 
-export default skills + inventory + social + settings + mail + companion + shortcut + selection + quests;
+export default container + attributes + skills + inventory + social + settings + mail + companion + shortcut + selection + quests;

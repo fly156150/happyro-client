@@ -1,0 +1,65 @@
+/* Tablet portrait: each attribute owns an aligned information and action card. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-allocation {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ column-gap: 0;
+ row-gap: 14px;
+ grid-auto-rows: 1fr;
+ border: 0;
+ border-radius: 0;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ grid-template-rows: minmax(34px, 1fr) var(--panel-attribute-control);
+ gap: 0;
+ padding: 0;
+ margin: 0;
+ min-height: 0;
+ border: 1px solid #52606d;
+ border-radius: 6px;
+ overflow: hidden;
+ align-items: stretch;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row > :is(strong, .attribute-value, small) {
+ min-width: 0;
+ white-space: normal;
+ overflow-wrap: anywhere;
+ line-height: 1.25;
+ box-sizing: border-box;
+ padding: 3px 6px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ text-align: center;
+ border-bottom: 1px solid #52606d;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row > strong { grid-column: 1; grid-row: 1; background: #ffffff06; border-right: 1px solid #52606d; }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row > .attribute-value { grid-column: 2; grid-row: 1; justify-content: center; font-variant-numeric: tabular-nums; }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row > small { grid-column: 3; grid-row: 1; justify-content: center; text-align: center; border-left: 1px solid #52606d; font-size: var(--panel-caption); }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments { grid-column: 1 / -1; grid-row: 2; }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl {
+ grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl > :is(dt, dd) {
+ min-width: 0;
+ white-space: normal;
+ overflow-wrap: anywhere;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .point-counter {
+ max-width: 100%;
+ height: auto;
+ min-height: var(--panel-control);
+ white-space: normal;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .point-counter > span {
+ min-width: 0;
+ overflow-wrap: anywhere;
+ padding-block: 4px;
+}
+
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button {
+ border-radius: 0;
+ border-top: 0;
+ border-bottom: 0;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button:first-child { border-left: 0; }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button:last-child { border-right: 0; }

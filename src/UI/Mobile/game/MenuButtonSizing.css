@@ -102,7 +102,7 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
  .character-detail-scroll [data-menu-action-layout='job'] {
  display: grid;
- grid-template-columns: repeat(4, minmax(0, 1fr));
+ grid-template-columns: repeat(var(--tablet-character-columns), minmax(0, 1fr));
  gap: 6px 8px;
  width: 100%;
  min-width: 0;

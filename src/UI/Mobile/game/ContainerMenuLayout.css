@@ -1,0 +1,32 @@
+/* Transparent grouping preserves existing toolbar flow outside tablet portrait. */
+.panel .warehouse-body .container-toolbar .container-primary-filters { display: contents; }
+
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='cart'] .container-toolbar {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 6px;
+ align-items: start;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='cart'] .container-toolbar > .container-filters { display: contents; }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='cart'] .container-toolbar .container-primary-filters {
+ display: flex;
+ grid-column: 1;
+ grid-row: 1;
+ min-width: 0;
+}
+/* Subtype and search share the right-hand track, aligned with the item details. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='cart'] .container-toolbar > .container-filters > :is(select:not([hidden]), .menu-select) {
+ grid-column: 2;
+ grid-row: 1;
+ justify-self: start;
+ width: calc(42% - 4px);
+ min-width: 0;
+ max-width: 100%;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='cart'] .container-toolbar > input[type='search'] {
+ grid-column: 2;
+ grid-row: 1;
+ justify-self: end;
+ width: calc(58% - 4px);
+ min-width: 0;
+}
+

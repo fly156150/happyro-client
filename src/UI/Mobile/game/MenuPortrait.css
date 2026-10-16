@@ -40,8 +40,20 @@
 	font-size: var(--panel-label, 13px);
 }
 
-/* Tablet portrait grows the workspace without changing columns or control density. */
+/* Tablet portrait keeps a shorter workspace without changing columns or controls. */
 :host(:not([data-phone-screen])[data-orientation='portrait']) {
-	--menu-standard-height: 90%;
+	--menu-standard-height: 72%;
 	--menu-edge-y: 24px;
+}
+
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) {
+ --npc-max-height: min(416px, 64%);
+ --npc-min-height: 256px;
+ --menu-dialog-height: 384px;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .panel .pickup-picker {
+ height: calc(var(--mobile-visible-height, 100dvh) * 0.64);
+}
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .panel[data-view='information'] {
+ max-height: min(416px, 64%);
 }

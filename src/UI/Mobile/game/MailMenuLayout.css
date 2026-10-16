@@ -13,3 +13,28 @@
  order: 2;
  margin: 0;
 }
+
+/* Align browsing controls with the content columns on touch wide layouts. */
+:host([data-menu-density][data-menu-arrangement='wide'][data-orientation]) .panel[data-view='mail'] .mail-toolbar {
+ grid-template-columns: calc((100% - 6px) / 2) minmax(0, 1fr) auto;
+ gap: 6px;
+}
+:host([data-menu-density][data-menu-arrangement='wide'][data-orientation]) .panel[data-view='mail'] .mail-toolbar > .mail-search {
+ grid-column: 1;
+ width: 100%;
+ min-width: 0;
+ box-sizing: border-box;
+}
+:host([data-menu-density][data-menu-arrangement='wide'][data-orientation]) .panel[data-view='mail'] .mail-toolbar > .mail-actions {
+ width: 100%;
+ min-width: 0;
+ flex-wrap: nowrap;
+}
+:host([data-menu-density][data-menu-arrangement='wide'][data-orientation]) .panel[data-view='mail'] .mail-toolbar > .mail-actions > button {
+ flex: 1;
+ min-width: var(--panel-action-min-width, 64px);
+}
+:host([data-menu-density][data-menu-arrangement='wide'][data-orientation]) .panel[data-view='mail'] .mail-item-filters {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 6px;
+}

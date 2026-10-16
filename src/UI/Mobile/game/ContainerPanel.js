@@ -66,7 +66,10 @@ export function createContainerPanel(body, actions, initialSource) {
 	}
 	const filters = document.createElement('div');
 	filters.className = 'container-filters menu-form-row';
-	filters.append(modes, sourceField, category);
+	const primaryFilters = document.createElement('div');
+	primaryFilters.className = 'container-filters container-primary-filters menu-form-row';
+	primaryFilters.append(modes, sourceField, category);
+	filters.append(primaryFilters);
 	const subtype = createItemSubtypeFilter(() => {
 		update();
 		$('.inventory-list').scrollTop = 0;

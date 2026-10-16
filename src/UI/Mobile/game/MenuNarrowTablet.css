@@ -48,10 +48,10 @@
   flex-wrap: wrap;
  }
  :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-toolbar {
-  flex-wrap: wrap;
+  grid-template-columns: minmax(0, 1fr) auto;
  }
  :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-toolbar > .mail-search {
-  flex-basis: 100%;
+  grid-column: 1 / -1;
  }
  :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-item-filters {
   grid-template-columns: minmax(0, 1fr);
@@ -96,5 +96,75 @@
  :is(.catalog-toolbar, .monster-toolbar) {
   display: flex;
   flex-wrap: wrap;
+ }
+}
+
+/* Form fields and their actions use the same columns, based on the detail pane.
+ * Keep the outer browser/detail split independent of these inner form rows.
+ */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .character-detail-scroll {
+ --tablet-character-columns: 1;
+}
+@container menu-detail (width >= 420px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .character-detail-scroll {
+  --tablet-character-columns: 2;
+ }
+}
+@container menu-detail (width >= 620px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .character-detail-scroll {
+  --tablet-character-columns: 3;
+ }
+}
+@container menu-detail (width >= 820px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .character-detail-scroll {
+  --tablet-character-columns: 4;
+ }
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .character-detail-scroll
+ :is(.management-form, .management-form-actions) {
+ grid-template-columns: repeat(var(--tablet-character-columns), minmax(0, 1fr));
+}
+
+@container menu-window (width < 560px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .settings-drop-table {
+  min-width: 0;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure .settings-drop-table .setting-number {
+  width: 100%;
+  min-width: 0;
+ }
+}
+
+/* Keep the two attribute panes while adapting each allocation row locally. */
+:host(:not([data-phone-screen])[data-menu-density]) .panel[data-view='attributes'] .attribute-editor {
+ container: attribute-pane / inline-size;
+}
+@container attribute-pane (width < 360px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-allocation {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1fr);
+  column-gap: 6px;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-row {
+  grid-template-rows: auto auto;
+  row-gap: 6px;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-row > :is(strong, .attribute-value, small) {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-increments {
+  grid-column: 1 / -1;
+ }
+}
+@container attribute-pane (width < 240px) {
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-allocation {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-row {
+  grid-template-rows: auto auto auto;
+ }
+ :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-row > small {
+  grid-column: 1 / -1;
  }
 }
