@@ -99,7 +99,10 @@ CartItems.init = function Init() {
 
 	// on drop item
 	this._host.addEventListener('drop', onDrop);
-	this._host.addEventListener('dragover', e => e.stopImmediatePropagation());
+	this._host.addEventListener('dragover', e => {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+	});
 
 	// Items event (delegation)
 	const content = root.querySelector('.container .content');
@@ -805,14 +808,14 @@ function transferItemToOtherUI(item) {
 }
 
 /**
- * Ask to use an item
+ * Double-click transfers the stack back to inventory.
  */
 function onItemUsed(event) {
 	const index = parseInt(this.getAttribute('data-index'), 10);
 	const item = CartItems.getItemByIndex(index);
 
 	if (item) {
-		CartItems.useItem(item);
+		CartItems.reqRemoveItem(item.index, item.count || 1);
 		onItemOut();
 	}
 
