@@ -21,6 +21,7 @@ import StatusState from 'DB/Status/StatusState.js';
 import Emotions from 'DB/Emotions.js';
 import SkillEffect from 'DB/Skills/SkillEffect.js';
 import SkillActionTable from 'DB/Skills/SkillAction.js';
+import { mechanicStatusEffects } from 'DB/Skills/MechanicEffects.js';
 import { fourthJobStatusEffects } from 'DB/Skills/FourthJobEffects.js';
 import EffectConst from 'DB/Effects/EffectConst.js';
 import PetMessageConst from 'DB/Pets/PetMessageConst.js';
@@ -1906,6 +1907,15 @@ function onEntityStatusChange(pkt) {
 		case StatusConst.GROUND_CHARM_POWER:
 		case StatusConst.MYSTERY_POWDER: {
 			const effectId = fourthJobStatusEffects[pkt.index];
+			EffectManager.remove(null, pkt.AID, effectId);
+			if (pkt.state || !Object.prototype.hasOwnProperty.call(pkt, 'state')) {
+				EffectManager.spam({ effectId, ownerAID: pkt.AID, persistent: true });
+			}
+			break;
+		}
+		case StatusConst.NEUTRALBARRIER_MASTER:
+		case StatusConst.STEALTHFIELD_MASTER: {
+			const effectId = mechanicStatusEffects[pkt.index];
 			EffectManager.remove(null, pkt.AID, effectId);
 			if (pkt.state || !Object.prototype.hasOwnProperty.call(pkt, 'state')) {
 				EffectManager.spam({ effectId, ownerAID: pkt.AID, persistent: true });

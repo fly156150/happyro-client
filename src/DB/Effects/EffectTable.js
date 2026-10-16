@@ -8,6 +8,8 @@
  */
 
 import RainWeatherEffect from 'Renderer/Effects/RainWeather.js';
+import { knightRenderEffects } from '../Skills/KnightEffects.js';
+import { mechanicRenderEffects } from '../Skills/MechanicEffects.js';
 import { fourthJobRenderEffects } from '../Skills/FourthJobEffects.js';
 import { fourthJobGroundEffects } from '../Skills/FourthJobGroundEffects.js';
 import SnowWeatherEffect from 'Renderer/Effects/SnowWeather.js';
@@ -65,6 +67,8 @@ const EvillandEffects = SongEffects.EvillandEffects;
 
 export default {
 	...fourthJobRenderEffects,
+	...mechanicRenderEffects,
+	...knightRenderEffects,
 	...fourthJobGroundEffects,
 	/// Common parameters
 	///
@@ -1200,7 +1204,7 @@ export default {
 			type: 'CYLINDER',
 			alphaMax: 0.7,
 			animation: 4,
-			attachedEntity: true,
+			attachedEntity: false,
 			bottomSize: 4,
 			duration: 300,
 			fade: true,
@@ -1213,7 +1217,7 @@ export default {
 			type: 'CYLINDER',
 			alphaMax: 0.6,
 			animation: 4,
-			attachedEntity: true,
+			attachedEntity: false,
 			bottomSize: 4,
 			duration: 300,
 			fade: true,
@@ -14750,11 +14754,15 @@ export default {
 
 	1050: [
 		{
-			//EF_NC_MAGMA_ERUPTION
+			// Bound to the server's magma skill unit, not its caster or victims.
 			type: 'STR',
 			file: 'nc_magma_eruption',
-			wav: 'effect/nc_magma_eruption',
 			attachedEntity: true
+		},
+		{
+			// Play once when the unit appears; the persistent visual may loop.
+			wav: 'effect/nc_magma_eruption',
+			repeat: false
 		}
 	],
 

@@ -616,6 +616,9 @@ class EffectManager {
 	 */
 	static spamEffect(Params) {
 		let filename;
+		// A ground-cast coordinate is an anchor, never a request to follow its caster.
+		// Copy per-instance options; shared definitions still serve hit/attachment effects.
+		if (Params.Init.fixedPosition) Params.effect = { ...Params.effect, attachedEntity: false };
 
 		Params.Inst.position = Params.Init.position;
 		Params.Inst.otherPosition = Params.Init.otherPosition;
@@ -683,7 +686,9 @@ class EffectManager {
 			Params.effect.attachedEntity && Params.Init.ownerEntity ? Params.Init.ownerEntity.direction : 0;
 
 		//Set delays
-		Params.Inst.duration = !isNaN(Params.effect.duration) ? Params.effect.duration : Params.Init.duration;
+		Params.Inst.duration = Params.effect.matchTravelDuration && Number.isFinite(Params.Init.travelDuration)
+			? Math.max(Params.Init.travelDuration, 1)
+			: !isNaN(Params.effect.duration) ? Params.effect.duration : Params.Init.duration;
 
 		Params.Inst.delayOffsetDelta = !isNaN(Params.effect.delayOffsetDelta)
 			? Params.effect.delayOffsetDelta * Params.Inst.duplicateID
@@ -841,6 +846,7 @@ class EffectManager {
 					effectId: effectId,
 					ownerAID: destAID,
 					position: position,
+					fixedPosition: Boolean(position),
 					startTick: tick,
 					otherAID: srcAID
 				};

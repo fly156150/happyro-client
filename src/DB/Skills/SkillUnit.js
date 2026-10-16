@@ -125,7 +125,7 @@ SkillUnit[SU.UNT_ZENKAI_WATER] = EC.EF_NONE; // Todo
 SkillUnit[SU.UNT_MAKIBISHI] = EC.EF_NONE; // Todo
 SkillUnit[SU.UNT_VENOMFOG] = EC.EF_NONE; // Todo
 SkillUnit[SU.UNT_ICEMINE] = EC.EF_NONE; // Todo
-SkillUnit[SU.UNT_MAGMA_ERUPTION] = EC.EF_NONE; // Todo
+SkillUnit[SU.UNT_MAGMA_ERUPTION] = EC.EF_NC_MAGMA_ERUPTION;
 SkillUnit[SU.UNT_B_TRAP] = EC.EF_NONE; // Todo
 
 Object.assign(SkillUnit, fourthJobGroundUnits);
