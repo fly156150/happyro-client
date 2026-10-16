@@ -670,8 +670,7 @@ function onActionFailure(pkt) {
 			break;
 
 		case 3: // Ammunition has been equipped.
-			// TODO: check the class - assassin: 1040 | gunslinger: 1175 | default: 245
-			ChatBox.addText(DB.getMessage(245), ChatBox.TYPE.BLUE, ChatBox.FILTER.ITEM);
+			ChatBox.addText('已装备弹药', ChatBox.TYPE.BLUE, ChatBox.FILTER.ITEM);
 			break;
 	}
 }

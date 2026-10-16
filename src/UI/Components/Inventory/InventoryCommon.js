@@ -914,6 +914,8 @@ export function createInventory(config) {
 	 * @param {Item} item
 	 */
 	Component.useItem = function UseItem(item) {
+		// Ammunition remains in the inventory while equipped; do not send a second wear request.
+		if (item.type === ItemType.AMMO && Component.equippedItems.includes(item.index)) return;
 		switch (item.type) {
 			case ItemType.HEALING:
 			case ItemType.USABLE:
