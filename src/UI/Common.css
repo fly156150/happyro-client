@@ -197,16 +197,14 @@ ui-button {
 	}
 }
 
-/* Native dialogs are above the game cursor's layer; keep their pointer visible. */
+/* The game cursor uses the top layer too; retain native text editing cursors. */
 @media (pointer: fine) {
+	:host-context(.custom-cursor) dialog:modal::backdrop,
 	:host-context(.custom-cursor) dialog:modal,
 	:host-context(.custom-cursor) dialog:modal * {
-		cursor: auto !important;
+		cursor: none !important;
 	}
-	:host-context(.custom-cursor) dialog:modal :is(button, [role='button']) {
-		cursor: pointer !important;
-	}
-	:host-context(.custom-cursor) dialog:modal :is(input, textarea) {
+	:host-context(.custom-cursor) dialog:modal :is(input, textarea, [contenteditable='true']) {
 		cursor: text !important;
 	}
 }

@@ -9,6 +9,7 @@
  */
 
 import Platform from 'UI/Platform.js';
+import { getFocusedNativeModal, syncModalCursorLayer, isTextCursorTarget } from './NativeModalCursor.js';
 import Client from 'Core/Client.js';
 import MemoryManager from 'Core/MemoryManager.js';
 import Graphics from 'Preferences/Graphics.js';
@@ -74,6 +75,7 @@ let _action;
  * @type {reference} selector
  */
 let _selector;
+let _pointerTarget = null;
 
 /**
  * Cursor Constructor
@@ -189,7 +191,9 @@ class Cursor {
 	 * Render the cursor (update)
 	 */
 	static render(tick) {
-		if (Platform.isMobile || !Graphics.cursor || !_compiledStyle.length) {
+		const modal = getFocusedNativeModal();
+		if (_selector) syncModalCursorLayer(_selector, modal);
+		if (Platform.isMobile || !Graphics.cursor || !_compiledStyle.length || (modal && isTextCursorTarget(_pointerTarget))) {
 			if (_selector) {
 				// Pre-rework it used 'hidden' css
 				_selector.style.display = 'none';
@@ -223,7 +227,7 @@ class Cursor {
 			return;
 		}
 
-		if (Cursor.magnetism && !Cursor.blockMagnetism) {
+		if (!modal && Cursor.magnetism && !Cursor.blockMagnetism) {
 			const entity = EntityManager.getOverEntity();
 			if (entity) {
 				switch (entity.objecttype) {
@@ -303,7 +307,8 @@ function bindMouseEvents() {
 	const cursorCSS = `
 		.custom-cursor * { cursor: none!important; }
 		.custom-cursor .cursor { display: block; }
-		.cursor { pointer-events: none; z-index: 9999; position: fixed; width: 50px; height: 50px; overflow: hidden; display: none; }
+		.cursor { margin: 0; padding: 0; border: 0; background: transparent; inset: auto; pointer-events: none; z-index: 9999; position: fixed; width: 50px; height: 50px; overflow: hidden; display: none; }
+		.cursor::backdrop { display: none; }
 		.cursor__sprite { position: absolute; top: 0; left: 0; }
 	`;
 	const styleEl = document.createElement('style');
@@ -313,6 +318,8 @@ function bindMouseEvents() {
 
 	const cursorDiv = document.createElement('div');
 	cursorDiv.className = 'cursor';
+	cursorDiv.popover = 'manual';
+	cursorDiv.setAttribute('aria-hidden', 'true');
 	document.body.appendChild(cursorDiv);
 	_selector = document.querySelector('.cursor');
 
@@ -430,6 +437,7 @@ function bindMouseEvents() {
 	window.addEventListener(
 		'pointermove',
 		e => {
+			_pointerTarget = e.composedPath()[0];
 			Cursor.x = e.pageX;
 			Cursor.y = e.pageY;
 			_selector.style.left = `${e.pageX}px`;
