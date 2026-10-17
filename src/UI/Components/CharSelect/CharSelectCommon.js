@@ -49,7 +49,8 @@ export function createCharSelect(config) {
 		activationEvent = 'mousedown',
 		bitmapSkin = true,
 		onSelectionChange = () => {},
-		onSlotChange = () => {}
+		onSlotChange = () => {},
+		renderCharacterPreview = null
 	} = config;
 	function loadSkin(path, callback) {
 		if (bitmapSkin) Client.loadFile(path, callback);
@@ -1446,7 +1447,8 @@ export function createCharSelect(config) {
 				if (_slots[idx + i] && _slots[idx + i].DeleteDate) {
 					_entitySlots[idx + i].action = 2;
 				}
-				_entitySlots[idx + i].renderEntity();
+				if (renderCharacterPreview) renderCharacterPreview(_entitySlots[idx + i], _ctx[i]);
+				else _entitySlots[idx + i].renderEntity();
 			}
 		}
 	}

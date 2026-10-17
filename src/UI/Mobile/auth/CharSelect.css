@@ -106,15 +106,22 @@
 	background: var(--m-surface-active);
 }
 
+.character-preview {
+ display: flex;
+ justify-content: center;
+ width: 100%;
+ height: 137px;
+ overflow: hidden;
+}
+
 .char_canvas canvas {
-	display: block;
-	width: 100%;
-	max-width: 110px;
-	/* Bring the enlarged preview closer to its label without moving the card. */
-	transform: translateY(8px) scale(1.18);
-	height: auto;
-	margin: -10px auto 0;
-	pointer-events: none;
+ --character-preview-scale: 1.18;
+ display: block;
+ width: 110px;
+ height: 137px;
+ max-width: 100%;
+ object-fit: contain;
+ pointer-events: none;
 }
 
 .char_canvas .name {
@@ -235,7 +242,8 @@
 @media (orientation: portrait) and (max-width: 600px) and (min-height: 480px) {
 	.layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(120px, calc((100% - 12px) / 2 - 8px)) minmax(200px, 1fr); }
 	.char_list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: max-content; }
-	.char_canvas canvas { max-width: 80px; transform: translateY(8px) scale(1.375); }
+	.character-preview { height: 110px; }
+	.char_canvas canvas { --character-preview-scale: 1.235; height: 110px; width: 89px; }
 	.detail-panel { border-top: 1px solid var(--m-border); padding-top: 8px; row-gap: 0; }
 	.selection-label { margin-bottom: 8px; }
 	.action-group { border-top: none; }

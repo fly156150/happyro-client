@@ -12,6 +12,7 @@
  */
 
 import { createCharSelect } from 'UI/Components/CharSelect/CharSelectCommon.js';
+import { createCharacterPreviewRenderer } from './CharacterPreview.js';
 import { withMobileShell } from '../Shell.js';
 import tokens from '../tokens.css?raw';
 import shellCSS from '../Shell.css?raw';
@@ -22,7 +23,7 @@ const slots = Array.from(
 	{ length: 15 },
 	(_, i) => `
 	<button class="char_canvas" id="slot${i}" type="button" aria-label="角色栏 ${i + 1}">
-		<canvas width="157" height="195"></canvas>
+		<span class="character-preview"><canvas width="157" height="195"></canvas></span>
 		<span class="name"></span>
 		<span class="empty-placeholder" hidden aria-hidden="true"><span class="empty-plus">+</span><span>创建角色</span></span>
 		<span class="timedelete slot${i} hidden"></span>
@@ -37,6 +38,7 @@ const CharSelect = withMobileShell(
 		htmlText,
 		cssText: tokens + shellCSS + screenCSS,
 		gridLayout: true,
+		renderCharacterPreview: createCharacterPreviewRenderer(),
 		deleteReservation: true,
 		deletionEnabled: false,
 		resetSelectionOnLogin: true,
