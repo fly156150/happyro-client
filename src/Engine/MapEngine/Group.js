@@ -1,3 +1,4 @@
+import { updatePartyMemberInfo } from './PartyMemberInfo.js';
 import { allowSocialText } from './SocialText.js';
 /**
  * Engine/MapEngine/Group.js
@@ -59,6 +60,7 @@ class GroupEngine {
 		Network.hookPacket(PACKET.ZC.DELETE_MEMBER_FROM_GROUP, onPartyMemberLeave);
 		Network.hookPacket(PACKET.ZC.ACK_MAKE_GROUP, onPartyCreate);
 		Network.hookPacket(PACKET.ZC.GROUP_ISALIVE, onPartyIsAlive);
+		Network.hookPacket(PACKET.ZC.NOTIFY_MEMBERINFO_TO_GROUPM, packet => updatePartyMemberInfo(PartyFriends.getUI(), packet));
 
 		const PartyUI = PartyFriends.getUI();
 

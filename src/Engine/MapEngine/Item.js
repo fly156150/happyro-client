@@ -2,6 +2,7 @@ import { showToast } from 'UI/Components/Toast.js';
 import { finishItemOperation, receiveItemOperationResult } from 'UI/Game/ItemOperationFeedback.js';
 import { finishRefinement } from 'UI/Game/GameRefinement.js';
 import { openGameMaterials } from 'UI/Game/GameMaterials.js';
+import { createMaterialSelectionPacket } from './MaterialSelection.js';
 import { openGameSelection, selectionEntries } from 'UI/Game/GameSelection.js';
 import Platform from 'UI/Platform.js';
 /**
@@ -591,18 +592,7 @@ function onListWinItem(ptk) {
  * @param {object} inforMaterialList
  */
 ItemListWindowSelection.onItemListWindowSelected = function onItemListWindowSelected(inforMaterialList) {
-	let pkt;
-	if (PACKETVER.value >= 20180307) {
-		pkt = new PACKET.CZ.ITEMLISTWIN_RES2();
-	} else {
-		pkt = new PACKET.CZ.ITEMLISTWIN_RES();
-	}
-
-	pkt.Type = inforMaterialList.Type;
-	pkt.Action = inforMaterialList.Action;
-	pkt.MaterialList = inforMaterialList.MaterialList;
-
-	Network.sendPacket(pkt);
+	Network.sendPacket(createMaterialSelectionPacket(inforMaterialList));
 };
 
 /**

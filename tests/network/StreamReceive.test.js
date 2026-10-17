@@ -170,3 +170,25 @@ it('receives arrival previews through the real framing table across every split'
  }
  expect(disconnected).not.toHaveBeenCalled();
 });
+
+it('reads a 20211103 talkie message without consuming the following packet', () => {
+	const talkie = vi.fn();
+	Network.hookPacket(PACKET.ZC.TALKBOX_CHATCONTENTS, talkie);
+	const frame = new Uint8Array(27);
+	const view = new DataView(frame.buffer);
+	view.setUint16(0, 0x0191, true);
+	view.setUint32(2, 42, true);
+	frame.set(new TextEncoder().encode('中文留言'), 6);
+	const combined = new Uint8Array(frame.length + bytes().byteLength);
+	combined.set(frame);
+	combined.set(new Uint8Array(bytes()), frame.length);
+	for (let split = 1; split < frame.length; split++) {
+		talkie.mockClear(); received.mockClear();
+		socket.onMessage(combined.slice(0, split));
+		expect(talkie).not.toHaveBeenCalled();
+		socket.onMessage(combined.slice(split));
+		expect(talkie).toHaveBeenCalledWith(expect.objectContaining({ AID: 42, contents: '中文留言' }));
+		expect(received).toHaveBeenCalledTimes(1);
+		expect(disconnected).not.toHaveBeenCalled();
+	}
+});

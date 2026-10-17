@@ -83,7 +83,6 @@ ItemListWindowSelection.init = function init() {
 
 	this.list = [];
 
-	this.draggable(root.querySelector('.head'));
 	root.querySelector('.footer .extend').addEventListener('mousedown', onResize);
 	root.querySelector('.event_selectall').addEventListener('mousedown', onToggleSelectAmount);
 

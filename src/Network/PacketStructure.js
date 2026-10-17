@@ -9,6 +9,7 @@
  * @author Vincent Thibault
  */
 
+import { TALKIE_MESSAGE_SIZE } from './TalkieBoxProtocol.js';
 import BinaryWriter from 'Utils/BinaryWriter.js';
 import PACKETVER from './PacketVerManager.js';
 import Struct from 'Utils/Struct.js';
@@ -2145,6 +2146,7 @@ PACKET.CZ.REQ_ITEMREPAIR = function PACKET_CZ_REQ_ITEMREPAIR() {
 	this.index = 0;
 	this.itemId = 0;
 	this.RefiningLevel = 0;
+	this.grade = 0;
 	this.slots = {
 		card1: 0,
 		card2: 0,
@@ -2155,32 +2157,15 @@ PACKET.CZ.REQ_ITEMREPAIR = function PACKET_CZ_REQ_ITEMREPAIR() {
 PACKET.CZ.REQ_ITEMREPAIR.prototype.build = function () {
 	const ver = this.getPacketVersion();
 	const pkt = new BinaryWriter(ver[2]);
-
 	pkt.writeShort(ver[1]);
 	pkt.writeShort(this.index);
-
-	if (ver[2] === 15) {
-		if (PACKETVER.value >= 20181121) {
-			pkt.writeULong(this.itemId);
-		} else {
-			pkt.writeUShort(this.itemId);
-		}
-
-		pkt.writeUByte(this.RefiningLevel);
-
-		if (PACKETVER.value >= 20181121) {
-			pkt.writeLong(this.slots.card1);
-			pkt.writeLong(this.slots.card2);
-			pkt.writeLong(this.slots.card3);
-			pkt.writeLong(this.slots.card4);
-		} else {
-			pkt.writeShort(this.slots.card1);
-			pkt.writeShort(this.slots.card2);
-			pkt.writeShort(this.slots.card3);
-			pkt.writeShort(this.slots.card4);
-		}
-	}
-
+	pkt.writeULong(this.itemId);
+	pkt.writeULong(this.slots.card1);
+	pkt.writeULong(this.slots.card2);
+	pkt.writeULong(this.slots.card3);
+	pkt.writeULong(this.slots.card4);
+	pkt.writeUByte(this.RefiningLevel);
+	pkt.writeUByte(this.grade);
 	return pkt;
 };
 
@@ -2758,9 +2743,9 @@ PACKET.CZ.REQ_MAKINGITEM.prototype.build = function () {
 	pkt_buf.writeShort(0x25b);
 	pkt_buf.writeShort(this.mkType);
 	if (PACKETVER.value >= 20181121) {
-		pkt_buf.writeUShort(this.id);
-	} else {
 		pkt_buf.writeULong(this.id);
+	} else {
+		pkt_buf.writeUShort(this.id);
 	}
 	return pkt_buf;
 };
@@ -6611,9 +6596,9 @@ PACKET.ZC.ACK_REQMAKINGITEM.size = 6;
 // 0x191
 PACKET.ZC.TALKBOX_CHATCONTENTS = function PACKET_ZC_TALKBOX_CHATCONTENTS(fp, end) {
 	this.AID = fp.readULong();
-	this.contents = fp.readString(80);
+	this.contents = fp.readString(TALKIE_MESSAGE_SIZE);
 };
-PACKET.ZC.TALKBOX_CHATCONTENTS.size = 86;
+PACKET.ZC.TALKBOX_CHATCONTENTS.size = 6 + TALKIE_MESSAGE_SIZE;
 
 // 0x192
 PACKET.ZC.UPDATE_MAPINFO = function PACKET_ZC_UPDATE_MAPINFO(fp, end) {
@@ -7574,18 +7559,18 @@ PACKET.ZC.NOTIFY_CRAZYKILLER.size = 10;
 // 0x221
 PACKET.ZC.NOTIFY_WEAPONITEMLIST = function PACKET_ZC_NOTIFY_WEAPONITEMLIST(fp, end) {
 	this.itemList = (function () {
-		const count = ((end - fp.tell()) / 13) | 0;
+		const count = ((end - fp.tell()) / 23) | 0;
 		const out = new Array(count);
 		for (let i = 0; i < count; ++i) {
 			out[i] = {};
 			out[i].index = fp.readShort();
-			out[i].ITID = fp.readUShort();
+			out[i].ITID = fp.readULong();
 			out[i].RefiningLevel = fp.readUChar();
 			out[i].slot = {};
-			out[i].slot.card1 = fp.readUShort();
-			out[i].slot.card2 = fp.readUShort();
-			out[i].slot.card3 = fp.readUShort();
-			out[i].slot.card4 = fp.readUShort();
+			out[i].slot.card1 = fp.readULong();
+			out[i].slot.card2 = fp.readULong();
+			out[i].slot.card3 = fp.readULong();
+			out[i].slot.card4 = fp.readULong();
 		}
 		return out;
 	})();
@@ -13798,6 +13783,14 @@ PACKET.ZC.CONFIG_NOTIFY3 = function PACKET_ZC_CONFIG_NOTIFY3(fp, end) {
 PACKET.ZC.CONFIG_NOTIFY3.size = 5;
 
 // 0xab2
+// Party member job and level update (PACKETVER 20211103).
+PACKET.ZC.NOTIFY_MEMBERINFO_TO_GROUPM = function PACKET_ZC_NOTIFY_MEMBERINFO_TO_GROUPM(fp, end) {
+	this.AID = fp.readULong();
+	this.job = fp.readUShort();
+	this.level = fp.readUShort();
+};
+PACKET.ZC.NOTIFY_MEMBERINFO_TO_GROUPM.size = 10;
+
 PACKET.ZC.GROUP_ISALIVE = function PACKET_ZC_GROUP_ISALIVE(fp, end) {
 	this.AID = fp.readULong();
 	this.isDead = fp.readChar();
@@ -14032,7 +14025,7 @@ PACKET.ZC.ADD_MEMBER_TO_GROUP4.size = 89;
 
 // 0xae5
 PACKET.ZC.GROUP_LIST3 = function PACKET_ZC_GROUP_LIST3(fp, end) {
-	this.groupName = fp.readBinaryString(NAME_LENGTH);
+	this.groupName = fp.readString(NAME_LENGTH);
 	this.groupInfo = (function () {
 		const count = ((end - fp.tell()) / 54) | 0;
 		const out = new Array(count);
@@ -14040,7 +14033,7 @@ PACKET.ZC.GROUP_LIST3 = function PACKET_ZC_GROUP_LIST3(fp, end) {
 			out[i] = {};
 			out[i].AID = fp.readULong();
 			out[i].GID = fp.readULong();
-			out[i].characterName = fp.readBinaryString(NAME_LENGTH);
+			out[i].characterName = fp.readString(NAME_LENGTH);
 			out[i].mapName = fp.readBinaryString(16);
 			out[i].role = fp.readUChar();
 			out[i].state = fp.readUChar();
@@ -14992,18 +14985,19 @@ PACKET.CZ.GRADE_ENCHANT_SELECT_EQUIPMENT.prototype.build = function () {
 // 0xb65
 PACKET.ZC.REPAIRITEMLIST2 = function PACKET_ZC_REPAIRITEMLIST2(fp, end) {
 	this.itemList = (function () {
-		const count = ((end - fp.tell()) / 13) | 0;
+		const count = ((end - fp.tell()) / 24) | 0;
 		const out = new Array(count);
 		for (let i = 0; i < count; ++i) {
 			out[i] = {};
 			out[i].index = fp.readShort();
 			out[i].ITID = fp.readULong();
-			out[i].RefiningLevel = fp.readUChar();
 			out[i].slot = {};
 			out[i].slot.card1 = fp.readULong();
 			out[i].slot.card2 = fp.readULong();
 			out[i].slot.card3 = fp.readULong();
 			out[i].slot.card4 = fp.readULong();
+			out[i].RefiningLevel = fp.readUChar();
+			out[i].grade = fp.readUChar();
 		}
 		return out;
 	})();

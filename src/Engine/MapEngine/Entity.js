@@ -17,6 +17,7 @@ import CombatDiagnostics from 'Core/CombatDiagnostics.js';
 import DB from 'DB/DBManager.js';
 import { localizeEntityName } from './EntityName.js';
 import { localizeGuildPositionName } from 'DB/GuildPositionName.js';
+import SkillUnitId from 'DB/Skills/SkillUnitConst.js';
 import SkillId from 'DB/Skills/SkillConst.js';
 import SkillInfo from 'DB/Skills/SkillInfo.generated.js';
 import StatusConst from 'DB/Status/StatusConst.js';
@@ -1441,6 +1442,20 @@ function onEntityUseSkill(pkt) {
  * @param {object} pkt - PACKET.ZC.SKILL_ENTRY
  */
 function onSkillAppear(pkt) {
+	// Hidden traps still need a position for their triggered speech bubble.
+	if (pkt.job === SkillUnitId.UNT_DUMMYSKILL) {
+		EntityManager.get(pkt.AID)?.remove();
+		const entity = new Entity();
+		entity.GID = pkt.AID;
+		entity.position = [pkt.xPos, pkt.yPos, Altitude.getCellHeight(pkt.xPos, pkt.yPos)];
+		entity.objecttype = Entity.TYPE_EFFECT;
+		entity.effectColor[3] = 0;
+		entity.hideShadow = true;
+		entity.creatorGID = pkt.creatorAID;
+		entity.skillUnitId = pkt.job;
+		EntityManager.add(entity);
+		return;
+	}
 	EffectManager.spamSkillZone(pkt.job, pkt.xPos, pkt.yPos, pkt.AID, pkt.creatorAID);
 }
 

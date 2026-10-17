@@ -72,7 +72,6 @@ ConvertItems.init = function init() {
 
 	this.material = [];
 
-	this.draggable(root.querySelector('.head'));
 	root.querySelector('.footer .extend').addEventListener('mousedown', onResize);
 	root.querySelector('ui-button.trade').addEventListener('click', onMessageModel);
 	root.querySelector('ui-button.cancel').addEventListener('click', onClose);

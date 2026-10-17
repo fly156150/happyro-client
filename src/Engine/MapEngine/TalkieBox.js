@@ -1,9 +1,10 @@
+import { TALKIE_MESSAGE_SIZE } from 'Network/TalkieBoxProtocol.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 
 export function talkieMessageError(value) {
 	if (!value.trim()) return '请输入留言';
-	if (value.includes('\0') || new TextEncoder().encode(value).length > 79) return '留言最多 79 字节（中文通常最多 26 字）';
+	if (value.includes('\0') || new TextEncoder().encode(value).length > TALKIE_MESSAGE_SIZE - 1) return `留言最多 ${TALKIE_MESSAGE_SIZE - 1} 字节（中文通常最多 6 字）`;
 	return '';
 }
 
@@ -14,7 +15,7 @@ export function requestTalkieMessage() {
 		const input = document.createElement('input');
 		input.type = 'text';
 		input.required = true;
-		input.maxLength = 79;
+		input.maxLength = TALKIE_MESSAGE_SIZE - 1;
 		input.placeholder = '输入留言';
 		input.setAttribute('aria-label', '话匣子留言');
 		content.append(input);
