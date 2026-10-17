@@ -97,7 +97,7 @@ function snapshot() {
 		autoCombat: autoCombat.snapshot(),
 		unreadMail: gameMailUnread(),
 		name: entity.display.name,
-		job: getJobDisplayName(entity.job),
+		job: getJobDisplayName(entity._job),
 		level: entity.clevel,
 		jobLevel: entity.joblevel,
 		money: entity.money,

@@ -1,5 +1,6 @@
 import escapeHtml from './escapeHtml.js';
 
+
 const names = { cart: '手推车', peco: '大嘴鸟', dragon: '龙', gryphon: '狮鹫', mado: '魔导机甲', falcon: '猎鹰', warg: '战狼', warg_rider: '战狼骑乘', hawk: '鹰' };
 const ridingActions = { enable: '骑乘', disable: '下骑' };
 const actions = {
@@ -25,8 +26,9 @@ const reasons = {
 export function renderCharacterRiding(rows, pending) {
 	return `<section class="character-riding"><h4>骑乘与随行</h4><div class="character-riding-list">${rows.length ? rows.map(row => {
 		const action = actions[row.kind];
+		const title = ['peco', 'dragon', 'gryphon'].includes(row.kind) ? '骑乘' : names[row.kind];
 		const reason = row.reason === 'riding_skill_required' ? `需学习「${skills[row.kind]}」` : reasons[row.reason] || row.reason;
-		return `<div class="character-riding-row"><div><strong>${names[row.kind]}</strong>${reason ? `<p>${escapeHtml(reason)}</p>` : ''}</div><div class="management-form-actions"><button type="button" data-riding-kind="${row.kind}" ${pending || row.reason ? 'disabled' : ''}>${row.active ? action.disable : action.enable}</button></div></div>`;
+		return `<div class="character-riding-row"><div><strong>${title}</strong>${reason ? `<p>${escapeHtml(reason)}</p>` : ''}</div><div class="management-form-actions"><button type="button" data-riding-kind="${row.kind}" ${pending || row.reason ? 'disabled' : ''}>${row.active ? action.disable : action.enable}</button></div></div>`;
 	}).join('') : '<p class="character-traits-unavailable">当前职业没有可用的骑乘或随行功能</p>'}</div></section>`;
 }
 export function ridingConfirmation(row) {
@@ -35,10 +37,11 @@ export function ridingConfirmation(row) {
 		if (['falcon', 'warg', 'hawk'].includes(row.kind)) return `确认${actions[row.kind].disable}${names[row.kind]}？`;
 		if (row.kind === 'warg_rider') return '确认从战狼上下骑？下骑后战狼会继续随行。';
 		if (row.kind === 'mado') return '确认解除魔导机甲驾驶？';
-		return `确认从${names[row.kind]}上下来？`;
+		return '确认下骑？';
 	}
 	if (row.kind === 'warg') return '确认召唤战狼？需携带狼笛，并按技能规则消耗 SP。';
 	if (row.kind === 'hawk') return '确认召唤鹰？需携带猎鹰笛，并按技能规则消耗 SP。';
 	if (row.kind === 'warg_rider') return '确认骑乘战狼？将按技能规则消耗 SP。';
-	return `确认${actions[row.kind].enable}${names[row.kind]}？${row.ticket ? '将消耗手推车免费使用券 ×1。' : row.fee ? `需支付 ${row.fee.toLocaleString()} Zeny。` : ''}`;
+	const operation = ['peco', 'dragon', 'gryphon'].includes(row.kind) ? '骑乘' : `${actions[row.kind].enable}${names[row.kind]}`;
+	return `确认${operation}？${row.ticket ? '将消耗手推车免费使用券 ×1。' : row.fee ? `需支付 ${row.fee.toLocaleString()} Zeny。` : ''}`;
 }

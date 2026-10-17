@@ -2833,6 +2833,10 @@ export default function EntityEngine() {
 	Network.hookPacket(PACKET.ZC.NOTIFY_CHAT, onEntityTalk);
 	Network.hookPacket(PACKET.ZC.SHOWSCRIPT, onEntityTalk);
 	Network.hookPacket(PACKET.ZC.NPC_CHAT, onEntityTalkColor);
+	Network.hookPacket(PACKET.ZC.HAPPYRO_RIDING_APPEARANCE, pkt => {
+		const entity = EntityManager.get(pkt.actorId);
+		if (entity) entity.ridingAppearance = pkt.appearance;
+	});
 	Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_NAME, pkt => {
 		const entity = EntityManager.get(pkt.AID);
 		if (entity) localizeEntityName(entity, pkt.CName);

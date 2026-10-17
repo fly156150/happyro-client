@@ -31,6 +31,7 @@ import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
 import ShadowTable from 'DB/Monsters/ShadowTable.js';
 import MountTable from 'DB/Jobs/MountTable.js';
+import { ridingAppearanceJob } from './RidingAppearance.js';
 import AllMountTable from 'DB/Jobs/AllMountTable.js';
 import EntityAction from './EntityAction.js';
 import PACKETVER from 'Network/PacketVerManager.js';
@@ -162,6 +163,10 @@ function hasTransformation() {
 /**
  * Returns the effective display job, considering all active transformations
  */
+function getRenderJob() {
+	return (this._ridingAppearance && ridingAppearanceJob(this)) || getEffectiveJob.call(this);
+}
+
 function getEffectiveJob() {
 	return (
 		this._active_monster_transform || this._monster_transform || this._job_transform || this.costume || this._job
@@ -192,6 +197,35 @@ function refreshHeadState() {
 	}
 }
 
+function loadAppearanceBody(path, args, onload, onerror) {
+ let stopped = false;
+ let ready = 0;
+ let timer;
+ const cancel = () => {
+  stopped = true;
+  clearTimeout(timer);
+  if (this._appearanceLoadCancel === cancel) this._appearanceLoadCancel = null;
+ };
+ const fail = () => { if (!stopped) { cancel(); onerror(); } };
+ const loaded = () => {
+  if (stopped) return;
+  if (++ready === 2) { cancel(); onload(); }
+ };
+ this._appearanceLoadCancel = cancel;
+ timer = setTimeout(fail, 8000);
+ try {
+  Client.loadFile(path + '.act', act => {
+   if (stopped) return;
+   this.sound.preload(act.sounds);
+   loaded();
+  }, fail);
+  if (!stopped) Client.loadFile(path + '.spr', loaded, fail, args);
+ } catch (error) {
+  if (stopped) throw error;
+  fail();
+ }
+}
+
 /**
  * Updating job
  *
@@ -201,6 +235,9 @@ function UpdateBody(job) {
 	let baseJob;
 	// Capture sequence number for stale callback detection
 	const transformationSeq = this._transformationSeq || 0;
+	const appearanceEpoch = this._appearanceEpoch || 0;
+	const appearanceManaged = !!(this._ridingAppearance || this._appearanceBody);
+	const viewSeq = appearanceManaged ? (this._viewSeq = (this._viewSeq || 0) + 1) : this._viewSeq;
 
 	// job < 0 is a "no body update" sentinel: keep the current body state untouched, including
 	// this.gr2. Intentionally not cleared here -- same as the invisible-sprite branch below
@@ -209,6 +246,8 @@ function UpdateBody(job) {
 	if (job < 0) {
 		return;
 	}
+
+	this._appearanceLoadCancel?.();
 
 	// Check if this is a transformation job (monster or form)
 	// If so, don't update _job - it should preserve the original job
@@ -245,9 +284,9 @@ function UpdateBody(job) {
 	// Update effective job
 	this._effectiveJob = getEffectiveJob.call(this);
 
-	if (this.costume) {
-		job = this.costume;
-	}
+	const appearanceJob = this._ridingAppearance ? ridingAppearanceJob(this) : 0;
+	this._appearanceBody = appearanceJob;
+	job = appearanceJob || this.costume || job;
 
 	// Resize character
 	this.xSize = this.ySize = DB.isBaby(job) ? 4 : 5;
@@ -367,23 +406,20 @@ function UpdateBody(job) {
 		this.gr2 = null;
 	}
 
-	// Loading
-	Client.loadFile(path + '.act', act => this.sound.preload(act.sounds));
-	Client.loadFile(
-		path + '.spr',
-		function () {
+	const onBodyLoaded = function () {
 			// Check if callback is stale (transformation changed while callback was pending)
 			const isStaleCallback = this._transformationSeq && this._transformationSeq > transformationSeq;
 
 			// Get current job considering transformations
-			const currentJob = getEffectiveJob.call(this);
+			const currentJob = getRenderJob.call(this);
 
 			// Only update if callback is valid
+			if (appearanceEpoch !== (this._appearanceEpoch || 0)) return;
+			if (appearanceManaged && (viewSeq !== this._viewSeq || isStaleCallback || job !== currentJob)) return;
 			if (!isStaleCallback && job === currentJob) {
 				this.files.body.spr = path + '.spr';
 				this.files.body.act = path + '.act';
 
-				// Apply head suppression/restoration
 				// Apply head suppression/restoration
 				refreshHeadState.call(this);
 			}
@@ -392,15 +428,24 @@ function UpdateBody(job) {
 			this.bodypalette = this._bodypalette;
 			this.weapon = this._weapon;
 			this.shield = this._shield;
-		}.bind(this),
-		null,
-		{
-			to_rgba: this.objecttype !== Entity.TYPE_PC
-		}
-	);
+			if (appearanceManaged) this.robe = this._robe;
+		}.bind(this);
+	const bodyArgs = { to_rgba: this.objecttype !== Entity.TYPE_PC };
+	if (appearanceJob) {
+		loadAppearanceBody.call(this, path, bodyArgs, onBodyLoaded, () => {
+			if (appearanceEpoch !== (this._appearanceEpoch || 0) || viewSeq !== this._viewSeq) return;
+			// Local suspension only: do not overwrite the server's saved choice or retry in a loop.
+			this._ridingAppearanceFailed = true;
+			this._appearanceEpoch++;
+			UpdateBody.call(this, this._job);
+		});
+	} else {
+		Client.loadFile(path + '.act', act => this.sound.preload(act.sounds));
+		Client.loadFile(path + '.spr', onBodyLoaded, null, bodyArgs);
+	}
 
 	// Refresh costume
-	if (PACKETVER.value > 20141022 && this._body > 0) {
+	if (PACKETVER.value > 20141022 && this._body > 0 && !ridingAppearanceJob(this)) {
 		this.body = this._body;
 	}
 }
@@ -526,6 +571,10 @@ function getBodyVal() {
  * @param {number} Body2 id
  */
 function UpdateBodyStyle(look) {
+	const appearanceManaged = !!this._ridingAppearance;
+	const appearanceEpoch = this._appearanceEpoch || 0;
+	if (appearanceManaged && look >= 0) this._body = look;
+	const viewSeq = this._viewSeq;
 	let path;
 	let Entity;
 
@@ -535,7 +584,12 @@ function UpdateBodyStyle(look) {
 
 	setTimeout(
 		function () {
+			if (appearanceEpoch !== (this._appearanceEpoch || 0) || (appearanceManaged && viewSeq !== this._viewSeq)) return;
 			this._body = look;
+			if (ridingAppearanceJob(this)) {
+				UpdateBody.call(this, this._job);
+				return;
+			}
 			let job = this._job;
 			let cashMountCostume = false;
 			if (PACKETVER.value <= 20231220) {
@@ -568,6 +622,7 @@ function UpdateBodyStyle(look) {
 			Client.loadFile(
 				path + '.spr',
 				function () {
+					if (appearanceEpoch !== (this._appearanceEpoch || 0) || (appearanceManaged && viewSeq !== this._viewSeq)) return;
 					this.files.body.spr = path + '.spr';
 					this.files.body.act = path + '.act';
 
@@ -595,7 +650,7 @@ function UpdateBodyPalette(pal) {
 	this._bodypalette = pal;
 
 	// Internal palette
-	if (pal <= 0) {
+	if (pal <= 0 || ridingAppearanceJob(this)) {
 		this.files.body.pal = null;
 		return;
 	}
@@ -666,6 +721,15 @@ function UpdateHeadPalette(pal) {
  */
 function UpdateGeneric(type, func, fallback) {
 	return function (val) {
+		const appearanceManaged = !!(this._ridingAppearance || this._appearanceBody);
+		const appearanceEpoch = this._appearanceEpoch || 0;
+		const request = appearanceManaged ? (this._attachmentRequests ||= {}) : null;
+		const sequence = request ? (request[type] = (request[type] || 0) + 1) : 0;
+		const renderJob = this.renderJob;
+		const jobDependent = type === 'weapon' || type === 'shield' || type === 'robe';
+		const current = () => appearanceEpoch === (this._appearanceEpoch || 0)
+			&& (!appearanceManaged || (request[type] === sequence && (!jobDependent || this.renderJob === renderJob)));
+		if (appearanceManaged) this['_' + type] = val;
 		let path;
 		const _this = this;
 		let _val = val;
@@ -673,6 +737,7 @@ function UpdateGeneric(type, func, fallback) {
 		// Nothing to load
 		if (val <= 0) {
 			this['_' + type] = 0;
+			if (appearanceManaged) this.files[type].spr = this.files[type].act = null;
 			return;
 		}
 
@@ -681,7 +746,7 @@ function UpdateGeneric(type, func, fallback) {
 			case 'weapon':
 			case 'shield':
 			case 'robe':
-				path = DB[func](val, this.job, this._sex);
+				path = DB[func](val, this.renderJob, this._sex);
 				break;
 
 			default:
@@ -708,7 +773,8 @@ function UpdateGeneric(type, func, fallback) {
 			Client.loadFile(
 				filepath + '.spr',
 				function () {
-					_this['_' + type] = _val;
+					if (!current()) return;
+					if (!appearanceManaged) _this['_' + type] = _val;
 
 					// Head accessories should not be applied if they should be suppressed
 					const isAccessory = type === 'accessory' || type === 'accessory2' || type === 'accessory3';
@@ -723,10 +789,11 @@ function UpdateGeneric(type, func, fallback) {
 						_this.sound.attackFile = DB.getWeaponSound(_val);
 
 						//Load weapon trail effect
-						const trail_file = DB.getWeaponTrail(_val, _this.job, _this._sex);
+						const trail_file = DB.getWeaponTrail(_val, _this.renderJob, _this._sex);
 						if (trail_file) {
 							Client.loadFile(trail_file + '.act');
 							Client.loadFile(trail_file + '.spr', function () {
+								if (!current()) return;
 								_this.files['weapon_trail'].spr = trail_file + '.spr';
 								_this.files['weapon_trail'].act = trail_file + '.act';
 							});
@@ -736,17 +803,19 @@ function UpdateGeneric(type, func, fallback) {
 
 				// if weapon isn't loaded, try to load the default sprite for the weapon type
 				function () {
+					if (!current()) return;
 					if (fallback && !final) {
 						_val = DB[fallback](val);
-						filepath = DB[func](_val, _this.job, _this._sex);
+						filepath = DB[func](_val, _this.renderJob, _this._sex);
 						if (filepath) {
 							LoadView(filepath, true);
 						}
 					} else if (type === 'robe' && !final) {
-						const fallbackPath = DB.getRobePathNoSex(val, _this.job, _this._sex);
+						const fallbackPath = DB.getRobePathNoSex(val, _this.renderJob, _this._sex);
 						if (fallbackPath) {
 							Client.loadFile(fallbackPath + '.spr', function () {
-								_this['_' + type] = _val;
+								if (!current()) return;
+								if (!appearanceManaged) _this['_' + type] = _val;
 								if (!shouldSuppressHead.call(_this)) {
 									_this.files[type].spr = fallbackPath + '.spr';
 									_this.files[type].act = filepath + '.act';
@@ -805,6 +874,21 @@ export default function Init() {
 		set: UpdateBody
 	});
 
+	this._ridingAppearance = 0;
+	this._appearanceEpoch = 0;
+	this._ridingAppearanceFailed = false;
+	Object.defineProperty(this, 'renderJob', { get: getRenderJob });
+	Object.defineProperty(this, 'ridingAppearance', {
+		get() { return this._ridingAppearance; },
+		set(value) {
+			if (!Number.isInteger(value) || value < 0 || value > 6) return;
+			if (this._ridingAppearance === value) return;
+			this._appearanceEpoch++;
+			this._ridingAppearanceFailed = false;
+			this._ridingAppearance = value;
+			UpdateBody.call(this, this._job);
+		}
+	});
 	this._body = this._job;
 	Object.defineProperty(this, 'body', {
 		get: function () {

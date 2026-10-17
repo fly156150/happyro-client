@@ -271,6 +271,8 @@ const swaprender = (function swaprenderClosure() {
 		const preview = {
 			GID: Session.Entity.GID + '_SWAPEQUIP',
 			job: Session.Entity.job,
+				ridingAppearance: Session.Entity._ridingAppearanceFailed ? 0 : Session.Entity.ridingAppearance,
+				body: Session.Entity.body,
 			sex: Session.Entity.sex,
 			head: Session.Entity.head,
 			headpalette: Session.Entity.headpalette,

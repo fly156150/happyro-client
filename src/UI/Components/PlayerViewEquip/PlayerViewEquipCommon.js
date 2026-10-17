@@ -19,6 +19,7 @@ import UIManager from 'UI/UIManager.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import ItemInfo from 'UI/Components/ItemInfo/ItemInfo.js';
 import Entity from 'Renderer/Entity/Entity.js';
+import EntityManager from 'Renderer/EntityManager.js';
 import { createEquipmentPreviewEntity } from 'UI/Components/Equipment/EquipmentPreviewEntity.js';
 
 /**
@@ -219,6 +220,7 @@ export function createPlayerViewEquip({ name, cssText, hasTabs, costumeRows, cos
 
 	// Character rendering data
 	let charName, jobID, headID, sexID, bodypalID, headpalID;
+	let appearanceSource = null;
 
 	// Cached DOM references
 	let _root, _overlay, _panel;
@@ -490,6 +492,10 @@ export function createPlayerViewEquip({ name, cssText, hasTabs, costumeRows, cos
 	Component.setChar2Render = function setChar2Render(pkt) {
 		if (pkt) {
 			charName = pkt.characterName;
+			appearanceSource = null;
+			EntityManager.forEach(entity => {
+				if (entity.objecttype === Entity.TYPE_PC && entity.display.name === charName) appearanceSource = entity;
+			});
 			jobID = pkt.job;
 			headID = pkt.head;
 			sexID = pkt.sex;
@@ -516,6 +522,8 @@ export function createPlayerViewEquip({ name, cssText, hasTabs, costumeRows, cos
 			const preview = {
 				GID: charName + '_EQUIP',
 				job: jobID,
+				ridingAppearance: appearanceSource?._ridingAppearanceFailed ? 0 : appearanceSource?.ridingAppearance,
+				body: appearanceSource?.body,
 				sex: sexID,
 				head: headID,
 				headpalette: headpalID,

@@ -675,7 +675,7 @@ function onConnectionAccepted(pkt) {
 	BasicInfo.getUI().update('jlvl', Session.Entity.joblevel);
 	BasicInfo.getUI().update('zeny', Session.Entity.money);
 	BasicInfo.getUI().update('name', Session.Entity.display.name);
-	BasicInfo.getUI().update('job', Session.Entity.job);
+	BasicInfo.getUI().update('job', Session.Entity._job);
 
 	// Fix http://forum.robrowser.com/?topic=32177.0
 	onMapChange({

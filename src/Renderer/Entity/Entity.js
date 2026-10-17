@@ -416,6 +416,8 @@ class Entity {
 	 * Remove Entity's attached GUI
 	 */
 	clean() {
+		this._appearanceLoadCancel?.();
+		if (this._appearanceEpoch) this._appearanceEpoch++;
 		// Remove UI elements
 		this.life.clean();
 		this.emblem.clean();

@@ -67,3 +67,17 @@ describe('character selection slot state', () => {
 		]);
 	});
 });
+
+it('refreshes preview for appearance and outfit changes while preserving real job', () => {
+ const resolve = createEquipmentPreviewEntity(() => FakeEntity);
+ const original = resolve(basePreview, {});
+ const selected = resolve({ ...basePreview, ridingAppearance: 2, body: 4253 }, {});
+ expect(selected).not.toBe(original);
+ expect(selected.ridingAppearance).toBe(2);
+ expect(selected.data.job).toBe(basePreview.job);
+ expect(selected.body).toBe(4253);
+ expect(resolve({ ...basePreview, ridingAppearance: 2, body: 4253 }, {})).toBe(selected);
+ const reset = resolve({ ...basePreview, ridingAppearance: 0 }, {});
+ expect(reset).not.toBe(selected);
+ expect(reset.ridingAppearance).toBe(0);
+});

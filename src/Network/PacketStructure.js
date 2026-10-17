@@ -15942,6 +15942,18 @@ PACKET.ZC.SELECTCART = function PACKET_ZC_SELECTCART(fp, end) {
 };
 PACKET.ZC.SELECTCART.size = -1;
 
+// Dedicated appearance state; never overwrites the actor's real job.
+PACKET.ZC.HAPPYRO_RIDING_APPEARANCE = function PACKET_ZC_HAPPYRO_RIDING_APPEARANCE(fp) {
+ this.actorId = fp.readULong();
+ this.appearance = fp.readUShort();
+};
+PACKET.ZC.HAPPYRO_RIDING_APPEARANCE.size = 8;
+PACKET.HC.HAPPYRO_CHARACTER_APPEARANCE = function PACKET_HC_HAPPYRO_CHARACTER_APPEARANCE(fp) {
+ this.charId = fp.readULong();
+ this.appearance = fp.readUShort();
+};
+PACKET.HC.HAPPYRO_CHARACTER_APPEARANCE.size = 8;
+
 // 0x0d04 - ZC_HAPPYRO_NPC_NAME: UTF-8 name including its internal suffix.
 PACKET.ZC.HAPPYRO_NPC_NAME = function PACKET_ZC_HAPPYRO_NPC_NAME(fp, end) {
 	if (end - fp.tell() < 5) throw new Error('Truncated NPC name packet');
