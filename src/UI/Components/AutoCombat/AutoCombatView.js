@@ -3,7 +3,7 @@ import { createAutoCombatPanel } from 'UI/Game/AutoCombatPanel.js';
 import { createPickupSettingsPanel } from 'UI/Game/PickupSettingsPanel.js';
 
 /** Desktop presentation; gameplay and persistence remain in the shared services. */
-export function createAutoCombatView(root, actions, pickup) {
+export function createAutoCombatView(root, actions, pickup, { showSkillDescription } = {}) {
 	root.innerHTML = `
 		<button type="button" class="combat-launcher" data-settings aria-label="战斗辅助" title="战斗辅助" aria-haspopup="dialog" aria-expanded="false">
 			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 3-.7 2.4-2 .9L4 5.7 2 9l1.8 1.8v2.4L2 15l2 3.3 2.3-.6 2 .9L9 21h6l.7-2.4 2-.9 2.3.6 2-3.3-1.8-1.8v-2.4L22 9l-2-3.3-2.3.6-2-.9L15 3Z"/><circle cx="12" cy="12" r="3.5"/></svg>
@@ -29,6 +29,14 @@ export function createAutoCombatView(root, actions, pickup) {
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const backdrop = $('.combat-backdrop');
+	root.addEventListener('contextmenu', event => {
+		const skill = event.target.closest('[data-auto-skills] [data-skill]');
+		if (!skill || backdrop.hidden || !showSkillDescription) return;
+		event.preventDefault();
+		event.stopPropagation();
+		showSkillDescription(Number(skill.dataset.skill));
+	}, { signal: abort.signal });
+
 	const restorePosition = bindDesktopDialogDrag($('.combat-dialog'), $('.desktop-window-header'), 'DesktopDialog.Position.AutoCombat', abort.signal);
 
 	let pickupEditor;

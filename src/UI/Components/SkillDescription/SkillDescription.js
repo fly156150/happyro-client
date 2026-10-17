@@ -83,6 +83,8 @@ SkillDescription.onKeyDown = function onKeyDown(event) {
  */
 SkillDescription.onRemove = function onRemove() {
 	this.uid = -1;
+	this._host?.removeAttribute('data-owner-layer');
+	this._host?.style.removeProperty('--skill-description-layer');
 	window.removeEventListener('resize', fitViewport);
 };
 
@@ -124,8 +126,17 @@ SkillDescription.init = function init() {
  *
  * @param {number} skill id
  */
-SkillDescription.setSkill = function setSkill(id) {
+SkillDescription.setSkill = function setSkill(id, { above } = {}) {
 	this.uid = id;
+	this._host.toggleAttribute('data-owner-layer', Boolean(above));
+	if (above) {
+		this._host.style.setProperty('--skill-description-layer', String((parseInt(getComputedStyle(above).zIndex, 10) || 0) + 1));
+		this._host.tabIndex = -1;
+		this._host.focus({ preventScroll: true });
+	} else {
+		this._host.style.removeProperty('--skill-description-layer');
+	}
+
 
 	const root = this.getRoot();
 	root.querySelector('.title').textContent = DB.getSkillName(id);

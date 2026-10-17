@@ -54,3 +54,8 @@
 	touch-action: none;
 	overflow-wrap: anywhere;
 }
+
+/* Descriptions opened from an elevated settings window stay above that owner. */
+:host([data-owner-layer]) {
+	z-index: var(--skill-description-layer) !important;
+}

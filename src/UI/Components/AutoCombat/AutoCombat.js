@@ -24,7 +24,18 @@ AutoCombat.onAppend = function () {
 		update: state => view?.update(state),
 		onDisconnect: () => this.remove()
 	});
-	view = createAutoCombatView(this._container, runtime, { load: loadPickupSettings, save: savePickupSettings });
+	view = createAutoCombatView(this._container, runtime, { load: loadPickupSettings, save: savePickupSettings }, {
+		showSkillDescription: async id => {
+			const { default: description } = await import('../SkillDescription/SkillDescription.js');
+			if (!view?.isOpen()) return;
+			if (description.uid === id) {
+				description.remove();
+				return;
+			}
+			description.append();
+			description.setSkill(id, { above: this._host });
+		}
+	});
 	view.update(runtime.snapshot());
 };
 AutoCombat.openSettings = () => view?.open();

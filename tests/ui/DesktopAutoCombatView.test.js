@@ -38,8 +38,8 @@ it('uses the shared species, skill and range editor and saves without starting c
 });
 it('cancels unsaved settings with Escape and keeps keyboard focus inside the dialog', () => {
 	click('[data-settings]');
-	root.querySelector('[data-tab="combat"]').focus();
-	root.querySelector('[data-tab="combat"]').dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true }));
+	root.querySelector('[data-close]').focus();
+	root.querySelector('[data-close]').dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true }));
 	expect(root.activeElement).toBe(root.querySelector('[data-skill="5"]'));
 	root.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 	expect(view.isOpen()).toBe(false); expect(actions.configure).not.toHaveBeenCalled();
@@ -109,4 +109,20 @@ it('keeps the pickup master switch outside scrolling content across reopening', 
  click('[data-close]');expect(root.querySelector('.pickup-enabled')).toBeNull();
  view.open();expect(root.querySelectorAll('.pickup-enabled')).toHaveLength(1);
  expect(root.querySelector('.pickup-enabled input').checked).toBe(true);
+});
+
+it('opens skill details on desktop right-click without changing combat selection', () => {
+ view.destroy();
+ const showSkillDescription = vi.fn();
+ view = createAutoCombatView(root, actions, pickup, { showSkillDescription });
+ view.open();
+ const skill = root.querySelector('[data-skill="5"]');
+ const event = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, button: 2 });
+ skill.querySelector('strong').dispatchEvent(event);
+ expect(event.defaultPrevented).toBe(true);
+ expect(showSkillDescription).toHaveBeenCalledWith(5);
+ expect(actions.configure).not.toHaveBeenCalled();
+ expect(skill.getAttribute('aria-checked')).toBe('false');
+ skill.click();
+ expect(skill.getAttribute('aria-checked')).toBe('true');
 });
