@@ -670,7 +670,7 @@ class DB {
 				(ItemTable[key] || (ItemTable[key] = {})).processitemlist = val.split('\n');
 			},
 			onLoad(),
-			true
+			'utf-8'
 		);
 
 		// Card
