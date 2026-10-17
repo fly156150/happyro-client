@@ -8,14 +8,14 @@ const editable =
 	'textarea, input:not([type]), input[type=text], input[type=search], input[type=number], input[type=password], input[type=email], input[type=url], input[type=tel]';
 
 /** Edit a draft outside the menu so keyboard resizing cannot disturb its layout. */
-export function createMobileInputEditor(host) {
+export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 	const root = host.shadowRoot;
 	let close;
 	let gesture;
 	let tappedSource;
 	function open(focusEvent) {
 		const source = focusEvent.target;
-		if (close || !source.matches?.(editable) || source.disabled || source.readOnly) return;
+		if (!enabled() || close || !source.matches?.(editable) || source.disabled || source.readOnly) return;
 
 		focusEvent.preventDefault();
 		focusEvent.stopImmediatePropagation();
@@ -129,7 +129,7 @@ export function createMobileInputEditor(host) {
 	root.addEventListener(
 		'pointerdown',
 		event => {
-			if (event.button !== 0 || !event.target.matches?.(editable)) return;
+			if (!enabled() || event.button !== 0 || !event.target.matches?.(editable)) return;
 			tappedSource = null;
 			gesture = { source: event.target, id: event.pointerId, x: event.clientX, y: event.clientY, moved: false };
 			// Touch keeps its native scrolling; mouse focus waits for release as well.

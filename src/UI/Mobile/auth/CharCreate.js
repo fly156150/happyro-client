@@ -14,6 +14,7 @@
 
 import { createCharCreate } from 'UI/Components/CharCreate/CharCreateCommon.js';
 import { loadAppearanceColors } from './AppearancePreviews.js';
+import { createMobileInputEditor } from '../game/MobileInputEditor.js';
 import { withMobileShell } from '../Shell.js';
 import tokens from '../tokens.css?raw';
 import shellCSS from '../Shell.css?raw';
@@ -119,7 +120,7 @@ const htmlText = `<div class="page">
 	<button class="make" type="button">创建角色</button>
 </div>`;
 
-export default withMobileShell(
+const CharCreate = withMobileShell(
 	createCharCreate({
 		name: 'MobileCharCreate',
 		htmlText,
@@ -149,3 +150,21 @@ export default withMobileShell(
 		},
 	})
 );
+
+// Reuse the game editor only in landscape; portrait keeps native name entry.
+const append = CharCreate.onAppend;
+const remove = CharCreate.onRemove;
+let disposeNameEditor;
+CharCreate.onAppend = function () {
+ append?.call(this);
+ disposeNameEditor?.();
+ disposeNameEditor = createMobileInputEditor(this._host, {
+  enabled: () => window.innerWidth > window.innerHeight
+ });
+};
+CharCreate.onRemove = function () {
+ disposeNameEditor?.();
+ disposeNameEditor = null;
+ remove?.call(this);
+};
+export default CharCreate;
