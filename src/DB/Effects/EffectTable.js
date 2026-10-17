@@ -1,3 +1,4 @@
+import { legacySupportRenderEffects } from '../Skills/LegacySupportEffects.js';
 import { monkRenderEffects } from '../Skills/MonkEffects.js';
 import { geneticRenderEffects } from '../Skills/GeneticEffects.js';
 import { sorcererRenderEffects } from '../Skills/SorcererEffects.js';
@@ -73,6 +74,7 @@ const GravityEffects = SongEffects.GravityEffects;
 const EvillandEffects = SongEffects.EvillandEffects;
 
 export default {
+	...legacySupportRenderEffects,
 	...monkRenderEffects,
 	...geneticRenderEffects,
 	...fourthJobRenderEffects,
@@ -3488,13 +3490,6 @@ export default {
 		}
 	],
 
-	119: [
-		{
-			//EF_DETECTING	Detect
-			wav: 'effect/hunter_detecting',
-			attachedEntity: true
-		}
-	],
 
 	120: [
 		{
@@ -8617,13 +8612,6 @@ export default {
 
 	//385: [{}],	//EF_LINKLIGHT	   Soul Change (Visual Effect)
 
-	386: [
-		{
-			//EF_TRUESIGHT	   True Sight
-			wav: 'effect/hunter_detecting',
-			attachedEntity: true
-		}
-	],
 
 	387: [
 		{
@@ -8649,13 +8637,6 @@ export default {
 		}
 	],
 
-	389: [
-		{
-			//windwalk	//EF_PORTAL4	Wind Walk
-			wav: 'effect/\xc0\xa9\xb5\xe5\xbf\xf6\xc5\xa9', //Ŕ©µĺżöĹ©
-			attachedEntity: true
-		}
-	],
 
 	390: [
 		{
@@ -12232,12 +12213,6 @@ export default {
 		}
 	],
 
-	719: [
-		{
-			//EF_FORESTLIGHT5	   Renovatio (light beam)
-			wav: 'effect/ab_renovatio'
-		}
-	],
 	//720: [{}],	//EF_SOULBREAKER3	   Yellow version of Soul Breaker
 
 	721: [
@@ -15620,12 +15595,6 @@ export default {
 		texturePath: 'new_secrament/new_secrament/', attachedEntity: true
 	}],
 
-	ef_duplelight: [
-		{
-			wav: 'effect/ab_duplelight',
-			attachedEntity: true
-		}
-	],
 
 	ef_wugbite: [
 		{

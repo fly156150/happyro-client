@@ -1,3 +1,4 @@
+import { legacySupportSkillEffects } from './LegacySupportEffects.js';
 import { monkSkillEffects } from './MonkEffects.js';
 import { geneticSkillEffects } from './GeneticEffects.js';
 import { sorcererSkillEffects } from './SorcererEffects.js';
@@ -1167,5 +1168,5 @@ SkillEffect[SK.GD_RESTORE] = {}; //Restoration
 SkillEffect[SK.GD_EMERGENCYCALL] = {}; //Urgent Call
 SkillEffect[SK.GD_ITEMEMERGENCYCALL] = {}; //Item Emergency Call
 
-Object.assign(SkillEffect, fourthJobSkillEffects, wizardSkillEffects, crusaderSkillEffects, assassinSkillEffects, sorcererSkillEffects, geneticSkillEffects, monkSkillEffects);
+Object.assign(SkillEffect, legacySupportSkillEffects, fourthJobSkillEffects, wizardSkillEffects, crusaderSkillEffects, assassinSkillEffects, sorcererSkillEffects, geneticSkillEffects, monkSkillEffects);
 export default SkillEffect;
