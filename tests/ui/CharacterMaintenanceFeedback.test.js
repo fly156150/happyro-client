@@ -6,7 +6,7 @@ import { loadCurrentCharacter, maintainCurrentCharacter } from '../../src/UI/Com
 import tab from '../../src/UI/Components/GameTools/CharacterMaintenanceTab.js';
 afterEach(() => { document.body.replaceChildren(); vi.clearAllMocks(); });
 it.each([false, true])('keeps character actions working with mobile layout %s', async mobile => {
-	const snapshot = { job_id: 0, name: '测试角色', map: 'prontera', x: 1, y: 1, hp: 50, max_hp: 50, sp: 10, max_sp: 10,
+	const snapshot = { characterAppearance: { current: 0, options: [{ id: 0, name: '默认外观', mountLabel: '', fallbackOnMount: false }], reason: '' }, job_id: 0, name: '测试角色', map: 'prontera', x: 1, y: 1, hp: 50, max_hp: 50, sp: 10, max_sp: 10,
 		base_level: 1, job_level: 1, skill_points: 0, status_points: 0, max_base_level: 200, max_job_level: 50, max_skill_points: 1000,
 		str: 1, agi: 1, vit: 1, int: 1, dex: 1, luk: 1, max_stat: 130,
 		riding: [], traits: { enabled: false }, jobs: [{id: 0, max_base_level: 99, max_job_level: 10}, {id: 1, max_base_level: 99, max_job_level: 50}] };

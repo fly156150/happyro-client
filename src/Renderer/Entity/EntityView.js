@@ -31,7 +31,7 @@ import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
 import ShadowTable from 'DB/Monsters/ShadowTable.js';
 import MountTable from 'DB/Jobs/MountTable.js';
-import { characterAppearanceJob } from './CharacterAppearance.js';
+import { characterAppearanceJob, isCharacterAppearance } from './CharacterAppearance.js';
 import AllMountTable from 'DB/Jobs/AllMountTable.js';
 import EntityAction from './EntityAction.js';
 import PACKETVER from 'Network/PacketVerManager.js';
@@ -881,7 +881,7 @@ export default function Init() {
 	Object.defineProperty(this, 'characterAppearance', {
 		get() { return this._characterAppearance; },
 		set(value) {
-			if (!Number.isInteger(value) || value < 0 || value > 6) return;
+			if (!isCharacterAppearance(value)) return;
 			if (this._characterAppearance === value) return;
 			this._appearanceEpoch++;
 			this._characterAppearanceFailed = false;

@@ -105,7 +105,7 @@ function mount(container, context = {}) {
 			showToast(container, jobChange ? `已转职为${getJobDisplayName(snapshot.job_id, '当前职业')}` : '操作成功');
 		} catch (error) {
 			showToast(container, error.message, 'error');
-			if (commands.some(command => command.type.startsWith('character.riding.'))) {
+			if (commands.some(command => command.type.startsWith('character.riding.') || command.type === 'character.appearance.update')) {
 				try { snapshot = await loadCurrentCharacter(); } catch { /* Keep the original operation error. */ }
 			}
 		} finally {
@@ -175,7 +175,7 @@ function mount(container, context = {}) {
 			<div class="character-detail-scroll">
 				<section><h4>${escapeHtml(displayedJobName)} <small>ID ${displayedJobId}</small></h4><div class="selected-job"><span class="management-form-actions" data-menu-action-layout="job"><button type="button" data-action="vitals">恢复状态</button><button data-action="apply-job" type="button" ${pending || selectedJobId === snapshot.job_id ? 'disabled' : ''}>${selectedJobId !== snapshot.job_id ? `转换为${escapeHtml(selectedJob?.name || `职业 ${selectedJobId}`)}` : '转换职业'}</button></span></div>
 				</section>
-				${renderCharacterAppearance(snapshot.riding, pending)}
+				${renderCharacterAppearance(snapshot.characterAppearance, pending)}
 				${renderCharacterRiding(snapshot.riding, pending)}
 				<section><h4>等级与点数</h4><form data-form="progression" class="management-form progression-form">
 					<label><span>基础等级</span><input name="base_level" type="number" min="1" max="${snapshot.max_base_level}" value="${snapshot.base_level}" required></label>

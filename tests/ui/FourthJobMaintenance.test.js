@@ -8,10 +8,10 @@ import tab from '../../src/UI/Components/GameTools/CharacterMaintenanceTab.js';
 const traits = { enabled: true, points: 7, budget: 7,
 	values: {pow: 0, sta: 0, wis: 0, spl: 0, con: 0, crt: 0},
 	maximums: {pow: 32767, sta: 32767, wis: 32767, spl: 32767, con: 32767, crt: 32767} };
-const snapshot = { job_id: 4060, name: '四转测试', map: 'prontera', x: 1, y: 1, hp: 50, max_hp: 50, sp: 10, max_sp: 10,
+const snapshot = { characterAppearance: { current: 0, options: [{ id: 0, name: '默认外观', mountLabel: '', fallbackOnMount: false }], reason: '' }, job_id: 4060, name: '四转测试', map: 'prontera', x: 1, y: 1, hp: 50, max_hp: 50, sp: 10, max_sp: 10,
 	base_level: 200, job_level: 70, skill_points: 0, status_points: 0, max_base_level: 200, max_job_level: 70,
 	max_skill_points: 32767, max_status_points: 2147483647, str: 1, agi: 1, vit: 1, int: 1, dex: 1, luk: 1, max_stat: 32767,
-	traits: {...traits, enabled: false}, jobs: [
+	riding: [], traits: {...traits, enabled: false}, jobs: [
 		{id: 4060, max_base_level: 200, max_job_level: 70, traits: false},
 		{id: 4252, max_base_level: 275, max_job_level: 60, traits: true},
 		{id: 4302, max_base_level: 275, max_job_level: 60, traits: true}
@@ -54,7 +54,7 @@ it('applies levels independently and refreshes point balances from the server', 
 	const dispose = tab.mount(root);
 	await vi.waitFor(() => expect(root.querySelector('[data-form="progression"]')).not.toBeNull());
 	const levels = root.querySelector('[data-form="progression"]');
-	expect(Array.from(levels.querySelectorAll('input'), input => input.name)).toEqual(['base_level', 'job_level', 'status_points', 'skill_points']);
+	expect(Array.from(levels.querySelectorAll('input'), input => input.name)).toEqual(['base_level', 'job_level', 'status_points', 'trait_points', 'skill_points']);
 	expect(Array.from(levels.querySelectorAll('button'), button => button.textContent)).toEqual(['应用', '重置技能', '学满技能']);
 	levels.querySelector('[name="job_level"]').value = '60';
 	levels.dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}));

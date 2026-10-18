@@ -41,6 +41,7 @@ vi.mock('Renderer/Entity/Entity.js', () => ({ default: class {
 } }));
 vi.mock('Network/PacketVerManager.js', () => ({ default: { value: 20211103 } }));
 
+import { characterAppearanceOptions } from '../../src/DB/Jobs/CharacterAppearanceTable.generated.js';
 import { createCharSelect } from '../../src/UI/Components/CharSelect/CharSelectCommon.js';
 import Login from '../../src/UI/Mobile/WinLogin/WinLogin.js';
 import Select from '../../src/UI/Mobile/auth/CharSelect.js';
@@ -335,4 +336,21 @@ describe('mobile authentication', () => {
 		await Promise.resolve();
 		expect(meta.content).toBe('width=980');
 	});
+});
+
+it('accepts every catalog appearance in selection slots and rejects unknown identifiers', () => {
+ mount(Select);
+ const selected = character();
+ Select.setInfo({ TotalSlotNum: 3, PremiumStartSlot: 0, sex: 1, charInfo: [selected] });
+ for (const id of Object.keys(characterAppearanceOptions).map(Number)) {
+  Select.updateCharacterAppearance(selected.GID, id);
+  expect(selected.characterAppearance).toBe(id);
+ }
+ const saved = selected.characterAppearance;
+ for (const invalid of [-1, 65535, 1.5, '7']) {
+  Select.updateCharacterAppearance(selected.GID, invalid);
+  expect(selected.characterAppearance).toBe(saved);
+ }
+ Select.updateCharacterAppearance(selected.GID, 0);
+ expect(selected.characterAppearance).toBe(0);
 });

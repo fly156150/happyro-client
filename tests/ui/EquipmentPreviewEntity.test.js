@@ -81,3 +81,31 @@ it('refreshes preview for appearance and outfit changes while preserving real jo
  expect(reset).not.toBe(selected);
  expect(reset.characterAppearance).toBe(0);
 });
+
+it('invalidates cached preview when mounted or cash-mount state changes', () => {
+ const resolve = createEquipmentPreviewEntity(() => FakeEntity);
+ const walking = resolve({ ...basePreview, characterAppearance: 9 }, {});
+ const riding = resolve({ ...basePreview, characterAppearance: 9, effectState: 0x200000 }, {});
+ expect(riding).not.toBe(walking);
+ expect(riding.characterAppearance).toBe(9);
+ expect(riding.effectState).toBe(0x200000);
+ const cash = resolve({ ...basePreview, characterAppearance: 9, allRidingState: 1 }, {});
+ expect(cash).not.toBe(riding);
+ expect(cash.allRidingState).toBe(1);
+ expect(cash.effectState).toBe(0);
+});
+
+it('forwards all 39 catalog choices, eligible sexes and real jobs without numeric truncation', async () => {
+ const { characterAppearanceJobs: jobs, characterAppearanceOptions: options } = await import('../../src/DB/Jobs/CharacterAppearanceTable.generated.js');
+ expect(Object.keys(options)).toHaveLength(39);
+ const resolve = createEquipmentPreviewEntity(() => FakeEntity);
+ for (const [id, option] of Object.entries(options)) {
+  const [job] = Object.entries(jobs).find(([, entry]) => entry.branch === option.branch && entry.stage === 4 && !entry.mountedOf);
+  for (const sex of option.sex === -1 ? [0, 1] : [option.sex]) {
+   const preview = resolve({ ...basePreview, job: Number(job), sex, characterAppearance: Number(id) }, {});
+   expect(preview.characterAppearance).toBe(Number(id));
+   expect(preview.data.job).toBe(Number(job));
+   expect(preview.data.sex).toBe(sex);
+  }
+ }
+});

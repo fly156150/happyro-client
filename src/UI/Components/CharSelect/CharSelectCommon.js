@@ -24,6 +24,7 @@ import Client from 'Core/Client.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import Renderer from 'Renderer/Renderer.js';
 import Entity from 'Renderer/Entity/Entity.js';
+import { isCharacterAppearance } from 'Renderer/Entity/CharacterAppearance.js';
 import SpriteRenderer from 'Renderer/SpriteRenderer.js';
 import StatusConst from 'DB/Status/StatusState.js';
 import Camera from 'Renderer/Camera.js';
@@ -553,7 +554,7 @@ export function createCharSelect(config) {
 	 * @param {object} character data
 	 */
 	Component.updateCharacterAppearance = function updateCharacterAppearance(charId, appearance) {
-		if (!Number.isInteger(appearance) || appearance < 0 || appearance > 6) return;
+		if (!isCharacterAppearance(appearance)) return;
 		_appearanceChoices.set(charId, appearance);
 		for (const character of _slots) {
 			if (character?.GID === charId) {

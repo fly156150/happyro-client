@@ -120,3 +120,42 @@ it('ignores an old default-body callback after selecting an appearance', () => {
  old.cb();
  expect(e.files.body.spr).toBe(`body/${Job.KNIGHT2}.spr`);
 });
+
+
+it.each([[4257, 4278, 7, 11, 9, 4056, 4084], [4253, 4279, 19, 10, 21, 4058, 4086]])(
+ 'preserves missing-form choice for job %s through real mounted bodies and late loads',
+ (job, mount, choice, walking, supportedChoice, supportedWalking, supportedMount) => {
+  const e = actor(); e.costume = 0; e.job = job; e.characterAppearance = choice;
+  finish(`body/${walking}.spr`);
+  const stale = pending.findLast(r => r.path === `body/${walking}.spr`);
+  e.job = mount;
+  finish(`body/${mount}.spr`);
+  stale.cb();
+  expect(e.characterAppearance).toBe(choice);
+  expect(e._job).toBe(job);
+  expect(e.renderJob).toBe(mount);
+  expect(e.files.body.spr).toBe(`body/${mount}.spr`);
+  e.characterAppearance = supportedChoice;
+  finish(`body/${supportedMount}.spr`);
+  expect(e.renderJob).toBe(supportedMount);
+  e.characterAppearance = choice;
+  finish(`body/${mount}.spr`);
+  e.costume = 0; e.job = job;
+  finish(`body/${walking}.spr`);
+  expect(e.renderJob).toBe(walking);
+  expect(e.characterAppearance).toBe(choice);
+  e.characterAppearance = supportedChoice;
+  finish(`body/${supportedWalking}.spr`);
+  expect(e.renderJob).toBe(supportedWalking);
+ });
+
+it('accepts the last configured choice and ignores unknown packet values', () => {
+ const e = actor(); e.costume = 0; e.sex = 0; e.job = 4264; e.characterAppearance = 39;
+ finish('body/4069.spr');
+ expect(e.renderJob).toBe(4069);
+ for (const value of [-1, 40, 65535, 1.5]) {
+  e.characterAppearance = value;
+  expect(e.characterAppearance).toBe(39);
+  expect(e.renderJob).toBe(4069);
+ }
+});

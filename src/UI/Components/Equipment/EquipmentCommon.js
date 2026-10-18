@@ -775,6 +775,8 @@ export function createEquipment({
 				job: Session.Entity.job,
 				characterAppearance: Session.Entity._characterAppearanceFailed ? 0 : Session.Entity.characterAppearance,
 				body: Session.Entity.body,
+				effectState: Session.Entity.effectState,
+				allRidingState: Session.Entity.allRidingState,
 				sex: Session.Entity.sex,
 				head: Session.Entity.head,
 				headpalette: Session.Entity.headpalette,

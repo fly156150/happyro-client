@@ -6,6 +6,8 @@ function getSignature(config) {
 		config.job,
 		config.characterAppearance || 0,
 		config.body || 0,
+		config.effectState || 0,
+		config.allRidingState || 0,
 		config.sex,
 		config.head,
 		config.headpalette,
@@ -48,6 +50,8 @@ export function createEquipmentPreviewEntity(getEntityClass) {
 		});
 		if (config.characterAppearance && config.body >= 0) entity._body = config.body;
 		if (config.body !== undefined) entity.body = config.body;
+		entity.allRidingState = config.allRidingState || 0;
+		entity.effectState = config.effectState || 0;
 		entity.characterAppearance = config.characterAppearance || 0;
 		entity.effectColor.set(CLEAN_COLOR);
 		entity.direction = config.direction;

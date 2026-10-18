@@ -524,6 +524,8 @@ export function createPlayerViewEquip({ name, cssText, hasTabs, costumeRows, cos
 				job: jobID,
 				characterAppearance: appearanceSource?._characterAppearanceFailed ? 0 : appearanceSource?.characterAppearance,
 				body: appearanceSource?.body,
+				effectState: appearanceSource?.effectState,
+				allRidingState: appearanceSource?.allRidingState,
 				sex: sexID,
 				head: headID,
 				headpalette: headpalID,
