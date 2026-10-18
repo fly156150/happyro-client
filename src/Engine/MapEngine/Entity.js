@@ -374,7 +374,10 @@ function onEntityVanish(pkt) {
 		}
 
 		entity.remove(pkt.type);
-		EntityManager.removeGID(pkt.GID);
+		// Player corpses must remain addressable for resurrection and later departure.
+		if (pkt.type !== Entity.VT.DEAD || entity.objecttype !== Entity.TYPE_PC) {
+			EntityManager.removeGID(pkt.GID);
+		}
 	}
 
 	// Show escape menu
