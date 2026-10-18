@@ -1,3 +1,4 @@
+import { showOwnedVending } from 'UI/Game/GameVending.js';
 import { requestTalkieMessage, showTalkieMessage } from './TalkieBox.js';
 import { openMonsterInformation } from 'UI/Game/GameMonsterInformation.js';
 import Platform from 'UI/Platform.js';
@@ -638,6 +639,7 @@ export function resumeQueuedTargetSkill(packet) {
  * @param {optional|number} target game id
  */
 function onUseSkill(id, level, targetID, { allowMove = true } = {}) {
+	if ((id === SkillId.MC_VENDING || id === SkillId.ALL_BUYING_STORE) && showOwnedVending()) return true;
 	let entity;
 	let range;
 

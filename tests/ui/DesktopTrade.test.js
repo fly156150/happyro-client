@@ -1,0 +1,21 @@
+import {beforeEach, expect, it, vi} from 'vitest';
+vi.mock('DB/DBManager.js',()=>({default:{}}));
+vi.mock('Core/Client.js',()=>({default:{}}));
+vi.mock('Engine/SessionStorage.js',()=>({default:{zeny:100}}));
+vi.mock('Renderer/Renderer.js',()=>({default:{width:1200,height:800}}));
+vi.mock('UI/GUIComponent.js',()=>({default:class {static MouseMode={STOP:0};draggable(){} getRoot(){return this._host;}}}));
+vi.mock('UI/UIManager.js',()=>({default:{addComponent:x=>x}}));
+vi.mock('UI/Elements/Elements.js',()=>({}));
+vi.mock('UI/Components/InputBox/InputBox.js',()=>({default:{}}));
+vi.mock('UI/Components/ItemInfo/ItemInfo.js',()=>({default:{}}));
+vi.mock('UI/Components/Inventory/Inventory.js',()=>({default:{}}));
+vi.mock('UI/Components/ChatBox/ChatBox.js',()=>({default:{}}));
+import Trade from '../../src/UI/Components/Trade/Trade.js';
+let root;
+beforeEach(()=>{document.body.innerHTML=Trade.render();root=document.querySelector('#Trade');Trade._host=root;Trade.reqAddItem=vi.fn();Trade.onConclude=vi.fn();Trade.onTradeSubmit=vi.fn();Trade.init();Trade.onAppend();});
+it('shows lock and execution progress and prevents duplicate requests',()=>{
+ root.querySelector('.ok.enabled').click();root.querySelector('.ok.enabled').click();expect(Trade.onConclude).toHaveBeenCalledTimes(1);expect(root.querySelector('.ok.enabled').textContent).toBe('正在锁定…');
+ Trade.conclude('send');expect(root.querySelector('.ok.disabled').style.display).toBe('');expect(root.querySelector('.ok.disabled').textContent).toBe('报价已锁定');
+ Trade.conclude('recv');root.querySelector('.trade.enabled').click();root.querySelector('.trade.enabled').click();expect(Trade.onTradeSubmit).toHaveBeenCalledTimes(1);expect(root.querySelector('.trade.disabled').textContent).toBe('已确认，等待对方');
+ Trade.onAppend();expect(root.querySelector('.trade.disabled').textContent).toBe('等待双方锁定');expect(root.querySelector('.ok.enabled').disabled).toBe(false);
+});

@@ -1,3 +1,4 @@
+import { showOwnedVending } from 'UI/Game/GameVending.js';
 /**
  * Controls/EntityControl.js
  *
@@ -394,6 +395,9 @@ class EntityControl {
 	static onRoomEnter() {
 		let pkt;
 		const Room = this.room.constructor;
+  if (this === Session.Entity && [Room.Type.BUY_SHOP,Room.Type.SELL_SHOP].includes(this.room.type)) {
+   showOwnedVending(); return;
+  }
 
 		switch (this.room.type) {
 			case Room.Type.SELL_SHOP:

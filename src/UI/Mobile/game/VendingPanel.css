@@ -1,20 +1,9 @@
-/* Touch storefronts retain the shared framed panels and pinned actions. */
-:host([data-menu-density]) .panel[data-view='vending'] .vending-transactions {
- margin: 0;
- white-space: pre-line;
+.vending-transactions { margin: 0; white-space: pre-line; }
+.interaction-panel .interaction-columns.vending-transfer-layout {
+ grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 }
-:host([data-menu-density]) .panel[data-view='vending'] .interaction-column-title {
- color: #f6d9a5;
-}
-:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
- [data-vending-owned='true'] .interaction-columns {
- grid-template-columns: minmax(0, 1fr);
- grid-template-rows: minmax(0, .9fr) minmax(0, 1.2fr) minmax(0, .7fr);
- overflow: hidden;
-}
-:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
- [data-vending-owned='true'] [data-vending-section='detail'] { grid-row: 1; }
-:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
- [data-vending-owned='true'] [data-vending-section='items'] { grid-row: 2; }
-:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='vending']
- [data-vending-owned='true'] [data-vending-section='order'] { grid-row: 3; }
+.vending-transfer-layout .vending-transfer button { padding: 0; width: var(--panel-control); min-width: 28px; }
+.interaction-panel .ui-confirm .interaction-field { display: grid; gap: 6px; margin-top: 10px; }
+.interaction-panel .ui-confirm input[data-title] { box-sizing: border-box; width: 100%; margin-bottom: 10px; }
+
+.vending-transfer { display:flex; flex-direction:column; justify-content:center; gap:var(--panel-gap); }

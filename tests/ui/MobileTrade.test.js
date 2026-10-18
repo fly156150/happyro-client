@@ -27,7 +27,7 @@ it('allows damaged inventory items to be offered, leaving tradeability to the se
 it('does not replace the quantity input when an asynchronous item icon arrives',()=>{const t=open(),snapshot=t.snapshot;let icon='';t.snapshot=()=>{const state=snapshot();state.items=state.items.map(item=>({...item,icon}));return state;};const body=document.body.appendChild(document.createElement('div')),panel=createTradePanel(body,t);body.querySelector('.inventory-list button').click();const input=body.querySelector('[aria-label="交易数量"]');input.value='2';icon='data:image/png;base64,AA';panel.update();expect(body.querySelector('[aria-label="交易数量"]')).toBe(input);expect(input.value).toBe('2');});
 
 it('lets players inspect the other offer without relying on right click or sending a packet',()=>{
- const t=open();t.receive({ITID:502,count:1});const body=document.body.appendChild(document.createElement('div'));createTradePanel(body,t);body.querySelector('[data-picker]').scrollIntoView=vi.fn();body.querySelector('[data-peer] button').click();expect(body.querySelector('[data-picker] h3').textContent).toBe('物品502');expect(body.querySelector('[data-picker] p').textContent).toBe('说明');expect(body.querySelector('[aria-label="交易数量"]')).toBeNull();expect(s.add).not.toHaveBeenCalled();
+ const t=open();t.receive({ITID:502,count:1});const body=document.body.appendChild(document.createElement('div'));createTradePanel(body,t);body.querySelector('[data-peer] button').click();expect(body.querySelector('[data-picker] h3').textContent).toBe('物品502');expect(body.querySelector('[data-picker] p').textContent).toBe('说明');expect(body.querySelector('[aria-label="交易数量"]')).toBeNull();expect(s.add).not.toHaveBeenCalled();
 });
 
 it('excludes hatched eggs encoded as damaged armor while allowing unhatched eggs and damaged equipment',()=>{
@@ -41,4 +41,10 @@ it('unlocks an item request on server rejection so another item can be offered',
  const t=open(),identity=t.snapshot().items[0].identity;t.add(2,identity,1);
  t.acknowledge(2,false);expect(t.snapshot().pending).toBe(false);expect(s.remove).not.toHaveBeenCalled();
  t.add(2,identity,1);expect(s.add).toHaveBeenCalledTimes(2);
+});
+
+it('adds an item through the quantity dialog only after explicit confirmation',()=>{
+ const t=open(),body=document.body.appendChild(document.createElement('div'));createTradePanel(body,t);
+ body.querySelector('.inventory-list button').click();body.querySelector('[aria-label="交易数量"]').value='2';
+ expect(s.add).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();expect(s.add).toHaveBeenCalledExactlyOnceWith(2,2);
 });

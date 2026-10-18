@@ -1,3 +1,5 @@
+import Platform from 'UI/Platform.js';
+import VendingShop from 'UI/Components/VendingShop/VendingShop.js';
 import Session from 'Engine/SessionStorage.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import CartItems from 'UI/Components/CartItems/CartItems.js';
@@ -182,6 +184,13 @@ export function updateOwnedVending(index, count, byItemID = false, budget) {
 	}
 }
 export function showOwnedVending() {
+	if (!Platform.isMobile) {
+		const room = Session.Entity?.room;
+		if (!room?.display || ![room.constructor.Type.BUY_SHOP, room.constructor.Type.SELL_SHOP].includes(room.type))
+			return false;
+		VendingShop.append();
+		return true;
+	}
 	if (!ownedStore || ownedStore.owner !== Session.Entity) return false;
 	const store = ownedStore,
 		token = {};

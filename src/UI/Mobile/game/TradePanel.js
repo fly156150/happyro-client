@@ -1,27 +1,49 @@
-import { createMenuField } from './MenuFormControls.js';
+import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
 import { interactionColumns, interactionReview, interactionFooter, inputDraft } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
 
 export function createTradePanel(body, service) {
-	interactionColumns(body, [
+	const layout = interactionColumns(body, [
 		{ title: '可交易物品', className: 'inventory-list' },
 		{
 			title: '双方报价',
 			className: 'trade-offers',
 			content:
 				'<section><h3>我方物品</h3><div data-own></div></section><section><h3>对方物品</h3><div data-peer></div></section>'
-		},
-		{
-			title: '物品与金额',
-			className: 'inventory-detail trade-editor',
-			content:
-				'<label class="interaction-field">交易金额<input data-menu-control="field" data-money type="number" min="0" step="1" value="0"></label><div class="interaction-inline-actions"><button data-send-money>设置金额</button><button data-revert-money>撤销金额</button></div><div data-picker></div>'
 		}
 	]);
+	layout.dataset.menuLayout = 'trade';
+	const toolbar = document.createElement('div');
+	toolbar.className = 'trade-money-toolbar';
+	toolbar.innerHTML =
+		'<label class="interaction-field">交易金额<input data-menu-control="field" data-money type="number" min="0" step="1" value="0"></label><div class="interaction-inline-actions"><button data-send-money>设置金额</button><button data-revert-money>撤销金额</button></div>';
+	body.prepend(toolbar);
+	const pickerContent = document.createElement('div');
+	pickerContent.dataset.picker = '';
+	function showPicker() {
+		const add = pickerContent.querySelector('[data-add-item]');
+		confirmAction(
+			body,
+			add ? '加入交易' : '物品详情',
+			() => {
+				add?.click();
+				quantityDraft = null;
+				pickerKey = '';
+			},
+			{
+				content: pickerContent,
+				cancelled: () => {
+					quantityDraft = null;
+					pickerKey = '';
+				}
+			}
+		);
+	}
+
 	const feedback = createFeedback(body);
-	const $ = selector => body.querySelector(selector),
+	const $ = selector => (selector === '[data-picker]' ? pickerContent : body.querySelector(selector)),
 		nodes = new Map();
 	const { footer, status } = interactionFooter(body);
 	status.dataset.phase = '';
@@ -133,6 +155,7 @@ export function createTradePanel(body, service) {
 					preview = null;
 					pickerKey = '';
 					update();
+					showPicker();
 				};
 				nodes.set(item.index, node);
 				$('.inventory-list').append(node);
@@ -154,7 +177,8 @@ export function createTradePanel(body, service) {
 			if (item) {
 				const text = document.createElement('p');
 				text.textContent = item.description;
-				const input = createMenuField();
+				const stepper = createQuantityStepper({ label: '交易数量', value: 1, min: 1, max: item.count });
+				const input = stepper.input;
 				quantityInput = input;
 				input.type = 'number';
 				input.required = true;
@@ -165,11 +189,13 @@ export function createTradePanel(body, service) {
 				input.setAttribute('aria-label', '交易数量');
 				const button = document.createElement('button');
 				button.textContent = '加入交易';
+				button.dataset.addItem = '';
+				button.hidden = true;
 				button.disabled = !active || state.ownLocked;
 				button.onclick = () => {
 					if (!input.reportValidity()) return;
 					const result = service.add(item.index, item.identity, Number(input.value));
-					if (result === '等待服务器确认物品') quantityDraft.accept();
+					if (result === '等待服务器确认物品') quantityDraft?.accept();
 					action(result);
 				};
 				const title = document.createElement('h3');
@@ -182,7 +208,8 @@ export function createTradePanel(body, service) {
 					revert.textContent = '撤销修改';
 					revert.dataset.revertQuantity = '';
 					revert.onclick = () => quantityDraft.reset();
-					picker.append(input, button, revert, text);
+					revert.hidden = true;
+					picker.append(stepper.element, button, text);
 					quantityDraft = inputDraft([input], update);
 				}
 			} else picker.textContent = '点击左侧物品设置数量';
@@ -222,7 +249,7 @@ export function createTradePanel(body, service) {
 					selected = null;
 					pickerKey = '';
 					update();
-					$('[data-picker]').scrollIntoView({ block: 'nearest' });
+					showPicker();
 				};
 				parent.append(button);
 			}
@@ -231,6 +258,7 @@ export function createTradePanel(body, service) {
 		$('[data-money]').disabled = !active || state.ownLocked;
 		$('[data-send-money]').disabled = !active || state.ownLocked;
 		$('[data-lock]').disabled = !active || state.ownLocked;
+		$('[data-lock]').textContent = state.ownLocked ? '报价已锁定' : '锁定报价';
 		$('[data-execute]').disabled = !active || !state.ownLocked || !state.peerLocked;
 		$('[data-execute]').textContent = '确认成交';
 		$('[data-cancel]').disabled = !state.allowed;

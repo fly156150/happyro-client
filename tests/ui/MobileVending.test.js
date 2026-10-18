@@ -1,3 +1,5 @@
+vi.mock('UI/Platform.js',()=>({default:{isMobile:true}}));
+vi.mock('UI/Components/VendingShop/VendingShop.js',()=>({default:{append:vi.fn()}}));
 import {beforeEach,expect,it,vi} from 'vitest';
 const s=vi.hoisted(()=>({items:[],cart:[],session:{Playing:true,zeny:1000,Entity:{action:0,ACTION:{DIE:99}}},send:vi.fn()}));
 vi.mock('Engine/SessionStorage.js',()=>({default:s.session}));
@@ -28,12 +30,27 @@ it('keeps owned stock updated while hidden and sends close once; auto close remo
  setOwnedVending('buy',{itemList:[]});finishOwnedBuying();expect(showOwnedVending()).toBe(false);
 });
 it('requires reviewing an order before opening and preserves native text input during updates',()=>{
- const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);t.set(3,t.snapshot().items[0].identity,2,10);const body=panelBody(),panel=createVendingPanel(body,t);body.querySelector('[data-title]').value='我的店';panel.update();expect(body.querySelector('[data-title]').value).toBe('我的店');body.querySelector('[data-submit]').click();expect(s.send).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();expect(s.send).toHaveBeenCalledOnce();
+ const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);t.set(3,t.snapshot().items[0].identity,2,10);const body=panelBody(),panel=createVendingPanel(body,t);expect(body.querySelector('[data-title]')).toBeNull();body.querySelector('[data-submit]').click();body.querySelector('[data-title]').value='我的店';panel.update();expect(body.querySelector('[data-title]').value).toBe('我的店');expect(s.send).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();expect(s.send).toHaveBeenCalledOnce();
 });
 it('automatically closes a sold-out vending store and retains the sale receipt',()=>{
  setOwnedVending('sell',{itemList:[{index:3,ITID:501,count:2,price:10}]});updateOwnedVending(3,2);expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'REQ_CLOSESTORE'}));expect(showOwnedVending()).toBe(false);expect(interactionSnapshot().title).toBe('商品已售完');
 });
 
-it('keeps draft amount and price inputs while item artwork loads',()=>{const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);const original=t.snapshot;let icon='';t.snapshot=()=>{const state=original();state.items=state.items.map(item=>({...item,icon}));return state;};const body=panelBody(),panel=createVendingPanel(body,t);body.querySelector('.inventory-list button').click();const amount=body.querySelector('[aria-label="数量"]'),price=body.querySelector('[aria-label="单价"]');amount.value='2';price.value='30';icon='icon.png';panel.update();expect(body.querySelector('[aria-label="数量"]')).toBe(amount);expect(price.value).toBe('30');});
+it('keeps draft amount and price inputs while item artwork loads',()=>{const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);const original=t.snapshot;let icon='';t.snapshot=()=>{const state=original();state.items=state.items.map(item=>({...item,icon}));return state;};const body=panelBody(),panel=createVendingPanel(body,t);body.querySelector('.inventory-list button').click();body.querySelector('[aria-label="加入摊位清单"]').click();const amount=body.querySelector('[aria-label="数量"]'),price=body.querySelector('[aria-label="单价"]');amount.value='2';price.value='30';icon='icon.png';panel.update();expect(body.querySelector('[aria-label="数量"]')).toBe(amount);expect(price.value).toBe('30');});
 
 it('allows stackable ammunition in buying-store candidates when the database permits it',()=>{s.items[0].type=10;const t=openVendingSetup('buy',1);expect(t.snapshot().items).toHaveLength(1);});
+
+it('moves quantities with arrow dialogs and retains icons in the two-column order',()=>{
+ const t=openVendingSetup('sell',1);t.setOperationGuard(()=>true);const body=panelBody(),panel=createVendingPanel(body,t);
+ expect(body.querySelectorAll('.interaction-column')).toHaveLength(2);
+ body.querySelector('.inventory-list button').click();body.querySelector('[aria-label="加入摊位清单"]').click();
+ body.querySelector('[aria-label="数量"]').value='3';body.querySelector('[aria-label="单价"]').value='20';body.querySelector('dialog [data-confirm]').click();
+ expect(t.snapshot().order[0]).toMatchObject({count:3,price:20});expect(body.querySelector('[data-order] img')).not.toBeNull();
+ body.querySelector('[aria-label="移回可选商品"]').click();body.querySelector('[aria-label="数量"]').value='2';body.querySelector('dialog [data-confirm]').click();expect(t.snapshot().order[0].count).toBe(1);
+ body.querySelector('[aria-label="加入摊位清单"]').click();s.cart[0].count=0;body.querySelector('dialog [data-confirm]').click();expect(t.snapshot().order[0].count).toBe(1);panel.update();
+});
+
+it('keeps item rows stable as icons arrive so a pointer click is not lost',()=>{
+ const t=openVendingSetup('sell',1),snapshot=t.snapshot;let icon='';t.snapshot=()=>{const state=snapshot();state.items=state.items.map(item=>({...item,icon}));return state;};
+ const body=panelBody(),panel=createVendingPanel(body,t),row=body.querySelector('.inventory-list button');icon='icon.png';panel.update();expect(body.querySelector('.inventory-list button')).toBe(row);row.click();expect(body.querySelector('[aria-label="加入摊位清单"]').disabled).toBe(false);
+});

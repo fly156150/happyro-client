@@ -207,8 +207,11 @@ function resetUI() {
 	const tradeDisabled = root.querySelector('.trade.disabled');
 	if (okEnabled) {
 		okEnabled.style.display = '';
+		okEnabled.disabled = false;
+		okEnabled.textContent = '锁定报价';
 	}
 	if (tradeDisabled) {
+		tradeDisabled.textContent = '等待双方锁定';
 		tradeDisabled.style.display = '';
 	}
 
@@ -421,6 +424,9 @@ function onCancel() {
  */
 function onConclude() {
 	const root = Trade.getRoot();
+	const lock = root.querySelector('.ok.enabled');
+	if (lock.disabled || lock.style.display === 'none') return;
+	lock.disabled = true; lock.textContent = '正在锁定…';
 	const zenySend = root.querySelector('.zeny.send');
 	let zeny = parseInt(zenySend ? zenySend.value : '0', 10) || 0;
 	zeny = Math.min(Math.max(0, zeny), Session.zeny);
@@ -433,6 +439,7 @@ function onConclude() {
  * Let's finish the trade
  */
 function onTrade() {
+	if (Trade.getRoot().querySelector('.trade.enabled').style.display === 'none') return;
 	Trade.onTradeSubmit();
 	const root = Trade.getRoot();
 	const tradeEnabled = root.querySelector('.trade.enabled');
@@ -441,6 +448,7 @@ function onTrade() {
 		tradeEnabled.style.display = 'none';
 	}
 	if (tradeDisabled) {
+		tradeDisabled.textContent = '已确认，等待对方';
 		tradeDisabled.style.display = '';
 	}
 }
@@ -449,6 +457,7 @@ function onTrade() {
  * Drop from inventory to trade
  */
 function onDrop(event) {
+	if (Trade.getRoot().querySelector('.ok.enabled').disabled || Trade.getRoot().querySelector('.box.send.disabled')) { event.preventDefault(); return false; }
 	let data;
 
 	try {

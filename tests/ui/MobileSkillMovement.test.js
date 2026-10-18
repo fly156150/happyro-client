@@ -1,3 +1,4 @@
+vi.mock('UI/Game/GameVending.js',()=>({showOwnedVending:vi.fn(()=>false)}));
 vi.mock('UI/Platform.js',()=>({default:{isMobile:true}}));
 vi.mock('UI/Game/GameSelection.js',()=>({openGameSelection:vi.fn(),selectionEntries:vi.fn()}));
 vi.mock('UI/Game/GameMonsterInformation.js',()=>({openMonsterInformation:vi.fn()}));
@@ -115,4 +116,11 @@ it('ignores ground casts after the player entity is released',()=>{
  state.session.Entity=null;
  expect(()=>state.selection.onUseSkillToPos(100,1,9,10)).not.toThrow();
  expect(state.send).not.toHaveBeenCalled();
+});
+
+it('reopens an owned vending store instead of sending another skill request',async()=>{
+ const {showOwnedVending}=await import('../../src/UI/Game/GameVending.js');
+ showOwnedVending.mockReturnValueOnce(true);state.send.mockClear();
+ state.selection.onUseSkillToId(41,10);
+ expect(showOwnedVending).toHaveBeenCalled();expect(state.send).not.toHaveBeenCalled();
 });

@@ -413,7 +413,7 @@
 	gap: var(--panel-gap);
 }
 
-.interaction-order-item:has(> img) {
+.interaction-panel .interaction-order-item:has(> img) {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -424,3 +424,8 @@
 	object-fit: contain;
 	flex: none;
 }
+
+.interaction-panel .trade-money-toolbar { display: flex; align-items: center; gap: var(--panel-gap); flex-shrink: 0; }
+.interaction-panel .trade-money-toolbar .interaction-field { display:flex; align-items:center; gap:var(--panel-gap); flex:1; min-width:0; white-space:nowrap; margin:0; }
+.interaction-panel .trade-money-toolbar input { flex:1; min-width:0; width:0; }
+.interaction-panel .trade-money-toolbar .interaction-inline-actions { flex-shrink:0; }

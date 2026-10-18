@@ -12,15 +12,10 @@
 		<input type="text" class="zeny send" value="0" />
 		<div class="zeny recv disabled">0</div>
 
-		<ui-button class="btn ok enabled" bg="btn_ok.bmp" hover="btn_ok_a.bmp" down="btn_ok_b.bmp"></ui-button>
-		<ui-button class="btn ok disabled" bg="btn_ok_dis.bmp"></ui-button>
-		<ui-button
-			class="btn trade enabled"
-			bg="btn_exchange.bmp"
-			hover="btn_exchange_a.bmp"
-			down="btn_exchange_b.bmp"
-		></ui-button>
-		<ui-button class="btn trade disabled" bg="btn_exchange_dis.bmp"></ui-button>
-		<ui-button class="btn cancel" bg="btn_cancel.bmp" hover="btn_cancel_a.bmp" down="btn_cancel_b.bmp"></ui-button>
+		<button type="button" class="btn ok enabled">锁定报价</button>
+		<button type="button" class="btn ok disabled" disabled>报价已锁定</button>
+		<button type="button" class="btn trade enabled">确认成交</button>
+		<button type="button" class="btn trade disabled" disabled>等待双方锁定</button>
+		<button type="button" class="btn cancel">取消</button>
 	</div>
 </div>

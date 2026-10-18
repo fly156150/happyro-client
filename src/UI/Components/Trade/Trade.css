@@ -156,3 +156,7 @@
 #Trade .btn.cancel {
 	left: 510px;
 }
+
+#Trade button.btn { align-items:center; justify-content:center; padding:0 6px; border:1px solid #8b969f; border-radius:3px; background:linear-gradient(#fff,#d5dce2); color:#26323b; font-size:12px; }
+#Trade button.btn:disabled { color:#6b747c; background:#dce1e5; }
+#Trade .btn.trade { left:235px; min-width:90px; }
