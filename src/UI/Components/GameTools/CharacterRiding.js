@@ -24,12 +24,13 @@ const reasons = {
 	riding_warg_conflict: '请先解除猎鹰'
 };
 export function renderCharacterRiding(rows, pending) {
-	return `<section class="character-riding"><h4>骑乘与随行</h4><div class="character-riding-list">${rows.length ? rows.map(row => {
+	if (!rows.length) return '';
+	return `<section class="character-riding"><h4>骑乘与随行</h4><div class="character-riding-list">${rows.map(row => {
 		const action = actions[row.kind];
 		const title = ['peco', 'dragon', 'gryphon'].includes(row.kind) ? '骑乘' : names[row.kind];
 		const reason = row.reason === 'riding_skill_required' ? `需学习「${skills[row.kind]}」` : reasons[row.reason] || row.reason;
 		return `<div class="character-riding-row"><div><strong>${title}</strong>${reason ? `<p>${escapeHtml(reason)}</p>` : ''}</div><div class="management-form-actions"><button type="button" data-riding-kind="${row.kind}" ${pending || row.reason ? 'disabled' : ''}>${row.active ? action.disable : action.enable}</button></div></div>`;
-	}).join('') : '<p class="character-traits-unavailable">当前职业没有可用的骑乘或随行功能</p>'}</div></section>`;
+	}).join('')}</div></section>`;
 }
 export function ridingConfirmation(row) {
 	if (row.active) {
