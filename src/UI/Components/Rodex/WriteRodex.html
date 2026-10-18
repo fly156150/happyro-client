@@ -11,14 +11,8 @@
 			</div>
 		</div>
 		<div class="sender">
-			<input class="name" />
-			<button
-				class="base validate-name"
-				data-text="3545"
-				data-background="basic_interface/rodexsystem/renewal/btn_confirm_id_empty_out.bmp"
-				data-hover="basic_interface/rodexsystem/renewal/btn_confirm_id_empty_over.bmp"
-				data-down="basic_interface/rodexsystem/renewal/btn_confirm_id_empty_press.bmp"
-			></button>
+			<input class="name" aria-label="收件人角色名" placeholder="请输入角色名" />
+			<button type="button" class="validate-name" aria-label="确认收件人">确认收件人</button>
 			<span class="baloon" data-background="basic_interface/rodexsystem/renewal/bg_id_balloon.bmp"></span>
 		</div>
 		<div class="title">
@@ -41,7 +35,7 @@
 			<span class="character-zeny"></span>
 		</div>
 		<div class="footer">
-			<span type="text" class="base tax" data-background="basic_interface/rodexsystem/renewal/bg_tax.bmp"></span>
+			<span class="tax">邮费</span>
 			<span class="tax-text">0</span>
 			<button
 				class="base send"

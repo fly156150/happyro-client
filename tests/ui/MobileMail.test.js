@@ -5,7 +5,7 @@ vi.mock('Network/NetworkManager.js',()=>({default:{sendPacket:s.send}}));
 vi.mock('Network/PacketStructure.js',()=>({default:{CZ:new Proxy({}, {get:(t,k)=>t[k]||=(class{constructor(){this.packet=k;}})})}}));
 vi.mock('UI/Components/Inventory/Inventory.js',()=>({default:{getUI:()=>({list:s.items})}}));
 vi.mock('../../src/UI/Game/GameInventory.js',()=>({createGameInventory:()=>({snapshot:()=>s.items.map(i=>({index:i.index,ID:i.ITID,count:i.count,name:'红色药水'})),describe:i=>({...i,ID:i.ITID,name:'红色药水',description:'恢复 HP'})})}));
-import {openGameMail,receiveGameMail,currentGameMail} from '../../src/UI/Game/GameMail.js';
+import {openGameMail,receiveGameMail,currentGameMail,gameMailUnread,setGameMailUnread} from '../../src/UI/Game/GameMail.js';
 import {clearInteraction} from '../../src/UI/Game/ServerInteraction.js';
 import {createMailPanel} from '../../src/UI/Mobile/game/MailPanel.js';
 const mail={MailID:4294967300,openType:0,title:'测试',SenderName:'其他玩家',Isread:0,type:0};
@@ -59,4 +59,25 @@ it('distinguishes invalid input, pending requests, failed claims and confirmed s
  expect(m.snapshot().messageKind).toBe('error');
  m.claim('zeny'); m.receive('zeny', {...mail, result: 0});
  expect(m.snapshot().messageKind).toBe('success');
+});
+
+it('clears the mail badge only after all loaded unread messages are read or removed',()=>{
+ setGameMailUnread(true);
+ const m=openGameMail();m.setOperationGuard(()=>true);
+ const first={...mail},second={...mail,MailID:12};
+ m.receive('list',{MailList:[first,second]});expect(gameMailUnread()).toBe(true);
+ m.read('0:4294967300');m.receive('read',{...first,ItemList:[],Textcontent:'正文'});
+ expect(gameMailUnread()).toBe(true);expect(first.Isread).toBe(0);
+ m.read('0:12');m.receive('read',{...second,ItemList:[],Textcontent:'正文'});
+ expect(gameMailUnread()).toBe(false);
+ setGameMailUnread(true);expect(gameMailUnread()).toBe(true);
+ receiveGameMail('list',{MailList:[{...first,Isread:1},{...second,Isread:1}]});
+ expect(gameMailUnread()).toBe(false);
+});
+
+it('keeps notification on failed list loads and updates it from server refreshes outside the mail window',()=>{
+ setGameMailUnread(true);const m=openGameMail();m.receive('listFailed',{});
+ expect(gameMailUnread()).toBe(true);m.close();
+ receiveGameMail('list',{MailList:[]});expect(gameMailUnread()).toBe(false);
+ receiveGameMail('list',{MailList:[{...mail,Isread:0}]});expect(gameMailUnread()).toBe(true);
 });

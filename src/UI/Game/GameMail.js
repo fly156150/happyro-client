@@ -24,6 +24,8 @@ export function currentGameMail() {
 	return state?.kind === 'mail' ? state.service : null;
 }
 export function receiveGameMail(kind, packet) {
+	// PACKETVER 20211103 sends the complete inbox, including unsolicited refreshes.
+	if (kind === 'list') unread = packet.MailList.some(mail => !mail.Isread);
 	currentGameMail()?.receive(kind, packet);
 }
 export function openGameMail(canOperate = () => true) {
@@ -236,7 +238,8 @@ export function openGameMail(canOperate = () => true) {
 			if (closed || interactionSnapshot()?.token !== token) return;
 			if (kind === 'list') {
 				if (pending?.kind !== 'list') return;
-				list = pkt.MailList;
+				list = pkt.MailList.map(mail => ({ ...mail }));
+				unread = list.some(mail => !mail.Isread);
 				details.clear();
 				selected = null;
 				deleting.clear();
@@ -255,6 +258,7 @@ export function openGameMail(canOperate = () => true) {
 			if (kind === 'delete') {
 				const id = key(pkt);
 				list = list.filter(m => key(m) !== id);
+				unread = list.some(mail => !mail.Isread);
 				details.delete(id);
 				deleting.delete(id);
 				if (selected === id) selected = null;
@@ -273,6 +277,7 @@ export function openGameMail(canOperate = () => true) {
 				details.set(wait.key, { ...list.find(m => key(m) === wait.key), ...pkt });
 				const row = list.find(m => key(m) === wait.key);
 				if (row) row.Isread = 1;
+				unread = list.some(mail => !mail.Isread);
 				setMessage('', 'info');
 			}
 			if (kind === 'items' || kind === 'zeny') {

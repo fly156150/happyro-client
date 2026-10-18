@@ -54,3 +54,14 @@ it('preserves punctuation instead of silently stripping content', () => {
  field('.title-text').value='$标题'; field('.content-text').value='%正文\t内容'; field('.send').click();
  expect(s.send.mock.calls[0].slice(6)).toEqual(['$标题\0','%正文\t内容\0']);
 });
+
+it('starts with an empty title and explains recipient confirmation in Chinese',()=>{
+ WriteRodex.initData({receiveName:'Bob'});
+ expect(field('.title-text').value).toBe('');
+ expect(field('.title-text').placeholder).toBe('请输入标题');
+ expect(field('.validate-name').textContent).toBe('确认收件人');
+ field('.send').click();
+ expect(s.send).not.toHaveBeenCalled();
+ expect(s.notice.mock.calls.at(-1)[0]).toContain('确认收件人');
+ expect(s.notice.mock.calls.at(-1)[0]).not.toContain('C代码');
+});

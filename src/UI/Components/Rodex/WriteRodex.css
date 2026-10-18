@@ -44,6 +44,9 @@
 	align-items: flex-end;
 }
 #WriteRodex .body .sender .name {
+	box-sizing: border-box;
+	height: 22px;
+	flex: 0 0 143px;
 	margin-left: 10px;
 	font-weight: bold;
 	color: darkblue;
@@ -53,12 +56,19 @@
 	border-radius: 0px;
 }
 #WriteRodex .body .sender .validate-name {
-	position: absolute;
-	top: 5px;
-	right: 70px;
-	color: gray;
+	box-sizing: border-box;
+	flex: 0 0 70px;
+	margin-left: 8px;
+	color: #24354a;
 	width: 70px;
-	height: 18px;
+	height: 22px;
+	padding: 0 3px;
+	border: 1px solid #768ca6;
+	border-radius: 3px;
+	background: linear-gradient(#ffffff, #d9e7f5);
+	font-size: 11px;
+	font-weight: bold;
+	cursor: pointer;
 }
 #WriteRodex .body .sender .baloon {
 	position: absolute;
@@ -205,6 +215,12 @@
 	position: relative;
 }
 #WriteRodex .body .footer .tax {
+	box-sizing: border-box;
+	padding: 1px 6px;
+	border: 1px solid #b6c0cb;
+	border-radius: 3px;
+	background: #fff;
+	color: #24354a;
 	position: absolute;
 	width: 112px;
 	height: 18px;
@@ -228,3 +244,6 @@
 	font-weight: bold;
 	color: red;
 }
+
+#WriteRodex .validate-name:hover { background: #eaf3ff; border-color: #3b679d; }
+#WriteRodex .validate-name:focus-visible { outline: 2px solid #3b679d; outline-offset: 1px; }

@@ -71,7 +71,11 @@ WriteRodex.onAppend = function onAppend() {
 	const rodexTop = Rodex._host ? parseInt(Rodex._host.style.top, 10) || 0 : 0;
 	const rodexLeft = Rodex._host ? parseInt(Rodex._host.style.left, 10) || 0 : 0;
 
-	this._host.style.top = `${Math.min(Math.max(0, rodexTop) - 20, Renderer.height - this._host.offsetHeight)}px`;
+	const availableHeight = Math.max(0, Renderer.height - this._host.offsetHeight);
+	const inset = Math.min(32, availableHeight / 2);
+	const inboxOpen = Rodex._host?.isConnected && Rodex._host.style.display !== 'none';
+	const preferredTop = inboxOpen ? rodexTop : availableHeight / 2;
+	this._host.style.top = `${Math.max(inset, Math.min(preferredTop, availableHeight - inset))}px`;
 	this._host.style.left = `${Math.min(Math.max(0, rodexLeft) + 330, Renderer.width - this._host.offsetWidth)}px`;
 
 	this.draggable(root.querySelector('.titlebar'));
@@ -96,7 +100,8 @@ WriteRodex.initData = function initData(pkt) {
 	const baloon = root.querySelector('.baloon');
 	baloon.style.display = 'none';
 
-	root.querySelector('.title-text').value = DB.getMessage(3575);
+	root.querySelector('.title-text').value = '';
+	root.querySelector('.title-text').placeholder = '请输入标题';
 	root.querySelector('.content-text').value = '';
 	root.querySelector('.character-zeny').textContent = `${prettifyZeny(Session.zeny)} Zeny`;
 
@@ -168,7 +173,8 @@ function onClickSend(e) {
 	const root = _root();
 
 	if (!WriteRodex.receiver || root.querySelector('.name').value.trim() !== WriteRodex.receiver) {
-		ChatBox.addText(DB.getMessage(2611), ChatBox.TYPE.INFO_MAIL, ChatBox.FILTER.PUBLIC_LOG);
+		ChatBox.addText('请先点击角色名右侧的“确认收件人”，确认后再发送邮件。', ChatBox.TYPE.INFO_MAIL, ChatBox.FILTER.PUBLIC_LOG);
+		root.querySelector('.validate-name').focus();
 		return;
 	}
 	const receiver = WriteRodex.receiver;

@@ -142,7 +142,7 @@ PartyMemberExternal.init = function init() {
 		}
 
 		// Remove small party window
-		ContextMenu.addElement('Remove small party window', () => {
+		ContextMenu.addElement('关闭队员小窗口', () => {
 			self._closedByUser = true;
 			self.remove();
 		});
