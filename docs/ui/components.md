@@ -28,7 +28,7 @@
 - 界面文案引用名称或内容时统一使用直角引号「」，不使用英文双引号或弯双引号；此规范不适用于代码语法及 HTML 属性。
 - 普通文字用 `textContent`；RO 颜色控制码走已有 `DB.formatMsgToHtml()` 管线，不直接把任意输入当 HTML。
 - `<ui-button>` 不具备原生 button 的默认装饰，需定义背景、对齐和边框；图片元素的属性回调可能先于挂载，初始化应允许这种顺序。
-- 程序修改 scrollTop 后按[滚动条说明](scrollbar.md)同步滚动条。移动端尺寸、键盘和触摸规则见[菜单布局](../mobile-menu-layout.md)。
+- 程序修改 scrollTop 后按[滚动条说明](scrollbar.md)同步滚动条。移动端尺寸、键盘和触摸规则见[菜单布局](mobile-menu-layout.md)。
 
 ## 多版本组件与共享工厂
 

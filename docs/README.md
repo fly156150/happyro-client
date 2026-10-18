@@ -1,17 +1,11 @@
 # 客户端文档
 
-## 开发与运行
+| 主题 | 入口 |
+| --- | --- |
+| 开发与运行 | [架构](architecture.md)、[运行时与资源](happyro-runtime.md)、[开发](development.md)、[构建与测试](build-and-test.md) |
+| UI 与多端布局 | [组件索引](ui/README.md)、[移动认证](ui/mobile-auth.md)、[菜单布局](ui/mobile-menu-layout.md) |
+| 连接与协议 | [网络索引](network/README.md) |
+| 游戏行为与效果 | [游戏专题](gameplay/README.md) |
+| 文本与路径 | [编码契约](encoding.md) |
 
-- [架构](architecture.md)、[运行时与资源](happyro-runtime.md)
-- [开发](development.md)、[构建与测试](build-and-test.md)
-- [编码与文本](encoding.md)、[UI 组件](ui/README.md)
-
-## 移动端与协议
-
-- [移动认证与方向](mobile-auth.md)、[菜单布局](mobile-menu-layout.md)
-- [保持登录与连接恢复](connection-recovery.md)
-- [NPC 名称协议](npc-name-protocol.md)、[地图默认落点](city-arrival-points.md)
-
-## 维护边界
-
-HappyRO 的安装与发布以[根仓库](https://github.com/happyro/happyro)为准。上游实现来自 [roBrowserLegacy](https://github.com/MrAntares/roBrowserLegacy)，不在此复制另一套安装手册。稳定规则维护在对应主题中；阶段验收与变更历史查阅 changelog 和 Git，不保留 Agent 交接副本。
+本仓库维护客户端实现；跨仓库职业外观、技能审查及发布规则由 [HappyRO 根仓库](https://github.com/happyro/happyro)维护。上游来自 [roBrowserLegacy](https://github.com/MrAntares/roBrowserLegacy)。阶段过程从 changelog 和 Git 查询，当前限制写入对应主题，不保存重复交接副本。
