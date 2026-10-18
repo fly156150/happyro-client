@@ -4,7 +4,7 @@ function getSignature(config) {
 	return [
 		config.GID,
 		config.job,
-		config.ridingAppearance || 0,
+		config.characterAppearance || 0,
 		config.body || 0,
 		config.sex,
 		config.head,
@@ -46,9 +46,9 @@ export function createEquipmentPreviewEntity(getEntityClass) {
 			accessory3: config.accessory3,
 			Robe: config.robe
 		});
-		if (config.ridingAppearance && config.body >= 0) entity._body = config.body;
+		if (config.characterAppearance && config.body >= 0) entity._body = config.body;
 		if (config.body !== undefined) entity.body = config.body;
-		entity.ridingAppearance = config.ridingAppearance || 0;
+		entity.characterAppearance = config.characterAppearance || 0;
 		entity.effectColor.set(CLEAN_COLOR);
 		entity.direction = config.direction;
 		entity.headDir = 0;

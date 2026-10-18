@@ -522,7 +522,7 @@ export function createPlayerViewEquip({ name, cssText, hasTabs, costumeRows, cos
 			const preview = {
 				GID: charName + '_EQUIP',
 				job: jobID,
-				ridingAppearance: appearanceSource?._ridingAppearanceFailed ? 0 : appearanceSource?.ridingAppearance,
+				characterAppearance: appearanceSource?._characterAppearanceFailed ? 0 : appearanceSource?.characterAppearance,
 				body: appearanceSource?.body,
 				sex: sexID,
 				head: headID,

@@ -31,7 +31,7 @@ import Client from 'Core/Client.js';
 import DB from 'DB/DBManager.js';
 import ShadowTable from 'DB/Monsters/ShadowTable.js';
 import MountTable from 'DB/Jobs/MountTable.js';
-import { ridingAppearanceJob } from './RidingAppearance.js';
+import { characterAppearanceJob } from './CharacterAppearance.js';
 import AllMountTable from 'DB/Jobs/AllMountTable.js';
 import EntityAction from './EntityAction.js';
 import PACKETVER from 'Network/PacketVerManager.js';
@@ -164,7 +164,7 @@ function hasTransformation() {
  * Returns the effective display job, considering all active transformations
  */
 function getRenderJob() {
-	return (this._ridingAppearance && ridingAppearanceJob(this)) || getEffectiveJob.call(this);
+	return (this._characterAppearance && characterAppearanceJob(this)) || getEffectiveJob.call(this);
 }
 
 function getEffectiveJob() {
@@ -236,7 +236,7 @@ function UpdateBody(job) {
 	// Capture sequence number for stale callback detection
 	const transformationSeq = this._transformationSeq || 0;
 	const appearanceEpoch = this._appearanceEpoch || 0;
-	const appearanceManaged = !!(this._ridingAppearance || this._appearanceBody);
+	const appearanceManaged = !!(this._characterAppearance || this._appearanceBody);
 	const viewSeq = appearanceManaged ? (this._viewSeq = (this._viewSeq || 0) + 1) : this._viewSeq;
 
 	// job < 0 is a "no body update" sentinel: keep the current body state untouched, including
@@ -284,7 +284,7 @@ function UpdateBody(job) {
 	// Update effective job
 	this._effectiveJob = getEffectiveJob.call(this);
 
-	const appearanceJob = this._ridingAppearance ? ridingAppearanceJob(this) : 0;
+	const appearanceJob = this._characterAppearance ? characterAppearanceJob(this) : 0;
 	this._appearanceBody = appearanceJob;
 	job = appearanceJob || this.costume || job;
 
@@ -435,7 +435,7 @@ function UpdateBody(job) {
 		loadAppearanceBody.call(this, path, bodyArgs, onBodyLoaded, () => {
 			if (appearanceEpoch !== (this._appearanceEpoch || 0) || viewSeq !== this._viewSeq) return;
 			// Local suspension only: do not overwrite the server's saved choice or retry in a loop.
-			this._ridingAppearanceFailed = true;
+			this._characterAppearanceFailed = true;
 			this._appearanceEpoch++;
 			UpdateBody.call(this, this._job);
 		});
@@ -445,7 +445,7 @@ function UpdateBody(job) {
 	}
 
 	// Refresh costume
-	if (PACKETVER.value > 20141022 && this._body > 0 && !ridingAppearanceJob(this)) {
+	if (PACKETVER.value > 20141022 && this._body > 0 && !characterAppearanceJob(this)) {
 		this.body = this._body;
 	}
 }
@@ -571,7 +571,7 @@ function getBodyVal() {
  * @param {number} Body2 id
  */
 function UpdateBodyStyle(look) {
-	const appearanceManaged = !!this._ridingAppearance;
+	const appearanceManaged = !!this._characterAppearance;
 	const appearanceEpoch = this._appearanceEpoch || 0;
 	if (appearanceManaged && look >= 0) this._body = look;
 	const viewSeq = this._viewSeq;
@@ -586,7 +586,7 @@ function UpdateBodyStyle(look) {
 		function () {
 			if (appearanceEpoch !== (this._appearanceEpoch || 0) || (appearanceManaged && viewSeq !== this._viewSeq)) return;
 			this._body = look;
-			if (ridingAppearanceJob(this)) {
+			if (characterAppearanceJob(this)) {
 				UpdateBody.call(this, this._job);
 				return;
 			}
@@ -650,7 +650,7 @@ function UpdateBodyPalette(pal) {
 	this._bodypalette = pal;
 
 	// Internal palette
-	if (pal <= 0 || ridingAppearanceJob(this)) {
+	if (pal <= 0 || characterAppearanceJob(this)) {
 		this.files.body.pal = null;
 		return;
 	}
@@ -721,7 +721,7 @@ function UpdateHeadPalette(pal) {
  */
 function UpdateGeneric(type, func, fallback) {
 	return function (val) {
-		const appearanceManaged = !!(this._ridingAppearance || this._appearanceBody);
+		const appearanceManaged = !!(this._characterAppearance || this._appearanceBody);
 		const appearanceEpoch = this._appearanceEpoch || 0;
 		const request = appearanceManaged ? (this._attachmentRequests ||= {}) : null;
 		const sequence = request ? (request[type] = (request[type] || 0) + 1) : 0;
@@ -874,18 +874,18 @@ export default function Init() {
 		set: UpdateBody
 	});
 
-	this._ridingAppearance = 0;
+	this._characterAppearance = 0;
 	this._appearanceEpoch = 0;
-	this._ridingAppearanceFailed = false;
+	this._characterAppearanceFailed = false;
 	Object.defineProperty(this, 'renderJob', { get: getRenderJob });
-	Object.defineProperty(this, 'ridingAppearance', {
-		get() { return this._ridingAppearance; },
+	Object.defineProperty(this, 'characterAppearance', {
+		get() { return this._characterAppearance; },
 		set(value) {
 			if (!Number.isInteger(value) || value < 0 || value > 6) return;
-			if (this._ridingAppearance === value) return;
+			if (this._characterAppearance === value) return;
 			this._appearanceEpoch++;
-			this._ridingAppearanceFailed = false;
-			this._ridingAppearance = value;
+			this._characterAppearanceFailed = false;
+			this._characterAppearance = value;
 			UpdateBody.call(this, this._job);
 		}
 	});

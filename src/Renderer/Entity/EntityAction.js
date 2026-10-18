@@ -30,7 +30,7 @@
  */
 
 import DB from 'DB/DBManager.js';
-import { ridingAppearanceBaseJob } from './RidingAppearance.js';
+import { characterAppearanceBaseJob } from './CharacterAppearance.js';
 
 /**
  * Action frames
@@ -88,7 +88,7 @@ function setAction(option) {
 		// Know attack frame based on weapon type
 		if (option.action === this.ACTION.ATTACK) {
 			if (this.objecttype === this.constructor.TYPE_PC) {
-				const attack = DB.getWeaponAction(this.weapon, this._ridingAppearance ? ridingAppearanceBaseJob(this) : this._job, this._sex);
+				const attack = DB.getWeaponAction(this.weapon, this._characterAppearance ? characterAppearanceBaseJob(this) : this._job, this._sex);
 				option.action = [this.ACTION.ATTACK1, this.ACTION.ATTACK2, this.ACTION.ATTACK3][attack];
 			}
 

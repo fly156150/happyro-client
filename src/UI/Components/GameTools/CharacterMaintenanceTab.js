@@ -204,7 +204,7 @@ function mount(container, context = {}) {
 
 		detail.querySelectorAll('.character-appearance [data-game-select]').forEach(root => {
 			const { input } = mountGameSelect(root);
-			input.addEventListener('change', () => void submit('character.riding.appearance', { appearance: Number(input.value) }));
+			input.addEventListener('change', () => void submit('character.appearance.update', { appearance: Number(input.value) }));
 		});
 		detail.querySelectorAll('[data-riding-kind]').forEach(button => {
 			button.addEventListener('click', () => {

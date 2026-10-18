@@ -9,10 +9,10 @@ const stages = new Map([
  [Job.KNIGHT, 1], [Job.KNIGHT_H, 2], [Job.RUNE_KNIGHT, 3], [Job.RUNE_KNIGHT_H, 3], [Job.DRAGON_KNIGHT, 4],
  [Job.CRUSADER, 11], [Job.CRUSADER_H, 12], [Job.ROYAL_GUARD, 13], [Job.ROYAL_GUARD_H, 13], [Job.IMPERIAL_GUARD, 14]
 ]);
-export function ridingAppearanceJob(entity) {
- const choice = entity._ridingAppearance || 0;
+export function characterAppearanceJob(entity) {
+ const choice = entity._characterAppearance || 0;
  const stage = stages.get(entity._job) || 0;
- if (!choice || entity._ridingAppearanceFailed || entity._allRidingState || entity._active_monster_transform || entity._monster_transform || entity._job_transform
+ if (!choice || entity._characterAppearanceFailed || entity._allRidingState || entity._active_monster_transform || entity._monster_transform || entity._job_transform
   || (entity.costume && entity.costume !== MountTable[entity._job])) return 0;
  // Preserve second outfits. The protocol also sends the base job as a default body style.
  if (entity._body > 0 && entity._body !== entity._job && entity._body !== entity.costume) return 0;
@@ -23,6 +23,6 @@ export function ridingAppearanceJob(entity) {
  }
  return 0;
 }
-export function ridingAppearanceBaseJob(entity) {
- return ridingAppearanceJob(entity) ? appearances[entity._ridingAppearance] : entity._job;
+export function characterAppearanceBaseJob(entity) {
+ return characterAppearanceJob(entity) ? appearances[entity._characterAppearance] : entity._job;
 }

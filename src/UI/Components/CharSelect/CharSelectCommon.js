@@ -557,15 +557,15 @@ export function createCharSelect(config) {
 		_appearanceChoices.set(charId, appearance);
 		for (const character of _slots) {
 			if (character?.GID === charId) {
-				character.ridingAppearance = appearance;
+				character.characterAppearance = appearance;
 				if (appearance && character.body >= 0) _entitySlots[character.CharNum]._body = character.body;
-				_entitySlots[character.CharNum].ridingAppearance = appearance;
+				_entitySlots[character.CharNum].characterAppearance = appearance;
 			}
 		}
 	};
 
 	Component.addCharacter = function addCharacter(character) {
-		character.ridingAppearance = _appearanceChoices.get(character.GID) || 0;
+		character.characterAppearance = _appearanceChoices.get(character.GID) || 0;
 		if (!('sex' in character) || character.sex === 99) {
 			character.sex = _sex;
 		}
@@ -576,7 +576,7 @@ export function createCharSelect(config) {
 			_slots[character.CharNum] = character;
 
 			_entitySlots[character.CharNum] ??= new Entity();
-			if (character.ridingAppearance && character.body >= 0) _entitySlots[character.CharNum]._body = character.body;
+			if (character.characterAppearance && character.body >= 0) _entitySlots[character.CharNum]._body = character.body;
 			_entitySlots[character.CharNum].set(character);
 			_entitySlots[character.CharNum].effectState =
 				_entitySlots[character.CharNum]._effectState & ~StatusConst.EffectState.INVISIBLE;
@@ -600,7 +600,7 @@ export function createCharSelect(config) {
 		_slots[character.CharNum] = character;
 
 		_entitySlots[character.CharNum] ??= new Entity();
-		if (character.ridingAppearance && character.body >= 0) _entitySlots[character.CharNum]._body = character.body;
+		if (character.characterAppearance && character.body >= 0) _entitySlots[character.CharNum]._body = character.body;
 		_entitySlots[character.CharNum].set(character);
 		_entitySlots[character.CharNum].effectState =
 			_entitySlots[character.CharNum]._effectState & ~StatusConst.EffectState.INVISIBLE;
