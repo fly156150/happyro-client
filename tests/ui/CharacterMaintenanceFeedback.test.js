@@ -9,7 +9,7 @@ it.each([false, true])('keeps character actions working with mobile layout %s', 
 	const snapshot = { job_id: 0, name: '测试角色', map: 'prontera', x: 1, y: 1, hp: 50, max_hp: 50, sp: 10, max_sp: 10,
 		base_level: 1, job_level: 1, skill_points: 0, status_points: 0, max_base_level: 200, max_job_level: 50, max_skill_points: 1000,
 		str: 1, agi: 1, vit: 1, int: 1, dex: 1, luk: 1, max_stat: 130,
-		traits: { enabled: false }, jobs: [{id: 0, max_base_level: 99, max_job_level: 10}, {id: 1, max_base_level: 99, max_job_level: 50}] };
+		riding: [], traits: { enabled: false }, jobs: [{id: 0, max_base_level: 99, max_job_level: 10}, {id: 1, max_base_level: 99, max_job_level: 50}] };
 	loadCurrentCharacter.mockResolvedValue(snapshot);
 	maintainCurrentCharacter.mockResolvedValue({ ...snapshot, job_id: 1 });
 	document.body.innerHTML = '<div class="game-tools-window"><div class="tab"></div></div>';
@@ -25,12 +25,13 @@ it.each([false, true])('keeps character actions working with mobile layout %s', 
 	}
 	root.querySelector('[data-action="apply-job"]').click();
 	await vi.waitFor(() => expect(document.querySelector('.ui-toast.success')?.textContent).toContain('已转职为剑士'));
+	expect(maintainCurrentCharacter).toHaveBeenCalledWith('character.progression.update', { job_id: 1 });
 	expect(close).not.toHaveBeenCalled();
 	if (mobile) {
 		expect(root.querySelector('.character-summary')).toBeNull();
 		expect(root.querySelector('.character-current-job')).toBeNull();
 		expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');
-		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['剑士', '等级与点数', '基础属性', '四转属性']);
+		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['剑士', '骑乘与随行', '等级与点数', '基础属性', '四转属性']);
 	}
 	expect(root.querySelector('.character-summary')).toBeNull();
 	expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');
