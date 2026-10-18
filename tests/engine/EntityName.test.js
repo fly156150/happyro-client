@@ -16,6 +16,22 @@ describe('monster display and message names', () => {
 		localizeEntityName(mob);
 		expect(mob.display.name).toBe('虫蛹');
 	});
+	it('preserves distinct quest names for monsters sharing the same appearance', () => {
+		for (const serverName of ['转职怪物', '职业测试员怪物', 'Custom Target']) {
+			const mob = entity();
+			localizeEntityName(mob, serverName);
+			expect(mob.display.name).toBe(serverName);
+			expect(mob.display.fakename).toBe('');
+			localizeEntityName(mob);
+			expect(mob.display.name).toBe(serverName);
+		}
+	});
+	it('accepts a subsequent server rename and normal localized monster names', () => {
+		const mob = entity();
+		localizeEntityName(mob, '转职怪物');
+		localizeEntityName(mob, '虫蛹');
+		expect(mob.display.name).toBe('虫蛹');
+	});
 	it('preserves player names even when they use a monster appearance', () => {
 		const player = entity(types.TYPE_PC);
 		expect(localizeEntityName(player)).toBe(false);

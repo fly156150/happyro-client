@@ -158,7 +158,7 @@ function onEntitySpam(pkt) {
 	}
 
 	syncWhiteImprison(entity, EffectManager);
-	localizeEntityName(entity);
+	localizeEntityName(entity, pkt.name);
 
 	if (pkt.effectState & StatusState.EffectState.FALCON && DB.isHunter(pkt.job)) {
 		if (!entity.falcon) {
