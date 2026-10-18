@@ -112,10 +112,11 @@ class Cast {
 	 */
 	render(matrix) {
 		const canvas = this.canvas;
-		const percent = +((Date.now() - this.tick) / this.delay).toFixed(2);
+		const elapsed = Date.now() - this.tick;
+		const percent = Math.min(elapsed / this.delay, 1);
 
 		// Cast complete remove it
-		if (percent >= 1.0) {
+		if (elapsed >= this.delay) {
 			this.remove();
 
 			if (this.onComplete) {
