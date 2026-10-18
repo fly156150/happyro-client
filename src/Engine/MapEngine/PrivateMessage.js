@@ -8,6 +8,7 @@
  * @author Vincent Thibault
  */
 
+import { privateRecipientError } from 'UI/Game/PrivateRecipient.js';
 import Platform from 'UI/Platform.js';
 import DB from 'DB/DBManager.js';
 import Friends from 'Engine/MapEngine/Friends.js';
@@ -73,6 +74,8 @@ function onPrivateMessage(pkt) {
 function onPrivateMessageSent(pkt) {
 	const user = ChatBox.PrivateMessageStorage.nick;
 	const msg = ChatBox.PrivateMessageStorage.msg;
+	ChatBox.PrivateMessageStorage.nick = '';
+	ChatBox.PrivateMessageStorage.msg = '';
 
 	if (pkt.result === 0) {
 		if (user && msg) {
@@ -87,12 +90,10 @@ function onPrivateMessageSent(pkt) {
 			}
 		}
 	} else {
-		const errorMsg = '(' + user + ') : ' + DB.getMessage(147 + pkt.result);
+		const errorMsg = ['(', { kind: 'nickname', text: user }, ') : ', DB.getMessage(147 + pkt.result)];
 		ChatBox.addText(errorMsg, ChatBox.TYPE.ERROR, ChatBox.FILTER.WHISPER);
 	}
 
-	ChatBox.PrivateMessageStorage.nick = '';
-	ChatBox.PrivateMessageStorage.msg = '';
 }
 
 /**
@@ -105,14 +106,21 @@ export default function PrivateMessageEngine() {
 	Network.hookPacket(PACKET.ZC.ACK_WHISPER2, onPrivateMessageSent);
 
 	// Hook WhisperBox outbound messages
-	WhisperBox.onRequestTalk = function (nickname, text) {
+	WhisperBox.onRequestTalk = sendPrivateMessage;
+}
+
+/** Share validation and pending acknowledgement ownership across chat entry points. */
+export function sendPrivateMessage(nickname, text) {
+		const error = privateRecipientError(nickname) || (ChatBox.PrivateMessageStorage.nick ? '上一条私聊尚未收到回执，请稍后再发送' : '');
+		if (error) {
+			ChatBox.addText(['(', { kind: 'nickname', text: nickname }, ') : ', error], ChatBox.TYPE.ERROR, ChatBox.FILTER.WHISPER);
+			return error;
+		}
 		const pkt = new PACKET.CZ.WHISPER();
 		pkt.receiver = nickname;
 		pkt.msg = text;
-		Network.sendPacket(pkt);
-
 		// Save temporarily to handle ACK
 		ChatBox.PrivateMessageStorage.nick = nickname;
 		ChatBox.PrivateMessageStorage.msg = text;
-	};
+		Network.sendPacket(pkt);
 }

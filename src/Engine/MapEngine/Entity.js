@@ -1,3 +1,4 @@
+import { chatSpeakerMetadata } from 'UI/Game/ChatSpeaker.js';
 import { syncWhiteImprison } from './WizardBodyState.js';
 import { updateWarlockSpheres } from './WarlockSphereState.js';
 import { servantWeaponEffectIds } from 'DB/Skills/ServantWeaponEffects.js';
@@ -965,7 +966,7 @@ function onEntityTalk(pkt) {
 	type = ChatBox.TYPE.PUBLIC;
 	const entity = EntityManager.get(pkt.GID);
 
-	ChatBox.addText(pkt.msg, type, ChatBox.FILTER.PUBLIC_CHAT);
+	ChatBox.addText(pkt.msg, type, ChatBox.FILTER.PUBLIC_CHAT, undefined, chatSpeakerMetadata({ id: entity?.objecttype === Entity.TYPE_PC ? pkt.GID : 0 }));
 
 	if (entity) {
 		pkt.msg = pkt.msg.replace(

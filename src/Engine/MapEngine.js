@@ -114,7 +114,7 @@ import NPCEngine from './MapEngine/NPC.js';
 import EntityEngine from './MapEngine/Entity.js';
 import ItemEngine from './MapEngine/Item.js';
 import MailEngine from './MapEngine/Mail.js';
-import PrivateMessageEngine from './MapEngine/PrivateMessage.js';
+import PrivateMessageEngine, { sendPrivateMessage } from './MapEngine/PrivateMessage.js';
 import StorageEngine from './MapEngine/Storage.js';
 import GroupEngine from './MapEngine/Group.js';
 import GuildEngine from './MapEngine/Guild.js';
@@ -1061,15 +1061,7 @@ function onRequestTalk(user, text, target, { literal = false } = {}) {
 	if (!literal) text = text.replace(/^(\$|%)/, '');
 
 	// Private messages
-	if (user && user.length) {
-		pkt = new PACKET.CZ.WHISPER();
-		pkt.receiver = user;
-		pkt.msg = text;
-		Network.sendPacket(pkt);
-		ChatBox.PrivateMessageStorage.nick = user;
-		ChatBox.PrivateMessageStorage.msg = text;
-		return;
-	}
+	if (user && user.length) return sendPrivateMessage(user, text);
 
 	// Set off/on flags
 	if (flag_party) {

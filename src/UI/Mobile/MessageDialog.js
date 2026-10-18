@@ -1,6 +1,8 @@
 import menuLayoutCSS from './game/MenuLayout.css?raw';
 import { bindMobileViewport } from './game/MobileViewport.js';
-import tokens from './tokens.css?raw';
+import confirmationCSS from '../Components/Confirmation.css?raw';
+import backdropCSS from './game/MobileModalBackdrop.css?raw';
+import inputCSS from './game/MobileModalInput.css?raw';
 import css from './MessageDialog.css?raw';
 
 const activeDialogs = new Set();
@@ -22,9 +24,9 @@ export function showMobileDialog({
 	const host = document.createElement('div');
 	host.className = 'mobile-message-host';
 	const root = host.attachShadow({ mode: 'open' });
-	root.innerHTML = `<style>${tokens}${css}${menuLayoutCSS}</style><dialog class="mobile-menu-dialog" aria-labelledby="message-title" aria-describedby="message-text">
-		<div class="container"><h2 id="message-title" tabindex="-1" autofocus></h2><p id="message-text" class="text"></p></div>
-		<div class="btns"></div></dialog>`;
+	root.innerHTML = `<style>${menuLayoutCSS}${confirmationCSS}${backdropCSS}${inputCSS}${css}</style><dialog class="mobile-menu-dialog ui-confirm" aria-labelledby="message-title" aria-describedby="message-text">
+		<div class="container ui-confirm-body"><h2 id="message-title" tabindex="-1" autofocus></h2><p id="message-text" class="text"></p></div>
+		<div class="btns ui-confirm-actions"></div></dialog>`;
 	const dialog = root.querySelector('dialog');
 	const heading = root.querySelector('h2');
 	heading.textContent = title;

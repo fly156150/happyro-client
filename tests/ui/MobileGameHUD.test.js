@@ -7,7 +7,7 @@ const state = { name: '测试角色', job: '初心者', level: 10, jobLevel: 5, 
 beforeEach(() => {
  vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
 	host = document.createElement('div'); document.body.append(host); root = host.attachShadow({ mode: 'open' });
-	actions = { openAdventureMap: vi.fn(), equipmentSnapshot: () => ({ slots: [], stats: [] }), inventorySnapshot: () => [], cancelSceneInput: vi.fn(), setModal: vi.fn(), sendChat: vi.fn(), returnToCharacters: vi.fn() };
+	actions = { openAdventureMap: vi.fn(), equipmentSnapshot: () => ({ slots: [], stats: [], attachment: {mask:0,label:"",removal:null} }), inventorySnapshot: () => [], cancelSceneInput: vi.fn(), setModal: vi.fn(), sendChat: vi.fn(), returnToCharacters: vi.fn() };
 	view = createGameHUDView(root, actions); view.update(state);
 });
 afterEach(() => {
@@ -21,7 +21,7 @@ describe('mobile game HUD', () => {
 		click('[data-panel="profile"]');
 		view.update({ ...state, hp: 45 });
 		expect(root.querySelector('.panel-body').textContent).toContain('45 / 100');
-		click('[data-close]'); click('[data-panel="chat"]');
+		click('[data-close]'); click('[data-panel="chat"]'); click('[data-chat-filter="public"]');
 		const input = root.querySelector('[aria-label="聊天内容"]'); input.value = '正在输入'; input.focus();
 		view.update({ ...state, hp: 30 });
 		expect(root.querySelector('[aria-label="聊天内容"]')).toBe(input);
@@ -41,7 +41,7 @@ describe('mobile game HUD', () => {
 		} finally { for (const name of ['pointerdown', 'touchstart', 'touchend', 'click']) window.removeEventListener(name, bubble); }
 	});
 	it('renders messages as text, submits once, and releases modal state on removal', () => {
-		click('[data-panel="chat"]');
+		click('[data-panel="chat"]'); click('[data-chat-filter="public"]');
 		view.setMessages([{ text: '<img src=x onerror=alert(1)>', channel: 'public' }]);
 		expect(root.querySelector('.chat-log img')).toBeNull();
 		root.querySelector('[aria-label="聊天内容"]').value = '你好';
@@ -191,7 +191,7 @@ it('confirms returning to characters with the shared modal', () => {
 
 it('exposes chat preview and counts each private message once until chat is opened', () => {
  expect(root.querySelector('.chat-preview').hidden).toBe(false);
- const messages = [{id:1,text:'你好',channel:'private'}];
+ const messages = [{id:1,text:'你好',channel:'private',incomingPrivate:true,privatePeer:'朋友'}];
  view.setMessages(messages); view.setMessages(messages);
  expect(root.querySelector('[data-chat-unread]').textContent).toBe('1');
  click('[data-panel="chat"]');
@@ -202,8 +202,8 @@ it('exposes chat preview and counts each private message once until chat is open
  expect(root.querySelector('.backdrop').classList.contains('chat-backdrop')).toBe(false);
 });
 
-it('closes chat after submission while retaining failed drafts', () => {
- click('[data-panel="chat"]');
+it('keeps chat open after submission while retaining failed drafts', () => {
+ click('[data-panel="chat"]'); click('[data-chat-filter="public"]');
  const input=root.querySelector('[aria-label="聊天内容"]'); input.value='你好';
  actions.sendChat.mockReturnValueOnce('当前不能发送消息');
  root.querySelector('form').requestSubmit();
@@ -211,19 +211,19 @@ it('closes chat after submission while retaining failed drafts', () => {
  expect(input.value).toBe('你好');
  actions.sendChat.mockReturnValueOnce('');
  root.querySelector('form').requestSubmit();
- expect(root.querySelector('.backdrop').hidden).toBe(true);
- expect(actions.setModal).toHaveBeenLastCalledWith(false);
+ expect(root.querySelector('.backdrop').hidden).toBe(false);
+ expect(input.value).toBe('');
 });
 
 it('remembers collapsed chat previews and retains unread messages until chat opens', () => {
  click('[data-chat-collapse]');
  expect(root.querySelector('.chat-preview-open').hidden).toBe(true);
  expect(root.querySelector('.backdrop').hidden).toBe(true);
- view.setMessages([{id:1,text:'私聊消息',channel:'private'}]);
+ view.setMessages([{id:1,text:'私聊消息',channel:'private',incomingPrivate:true,privatePeer:'朋友'}]);
  expect(root.querySelector('[data-chat-expand] [data-chat-unread]').textContent).toBe('1');
  view.destroy(); view=createGameHUDView(root,actions);
  expect(root.querySelector('[data-chat-expand]').hidden).toBe(false);
- view.setMessages([{id:1,text:'私聊消息',channel:'private'}]);
+ view.setMessages([{id:1,text:'私聊消息',channel:'private',incomingPrivate:true,privatePeer:'朋友'}]);
  click('[data-chat-expand]');
  expect(root.querySelector('.chat-preview-open').hidden).toBe(false);
  expect(root.querySelector('[data-chat-unread]').hidden).toBe(false);
@@ -234,15 +234,16 @@ it('remembers collapsed chat previews and retains unread messages until chat ope
 });
 
 it('keeps full chat filtering independent from preview categories and remembers it on reopen', () => {
- const messages = [{id:1,text:'附近消息',channel:'public'}, {id:2,text:'私聊消息',channel:'private'}];
+ const messages = [{id:1,text:'附近消息',channel:'public'}, {id:2,text:'私聊消息',bodyText:'私聊消息',direction:'incoming',channel:'private',privatePeer:'朋友'}];
  view.setMessages(messages);
  click('[data-panel="chat"]');
  const choose = value => root.querySelector(`[data-chat-filter="${value}"]`).click();
  choose('private');
+ root.querySelector('.chat-contact-list button').click();
  expect(root.querySelector('[data-chat-preview]').textContent).toContain('附近消息');
- expect(root.querySelector('.chat-log').textContent).toBe('[私聊] 私聊消息');
+ expect(root.querySelector('.chat-log').textContent).toBe('喵：私聊消息');
  click('[data-close]');
- view.setMessages([...messages, {id:3,text:'新附近消息',channel:'public'}, {id:4,text:'新私聊消息',channel:'private'}]);
+ view.setMessages([...messages, {id:3,text:'新附近消息',channel:'public'}, {id:4,text:'新私聊消息',bodyText:'新私聊消息',direction:'incoming',channel:'private',privatePeer:'朋友'}]);
  expect(root.querySelector('[data-chat-preview]').textContent).toContain('附近');
  expect(root.querySelector('[data-chat-preview]').textContent).toContain('新私聊消息');
  click('[data-panel="chat"]');
@@ -351,4 +352,40 @@ it('classifies item icons separately and clears the classification when a slot c
  update({isSkill:false,ID:501});expect(slot.dataset.shortcutKind).toBe('item');
  update({isSkill:true,ID:1});expect(slot.dataset.shortcutKind).toBe('skill');
  update(null);expect(slot.dataset.shortcutKind).toBe('empty');
+});
+
+it('shows ordered player actions instead of combat status only for player targets',()=>{
+ actions.playerAction=vi.fn();view.update({...state,target:{interaction:'交易',player:{id:42,name:'玩家',friend:false}}});
+ expect(root.querySelector('[data-target]').hidden).toBe(true);expect(root.querySelector('[data-interact]').hidden).toBe(true);
+ expect([...root.querySelectorAll('[data-player-action]')].map(el=>el.textContent)).toEqual(['私聊','装备','好友','交易']);
+ click('[data-player-action=private]');expect(actions.playerAction).toHaveBeenCalledWith('private',42);
+ actions.playerAction.mockReturnValue('目标已离开');click('[data-player-action=equipment]');expect(document.querySelector('.ui-toast').textContent).toBe('目标已离开');
+ view.update({...state,target:{player:{id:42,name:'玩家',friend:true}}});expect(root.querySelector('[data-player-action=friend]').disabled).toBe(true);expect(root.querySelector('[data-player-action=friend]').textContent).toBe('好友');
+ view.update({...state,target:{interaction:'进入'}});expect(root.querySelector('[data-player-actions]').hidden).toBe(true);expect(root.querySelector('[data-interact]').hidden).toBe(false);
+});
+
+it('confirms a trade once with the captured player identity and acknowledges friend requests',()=>{
+ actions.playerAction=vi.fn(()=> '');
+ view.update({...state,target:{player:{id:42,name:'玩家'}}});
+ click('[data-player-action=friend]');
+ expect(document.querySelector('.ui-toast').textContent).toBe('已发好友请求');
+ click('[data-player-action=trade]');
+ expect(root.querySelectorAll('dialog.ui-confirm')).toHaveLength(1);
+ expect(actions.playerAction).not.toHaveBeenCalledWith('trade',42);
+ view.update({...state,target:{player:{id:43,name:'另一位'}}});
+ click('dialog [data-confirm]');
+ expect(actions.playerAction).toHaveBeenCalledWith('trade',42);
+ expect(root.querySelector('dialog')).toBeNull();
+});
+
+it('replaces auto combat with cancel selection for another player',()=>{
+ actions.clearPlayerSelection=vi.fn();actions.toggleAutoCombat=vi.fn();
+ view.update({...state,target:{player:{id:42,name:'玩家'}},autoCombat:{active:true}});
+ expect(root.querySelector('[data-auto-toggle]').textContent).toBe('取消选择');
+ expect(root.querySelector('[data-auto-toggle]').classList.contains('clear-selection')).toBe(true);
+ expect(root.querySelector('[data-auto-toggle]').getAttribute('aria-pressed')).toBe('false');
+ click('[data-auto-toggle]');expect(actions.clearPlayerSelection).toHaveBeenCalledOnce();expect(actions.toggleAutoCombat).not.toHaveBeenCalled();
+ view.update(state);expect(root.querySelector('[data-auto-toggle]').textContent).toBe('自动战斗');
+ expect(root.querySelector('[data-auto-toggle]').classList.contains('clear-selection')).toBe(false);
+ click('[data-auto-toggle]');expect(actions.toggleAutoCombat).toHaveBeenCalledOnce();
 });

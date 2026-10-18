@@ -1,3 +1,4 @@
+import { chatSpeakerMetadata } from 'UI/Game/ChatSpeaker.js';
 import { allowSocialText } from './SocialText.js';
 import Platform from 'UI/Platform.js';
 /**
@@ -526,7 +527,10 @@ function adler32(data) {
  * @param {object} pkt - PACKET.ZC.NOTIFY_HP_TO_GROUPM
  */
 function onMemberTalk(pkt) {
-	ChatBox.addText(pkt.msg, ChatBox.TYPE.GUILD, ChatBox.FILTER.GUILD);
+	// This packet includes the sender only in its server-formatted name prefix.
+	const separator = pkt.msg.indexOf(' : ');
+	const name = separator > 0 ? pkt.msg.slice(0, separator) : '';
+	ChatBox.addText(pkt.msg, ChatBox.TYPE.GUILD, ChatBox.FILTER.GUILD, undefined, chatSpeakerMetadata({ name }));
 }
 
 /**

@@ -13,7 +13,7 @@ import { graphicsFields, settingsSnapshot, saveGameSettings, saveGameAudio } fro
 import { requestGameBank } from 'UI/Game/GameBank.js';
 import { showOwnedVending } from 'UI/Game/GameVending.js';
 import { createGameSocial } from 'UI/Game/GameSocial.js';
-import { createGameChat, chatChannel, isIncomingPrivateMessage } from 'UI/Game/GameChat.js';
+import { createGameChat, chatChannelError, chatChannel, isIncomingPrivateMessage } from 'UI/Game/GameChat.js';
 import { createGameQuests } from 'UI/Game/GameQuests.js';
 import { createGameContainers } from 'UI/Game/GameContainers.js';
 import EntityManager from 'Renderer/EntityManager.js';
@@ -159,9 +159,18 @@ HUD.onAppend = function () {
 		openAdventureTools: back => AdventureTools.openFromMenu(back),
 		openAdventureMap: (target, back) => AdventureTools.openMap(target, back),
 		setModal,
+		playerAction: (action, id) => {
+			autoCombat.stop();
+			return Commands.playerAction(action, id, name => view.openPrivate(name));
+		},
 		interact: () => {
 			autoCombat.stop();
 			Commands.interactSelected();
+		},
+		clearPlayerSelection: () => {
+			cancelSceneInput();
+			EntityManager.setFocusEntity(null);
+			snapshot();
 		},
 		toggleAutoCombat: () => {
 			if (autoCombat.snapshot().active) autoCombat.stop();
@@ -229,6 +238,7 @@ HUD.onAppend = function () {
 			snapshot();
 		},
 		sendChat: (...args) => chat.send(...args),
+		chatChannelError,
 		chatEmotionImages: () => import('UI/Game/ChatEmotionImages.js').then(module => module.loadChatEmotionImages()),
 		returnToCharacters: () => HUD.actions.returnToCharacters()
 	});
@@ -312,17 +322,14 @@ HUD.onAppend = function () {
 	unsubscribe = subscribeChatFeed(messages => {
 		view.setMessages(
 			messages.map(message => {
-				if (!message.html)
-					return {
-						id: message.id,
-						text: message.text,
-						channel: chatChannel(message),
-						incomingPrivate: isIncomingPrivateMessage(message)
-					};
-				const parsed = new DOMParser().parseFromString(message.text, 'text/html');
+				const parsed = message.html ? new DOMParser().parseFromString(message.text, 'text/html') : null;
 				return {
 					id: message.id,
-					text: parsed.body.textContent || '',
+					privatePeer: message.privatePeer,
+					bodyText: message.bodyText,
+					direction: message.direction,
+					replyable: message.replyable,
+					text: parsed ? parsed.body.textContent || '' : message.text,
 					channel: chatChannel(message),
 					incomingPrivate: isIncomingPrivateMessage(message)
 				};

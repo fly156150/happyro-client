@@ -27,9 +27,10 @@ it('clears account chat before the desktop view has ever been mounted', () => {
  const listener = vi.fn(); const unsubscribe = subscribeChatFeed(listener);
  try {
   publishChatMessage({ text: 'previous account' });
+  ChatBox.PrivateMessageStorage.nick='old';ChatBox.PrivateMessageStorage.msg='pending';
   expect(() => ChatBox.clean()).not.toThrow();
   expect(listener).toHaveBeenLastCalledWith([]);
-  expect(ChatBox._host).toBeNull();
+  expect(ChatBox._host).toBeNull();expect(ChatBox.PrivateMessageStorage).toEqual({nick:'',msg:''});
  } finally { unsubscribe(); }
 });
 it('clears mounted chat, input and queued messages before another account can see them', () => {
@@ -47,4 +48,12 @@ it('clears mounted chat, input and queued messages before another account can se
  expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:old-account');
  flush();
  expect(root.querySelector('.content').textContent).toBe('');
+});
+
+it('publishes explicit private bodies and direction without their display prefixes',()=>{
+ vi.stubGlobal('requestAnimationFrame',vi.fn());const listener=vi.fn();const unsubscribe=subscribeChatFeed(listener);
+ ChatBox.addText(['[ To ',{kind:'nickname',text:'角色名称'},' ] : ','正文'],ChatBox.TYPE.PRIVATE|ChatBox.TYPE.SELF,ChatBox.FILTER.WHISPER);
+ expect(listener.mock.lastCall[0].at(-1)).toMatchObject({privatePeer:'角色名称',bodyText:'正文',direction:'outgoing'});
+ ChatBox.addText('欢迎来到 HappyRO！',ChatBox.TYPE.PUBLIC,ChatBox.FILTER.PUBLIC_CHAT,undefined,{replyable:false});
+ expect(listener.mock.lastCall[0].at(-1).replyable).toBe(false);unsubscribe();ChatBox.clean();
 });

@@ -5,6 +5,7 @@ import { openGameMaterials } from 'UI/Game/GameMaterials.js';
 import { createMaterialSelectionPacket } from './MaterialSelection.js';
 import { openGameSelection, selectionEntries } from 'UI/Game/GameSelection.js';
 import Platform from 'UI/Platform.js';
+import { showPlayerEquipment } from 'UI/Game/GamePlayerEquipment.js';
 /**
  * Engine/MapEngine/Item.js
  *
@@ -292,6 +293,10 @@ Equipment.onCheckPlayerEquipment = function onCheckPlayerEquipment(AID) {
  * @param {object} pkt - ZC_EQUIPWIN_MICROSCOPE
  */
 function onShowPlayerEquip(pkt) {
+	if (Platform.isMobile) {
+		showPlayerEquipment(pkt);
+		return;
+	}
 	PlayerViewEquip.getUI().append();
 	PlayerViewEquip.getUI().setTitleBar(pkt.characterName);
 	PlayerViewEquip.getUI().setEquipmentData(pkt.ItemInfo);

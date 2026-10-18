@@ -59,6 +59,7 @@ export function createEquipmentPanel(body, actions) {
 		['shadow', '影子'],
 		['stats', '属性']
 	]) {
+		if (actions.readOnly && key === 'stats') continue;
 		const tab = button(label, () => {
 			dismiss?.();
 			group = key;
@@ -190,6 +191,13 @@ export function createEquipmentPanel(body, actions) {
 		content.append(heading);
 		const ops = $('.equipment-actions');
 		ops.replaceChildren();
+		if (actions.readOnly) {
+			ops.hidden = true;
+			if (slot.item) content.append(...itemDetails(slot.item));
+			else content.append(document.createTextNode('此部位未穿戴装备'));
+			detail.replaceChildren(content);
+			return;
+		}
 		if (slot.item) {
 			content.append(...itemDetails(slot.item));
 			const remove = button('卸下', () => perform(slot, slot.item, 'unequip'));
@@ -233,7 +241,7 @@ export function createEquipmentPanel(body, actions) {
 			node.hidden = slot.group !== group;
 			node.setAttribute('aria-pressed', String(selected === slot.key));
 			node.querySelector('strong').textContent = slot.label;
-			node.querySelector('span').textContent = slot.item?.name || '＋ 选择装备';
+			node.querySelector('span').textContent = slot.item?.name || (actions.readOnly ? '未穿戴' : '＋ 选择装备');
 			const image = node.querySelector('img');
 			image.alt = '';
 			image.hidden = !slot.item?.icon;
@@ -268,6 +276,7 @@ export function createEquipmentPanel(body, actions) {
 			}
 		}
 		renderDetail();
+		if (actions.readOnly) return;
 		removeAttachment.textContent = state.attachment.label;
 		removeAttachment.hidden = !state.attachment.mask;
 		removeAttachment.disabled = Boolean(state.attachment.removal?.pending);

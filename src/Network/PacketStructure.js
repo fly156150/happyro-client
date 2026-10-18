@@ -15980,4 +15980,13 @@ PACKET.CZ.SELECTCART.prototype.build = function () {
 /**
  * Export
  */
+PACKET.CZ.HAPPYRO_FRIEND_DETAILS = function () {};
+PACKET.CZ.HAPPYRO_FRIEND_DETAILS.prototype.build = function () {
+ const buffer = new BinaryWriter(2); buffer.writeShort(0x0d0a); return buffer;
+};
+PACKET.ZC.HAPPYRO_FRIEND_DETAIL = function (fp) {
+ this.AID = fp.readULong(); this.GID = fp.readULong();
+ this.baseLevel = fp.readUShort(); this.mapName = fp.readString(16);
+};
+PACKET.ZC.HAPPYRO_FRIEND_DETAIL.size = 28;
 export default PACKET;

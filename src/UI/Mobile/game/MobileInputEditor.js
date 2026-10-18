@@ -7,18 +7,25 @@ import css from './MobileInputEditor.css?raw';
 const editable =
 	'textarea, input:not([type]), input[type=text], input[type=search], input[type=number], input[type=password], input[type=email], input[type=url], input[type=tel]';
 
+const editors = new WeakMap();
+
+/** Open the shared editor directly, without an intermediate field dialog. */
+export function requestMobileInput(host, options) {
+	return editors.get(host)(options);
+}
+
 /** Edit a draft outside the menu so keyboard resizing cannot disturb its layout. */
 export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 	const root = host.shadowRoot;
 	let close;
 	let gesture;
 	let tappedSource;
-	function open(focusEvent) {
-		const source = focusEvent.target;
+	function open(focusEvent, prompt) {
+		const source = prompt?.field || focusEvent.target;
 		if (!enabled() || close || !source.matches?.(editable) || source.disabled || source.readOnly) return;
 
-		focusEvent.preventDefault();
-		focusEvent.stopImmediatePropagation();
+		focusEvent?.preventDefault();
+		focusEvent?.stopImmediatePropagation();
 		const overlay = document.createElement('div');
 		overlay.dataset.mobileInputEditor = '';
 		overlay.toggleAttribute('data-phone-screen', Math.min(screen.width, screen.height) < 600);
@@ -27,13 +34,15 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 		const dialog = editor.querySelector('dialog');
 		const content = editor.querySelector('section');
 		const title =
+			prompt?.title ||
 			source.getAttribute('aria-label') ||
 			source.labels?.[0]?.textContent.trim() ||
 			source.placeholder ||
 			'输入内容';
 		editor.querySelector('#editor-title').textContent = title;
 		const submitOnDone = source.hasAttribute('data-input-submit');
-		if (submitOnDone) editor.querySelector('[data-done]').textContent = '发送';
+		if (prompt?.doneLabel || submitOnDone)
+			editor.querySelector('[data-done]').textContent = prompt?.doneLabel || '发送';
 		const field = source.cloneNode(true);
 		field.removeAttribute('id');
 		field.removeAttribute('name');
@@ -44,6 +53,8 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 		if (!field.placeholder) field.placeholder = title;
 		field.setAttribute('enterkeyhint', submitOnDone ? 'send' : field.tagName === 'TEXTAREA' ? 'enter' : 'done');
 		field.value = source.value;
+		if (prompt?.validate)
+			field.addEventListener('input', () => field.setCustomValidity(prompt.validate(field.value)));
 		editor.querySelector('main').append(field);
 		const originalInert = host.inert;
 		const abort = new AbortController();
@@ -80,11 +91,17 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 			source.blur();
 			source.closest('dialog')?.querySelector('[tabindex="-1"]')?.focus({ preventScroll: true });
 			close = null;
+			prompt?.onClose?.();
 		};
 		function done() {
+			if (prompt?.validate) field.setCustomValidity(prompt.validate(field.value));
 			if (!field.reportValidity()) return;
 			const value = field.value;
 			close();
+			if (prompt) {
+				prompt.onConfirm(value);
+				return;
+			}
 			if (!source.isConnected) return;
 			if (source.value !== value) {
 				source.value = value;
@@ -124,6 +141,10 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 		host.inert = true;
 		if (field.selectionStart !== null) field.setSelectionRange(field.value.length, field.value.length);
 	}
+	editors.set(host, options => {
+		open(null, options);
+		return close;
+	});
 	const listeners = new AbortController();
 	const options = { capture: true, signal: listeners.signal };
 	root.addEventListener(
@@ -199,6 +220,7 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 		options
 	);
 	return () => {
+		editors.delete(host);
 		listeners.abort();
 		gesture = null;
 		close?.();

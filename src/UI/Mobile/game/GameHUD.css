@@ -992,3 +992,13 @@ dd {
 .profile [data-hp].low-hp {
 	--gauge-color: #ff0000;
 }
+
+.battle-status.has-player-actions { flex-wrap: wrap; }
+.player-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%; }
+.player-actions[hidden], .battle-status [data-target][hidden] { display: none; }
+.player-actions button { min-width: 0; padding: 4px 2px; white-space: nowrap; }
+.player-actions button:disabled { opacity: .5; }
+
+[data-auto-toggle].clear-selection {
+	color: #ecce94; border-color: #ecce94; background: #483a25b8;
+}

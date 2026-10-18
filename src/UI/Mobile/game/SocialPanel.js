@@ -1,3 +1,4 @@
+import DB from 'DB/DBManager.js';
 import { createMenuField } from './MenuFormControls.js';
 import { SOCIAL_TEXT_LIMITS, validateSocialText } from 'Utils/SocialText.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -69,6 +70,51 @@ export function createSocialPanel(body, service, whisper) {
 		const p = document.createElement('p');
 		p.textContent = text;
 		return p;
+	}
+	function memberSummary(member, type, isSelf) {
+		const card = document.createElement('section');
+		card.className = 'social-member-card';
+		card.setAttribute('aria-label', '成员资料');
+		const header = document.createElement('div');
+		header.className = 'social-member-header';
+		const name = document.createElement('h3');
+		name.textContent = `${member.Name || member.characterName || member.CharName}${isSelf ? '（自己）' : ''}`;
+		const rawStatus = type === 'friends' ? member.State : type === 'party' ? member.state : member.CurrentState;
+		const online = rawStatus === undefined ? null : type === 'guild' ? Boolean(rawStatus) : rawStatus === 0;
+		const badge = document.createElement('span');
+		badge.className = 'social-member-status';
+		badge.dataset.status = online === null ? 'unknown' : online ? 'online' : 'offline';
+		badge.textContent = online === null ? '状态未知' : online ? '在线' : '离线';
+		header.append(name, badge);
+		card.append(header);
+		const mapCode = member.mapName || member.mapname;
+		const mapName = mapCode ? DB.getMapName(mapCode.replace(/\.(gat|rsw)$/, '') + '.rsw', '未知地图') : '未知';
+		const rows = type === 'friends' ? [
+			['等级', member.baseLevel ? `Lv.${member.baseLevel}` : '未知'],
+			['地图', mapName]
+		] : type === 'party' ? [
+			['队伍', state.partyName || '未知'],
+			['身份', member.role === 0 ? '队长' : member.role === 1 ? '队员' : '未知'],
+			['等级', member.baseLevel ? `Lv.${member.baseLevel}` : '未知'],
+			['地图', mapName]
+		] : [
+			['公会', state.guildName || '未知'],
+			['职位', state.guild.positions.find(position => position.positionID === member.GPositionID)?.posName || '未知'],
+			['等级', member.Level ? `Lv.${member.Level}` : '未知']
+		];
+		const facts = document.createElement('dl');
+		facts.className = 'social-member-facts';
+		for (const [label, value] of rows) {
+			const row = document.createElement('div');
+			const term = document.createElement('dt');
+			const description = document.createElement('dd');
+			term.textContent = label;
+			description.textContent = value;
+			row.append(term, description);
+			facts.append(row);
+		}
+		if (rows.length) card.append(facts);
+		return card;
 	}
 	function form(title, fields, submit, confirm = false, autoSave = false) {
 		const f = document.createElement('form');
@@ -172,25 +218,25 @@ export function createSocialPanel(body, service, whisper) {
 					render();
 				});
 				b.className = 'inventory-item';
+				b.dataset.member = identity(member);
 				setListItemText(b, name);
 				list.append(b);
 			}
-			list.firstElementChild.classList.add('social-management');
-			if (!members.length) {
-				const empty = paragraph('暂无成员');
-				empty.className = 'social-empty';
-				list.append(empty);
-			}
+			list.firstElementChild.classList.add('social-management', 'inventory-item');
 		}
 		const member = members.find(m => identity(m) === selected);
 		if (selected && !member) selected = null;
+		for (const button of list.querySelectorAll('button'))
+			button.setAttribute('aria-pressed', String((button.dataset.member || null) === selected));
 		const key = JSON.stringify([
 			type,
 			selected,
-			member,
+			member && [member.AID, member.GID, member.Name, member.characterName, member.CharName,
+				member.State, member.state, member.role, member.CurrentState, member.mapName, member.mapname, member.baseLevel, member.Level, member.GPositionID],
 			state.allowed,
 			state.hasParty,
 			state.partyName,
+			state.guildName,
 			state.leader,
 			state.options,
 			state.master,
@@ -206,7 +252,7 @@ export function createSocialPanel(body, service, whisper) {
 		lastKey = key;
 		detail.replaceChildren();
 		$('.social-footer-actions').replaceChildren();
-		if (type === 'party' && state.hasParty) {
+		if (type === 'party' && state.hasParty && !member) {
 			const heading = document.createElement('h3');
 			heading.className = 'social-party-heading';
 			const name = document.createElement('span');
@@ -221,26 +267,20 @@ export function createSocialPanel(body, service, whisper) {
 		}
 		if (member) {
 			const name = member.Name || member.characterName || member.CharName;
-			detail.append(paragraph(name));
+			const isSelf = member.AID === state.self.AID;
+			detail.append(memberSummary(member, type, isSelf));
 			const chat = button('私聊', () => whisper(name));
-			chat.disabled = !state.allowed;
+			chat.disabled = !state.allowed || isSelf;
 			(type === 'guild' ? detail : $('.social-footer-actions')).append(chat);
 			if (type === 'friends') {
-				detail.append(paragraph(member.State === 0 ? '在线' : '离线'));
 				form('删除好友', [], () => act('removeFriend', member), true);
 			} else if (type === 'party') {
-				detail.append(
-					paragraph(
-						`地图：${member.mapName || member.mapname || '未知'} · 等级：${member.baseLevel || '未知'}`
-					)
-				);
 				if (state.leader && member.AID !== state.self.AID) {
 					form('转交队长', [], () => act('leadParty', member), true);
 					form('移出队伍', [], () => act('expelParty', member), true);
 				}
 			} else {
-				detail.append(paragraph(`${member.CurrentState ? '在线' : '离线'} · 等级：${member.Level || 0}`));
-				if (state.master)
+				if (state.master && !isSelf)
 					form(
 						'设置职位',
 						[
@@ -321,7 +361,6 @@ export function createSocialPanel(body, service, whisper) {
 		if (type === 'guild') {
 			if (!state.guild) {
 				form('创建公会', [['name', '公会名']], values => act('createGuild', values), true);
-				detail.append(paragraph('创建公会所需材料由服务器检查'));
 				return;
 			}
 			const skillGroup = document.createElement('details'),

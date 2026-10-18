@@ -247,6 +247,7 @@ export function createInventoryPanel(body, actions) {
 		list.querySelector('p')?.remove();
 		if (!filtered.length) {
 			const empty = document.createElement('p');
+			empty.className = 'inventory-list-empty';
 			empty.textContent = '该分类暂无物品';
 			list.append(empty);
 		}

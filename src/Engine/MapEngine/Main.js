@@ -1,3 +1,5 @@
+import Platform from 'UI/Platform.js';
+import { showToast } from 'UI/Components/Toast.js';
 /**
  * Engine/MapEngine/Main.js
  *
@@ -65,7 +67,8 @@ function onPlayerMessage(pkt) {
 		return;
 	}
 
-	ChatBox.addText(pkt.msg, ChatBox.TYPE.PUBLIC | ChatBox.TYPE.SELF, ChatBox.FILTER.PUBLIC_CHAT);
+	// This packet also carries server notices (including the MOTD), without a player-name prefix.
+	ChatBox.addText(pkt.msg, ChatBox.TYPE.PUBLIC | ChatBox.TYPE.SELF, ChatBox.FILTER.PUBLIC_CHAT, undefined, { replyable: false });
 
 	if (Session.Entity) {
 		pkt.msg = pkt.msg.replace(
@@ -681,6 +684,8 @@ function onActionFailure(pkt) {
  * @param {object} pkt - PACKET_ZC_MSG & PACKET_ZC_MSG_COLOR
  */
 function onMessage(pkt) {
+	// The equipment-sharing refusal must be visible while the chat menu is closed.
+	if (Platform.isMobile && pkt.msg === 1357) showToast(document.body, DB.getMessage(pkt.msg), 'error');
 	if (pkt.color) {
 		ChatBox.addText(DB.getMessage(pkt.msg), ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, uint32ToRGB(pkt.color));
 	} else {

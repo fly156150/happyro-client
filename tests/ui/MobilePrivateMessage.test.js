@@ -9,12 +9,19 @@ vi.mock('Network/PacketVerManager.js',()=>({default:{value:20211103}}));
 vi.mock('UI/Components/ChatBox/ChatBox.js',()=>({default:{addText:s.add,saveNickName:vi.fn(),PrivateMessageStorage:s.store,TYPE:{PRIVATE:2,SELF:1,ERROR:4},FILTER:{WHISPER:3}}}));
 vi.mock('UI/Components/WhisperBox/WhisperBox.js',()=>({default:{instances:{},preferences:{open1to1Friend:true,open1to1Stranger:true},addText:s.whisper}}));
 vi.mock('Engine/SessionStorage.js',()=>({default:{Entity:{display:{name:'自己'}}}}));
-import initialize from '../../src/Engine/MapEngine/PrivateMessage.js';
+import initialize, {sendPrivateMessage} from '../../src/Engine/MapEngine/PrivateMessage.js';
 beforeEach(()=>{vi.clearAllMocks();s.mobile=true;s.friend=false;s.store.nick='对方';s.store.msg='已发送';initialize();});
 it('routes incoming mobile whispers to the shared chat feed even when desktop popup preferences are enabled',()=>{
  s.hooks.get('in')({sender:'对方',msg:'收到私聊'});expect(s.whisper).not.toHaveBeenCalled();expect(s.add).toHaveBeenCalledWith([`[ 来自 `, {kind:'nickname',text:'对方'}, ' ] : ', '收到私聊'],2,3);
 });
 it('shows mobile sent acknowledgements and errors in the private channel without a desktop window',()=>{
- s.hooks.get('ack')({result:0});expect(s.add).toHaveBeenCalledWith(['[ To ', {kind:'nickname',text:'对方'}, ' ] : ', '已发送'],3,3);expect(s.store.nick).toBe('');s.store.nick='对方';s.hooks.get('ack')({result:1});expect(s.add).toHaveBeenLastCalledWith(expect.stringContaining('148'),4,3);expect(s.whisper).not.toHaveBeenCalled();
+ s.hooks.get('ack')({result:0});expect(s.add).toHaveBeenCalledWith(['[ To ', {kind:'nickname',text:'对方'}, ' ] : ', '已发送'],3,3);expect(s.store.nick).toBe('');s.store.nick='对方';s.hooks.get('ack')({result:1});expect(s.add).toHaveBeenLastCalledWith(['(', {kind:'nickname',text:'对方'}, ') : ', '148'],4,3);expect(s.whisper).not.toHaveBeenCalled();
 });
 it('preserves desktop one-to-one popup preferences',()=>{s.mobile=false;s.hooks.get('in')({sender:'对方',msg:'桌面私聊'});expect(s.whisper).toHaveBeenCalledOnce();expect(s.add).not.toHaveBeenCalled();});
+
+it('rejects invalid encoded names and prevents a second send from overwriting an outstanding acknowledgement',()=>{
+ s.store.nick='';s.store.msg='';expect(sendPrivateMessage('不存在的角色测试名','test')).toContain('23');expect(s.store.nick).toBe('');
+ sendPrivateMessage('A','first');expect(s.store.nick).toBe('A');expect(sendPrivateMessage('B','second')).toContain('回执');expect(s.store.nick).toBe('A');expect(s.store.msg).toBe('first');
+ s.hooks.get('ack')({result:1});expect(s.add).toHaveBeenLastCalledWith(['(',{kind:'nickname',text:'A'},') : ','148'],4,3);
+ sendPrivateMessage('B','second');expect(s.store.nick).toBe('B');s.hooks.get('ack')({result:0});expect(s.add).toHaveBeenLastCalledWith(['[ To ',{kind:'nickname',text:'B'},' ] : ','second'],3,3);
+});

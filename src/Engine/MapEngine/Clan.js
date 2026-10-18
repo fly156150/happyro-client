@@ -1,3 +1,4 @@
+import { chatSpeakerMetadata } from 'UI/Game/ChatSpeaker.js';
 /**
  * Engine/MapEngine/Clan.js
  *
@@ -97,7 +98,7 @@ function onClanInfo(pkt) {
 function onNotifyClanChat(pkt) {
 	const clan_message =
 		pkt.memberName && pkt.memberName?.length > 0 ? pkt.memberName + ': ' + pkt.message : pkt.message;
-	ChatBox.addText(clan_message, ChatBox.TYPE.CLAN, ChatBox.FILTER.CLAN);
+	ChatBox.addText(clan_message, ChatBox.TYPE.CLAN, ChatBox.FILTER.CLAN, undefined, chatSpeakerMetadata({ name: pkt.memberName }));
 }
 
 /**

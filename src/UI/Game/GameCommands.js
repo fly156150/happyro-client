@@ -1,3 +1,5 @@
+import Friends from 'Engine/MapEngine/Friends.js';
+import Equipment from 'UI/Components/Equipment/Equipment.js';
 import Trade from 'UI/Components/Trade/Trade.js';
 import UIManager from 'UI/UIManager.js';
 import { ownAttack, releaseAttack } from 'Controls/AttackIntent.js';
@@ -138,12 +140,30 @@ export function interactSelected() {
 	Mouse.world.y = Math.round(target.position[1]);
 	target.onMouseDown();
 }
+/** Revalidate the selected player at activation time, not just when rendering buttons. */
+export function playerAction(action, expectedId, openPrivate) {
+	const target = selectedTarget();
+	if (!Session.Playing || Session.FreezeUI) return '当前不能操作';
+	if (!target || target.GID !== expectedId || target === Session.Entity || target.objecttype !== target.constructor.TYPE_PC)
+		return '目标已离开或已切换，请重新选择玩家';
+	const name = target.display.name;
+	if (!name) return '正在获取角色名，请稍后重试';
+	if (action === 'private') openPrivate(name);
+	else if (action === 'equipment') Equipment.onCheckPlayerEquipment(target.GID);
+	else if (action === 'friend') {
+		if (Friends.isFriend(name)) return '已是好友';
+		if (Friends.addFriend(name) === false) return '好友请求未发送';
+	} else if (action === 'trade') Trade.reqExchange(target.GID, name);
+	return '';
+}
+
 export function targetSnapshot() {
 	const target = selectedTarget();
 	if (!target) return { name: '点击目标进行选择', attack: false, interaction: '' };
 	const T = target.constructor;
 	return {
 		name: target.display.name || '已选目标',
+		player: target.objecttype === T.TYPE_PC && target !== Session.Entity ? { id: target.GID, name: target.display.name, friend: Friends.isFriend(target.display.name) } : null,
 		attack: canAttack(target),
 		interaction:
 			target.room?.display &&

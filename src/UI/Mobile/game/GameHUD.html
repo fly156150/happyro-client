@@ -45,7 +45,14 @@
 	<div class="battle-dock">
 		<div class="battle-controls">
 			<div class="battle-status surface">
-				<span data-target role="status">自动战斗已停止</span><button data-interact hidden></button>
+				<span data-target role="status">自动战斗已停止</span>
+				<div class="player-actions" data-player-actions hidden>
+					<button data-player-action="private">私聊</button>
+					<button data-player-action="equipment">装备</button>
+					<button data-player-action="friend">好友</button>
+					<button data-player-action="trade">交易</button>
+				</div>
+				<button data-interact hidden></button>
 			</div>
 			<div class="skill-prompt surface" hidden>
 				<span data-skill-prompt role="status"></span>

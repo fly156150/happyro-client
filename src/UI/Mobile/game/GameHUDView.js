@@ -47,7 +47,7 @@ import { createRefinementPanel } from './RefinementPanel.js';
 import { createMaterialsPanel } from './MaterialsPanel.js';
 import { createSelectionPanel } from './SelectionPanel.js';
 import { createSocialPanel } from './SocialPanel.js';
-import { createChatPanel } from './ChatPanel.js';
+import { createChatPanel, createChatComposer } from './ChatPanel.js';
 import { createQuestsPanel } from './QuestsPanel.js';
 import { createContainerPanel } from './ContainerPanel.js';
 import shopCSS from './ShopPanel.css?raw';
@@ -110,6 +110,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	let questsPanel = null;
 	let chatPanel = null;
 	let chatFilter = 'all';
+	const chatComposer = createChatComposer();
 	let socialPanel = null;
 	let selectionPanel = null;
 	let materialsPanel = null;
@@ -188,8 +189,26 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	listen(root, 'pointerdown', event => {
 		if (!event.target.closest('.combat, .battle-dock')) actions.cancelSceneInput();
 	});
-	listen($('[data-auto-toggle]'), 'click', () => actions.toggleAutoCombat());
+	listen($('[data-auto-toggle]'), 'click', () => {
+		if (snapshot.target?.player) actions.clearPlayerSelection();
+		else actions.toggleAutoCombat();
+	});
 	listen($('[data-interact]'), 'click', () => actions.interact());
+	for (const button of root.querySelectorAll('[data-player-action]')) {
+		listen(button, 'click', () => {
+			const player = snapshot.target?.player;
+			const action = button.dataset.playerAction;
+			const container = $('[data-player-actions]');
+			const perform = () => {
+				const error = actions.playerAction(action, player?.id);
+				if (error) showToast(container, error, 'error');
+				else if (action === 'friend') showToast(container, '已发好友请求', 'success');
+			};
+			if (action === 'trade' && player)
+				confirmAction(container, `向 ${player.name} 发起交易？`, perform);
+			else perform();
+		});
+	}
 	for (const button of root.querySelectorAll('[data-shortcut-page]'))
 		listen(button, 'click', () => actions.shortcutPage(Number(button.dataset.shortcutPage)));
 	listen($('[data-skill-cancel]'), 'click', () => actions.cancelSkill());
@@ -258,14 +277,15 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (notify) interaction?.close?.();
 	}
 	function updateMessages() {
-		const readingPrivate = currentPanel === 'chat' && ['all', 'private'].includes(chatFilter);
+		chatPanel?.update(messages);
+		const readingPrivate = currentPanel === 'chat' && chatFilter === 'all';
 		if (readingPrivate) unreadChat = 0;
+		else if (currentPanel === 'chat') unreadChat = messages.filter(m => m.incomingPrivate && !chatComposer.read.has(m.id)).length;
 		for (const badge of root.querySelectorAll('[data-chat-unread]')) {
 			badge.hidden = !unreadChat;
 			badge.textContent = unreadChat > 99 ? '99+' : String(unreadChat);
 		}
 		chatPreview.update(messages, { read: readingPrivate, visible: !currentPanel });
-		chatPanel?.update(messages);
 	}
 	function details(entries) {
 		const dl = document.createElement('dl');
@@ -338,7 +358,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 				attributes: '素质',
 				shortcuts: '快捷键',
 				inventory: '背包',
-				equipment: '装备',
+				equipment: serverState?.kind === 'equipment' ? serverState.title : '装备',
 				skills: '技能',
 				quests: '任务',
 				social: '社交',
@@ -631,7 +651,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 				slotName: actions.shortcutName
 			});
 		if (panel === 'equipment')
-			equipmentPanel = createEquipmentPanel(body, {
+			equipmentPanel = createEquipmentPanel(body, serverState?.kind === 'equipment' ? serverState.service : {
 				snapshot: actions.equipmentSnapshot,
 				removeAttachment: actions.equipmentRemoveAttachment,
 				preview: actions.inventoryPreview,
@@ -664,12 +684,13 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 				actions.sendChat,
 				slotIndex,
 				actions.chatEmotionImages,
-				() => close(),
 				chatFilter,
 				value => {
 					chatFilter = value;
 					updateMessages();
-				}
+				},
+				chatComposer,
+				actions.chatChannelError
 			);
 			updateMessages();
 		}
@@ -769,9 +790,16 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			const targetLabel = species.length > 1 ? `${species.length} 种魔物` : species[0]?.name || '全部魔物';
 			text('[data-auto-target]', `${targetLabel} ▾`);
 			$('[data-auto-target]').title = species.map(entry => entry.name).join('、') || '全部魔物';
-			text('[data-auto-toggle]', next.autoCombat?.active ? '停止战斗' : '自动战斗');
-			$('[data-auto-toggle]').setAttribute('aria-pressed', String(Boolean(next.autoCombat?.active)));
-			$('[data-interact]').hidden = !next.target?.interaction;
+			text('[data-auto-toggle]', next.target?.player ? '取消选择' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
+			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!next.target?.player && Boolean(next.autoCombat?.active)));
+			const player = next.target?.player;
+			$('[data-auto-toggle]').classList.toggle('clear-selection', Boolean(player));
+			$('[data-player-actions]').hidden = !player;
+			$('[data-target]').hidden = Boolean(player);
+			$('.battle-status').classList.toggle('has-player-actions', Boolean(player));
+			for (const button of root.querySelectorAll('[data-player-action]')) button.disabled = !player?.name || (button.dataset.playerAction === 'friend' && player.friend);
+			$('[data-player-action=friend]').title = player?.friend ? '已是好友' : '加好友';
+			$('[data-interact]').hidden = !next.target?.interaction || (player && next.target.interaction === '交易');
 			text('[data-interact]', next.target?.interaction);
 			text('[data-name]', next.name);
 			text('[data-job]', `Lv.${next.level} ${next.job}`);
@@ -816,6 +844,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			shopPanel?.update();
 			containerPanel?.update();
 			questsPanel?.update();
+			chatPanel?.refresh();
 			socialPanel?.update();
 			selectionPanel?.update();
 			materialsPanel?.update();
@@ -830,7 +859,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		setMessages(next) {
 			if (!next.length) unreadChat = 0;
 			const lastId = messages.at(-1)?.id || 0;
-			if (currentPanel !== 'chat' || !['all', 'private'].includes(chatFilter))
+			if (currentPanel !== 'chat' || chatFilter !== 'all')
 				unreadChat += next.filter(m => m.id > lastId && m.incomingPrivate).length;
 			messages = next;
 			updateMessages();
@@ -862,12 +891,14 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 					'refinement',
 					'enchant',
 					'information',
+					'equipment',
 					'transformation'
 				].includes(state.kind)
 					? state.kind
 					: 'npc'
 			);
 		},
+		openPrivate: name => open('chat', name),
 		openShortcuts: index => open('shortcuts', index),
 		updateShortcuts(state) {
 			shortcutPanel?.updateIcons(actions.shortcutCandidates());

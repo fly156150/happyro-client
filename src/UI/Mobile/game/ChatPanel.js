@@ -1,35 +1,257 @@
+import { privateRecipientError } from 'UI/Game/PrivateRecipient.js';
+import { requestMobileInput } from './MobileInputEditor.js';
 import { chatChannelLabels } from './ChatChannels.js';
 import { chatEmotions } from 'UI/Game/ChatEmotions.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
-export function createChatPanel(body, send, initialReceiver = '', loadEmotionImages, onSent, initialFilter = 'all', onFilterChange) {
-	body.innerHTML =
-		'<div class="chat-conversation"><nav class="chat-filters" aria-label="消息筛选"></nav><div class="chat-content"><div class="chat-log" role="log" aria-label="聊天消息"></div><div class="chat-emotions" hidden aria-label="RO 表情"></div></div></div><form class="chat-form"><select aria-label="发送频道"><option value="public">附近</option><option value="private">私聊</option><option value="party">队伍</option><option value="guild">公会</option><option value="clan">氏族</option></select><input data-menu-control="field" aria-label="私聊对象" maxlength="24" placeholder="角色名" hidden><input data-menu-control="field" data-input-submit aria-label="聊天内容" placeholder="输入消息" maxlength="120" autocomplete="off" enterkeyhint="send"><button type="button" data-emotions aria-label="选择表情" aria-expanded="false">表情</button><button type="submit">发送</button></form>';
+
+export function createChatComposer() {
+	return { receiver: '', drafts: new Map(), contacts: new Set(), removedContacts: new Map(), read: new Set() };
+}
+
+export function createChatPanel(
+	body,
+	send,
+	initialReceiver = '',
+	loadEmotionImages,
+	initialFilter = 'all',
+	onFilterChange,
+	composer = createChatComposer(),
+	channelError = () => ''
+) {
+	body.innerHTML = `
+		<div class="chat-conversation">
+			<nav class="chat-filters" aria-label="消息分类"></nav>
+			<section class="chat-contacts" aria-label="私聊对象" hidden>
+				<button type="button" data-new-private>＋ 新私聊</button>
+				<div class="chat-contact-list"></div>
+			</section>
+			<div class="chat-content">
+				<div class="chat-recipient" hidden></div>
+				<div class="chat-log" role="log" aria-label="聊天消息"></div>
+				<div class="chat-emotions" hidden aria-label="RO 表情"></div>
+			</div>
+		</div>
+		<form class="chat-form">
+			<input data-menu-control="field" data-input-submit aria-label="聊天内容" maxlength="120" autocomplete="off" enterkeyhint="send">
+			<button type="button" data-emotions aria-label="选择表情" aria-expanded="false">表情</button>
+			<button type="submit">发送</button>
+		</form>`;
 	const feedback = createFeedback(body);
-	const $ = selector => body.querySelector(selector),
-		log = $('.chat-log'),
-		channel = $('[aria-label="发送频道"]'),
-		receiver = $('[aria-label="私聊对象"]'),
+	const $ = selector => body.querySelector(selector);
+	const log = $('.chat-log'),
 		input = $('[aria-label="聊天内容"]');
-	let messages = [];
-	let filter = initialFilter;
+	const palette = $('.chat-emotions'),
+		toggle = $('[data-emotions]');
+	const recipient = $('.chat-recipient');
+	let dismissNewPrivate;
+	const sendable = ['public', 'private', 'party', 'guild', 'clan'];
+	let messages = [],
+		filter = initialReceiver ? 'private' : initialFilter;
+	if (initialReceiver) {
+		composer.receiver = initialReceiver;
+		composer.contacts.add(initialReceiver);
+		composer.removedContacts.delete(initialReceiver);
+	}
+	const key = () => (filter === 'private' ? `private:${composer.receiver}` : filter);
+	const canSend = () => sendable.includes(filter) && (filter !== 'private' || Boolean(composer.receiver));
+	function saveDraft() {
+		if (canSend()) composer.drafts.set(key(), input.value);
+	}
+	function hideEmotions() {
+		palette.hidden = true;
+		toggle.setAttribute('aria-expanded', 'false');
+	}
+	function renderComposer() {
+		input.disabled =
+			toggle.disabled =
+			$('.chat-form [type="submit"]').disabled =
+				!canSend() || Boolean(channelError(filter));
+		input.value = canSend() ? composer.drafts.get(key()) || '' : '';
+		input.placeholder =
+			channelError(filter) ||
+			(filter === 'all'
+				? '请选择频道，或点击消息回复'
+				: !sendable.includes(filter)
+					? '当前分类仅供查看'
+					: filter === 'private'
+						? composer.receiver
+							? '输入私聊消息'
+							: '请先选择私聊对象'
+						: `发送到${chatChannelLabels[filter]}`);
+		recipient.hidden = filter !== 'private';
+		recipient.textContent = composer.receiver || '请选择私聊对象';
+		$('.chat-contacts').hidden = filter !== 'private';
+		$('.chat-conversation').classList.toggle('is-private', filter === 'private');
+		for (const button of $('.chat-filters').children)
+			button.setAttribute('aria-pressed', String(button.dataset.chatFilter === filter));
+	}
+	function chooseFilter(value, peer) {
+		saveDraft();
+		if (peer) {
+			composer.receiver = peer;
+			composer.contacts.add(peer);
+			composer.removedContacts.delete(peer);
+		}
+		filter = value;
+		hideEmotions();
+		renderComposer();
+		update();
+		log.scrollTop = log.scrollHeight;
+		onFilterChange?.(filter);
+	}
 	for (const [value, label] of Object.entries({ all: '全部消息', ...chatChannelLabels })) {
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.dataset.chatFilter = value;
 		button.textContent = label;
-		button.setAttribute('aria-pressed', String(value === filter));
-		button.onclick = () => {
-			filter = value;
-			for (const item of $('.chat-filters').children)
-				item.setAttribute('aria-pressed', String(item === button));
-			update();
-			log.scrollTop = log.scrollHeight;
-			onFilterChange?.(filter);
-		};
+		button.onclick = () => chooseFilter(value);
 		$('.chat-filters').append(button);
 	}
-	const palette = $('.chat-emotions'),
-		toggle = $('[data-emotions]');
+	function selectPeer(name) {
+		name = name.trim();
+		if (privateRecipientError(name)) return;
+		dismissNewPrivate?.();
+		chooseFilter('private', name);
+	}
+	function removePeer(name) {
+		saveDraft();
+		composer.contacts.delete(name);
+		composer.removedContacts.set(name, Math.max(0, ...messages.map(message => message.id)));
+		for (const message of messages) {
+			if (message.privatePeer === name) composer.read.add(message.id);
+		}
+		if (composer.receiver === name) composer.receiver = '';
+		renderComposer();
+		update();
+	}
+	function renderContacts() {
+		const list = $('.chat-contact-list');
+		list.replaceChildren();
+		for (const name of [...composer.contacts].reverse()) {
+			const unread = messages.filter(
+				m => m.privatePeer === name && m.incomingPrivate && !composer.read.has(m.id)
+			).length;
+			const row = document.createElement('div');
+			row.className = 'chat-contact';
+			row.classList.toggle('is-selected', name === composer.receiver);
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'chat-contact-select';
+			const label = document.createElement('span');
+			label.className = 'chat-contact-name';
+			label.textContent = name;
+			button.append(label);
+			button.title = name;
+			button.setAttribute('aria-label', `${name}${unread ? `，${unread} 条未读` : ''}`);
+			if (unread) {
+				const badge = document.createElement('b');
+				badge.className = 'chat-contact-unread';
+				badge.textContent = String(unread);
+				button.append(badge);
+			}
+			button.setAttribute('aria-pressed', String(name === composer.receiver));
+			button.onclick = () => selectPeer(name);
+			const remove = document.createElement('button');
+			remove.type = 'button';
+			remove.className = 'chat-contact-remove';
+			remove.textContent = '×';
+			remove.title = '删除对象';
+			remove.setAttribute('aria-label', `删除私聊对象 ${name}`);
+			remove.onclick = () => removePeer(name);
+			row.append(button, remove);
+			list.append(row);
+		}
+	}
+	function openRecipients() {
+		const field = document.createElement('input');
+		field.placeholder = '输入角色名';
+		field.maxLength = 24;
+		field.required = true;
+		field.autocomplete = 'off';
+		dismissNewPrivate = requestMobileInput(body.getRootNode().host, {
+			field,
+			title: '新私聊',
+			doneLabel: '开始私聊',
+			validate: value => privateRecipientError(value.trim()),
+			onConfirm: selectPeer,
+			onClose: () => {
+				dismissNewPrivate = null;
+			}
+		});
+	}
+	$('[data-new-private]').onclick = openRecipients;
+	function update(next = messages) {
+		messages = next;
+		const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 24;
+		for (const message of messages) {
+			if (message.privatePeer) {
+				const removedAt = composer.removedContacts.get(message.privatePeer);
+				if (removedAt === undefined || (message.incomingPrivate && message.id > removedAt)) {
+					composer.removedContacts.delete(message.privatePeer);
+					composer.contacts.add(message.privatePeer);
+				}
+			}
+			if (
+				!dismissNewPrivate &&
+				(filter === 'all' || (filter === 'private' && message.privatePeer === composer.receiver))
+			)
+				composer.read.add(message.id);
+		}
+		const unread = messages.filter(m => m.incomingPrivate && !composer.read.has(m.id)).length;
+		$('[data-chat-filter="private"]').textContent = `私聊${unread ? ` (${unread})` : ''}`;
+		log.replaceChildren(
+			...messages
+				.filter(
+					m =>
+						filter === 'all' ||
+						(m.channel === filter && (filter !== 'private' || m.privatePeer === composer.receiver))
+				)
+				.map(m => {
+					const p = document.createElement('p');
+					p.dataset.channel = m.channel;
+					if (filter === 'private') {
+						p.classList.add('chat-private-message');
+						p.dataset.direction = m.direction || (m.incomingPrivate ? 'incoming' : 'outgoing');
+						const label = document.createElement('span');
+						label.className = 'chat-message-author';
+						label.textContent =
+							p.dataset.direction === 'error' ? '提示' : p.dataset.direction === 'incoming' ? '喵' : '我';
+						const text = document.createElement('span');
+						label.textContent += '：';
+						text.className = 'chat-message-body';
+						text.textContent = m.bodyText;
+						p.append(label, text);
+					} else if (m.channel === 'private' && m.privatePeer) {
+						const prefix = m.direction === 'error' ? '提示 ' : m.direction === 'outgoing' ? '回复 ' : '';
+						p.textContent = `[私聊] ${prefix}[${m.privatePeer}]: ${m.bodyText}`;
+					} else p.textContent = `[${chatChannelLabels[m.channel] || '系统'}] ${m.text}`;
+					if (
+						filter === 'all' &&
+						(m.channel === 'private' ? m.replyable !== false : m.replyable === true) &&
+						sendable.includes(m.channel) &&
+						(m.channel !== 'private' || (m.privatePeer && m.incomingPrivate))
+					) {
+						const reply = document.createElement('a');
+						reply.href = '#';
+						reply.className = 'chat-reply';
+						reply.textContent = m.channel === 'private' ? '回复' : '发言';
+						reply.setAttribute(
+							'aria-label',
+							m.privatePeer ? `私聊 ${m.privatePeer}` : `在${chatChannelLabels[m.channel]}发言`
+						);
+						reply.onclick = event => {
+							event.preventDefault();
+							chooseFilter(m.channel, m.privatePeer);
+							input.focus();
+						};
+						p.append(' ', reply);
+					}
+					return p;
+				})
+		);
+		renderContacts();
+		if (atBottom) log.scrollTop = log.scrollHeight;
+	}
 	let loading;
 	async function ensureEmotions() {
 		if (loading) return loading;
@@ -48,7 +270,7 @@ export function createChatPanel(body, send, initialReceiver = '', loadEmotionIma
 					icon.alt = '';
 					icon.width = icon.height = 40;
 					button.append(icon);
-					button.onclick = () => submit(`/${command}`);
+					button.onclick = () => submit(`/${command}`, true);
 					palette.append(button);
 				}
 			})
@@ -64,54 +286,42 @@ export function createChatPanel(body, send, initialReceiver = '', loadEmotionIma
 		toggle.setAttribute('aria-expanded', String(!palette.hidden));
 		if (!palette.hidden) void ensureEmotions();
 	};
-	for (const region of [$('form'), palette])
-		region.addEventListener('pointerdown', event => {
-			if (event.target.closest('button')) event.preventDefault();
-		});
-	channel.onchange = () => {
-		receiver.hidden = channel.value !== 'private';
-	};
-	if (initialReceiver) {
-		channel.value = 'private';
-		receiver.value = initialReceiver;
-		channel.onchange();
-	}
-	function update(next = messages) {
-		messages = next;
-		const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 24;
-		log.replaceChildren(
-			...messages
-				.filter(m => filter === 'all' || m.channel === filter)
-				.map(m => {
-					const p = document.createElement('p');
-					p.dataset.channel = m.channel;
-					p.textContent = `[${chatChannelLabels[m.channel] || '系统'}] ${m.text}`;
-					return p;
-				})
-		);
-		if (atBottom) log.scrollTop = log.scrollHeight;
-	}
 	let composing = false;
+	input.addEventListener('input', saveDraft);
 	input.addEventListener('compositionstart', () => {
 		composing = true;
 	});
 	input.addEventListener('compositionend', () => {
 		composing = false;
+		saveDraft();
 	});
-	function submit(text) {
-		const error = send(text, channel.value, receiver.value);
-		if (error) feedback(error, 'error');
-		if (!error) {
-			input.value = '';
-			input.blur();
-			palette.hidden = true;
-			toggle.setAttribute('aria-expanded', 'false');
-			onSent?.();
+	function submit(text, emotion = false) {
+		if (!canSend() || composing || channelError(filter)) return;
+		const error = send(text, filter, filter === 'private' ? composer.receiver : '');
+		if (error) {
+			if (filter !== 'private') feedback(error, 'error');
+			return;
 		}
+		if (!emotion) {
+			input.value = '';
+			saveDraft();
+		}
+		hideEmotions();
 	}
-	$('form').onsubmit = event => {
+	$('.chat-form').onsubmit = event => {
 		event.preventDefault();
-		if (!composing) submit(input.value);
+		submit(input.value);
 	};
-	return { update };
+	renderComposer();
+	if (initialReceiver) onFilterChange?.(filter);
+	return {
+		update,
+		refresh() {
+			const disabled = !canSend() || Boolean(channelError(filter));
+			if (input.disabled !== disabled) {
+				saveDraft();
+				renderComposer();
+			}
+		}
+	};
 }

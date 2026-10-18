@@ -1,10 +1,12 @@
+vi.mock('Engine/MapEngine/Friends.js',()=>({default:{isFriend:()=>s.friend,addFriend:s.addFriend}}));
+vi.mock('UI/Components/Equipment/Equipment.js',()=>({default:{onCheckPlayerEquipment:s.equip}}));
 vi.mock('UI/Components/Trade/Trade.js', () => ({default:{reqExchange:s.trade}}));
 vi.mock('UI/UIManager.js', () => ({default:{showPromptBox:s.prompt}}));
 import { beforeEach, expect, it, vi } from 'vitest';
 import glMatrix from '../../src/Utils/gl-matrix.js';
 const s = vi.hoisted(() => ({
 	session: { Playing: true, Entity: null },
-	trade: vi.fn(), prompt: vi.fn(),
+	trade: vi.fn(), prompt: vi.fn(), equip: vi.fn(), addFriend: vi.fn(), friend: false,
 	target: null,
 	over: null,
 	send: vi.fn(),
@@ -63,7 +65,7 @@ import {
 	attackSelected,
 	stopAttack,
 	interactSelected,
-	targetSnapshot
+	targetSnapshot, playerAction
 } from '../../src/UI/Game/GameCommands.js';
 function entity(type = 1) {
 	return {
@@ -85,6 +87,7 @@ beforeEach(() => {
 	stopDirectionalMovement();
 	s.session.Playing = true;
 	vi.clearAllMocks();
+	s.friend=false;s.session.FreezeUI=false;
 	s.target = null;
 	s.over = null;
 	s.session.Entity = { position: [10, 10], ACTION: { DIE: 99, SIT: 2 }, action: 0 };
@@ -267,4 +270,23 @@ it('updates a held joystick from the current camera angle on every movement tick
  s.camera.angle[1] = 90;
  moveDirection(1, 0);
  expect(s.send.mock.calls.at(-1)[0].dest).toEqual([10, 13]);
+});
+
+it('exposes player actions only for other players and rejects stale targets',()=>{
+ s.target=entity(s.types.TYPE_PC);const open=vi.fn();expect(targetSnapshot().player).toEqual({id:42,name:'目标',friend:false});
+ playerAction('private',42,open);expect(open).toHaveBeenCalledWith('目标');playerAction('equipment',42,open);expect(s.equip).toHaveBeenCalledWith(42);playerAction('friend',42,open);expect(s.addFriend).toHaveBeenCalledWith('目标');
+ s.friend=true;expect(targetSnapshot().player.friend).toBe(true);expect(playerAction('friend',42,open)).toBe('已是好友');expect(s.addFriend).toHaveBeenCalledTimes(1);
+ expect(playerAction('equipment',43,open)).toContain('重新选择');s.target=entity(s.types.TYPE_NPC);expect(targetSnapshot().player).toBeNull();expect(playerAction('equipment',42,open)).toContain('重新选择');
+ s.target=s.session.Entity;expect(playerAction('private',undefined,open)).toContain('重新选择');
+});
+
+it('revalidates confirmed trades and reports rejected friend requests',()=>{
+ s.target=entity(s.types.TYPE_PC);
+ expect(playerAction('trade',42)).toBe('');
+ expect(s.trade).toHaveBeenCalledWith(42,'目标');
+ expect(s.prompt).not.toHaveBeenCalled();
+ expect(playerAction('trade',43)).toContain('重新选择');
+ expect(s.trade).toHaveBeenCalledTimes(1);
+ s.addFriend.mockReturnValueOnce(false);
+ expect(playerAction('friend',42)).toBe('好友请求未发送');
 });

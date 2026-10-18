@@ -1,3 +1,4 @@
+import { chatSpeakerMetadata } from 'UI/Game/ChatSpeaker.js';
 import { updatePartyMemberInfo } from './PartyMemberInfo.js';
 import { allowSocialText } from './SocialText.js';
 /**
@@ -394,7 +395,7 @@ function onMemberTalk(pkt) {
 		entity.dialog.set(pkt.msg);
 	}
 
-	ChatBox.addText(pkt.msg, ChatBox.TYPE.PARTY, ChatBox.FILTER.PARTY);
+	ChatBox.addText(pkt.msg, ChatBox.TYPE.PARTY, ChatBox.FILTER.PARTY, undefined, chatSpeakerMetadata({ id: pkt.AID }));
 }
 
 /**

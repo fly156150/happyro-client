@@ -733,6 +733,8 @@ ChatBox.clean = function Clean() {
 	_messageBuffer = [];
 	_historyMessage.clear();
 	_historyNickName.clear();
+	ChatBox.PrivateMessageStorage.nick = '';
+	ChatBox.PrivateMessageStorage.msg = '';
 	clearChatFeed();
 	const root = _root();
 	// Account switches can happen before desktop chat is mounted, including on mobile.
@@ -1224,8 +1226,6 @@ ChatBox.submit = function Submit() {
 
 	// Private message
 	if (user.length && trimmedText[0] !== '/') {
-		this.PrivateMessageStorage.nick = user;
-		this.PrivateMessageStorage.msg = trimmedText;
 		_historyNickName.push(user);
 		_historyNickName.previous();
 	}
@@ -1264,7 +1264,7 @@ function extractChatMessage(inputEl) {
 /**
  * Add text to chatbox
  */
-ChatBox.addText = function addText(text, colorType, filterType, color) {
+ChatBox.addText = function addText(text, colorType, filterType, color, metadata = {}) {
 	const content = createChatContent(text, link => DB.parseItemLink(link));
 	const html = content.childElementCount > 0;
 
@@ -1272,7 +1272,12 @@ ChatBox.addText = function addText(text, colorType, filterType, color) {
 		filterType = ChatBox.FILTER.PUBLIC_LOG;
 	}
 
-	publishChatMessage({ text: html ? content.innerHTML : content.textContent, html, colorType, filterType });
+	const privatePeer = filterType === ChatBox.FILTER.WHISPER && Array.isArray(text)
+		? text.find(part => part?.kind === 'nickname')?.text || ''
+		: '';
+	const bodyText = privatePeer ? createChatContent(text.at(-1), link => DB.parseItemLink(link)).textContent : '';
+	const direction = privatePeer ? (colorType & ChatBox.TYPE.ERROR ? 'error' : colorType & ChatBox.TYPE.SELF ? 'outgoing' : 'incoming') : '';
+	publishChatMessage({ text: html ? content.innerHTML : content.textContent, html, colorType, filterType, privatePeer, bodyText, direction, replyable: metadata.replyable });
 	_messageBuffer.push({
 		content,
 		colorType: colorType,

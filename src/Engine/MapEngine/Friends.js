@@ -23,17 +23,30 @@ import PartyFriends from 'UI/Components/PartyFriends/PartyFriends.js';
  * @var {Array} list of friends
  */
 let _friends = [];
+const details = new Map();
+let detailsRequestedAt = -Infinity;
 
 /**
  * Create namespace
  */
 class FriendEngine {
+ static detailsFor(friend) {
+  if (Date.now() - detailsRequestedAt >= 5000) {
+   detailsRequestedAt = Date.now(); Network.sendPacket(new PACKET.CZ.HAPPYRO_FRIEND_DETAILS());
+  }
+  return friend.State === 0 ? details.get(friend.GID) : undefined;
+ }
+
 	/**
 	 * Initialzing engine
 	 * (Hook Packets)
 	 */
 	static init() {
-		// Hook Packets
+		Network.hookPacket(PACKET.ZC.HAPPYRO_FRIEND_DETAIL, packet => {
+   if (_friends.some(friend => friend.AID === packet.AID && friend.GID === packet.GID))
+    details.set(packet.GID, {baseLevel: packet.baseLevel || undefined, mapName: packet.mapName || undefined});
+  });
+  // Hook Packets
 		Network.hookPacket(PACKET.ZC.FRIENDS_LIST, onFriendList);
 		Network.hookPacket(PACKET.ZC.FRIENDS_STATE, onFriendUpdate);
 		Network.hookPacket(PACKET.ZC.REQ_ADD_FRIENDS, onFriendRequest);
@@ -51,7 +64,7 @@ class FriendEngine {
 	 *
 	 */
 	static free() {
-		_friends.length = 0;
+		_friends.length = 0; details.clear(); detailsRequestedAt = -Infinity;
 	}
 
 	/**
@@ -139,7 +152,7 @@ class FriendEngine {
  * @param {object} pkt - PACKET.ZC.FRIENDS_LIST
  */
 function onFriendList(pkt) {
-	_friends = pkt.friendList;
+	_friends = pkt.friendList; details.clear(); detailsRequestedAt = -Infinity;
 
 	PartyFriends.getUI().setFriends(_friends);
 }
@@ -153,7 +166,7 @@ function onFriendUpdate(pkt) {
 	const idx = getFriendIndex(pkt.AID, pkt.GID);
 
 	if (idx > -1) {
-		_friends[idx].State = pkt.State;
+		_friends[idx].State = pkt.State; details.delete(pkt.GID); detailsRequestedAt = -Infinity;
 
 		PartyFriends.getUI().updateFriendState(idx, pkt.State);
 	}

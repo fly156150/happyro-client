@@ -77,3 +77,43 @@
 :host([data-menu-density][data-menu-arrangement][data-orientation='landscape']) .panel[data-view='social'] > .panel-body > .social-tabs + .social-footer {
  margin-top: 0;
 }
+
+
+/* Member detail hierarchy is shared across friends, party and guild. */
+.panel[data-view='social'] .social-member-card {
+ margin: 0 0 12px; min-width: 0;
+}
+.panel[data-view='social'] .social-member-header {
+ display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+ padding: 8px 10px; border-left: 3px solid #ceaa70; border-radius: 4px;
+ background: #2b3540;
+}
+.panel[data-view='social'] .social-member-header h3 {
+ margin: 0; min-width: 0; color: #ffe1ae; overflow-wrap: anywhere;
+ font-size: var(--panel-heading); line-height: 1.5;
+}
+.panel[data-view='social'] .social-member-status {
+ flex: 0 0 auto; padding: 1px 7px; border: 1px solid #65717b;
+ border-radius: 4px; font-size: var(--panel-label); line-height: 1.6;
+ color: #bac4cd; background: #222b35; white-space: nowrap;
+}
+.panel[data-view='social'] .social-member-status[data-status='online'] {
+ color: #acd9b1; border-color: #577b60; background: #263e30;
+}
+.panel[data-view='social'] .social-member-facts {
+ display: block; margin: 8px 0 0; padding: 0;
+}
+.panel[data-view='social'] .social-member-facts > div {
+ display: grid; grid-template-columns: 3em minmax(0, 1fr); gap: 12px;
+ align-items: baseline; padding: 7px 10px;
+}
+.panel[data-view='social'] .social-member-facts > div + div {
+ border-top: 1px solid #35434f;
+}
+.panel[data-view='social'] .social-member-facts dt {
+ color: #aab8c5; font-size: var(--panel-label);
+}
+.panel[data-view='social'] .social-member-facts dd {
+ min-width: 0; margin: 0; color: #f5f2e9; overflow-wrap: anywhere; text-align: left;
+ font-size: var(--panel-text); line-height: 1.5;
+}

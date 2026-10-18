@@ -24,6 +24,7 @@ export function createGameSocial(canOperate, shortcuts) {
 		if (pendingSkill && pendingSkill !== signature) pendingSkill = null;
 		return {
 			...social,
+			friends: social.friends.map(friend => ({ ...friend, ...FriendEngine.detailsFor(friend) })),
 			party: Session.hasParty ? social.party : [],
 			guild: Session.hasGuild ? guild : null,
 			allowed: allowed(),
@@ -210,7 +211,12 @@ export function createGameSocial(canOperate, shortcuts) {
 				break;
 			}
 			case 'guildPosition':
-				if (!state.master || !guildMember || !state.guild.positions.some(p => p.positionID === data.position))
+				if (
+					!state.master ||
+					!guildMember ||
+					guildMember.AID === state.self.AID ||
+					!state.guild.positions.some(p => p.positionID === data.position)
+				)
 					return '成员或职位已变化';
 				GuildEngine.requestChangeMemberPos([
 					{ AID: guildMember.AID, GID: guildMember.GID, positionID: data.position }
