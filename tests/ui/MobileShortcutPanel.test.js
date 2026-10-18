@@ -20,7 +20,7 @@ it('preserves chosen level and list position while icons load, then saves withou
  expect(body.querySelector('.shortcut-choices').scrollTop).toBe(100);
  body.querySelector('form').dispatchEvent(new Event('submit', { cancelable: true }));
  expect(actions.configure).toHaveBeenCalledWith(3, entry, 2);
- expect(body.querySelector('[data-current]').textContent).toContain(entry.name);
+ expect(body.querySelector('[data-slot-title]').textContent).toContain(entry.name);
  expect(document.querySelector('.ui-toast').textContent).toContain('已保存');
  expect(document.querySelector('.ui-toast').classList.contains('success')).toBe(true);
  expect(body.querySelector('form').hidden).toBe(false);
@@ -67,7 +67,7 @@ it('shows bound skill levels and switches batches without saving the previous dr
  expect(body.querySelector('.shortcut-pages').lastElementChild.textContent).toBe('›');
  expect(body.querySelector('[data-index="5"] > span').textContent).toContain('Lv.7');
  expect(body.querySelector('[data-index="3"]')).toBeNull();
- expect(body.querySelector('[data-slot-title]').textContent).toBe('位置 6');
+ expect(body.querySelector('[data-slot-title]').textContent).toBe('当前位置 6：其它技能 · Lv.7');
  expect(body.querySelector('[data-save-slot]').disabled).toBe(true);
  expect(actions.configure).not.toHaveBeenCalled();
  body.querySelector('[data-page-step="-1"]').click();
@@ -143,8 +143,8 @@ it('matches the skill menu description while retaining slot information', () => 
  const detail=body.querySelector('[data-choice-detail]');
  expect(detail.querySelector('h3').textContent).toBe(entry.name);
  expect([...detail.querySelectorAll('p')].map(p=>p.textContent)).toEqual(['主动 · 等级 5/10','前置技能：前置技能 3/3\n技能点不足',entry.description]);
- expect(body.querySelector('[data-slot-title]').textContent).toBe('位置 4');
- expect(body.querySelector('[data-current]').textContent).toContain('空位置');
+ expect(body.querySelector('[data-slot-title]').textContent).toBe('当前位置 4：空位置');
+ expect(body.querySelector('[data-slot-title]').textContent).toContain('空位置');
  expect(detail.querySelector('img')).toBeNull();
  body.querySelector('[data-key="false:501"]').click();
  expect(detail.querySelector('h3').textContent).toBe('红色药水');
@@ -179,7 +179,7 @@ it('shows the inventory illustration, quantity, weight and description without i
  expect(detail.querySelector('.inventory-item-metadata').textContent).toBe('数量：3重量：7');
  expect(detail.querySelector('.item-description').textContent).toBe('恢复生命。');
  expect(detail.querySelector('button')).toBeNull();
- expect(body.querySelector('[data-slot-title]').textContent).toBe('位置 4');
+ expect(body.querySelector('[data-slot-title]').textContent).toBe('当前位置 4：空位置');
 });
 it('does not insert a late item image into a newly selected skill', async () => {
  let resolve; actions.previewItem.mockReturnValue(new Promise(done=>{resolve=done}));

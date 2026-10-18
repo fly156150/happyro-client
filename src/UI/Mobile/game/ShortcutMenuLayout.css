@@ -29,7 +29,16 @@
  flex: 0 0 auto; margin: 0;
 }
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-editor {
- min-height: 0; overflow-y: auto;
+ display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-current {
+ flex: 0 0 auto;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail] {
+ display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail][hidden] {
+ display: none;
 }
 /* Phone editing controls remain on one row in either orientation. */
 :host([data-phone-screen][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-footer {
@@ -55,4 +64,12 @@
 }
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail] > .inventory-item-description > :first-child {
  margin-top: 0;
+}
+
+/* The actual description scroller owns the edge behavior, not its clipped parent. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail] > .inventory-item-description {
+ overscroll-behavior-y: none;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-slot-title] {
+ display: block; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }

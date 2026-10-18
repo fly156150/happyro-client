@@ -19,8 +19,8 @@ export function createShortcutPanel(body, actions) {
 				</div>
 				<div class="shortcut-choices"></div><p data-filter-empty hidden>没有符合条件的技能或物品</p>
 			</section>
-			<section class="shortcut-editor" aria-label="快捷键说明">
-				<div class="shortcut-current"><strong data-slot-title></strong><span data-current></span></div>
+			<section class="shortcut-editor inventory-item-detail" aria-label="快捷键说明">
+				<div class="shortcut-current"><strong data-slot-title></strong></div>
 				<p data-choice-hint>从列表选择技能或道具，查看说明并保存到当前位置。</p>
 				<div data-choice-detail hidden></div>
 			</section>
@@ -81,8 +81,12 @@ export function createShortcutPanel(body, actions) {
 				button.setAttribute('aria-pressed', String(slot.index === index));
 			}
 			if (slot.index === index) {
-				$('[data-slot-title]').textContent = `位置 ${index + 1}`;
-				$('[data-current]').textContent = `当前：${slot.name}${slot.amount ? ` · ${slot.amount}` : ''}`;
+				const heading = $('[data-slot-title]');
+				const title = `当前位置 ${index + 1}：${slot.name}${slot.binding?.isSkill ? ` · Lv.${slot.binding.count}` : ''}`;
+				if (heading.textContent !== title) {
+					heading.textContent = title;
+					heading.title = title;
+				}
 				$('[data-clear-slot]').disabled = slot.empty;
 			}
 		}
@@ -182,7 +186,6 @@ export function createShortcutPanel(body, actions) {
 				if (item) detail.replaceChildren(createInventoryDescription(item, actions.previewItem));
 				else detail.textContent = '物品已经变化，请重新选择';
 			}
-			$('.shortcut-editor').scrollTop = 0;
 			const select = $('.shortcut-level select');
 			select.replaceChildren();
 			select.disabled = !entry.isSkill;
