@@ -139,12 +139,23 @@ ShortCutOption.onAppend = function () {
 	this._host.style.left = _preferences.x + 'px';
 	this._host.style.top = _preferences.y + 'px';
 	this._host.style.zIndex = 100;
+	const root = this.getRoot();
+	for (const key of ['attackTargetMode', 'joyQuick', 'joySense', 'joyDeadline']) {
+		root.querySelector('.' + key).value = Controls[key];
+	}
+	for (const key of ['joyDisableVirtualMouse', 'joyAutoHide', 'joyReverseStick']) {
+		root.querySelector('.' + key).checked = Controls[key];
+	}
+	cancelSettings();
 };
 
 /**
  * Remove from window (and so clean up)
  */
 ShortCutOption.onRemove = function () {
+	ShortCutOption.isCapturing = false;
+	cancelSettings();
+	this.getRoot().querySelectorAll('td.selected').forEach(cell => cell.classList.remove('selected'));
 	_preferences.x = parseInt(this._host.style.left, 10);
 	_preferences.y = parseInt(this._host.style.top, 10);
 	_preferences.save();
@@ -265,7 +276,7 @@ ShortCutOption.onKeyDown = function (event) {
 							(oldAlt ? 'ALT + ' : '') +
 							(oldCtrl ? 'CTRL + ' : '') +
 							(oldShift ? 'SHIFT + ' : '') +
-							(oldKey ? KEYS.toReadableKey(parseInt(oldKey, 10)) : 'N/A');
+							(oldKey ? KEYS.toReadableKey(parseInt(oldKey, 10)) : '未设置');
 					}
 				}
 
@@ -281,7 +292,7 @@ ShortCutOption.onKeyDown = function (event) {
 				(getAlt(currentSC) ? 'ALT + ' : '') +
 				(getCtrl(currentSC) ? 'CTRL + ' : '') +
 				(getShift(currentSC) ? 'SHIFT + ' : '') +
-				KEYS.toReadableKey(getKey(currentSC), 10);
+				(getKey(currentSC) ? KEYS.toReadableKey(getKey(currentSC), 10) : '未设置');
 
 			root.querySelectorAll('td.selected').forEach(function (el) {
 				el.classList.add('changed');
@@ -311,7 +322,7 @@ function updateKeyList() {
 				(getShift(btnName) ? 'SHIFT + ' : '') +
 				KEYS.toReadableKey(parseInt(getKey(btnName), 10));
 		} else {
-			cells[i].textContent = 'N/A';
+			cells[i].textContent = '未设置';
 		}
 	}
 }
@@ -453,7 +464,7 @@ function onUpdateJoyQuick() {
 }
 
 function onUpdateJoyDeadline() {
-	Controls.joyDeadline = parseInt(this.value, 10);
+	Controls.joyDeadline = parseFloat(this.value);
 	Controls.save();
 }
 

@@ -25,7 +25,7 @@ export const graphicsFields = [
 	// ['fxaaSubpix', '亚像素抗锯齿', 0, 1, 0.05],
 	['fxaaEdgeThreshold', '边缘阈值', 0.063, 0.333, 0.001],
 	['vibranceEnabled', '自然饱和度'],
-	['vibrance', '饱和强度', -0.9, 0.9, 0.1],
+	['vibrance', '饱和强度', -0.9, 0.9, 0.05],
 	['cartoonEnabled', '卡通效果'],
 	['cartoonPower', '卡通强度', 0.1, 9.9, 0.1],
 	['cartoonEdgeSlope', '描边强度', 1.5, 5.9, 0.1],

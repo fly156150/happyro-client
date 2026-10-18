@@ -46,7 +46,9 @@ class Context {
 	 * Try to cancel roBrowser full screen
 	 */
 	static cancelFullScreen() {
-		if (document.cancelFullScreen) {
+		if (document.exitFullscreen) {
+			return document.exitFullscreen();
+		} else if (document.cancelFullScreen) {
 			document.cancelFullScreen();
 		} else if (document.mozCancelFullScreen) {
 			document.mozCancelFullScreen();

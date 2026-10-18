@@ -52,3 +52,12 @@ it('keeps working FXAA controls while hiding its unimplemented subpixel control'
  expect(GraphicsOption.root.querySelector('.fxaaEdgeThreshold')).not.toBeNull();
  expect(GraphicsOption.root.querySelector('.fxaaSubpix')).toBeNull();
 });
+
+it('represents fractional production defaults without range input rounding', () => {
+ for (const [selector, value] of [['.fxaaEdgeThreshold', '0.125'], ['.vibrance', '0.15']]) {
+  const input = GraphicsOption.root.querySelector(selector);
+  input.value = value;
+  expect(input.value).toBe(value);
+  expect(input.validity.valid).toBe(true);
+ }
+});

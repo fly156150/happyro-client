@@ -122,7 +122,7 @@ class BattleMode {
 			}
 		}
 
-		return 'None';
+		return '未设置';
 	}
 }
 /**

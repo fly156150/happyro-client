@@ -96,3 +96,13 @@ it('does not expose the shader parameter that has no implemented effect', () => 
  expect(body.querySelector('[data-setting=fxaaSubpix]')).toBeNull();
  expect(body.querySelector('[data-setting=fxaaEnabled]')).not.toBeNull();
 });
+
+it('accepts the production saturation default and saves it unchanged', () => {
+ s.graphics.vibrance = 0.15;
+ const { body } = mount();
+ const field = body.querySelector('[data-setting=vibrance]');
+ expect(field.validity.valid).toBe(true);
+ input(body, '[data-setting=vibrance]', '0.15');
+ expect(s.graphics.vibrance).toBe(0.15);
+ expect(s.graphics.save).toHaveBeenCalledOnce();
+});

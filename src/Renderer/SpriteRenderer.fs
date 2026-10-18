@@ -8,6 +8,7 @@ uniform sampler2D uDiffuse;
 uniform sampler2D uPalette;
 
 uniform bool uUsePal;
+uniform bool uPixelPerfect;
 uniform vec4 uSpriteRendererColor;
 
 uniform bool  uFogUse;
@@ -53,7 +54,12 @@ void main(void) {
     // Calculate texture
     vec4 textureSample;
     if (uUsePal) {
-        textureSample = bilinearSample( vTextureCoord, uDiffuse, uPalette );
+        if (uPixelPerfect) {
+            float index = texture(uDiffuse, vTextureCoord).r;
+            textureSample = index == 0.0 ? vec4(0.0) : vec4(texture(uPalette, vec2(index, 1.0)).rgb, 1.0);
+        } else {
+            textureSample = bilinearSample(vTextureCoord, uDiffuse, uPalette);
+        }
     }
     else {
         textureSample = texture( uDiffuse, vTextureCoord.st );

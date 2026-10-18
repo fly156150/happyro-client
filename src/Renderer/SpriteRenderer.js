@@ -11,6 +11,7 @@
 import WebGL from 'Utils/WebGL.js';
 import glMatrix from 'Utils/gl-matrix.js';
 import Camera from './Camera.js';
+import GraphicsSettings from 'Preferences/Graphics.js';
 import _vertexShader from './SpriteRenderer.vs?raw';
 import _fragmentShader from './SpriteRenderer.fs?raw';
 
@@ -435,6 +436,7 @@ class SpriteRenderer {
 		// Textures
 		gl.uniform1i(uniform.uDiffuse, 0);
 		gl.uniform1i(uniform.uPalette, 1);
+		gl.uniform1i(uniform.uPixelPerfect, GraphicsSettings.pixelPerfectSprites);
 
 		// Camera position for billboarding
 		gl.uniform1f(uniform.uCameraZoom, Camera.zoom);

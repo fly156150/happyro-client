@@ -112,7 +112,7 @@ function save(root) {
 	const qa = sel => root.querySelectorAll(sel);
 
 	Graphics.screensize = q('.screensize').value;
-	Graphics.quality = q('.quality').value;
+	Graphics.quality = Number(q('.quality').value);
 	Graphics.cursor = q('.cursor') ? q('.cursor').checked : false;
 	_preferences.saveFiles = q('.save') ? q('.save').checked : false;
 
