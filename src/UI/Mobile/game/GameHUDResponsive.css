@@ -237,6 +237,9 @@
 	height: 40px;
 	bottom: 5px;
 }
+:host(:not([data-phone-screen])[data-menu-density='spacious']) .combat .skill img {
+	bottom: 8px;
+}
 :host([data-menu-density='spacious']) .skill small {
 	font-size: 12px;
 }
@@ -299,4 +302,16 @@
 :host([data-menu-arrangement='wide']) .map canvas {
 	width: var(--landscape-map-canvas);
 	height: var(--landscape-map-canvas);
+}
+
+/* Item sprites reserve a separate count row; skill icon geometry is unchanged. */
+:host([data-menu-density]) .combat .skill[data-shortcut-kind='item'] img {
+ width: 28px; height: 28px; bottom: 10px;
+}
+:host(:not([data-phone-screen])[data-menu-density='spacious']) .combat .skill[data-shortcut-kind='item'] img {
+ width: 32px; height: 32px; bottom: 15px;
+}
+
+:host(:not([data-phone-screen])[data-menu-density='spacious']) .combat .skill[data-shortcut-kind='item'] small {
+ bottom: 4px;
 }

@@ -1,3 +1,4 @@
+import { toPlainRagnarokText } from 'Utils/RagnarokText.js';
 import { skillTiers } from './SkillTiers.js';
 import Guild from 'UI/Components/Guild/Guild.js';
 import ShortCut from 'UI/Components/ShortCut/ShortCut.js';
@@ -122,6 +123,15 @@ export function createGameShortcuts(moving = () => false) {
 						isSkill: true,
 						ID: skill.SKID,
 						tier: tiers.get(skill.SKID) || '其它',
+						description: toPlainRagnarokText(DB.getSkillDescription(skill.SKID)),
+						skillDetail: {
+							name: SkillInfo[skill.SKID]?.SkillName || String(skill.SKID),
+							kind: skill.type === 0 ? '被动' : '主动',
+							level: skill.level,
+							max: Math.max(SkillInfo[skill.SKID]?.MaxLv || skill.level, skill.level),
+							requirements: [], reason: '',
+							description: toPlainRagnarokText(DB.getSkillDescription(skill.SKID))
+						},
 						level: skill.level,
 						...describe({ isSkill: true, ID: skill.SKID, count: skill.level })
 					})),
@@ -132,6 +142,7 @@ export function createGameShortcuts(moving = () => false) {
 						isSkill: false,
 						ID: item.ITID,
 						type: item.type,
+						description: toPlainRagnarokText(DB.getItemInfo(item.ITID)[item.IsIdentified ? 'identifiedDescriptionName' : 'unidentifiedDescriptionName']),
 						...describe({ isSkill: false, ID: item.ITID })
 					}))
 			];

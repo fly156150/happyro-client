@@ -37,3 +37,11 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+/* Match tablet physical-screen sizing, including split view and the keyboard. */
+:host([data-tablet]) {
+ font-size: 16px;
+ padding: 12px 18px;
+ border-radius: 10px;
+ max-width: calc(100% - 32px);
+}

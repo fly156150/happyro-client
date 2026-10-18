@@ -282,7 +282,7 @@
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
-	gap: 6px;
+	gap: var(--panel-gap);
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-layout {
 	display: grid;

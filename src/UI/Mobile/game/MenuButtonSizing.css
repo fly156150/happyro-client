@@ -91,6 +91,14 @@
  line-height: 1;
 }
 
+/* Tablet container limits use text padding; +/- segments keep their step width. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement])
+ .panel:is([data-view='storage'], [data-view='cart']) .container-quantity-group > button:is(:first-child, :last-child):not([hidden]) {
+ flex: 0 0 auto;
+ width: auto;
+ padding-inline: 12px;
+}
+
 /* Explicit column groups fill their cells; ordinary action rows stay content-sized. */
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
  .character-detail-scroll [data-menu-action-layout] > button:not([hidden]) {

@@ -64,3 +64,16 @@
  font-size: var(--panel-label);
  font-weight: normal;
 }
+
+/* Landscape categories precede the list; portrait keeps its bottom tabs. */
+:host([data-menu-density][data-menu-arrangement][data-orientation='landscape']) .panel[data-view='social'] > .panel-body:has(> .social-tabs) {
+ row-gap: var(--panel-gap);
+}
+:host([data-menu-density][data-menu-arrangement][data-orientation='landscape']) .panel[data-view='social'] > .panel-body > .social-tabs {
+ order: -1;
+ border-top: 0;
+ padding-block: 0;
+}
+:host([data-menu-density][data-menu-arrangement][data-orientation='landscape']) .panel[data-view='social'] > .panel-body > .social-tabs + .social-footer {
+ margin-top: 0;
+}

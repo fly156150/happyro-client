@@ -2,14 +2,16 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-allocation {
  grid-template-columns: repeat(3, minmax(0, 1fr));
  column-gap: 0;
- row-gap: 14px;
+ row-gap: 18px;
  grid-auto-rows: 1fr;
  border: 0;
  border-radius: 0;
 }
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row {
  grid-template-columns: repeat(3, minmax(0, 1fr));
- grid-template-rows: minmax(34px, 1fr) var(--panel-attribute-control);
+ grid-template-rows: repeat(2, minmax(0, 1fr));
+ box-sizing: border-box;
+ height: calc(36px + var(--panel-attribute-control));
  gap: 0;
  padding: 0;
  margin: 0;
@@ -37,7 +39,7 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-row > small { grid-column: 3; grid-row: 1; justify-content: center; text-align: center; border-left: 1px solid #52606d; font-size: var(--panel-caption); }
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments { grid-column: 1 / -1; grid-row: 2; }
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl {
- grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+ grid-template-columns: max-content minmax(0, 1fr);
 }
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl > :is(dt, dd) {
  min-width: 0;
@@ -57,9 +59,16 @@
 }
 
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button {
+ height: 100%;
+ min-height: 0;
  border-radius: 0;
  border-top: 0;
  border-bottom: 0;
 }
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button:first-child { border-left: 0; }
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-increments button:last-child { border-right: 0; }
+
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement][data-orientation='portrait']) .panel[data-view='attributes'] .attribute-results > dl > dt {
+ white-space: nowrap;
+ overflow-wrap: normal;
+}

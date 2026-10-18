@@ -309,17 +309,6 @@ it('opens standalone camera controls next to status and clears transparent styli
  expect(root.querySelector('.camera-section')).toBeNull();
 });
 
-it('remembers dismissal of the optional orientation suggestion across HUD mounts', () => {
- expect(root.querySelector('[data-orientation-hint]').hidden).toBe(false);
- click('[data-dismiss-orientation]');
- expect(root.querySelector('[data-orientation-hint]').hidden).toBe(true);
- expect(actions.setModal).not.toHaveBeenCalled();
- view.destroy();
- view = createGameHUDView(root, actions);
- expect(root.querySelector('[data-orientation-hint]').hidden).toBe(true);
- localStorage.removeItem('OrientationHint');
-});
-
 it('returns from the menu map through its supplied back action', () => {
  click('[data-panel="menu"]');
  [...root.querySelectorAll('.menu-grid button')].find(button=>button.textContent==='地图').click();
@@ -354,4 +343,12 @@ it.each(['held','released'])('discards a %s backdrop gesture across suspension',
  pointer('pointerdown');if(phase==='released')pointer('pointerup');view.suspend();
  if(phase==='held')pointer('pointerup');backdrop.click();expect(backdrop.hidden).toBe(false);
  pointer('pointerdown');pointer('pointerup');backdrop.click();expect(backdrop.hidden).toBe(true);
+});
+
+it('classifies item icons separately and clears the classification when a slot changes', () => {
+ const update=binding=>view.updateShortcuts({page:0,pages:1,slots:[{index:0,name:'条目',available:true,empty:!binding,binding,amount:'1'}]});
+ const slot=root.querySelector('[data-shortcut="0"]');
+ update({isSkill:false,ID:501});expect(slot.dataset.shortcutKind).toBe('item');
+ update({isSkill:true,ID:1});expect(slot.dataset.shortcutKind).toBe('skill');
+ update(null);expect(slot.dataset.shortcutKind).toBe('empty');
 });

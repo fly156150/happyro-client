@@ -22,6 +22,7 @@ vi.mock('DB/Skills/SkillInfo.generated.js', () => ({ default: { 1: { Name: 'test
 vi.mock('DB/DBManager.js', () => ({
 	default: {
 		INTERFACE_PATH: 'ui/',
+		getSkillDescription: () => '^FF0000技能说明^000000',
 		getItemInfo: () => ({ identifiedResourceName: 'potion', identifiedDisplayName: '药水' }),
 		getItemName: () => '药水'
 	}
@@ -114,4 +115,10 @@ it('includes original skill tiers and item types in shortcut candidates', () => 
  expect(service.candidates().find(entry => entry.ID === 56)).toMatchObject({ tier: '二转' });
  s.skill = previousSkill;
  delete s.session.Entity._job;
+});
+
+it('includes plain skill descriptions for the shortcut detail pane', () => {
+ s.skill = { SKID: 1, level: 3, type: 4, spcost: 15 };
+ const service=createGameShortcuts();
+ expect(service.candidates().find(entry=>entry.isSkill && entry.ID===1).description).toBe('技能说明');
 });

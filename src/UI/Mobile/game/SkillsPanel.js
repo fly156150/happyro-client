@@ -1,3 +1,4 @@
+import { createSkillDescription } from './SkillDescription.js';
 import { createMenuField } from './MenuFormControls.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -55,10 +56,6 @@ export function createSkillsPanel(body, actions) {
 		if (next === key) return;
 		key = next;
 		detail.replaceChildren();
-		const title = document.createElement('h3');
-		title.textContent = skill.name;
-		const summary = document.createElement('p');
-		summary.textContent = `${skill.kind} · 等级 ${skill.level}/${skill.max}`;
 		const learn = button(skill.level ? '升级一级' : '学习一级', () => {
 			dismiss = confirmAction(body, `确认将「${skill.name}」升至 ${skill.level + 1} 级？`, () => {
 				const result = actions.learn(skill.id, skill.level + 1);
@@ -68,9 +65,7 @@ export function createSkillsPanel(body, actions) {
 			});
 		});
 		learn.disabled = !skill.learnable;
-		const content = document.createElement('div');
-		content.className = 'inventory-item-description';
-		content.append(title, summary);
+		const content = createSkillDescription(skill);
 		const ops = document.createElement('div');
 		ops.className = 'inventory-actions menu-action-group';
 		ops.append(learn);
@@ -107,12 +102,6 @@ export function createSkillsPanel(body, actions) {
 			bind.disabled = skill.level < 1;
 			ops.append(bind);
 		} else ops.append(disabledAction('设置快捷键'));
-		const requirements = document.createElement('p');
-		requirements.textContent = `前置技能：${skill.requirements.join('；') || '无'}${skill.reason ? '\n' + skill.reason : ''}`;
-		const description = document.createElement('p');
-		description.className = 'item-description';
-		description.textContent = skill.description;
-		content.append(requirements, description);
 		detail.append(content);
 		$('.skills-action-slot').replaceChildren(ops);
 	}

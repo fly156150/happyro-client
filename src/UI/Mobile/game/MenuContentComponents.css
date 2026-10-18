@@ -333,7 +333,7 @@
 }
 
 /* Storage follows inventory's framed browsing layout on every touch device. */
-:host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) > .warehouse-body { gap: 6px; }
+:host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) > .warehouse-body { gap: var(--panel-gap); }
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) :is(.inventory-layout, .container-toolbar) { gap: 6px; }
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .inventory-layout {
  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr);
@@ -345,6 +345,10 @@
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .inventory-list {
  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
  grid-auto-rows: min-content; align-content: start; gap: 6px;
+}
+/* Empty-state messages span the tablet list, rather than one item cell. */
+:host(:not([data-phone-screen])[data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .container-empty {
+ grid-column: 1 / -1; min-width: 0;
 }
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .container-filters { padding-right: 0; gap: 6px; }
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .container-item-count { margin: 0; }
@@ -445,7 +449,7 @@
 }
 
 /* Equipment uses the same framed list, image preview and fixed action row as storage. */
-:host([data-menu-density]) .panel[data-view='equipment'] > .equipment-body { gap: 6px; }
+:host([data-menu-density]) .panel[data-view='equipment'] > .equipment-body { gap: var(--panel-gap); }
 :host([data-menu-density]) .panel[data-view='equipment'] .equipment-layout {
  grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 6px;
 }
@@ -587,6 +591,14 @@
  min-width: 24px; font-variant-numeric: tabular-nums; color: #f5f2e9;
 }
 
+/* Tablet point counters need the same breathing room as nearby actions. */
+:host(:not([data-phone-screen])[data-menu-density]) .panel:is([data-view='attributes'], [data-view='skills']) .point-counter > span {
+ padding-inline: 12px;
+}
+:host(:not([data-phone-screen])[data-menu-density]) .panel:is([data-view='attributes'], [data-view='skills']) .point-counter-value {
+ min-width: 32px;
+}
+
 /* Phone portrait browsing menus use framed details above lists and bottom filters. */
 .portrait-menu-placeholder { display: none; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel:is([data-view='quests'], [data-view='social']) > .panel-body {
@@ -634,7 +646,7 @@
 .panel[data-view='social'] .social-form:first-child { margin-top: 0; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='social'] .social-form { margin: 4px 0; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='social'] .social-form:first-child { margin-top: 0; }
-.panel[data-view='selection'] .equipment-selection { display: flex; flex-direction: column; gap: 8px; }
+.panel[data-view='selection'] .equipment-selection { display: flex; flex-direction: column; gap: var(--panel-gap); }
 .panel[data-view='selection'] .equipment-selection .inventory-layout { flex: 1; min-height: 0; }
 .panel[data-view='selection'] .equipment-selection .inventory-list { border: 1px solid #52606d; border-radius: 10px; padding: 8px; box-sizing: border-box; }
 .panel[data-view='selection'] .equipment-filters { display: flex; gap: 8px; flex-shrink: 0; }

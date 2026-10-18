@@ -1,3 +1,5 @@
+import { createInventoryDescription } from './InventoryDescription.js';
+import { createSkillDescription } from './SkillDescription.js';
 import ItemType from 'DB/Items/ItemType.js';
 import { consumables, equipment } from 'UI/Game/InventoryItems.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -17,20 +19,19 @@ export function createShortcutPanel(body, actions) {
 				</div>
 				<div class="shortcut-choices"></div><p data-filter-empty hidden>没有符合条件的技能或物品</p>
 			</section>
-			<section class="shortcut-editor" aria-label="编辑快捷键">
+			<section class="shortcut-editor" aria-label="快捷键说明">
 				<div class="shortcut-current"><strong data-slot-title></strong><span data-current></span></div>
-				<p data-choice-hint>从列表选择技能或道具，再保存到当前位置。</p>
-				<form class="shortcut-config" hidden>
-					<div class="shortcut-selected"><img alt="" data-choice-icon><strong data-choice></strong></div>
-					<label class="shortcut-level">施放等级 <select aria-label="技能等级"></select></label>
-					<button type="submit" data-menu-button="action" data-save-slot aria-live="polite"></button>
-					<button type="button" data-menu-button="action" data-cancel-choice>取消选择</button>
-				</form>
-				<div class="shortcut-clear menu-footer"><button type="button" data-clear-slot>清空当前位置</button>
-				</div>
-
+				<p data-choice-hint>从列表选择技能或道具，查看说明并保存到当前位置。</p>
+				<div data-choice-detail hidden></div>
 			</section>
-		</div>`;
+		</div>
+		<form class="shortcut-config shortcut-footer menu-footer">
+			<label class="shortcut-level menu-labeled-select"><span>施放等级</span><select aria-label="技能等级" disabled><option>不适用</option></select></label>
+			<div class="menu-action-group shortcut-actions">
+				<button type="submit" data-menu-button="action" data-save-slot aria-live="polite" disabled></button>
+				<button type="button" data-menu-button="action" data-clear-slot disabled>清空位置</button>
+			</div>
+		</form>`;
 	const $ = selector => body.querySelector(selector);
 	const picker = $('.slot-picker'),
 		choices = $('.shortcut-choices'),
@@ -38,7 +39,7 @@ export function createShortcutPanel(body, actions) {
 	const status = createFeedback(body);
 	function resetSaveFeedback() {
 		const button = $('[data-save-slot]');
-		button.textContent = `保存到位置 ${index + 1}`;
+		button.textContent = '保存';
 		delete button.dataset.saveState;
 	}
 	form.oninput = () => {
@@ -96,7 +97,11 @@ export function createShortcutPanel(body, actions) {
 	function cancelChoice() {
 		selected = null;
 		resetSaveFeedback();
-		form.hidden = true;
+		$('[data-choice-detail]').hidden = true;
+		$('[data-save-slot]').disabled = true;
+		const level = $('.shortcut-level select');
+		level.replaceChildren(new Option('不适用', ''));
+		level.disabled = true;
 		$('[data-choice-hint]').hidden = false;
 		highlightChoices();
 	}
@@ -166,15 +171,22 @@ export function createShortcutPanel(body, actions) {
 		setListItemText(button, entry.name, String(entry.amount));
 		button.onclick = () => {
 			selected = entry;
-			form.hidden = false;
+			$('[data-choice-detail]').hidden = false;
 			$('[data-choice-hint]').hidden = true;
-			$('[data-clear-slot]').hidden = false;
-			$('[data-choice]').textContent = entry.name;
-			$('[data-choice-icon]').hidden = !entry.icon;
-			if (entry.icon) $('[data-choice-icon]').src = entry.icon;
-			$('.shortcut-level').hidden = !entry.isSkill;
+			$('[data-save-slot]').disabled = false;
+			const detail = $('[data-choice-detail]');
+			if (entry.isSkill) {
+				detail.replaceChildren(createSkillDescription(actions.skillDetail(entry.ID) || entry.skillDetail));
+			} else {
+				const item = actions.itemDetail(entry.ID);
+				if (item) detail.replaceChildren(createInventoryDescription(item, actions.previewItem));
+				else detail.textContent = '物品已经变化，请重新选择';
+			}
+			$('.shortcut-editor').scrollTop = 0;
 			const select = $('.shortcut-level select');
 			select.replaceChildren();
+			select.disabled = !entry.isSkill;
+			if (!entry.isSkill) select.add(new Option('不适用', '1'));
 			if (entry.isSkill)
 				for (let level = 1; level <= entry.level; level++) select.add(new Option(`Lv.${level}`, String(level)));
 			const current = slots().find(slot => slot.index === index)?.binding;
@@ -192,16 +204,13 @@ export function createShortcutPanel(body, actions) {
 	applyFilters(skillFilter);
 	form.onsubmit = event => {
 		event.preventDefault();
+		if (!selected) return;
 		if (selected && actions.configure(index, selected, Number($('.shortcut-level select').value))) {
 			updateSlotLabels();
 			status(`已保存到位置 ${index + 1}`, 'success');
 		} else {
 			status('保存失败，技能或物品已变化，请重新选择。', 'error');
 		}
-	};
-	$('[data-cancel-choice]').onclick = () => {
-		cancelChoice();
-		status('');
 	};
 	$('[data-clear-slot]').onclick = () => {
 		const slotIndex = index;
@@ -228,10 +237,7 @@ export function createShortcutPanel(body, actions) {
 				const img = button.querySelector('img');
 				if (entry.icon && img.getAttribute('src') !== entry.icon) img.src = entry.icon;
 				setListItemText(button, entry.name, String(entry.amount));
-				if (selected && button.dataset.key === `${selected.isSkill}:${selected.ID}` && entry.icon) {
-					$('[data-choice-icon]').src = entry.icon;
-					$('[data-choice-icon]').hidden = false;
-				}
+
 			}
 		}
 	};

@@ -9,7 +9,7 @@ it('supports category dropdowns, exact-index actions, live server updates and sh
  const click = text => [...body.querySelectorAll('button')].find(b => b.textContent === text).click();
  body.querySelector('[data-index="2"]').click(); expect(body.querySelector('.item-description img')).toBeNull(); click('使用'); expect(actions.act).not.toHaveBeenCalled(); body.querySelector('dialog [data-confirm]').click(); expect(actions.act).toHaveBeenCalledExactlyOnceWith(2, 501, 'use');
  const original = body.querySelector('[data-index="2"]'); items[0].count = 2; panel.update(); expect(body.querySelector('[data-index="2"]')).toBe(original); expect(original.textContent).toContain('×2');
- expect(body.querySelector('.inventory-detail').lastElementChild.className).toBe('inventory-actions');
+ expect(body.querySelector('.inventory-detail').lastElementChild.classList.contains('inventory-actions')).toBe(true);
  const description = body.querySelector('.item-description');
  click('设置快捷键'); expect(body.querySelector('.item-description')).toBe(description); expect(body.querySelector('dialog').open).toBe(true); expect(body.querySelector('[aria-label="位置"]').value).toBe('5'); body.querySelector('[aria-label="位置"]').value = '35'; panel.update(); expect(body.querySelector('[aria-label="位置"]').value).toBe('35'); click('确认'); expect(actions.bind).toHaveBeenCalledExactlyOnceWith(2, 501, 35);
  category('equipment'); expect(body.querySelector('[data-index="2"]')).toBeNull(); body.querySelector('[data-index="3"]').click(); click('穿戴'); expect(body.querySelector('dialog')).toBeNull(); expect(actions.act).toHaveBeenLastCalledWith(3, 1201, 'equip');

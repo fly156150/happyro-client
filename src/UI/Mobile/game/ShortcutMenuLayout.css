@@ -3,7 +3,7 @@
  display: grid;
  grid-template-rows: auto minmax(0, 1fr);
  align-content: stretch;
- gap: 4px;
+ gap: var(--panel-gap);
 }
 
 :host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view] .shortcut-filters {
@@ -17,7 +17,42 @@
  margin-top: 0;
 }
 
-:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .shortcut-clear {
- display: flex;
- align-items: center;
+/* Keep all editing controls in a full-width footer, independent of selection. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-footer {
+ display: flex; flex-wrap: wrap; justify-content: space-between;
+ gap: var(--panel-gap); border-top: 1px solid #52606d; margin: 0; order: 3;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-actions {
+ display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin-left: auto;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-level {
+ flex: 0 0 auto; margin: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-editor {
+ min-height: 0; overflow-y: auto;
+}
+/* Phone editing controls remain on one row in either orientation. */
+:host([data-phone-screen][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-footer {
+ flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 6px;
+}
+:host([data-phone-screen][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-actions {
+ display: flex; flex-wrap: nowrap; margin-left: auto; flex: 0 0 auto;
+}
+:host([data-phone-screen][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-actions > button {
+ min-width: 0; width: auto; padding-inline: 8px; white-space: nowrap;
+}
+
+/* Both detail types share one inset below the slot divider. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail] {
+ padding-top: 12px;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .inventory-item-summary > .item-description {
+ border-top: 0; padding-top: 0; margin-top: 8px;
+}
+
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail] {
+ padding-top: 16px;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-detail] > .inventory-item-description > :first-child {
+ margin-top: 0;
 }

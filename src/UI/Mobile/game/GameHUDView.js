@@ -93,17 +93,6 @@ ${menuActionButtonsCSS}
 ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
-	const orientationHint = Preferences.get('OrientationHint', { dismissed: false }, 1.0);
-	$('[data-orientation-hint]').hidden = orientationHint.dismissed;
-	$('[data-dismiss-orientation]').addEventListener(
-		'click',
-		() => {
-			orientationHint.dismissed = true;
-			orientationHint.save();
-			$('[data-orientation-hint]').hidden = true;
-		},
-		{ signal: abort.signal }
-	);
 	const chatPreview = createChatPreview(root);
 	const releaseNotificationInset = bindHUDNotificationInset(root);
 	let settingsCleanup;
@@ -664,6 +653,9 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 				turn: actions.shortcutPage,
 				snapshot: actions.shortcutSnapshot,
 				candidates: actions.shortcutCandidates,
+				skillDetail: id => actions.skillsSnapshot().skills.find(skill => skill.id === id),
+				itemDetail: id => actions.inventorySnapshot().find(item => item.ID === id),
+				previewItem: actions.inventoryPreview,
 				configure: actions.configureShortcut
 			});
 		if (panel === 'chat') {
@@ -882,6 +874,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			text('[data-shortcut-page-label]', `${state.page + 1}/${state.pages}`);
 			for (const button of root.querySelectorAll('[data-shortcut]')) {
 				const slot = state.slots[Number(button.dataset.shortcut)];
+				button.dataset.shortcutKind = slot?.binding ? (slot.binding.isSkill ? 'skill' : 'item') : 'empty';
 				button.hidden = !slot;
 				button.disabled = Boolean(slot?.unavailable);
 				button.classList.toggle('selected-skill', Boolean(slot && state.pending?.index === slot.index));

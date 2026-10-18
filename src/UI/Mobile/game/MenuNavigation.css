@@ -38,7 +38,7 @@
  height: var(--panel-control);
  min-height: var(--panel-control);
  border: 1px solid #465461;
- border-radius: 3px;
+ border-radius: 6px;
  background: transparent;
  color: #bac4cd;
 }

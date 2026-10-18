@@ -1,6 +1,6 @@
 /* Quests menu layout; loaded after shared chrome. */
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='quests'] > .panel-body {
- gap: 6px;
+ gap: var(--panel-gap);
 }
 
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='quests'] .quest-actions {

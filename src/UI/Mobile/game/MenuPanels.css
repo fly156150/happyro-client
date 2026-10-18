@@ -143,10 +143,6 @@
 	padding-top: 10px;
 	border-top: 1px solid #52606d;
 }
-.panel[data-view='pet'] .panel-body > *,
-.panel[data-view='companions'] .panel-body > * {
-	margin-bottom: var(--panel-gap);
-}
 .panel :is([data-info], .bank-form dl, .equipment-stats) {
 	padding: 4px var(--panel-gap);
 	border: 1px solid #52606d;
@@ -331,9 +327,6 @@
 }
 :host(:not([data-menu-density='spacious'])) .panel .settings-form .settings-field input[type='range'] {
 	padding: 0;
-}
-:host(:not([data-menu-density='spacious'])) .panel .shortcut-editor .shortcut-current {
-	display: none;
 }
 :host(:not([data-menu-density='spacious'])) .panel .shortcut-config {
 	margin-top: 0;

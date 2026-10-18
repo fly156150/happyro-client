@@ -14,3 +14,8 @@
  justify-content: flex-end;
  align-items: center;
 }
+
+/* Tablet name fields and action rows use the standard section spacing. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel:is([data-view='pet'], [data-view='companions']) .companion-footer:has(> .companion-name:not([hidden])) {
+ row-gap: var(--panel-gap);
+}

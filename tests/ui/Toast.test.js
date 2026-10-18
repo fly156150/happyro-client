@@ -89,3 +89,19 @@ it('keeps desktop adventure feedback in its window and mobile feedback in the vi
  expect(owner.querySelector('.ui-toast')).toBeNull();
  clearToast(container);
 });
+
+it('enlarges touch-tablet feedback while preserving phone and desktop themes', () => {
+ const owner=document.body.appendChild(document.createElement('div'));
+ try {
+  vi.stubGlobal('screen',{width:820,height:1180});
+  vi.stubGlobal('matchMedia',vi.fn(()=>({matches:true})));
+  showToast(owner,'保存成功');
+  expect(document.querySelector('.ui-toast').hasAttribute('data-tablet')).toBe(true);
+  vi.stubGlobal('screen',{width:844,height:390});
+  showToast(owner,'保存成功');
+  expect(document.querySelector('.ui-toast').hasAttribute('data-tablet')).toBe(false);
+  vi.stubGlobal('screen',{width:1180,height:820});
+  owner.dataset.feedbackTheme='desktop';showToast(owner,'保存成功');
+  expect(document.querySelector('.ui-toast').hasAttribute('data-tablet')).toBe(false);
+ } finally {clearToast(owner);vi.unstubAllGlobals()}
+});

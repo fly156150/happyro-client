@@ -1,6 +1,6 @@
 /* Shared mobile layout for pets, homunculi and mercenaries. */
 :host([data-menu-density]) .panel:is([data-view='pet'], [data-view='companions']) > .panel-body {
- display: flex; flex-direction: column; min-height: 0; overflow: hidden; gap: 6px;
+ display: flex; flex-direction: column; min-height: 0; overflow: hidden; gap: var(--panel-gap);
 }
 :host([data-menu-density]) .panel .companion-layout {
  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; flex: 1; min-height: 0;

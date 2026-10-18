@@ -29,6 +29,7 @@ export function showToast(container, message, kind = 'success') {
 	const shadow = element.attachShadow({ mode: 'open' });
 	const style = document.createElement('style');
 	const desktopOwner = container.closest('[data-feedback-theme="desktop"]');
+	element.toggleAttribute('data-tablet', !desktopOwner && Math.min(screen.width, screen.height) >= 600 && matchMedia('(any-pointer: coarse)').matches);
 	style.textContent = desktopOwner ? desktopCSS : css;
 	const content = document.createElement('span');
 	content.className = 'message';
