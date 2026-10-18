@@ -730,8 +730,13 @@ ChatBox.init = function init() {
  * Clean up the box
  */
 ChatBox.clean = function Clean() {
+	_messageBuffer = [];
+	_historyMessage.clear();
+	_historyNickName.clear();
 	clearChatFeed();
 	const root = _root();
+	// Account switches can happen before desktop chat is mounted, including on mobile.
+	if (!root) return;
 
 	const contents = root.querySelectorAll('.content');
 	contents.forEach(content => {
@@ -750,8 +755,6 @@ ChatBox.clean = function Clean() {
 	const nickBox = root.querySelector('.input .username');
 	if (nickBox) nickBox.value = '';
 
-	_historyMessage.clear();
-	_historyNickName.clear();
 };
 
 ChatBox.toggleChatBattleOption = function toggleChatBattleOption() {
