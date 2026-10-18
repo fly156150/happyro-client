@@ -19,7 +19,6 @@ import GUIComponent from 'UI/GUIComponent.js';
 import htmlText from './GraphicsOption.html?raw';
 import cssText from './GraphicsOption.css?raw';
 
-import MemoryManager from 'Core/MemoryManager.js';
 import ChatBox from 'UI/Components/ChatBox/ChatBox.js';
 
 /**
@@ -99,7 +98,7 @@ GraphicsOption.init = function init() {
 	bindChange('.casContrast', oncasContrast);
 	bindChange('.casSharpening', oncasSharpening);
 	bindChange('.fxaaEnabled', onfxaaEnabled);
-	bindChange('.fxaaSubpix', onfxaaSubpix);
+	// 亚像素参数未参与着色器运算，控件暂不开放。
 	bindChange('.fxaaEdgeThreshold', onfxaaEdgeThreshold);
 	bindChange('.vibranceEnabled', onvibranceEnabled);
 	bindChange('.vibrance', onvibrance);
@@ -137,7 +136,6 @@ GraphicsOption.onAppend = function onAppend() {
 	root.querySelector('.blur-area').value = GraphicsSettings.blurArea;
 	root.querySelector('.blur-intensity').value = GraphicsSettings.blurIntensity;
 	root.querySelector('.fxaaEnabled').checked = GraphicsSettings.fxaaEnabled;
-	root.querySelector('.fxaaSubpix').value = GraphicsSettings.fxaaSubpix;
 	root.querySelector('.fxaaEdgeThreshold').value = GraphicsSettings.fxaaEdgeThreshold;
 	root.querySelector('.vibranceEnabled').checked = GraphicsSettings.vibranceEnabled;
 	root.querySelector('.vibrance').value = GraphicsSettings.vibrance;
@@ -214,22 +212,11 @@ function onTogglePixelPerfect() {
 	GraphicsSettings.pixelPerfectSprites = !!this.checked;
 	GraphicsSettings.save();
 
-	if (GraphicsSettings.pixelPerfectSprites) {
-		function reloadSprites() {
-			const gl = Renderer.getContext();
-			const sprFiles = MemoryManager.search(/\.spr$/i);
-			for (let i = 0; i < sprFiles.length; i++) {
-				MemoryManager.remove(gl, sprFiles[i]);
-			}
-		}
-		reloadSprites();
-	} else {
-		ChatBox.addText(
-			'[系统] 像素完美已禁用。请重新加载页面（F5）以应用更改。',
-			ChatBox.TYPE.INFO,
-			ChatBox.FILTER.PUBLIC_LOG
-		);
-	}
+	ChatBox.addText(
+		'[系统] 像素清晰显示设置已保存，请刷新页面后生效。',
+		ChatBox.TYPE.INFO,
+		ChatBox.FILTER.PUBLIC_LOG
+	);
 }
 
 /**
@@ -287,11 +274,6 @@ function onvibrance() {
 
 function onfxaaEnabled() {
 	GraphicsSettings.fxaaEnabled = !!this.checked;
-	GraphicsSettings.save();
-}
-
-function onfxaaSubpix() {
-	GraphicsSettings.fxaaSubpix = parseFloat(this.value);
 	GraphicsSettings.save();
 }
 
@@ -376,6 +358,7 @@ function onTabSwitch(event) {
 }
 
 function onResetToDefaults() {
+	const previousPixelPerfect = GraphicsSettings.pixelPerfectSprites;
 	const defaultSettings = GraphicsSettings.defaults;
 
 	Object.keys(defaultSettings).forEach(key => {
@@ -384,6 +367,12 @@ function onResetToDefaults() {
 		}
 	});
 	GraphicsSettings.save();
+	Configs.set('quality', GraphicsSettings.quality);
+	Renderer.resize();
+	document.body.classList.toggle('custom-cursor', GraphicsSettings.cursor);
+	if (previousPixelPerfect !== GraphicsSettings.pixelPerfectSprites) {
+		ChatBox.addText('[系统] 像素清晰显示已恢复默认，请刷新页面后生效。', ChatBox.TYPE.INFO, ChatBox.FILTER.PUBLIC_LOG);
+	}
 
 	GraphicsOption.onAppend();
 }

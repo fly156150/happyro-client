@@ -25,7 +25,6 @@ class FXAA {
 
 		gl.useProgram(_program);
 
-		gl.uniform1f(_program.uniform.uSubpix, GraphicsSettings.fxaaSubpix || 0.25);
 		gl.uniform1f(_program.uniform.uEdgeThreshold, GraphicsSettings.fxaaEdgeThreshold || 0.125);
 		gl.uniform1f(_program.uniform.uEdgeThresholdMin, 0.0);
 		gl.uniform2f(_program.uniform.uTexelSize, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height);

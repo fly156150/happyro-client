@@ -14,14 +14,15 @@ export const graphicsFields = [
 	['performanceMode', '性能模式'],
 	['viewArea', '显示范围', 4, 20, 1],
 	['cursor', '游戏光标'],
-	['pixelPerfectSprites', '像素完美（重新加载后完全生效）'],
+	['pixelPerfectSprites', '像素清晰显示（刷新生效）'],
 	['bloom', '泛光'],
 	['bloomIntensity', '泛光强度', 0.1, 3, 0.05],
 	['blur', '景深'],
 	['blurArea', '景深范围', 3, 20, 1],
 	['blurIntensity', '景深强度', 2, 10, 0.1],
 	['fxaaEnabled', '抗锯齿'],
-	['fxaaSubpix', '亚像素抗锯齿', 0, 1, 0.05],
+	// 当前着色器未实现亚像素参数，完成实现与实测后再开放。
+	// ['fxaaSubpix', '亚像素抗锯齿', 0, 1, 0.05],
 	['fxaaEdgeThreshold', '边缘阈值', 0.063, 0.333, 0.001],
 	['vibranceEnabled', '自然饱和度'],
 	['vibrance', '饱和强度', -0.9, 0.9, 0.1],
@@ -116,7 +117,7 @@ export function saveGameSettings(draft) {
 		} else BGM.stop();
 	}
 	return previous.graphics.pixelPerfectSprites !== Graphics.pixelPerfectSprites
-		? '已保存，像素完美需刷新生效'
+		? '已保存，像素清晰显示需刷新生效'
 		: '设置已保存';
 }
 

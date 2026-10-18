@@ -29,7 +29,7 @@
 		<div class="tab-content selected" id="basic">
 			<table>
 				<tr>
-					<td>详情</td>
+					<td>渲染比例</td>
 					<td style="display: inline-block; width: 260px">
 						<input
 							class="details"
@@ -46,7 +46,7 @@
 					<td>分辨率</td>
 					<td>
 						<select class="screensize">
-							<option value="650x480">640 x 480</option>
+							<option value="640x480">640 x 480</option>
 							<option value="800x600">800 x 600</option>
 							<option value="1024x768">1024 x 768</option>
 							<option value="1280x800">1280 x 800</option>
@@ -61,7 +61,7 @@
 					<td>
 						<label>
 							<input class="cursor-option" type="checkbox" />
-							Show official cursor
+							显示游戏光标
 						</label>
 					</td>
 				</tr>
@@ -91,8 +91,8 @@
 		<div class="tab-content" id="advanced">
 			<table>
 				<tr>
-					<td title="强制使用最近邻过滤以实现像素完美的精灵渲染">
-						像素完美精灵
+					<td title="修改后刷新页面生效，保留当前人物与地图资源">
+						像素清晰显示（刷新生效）
 					</td>
 					<td>
 						<label>
@@ -154,7 +154,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td title="通过对比度自适应锐化增强细节">对比度自适应锐化（CAS）</td>
+					<td title="通过对比度自适应锐化增强细节">自适应锐化</td>
 					<td>
 						<label style="display: inline-block; margin-right: 20px">
 							<input class="casEnabled" type="checkbox" />
@@ -186,12 +186,13 @@
 					</td>
 				</tr>
 				<tr>
-					<td title="快速近似抗锯齿，使边缘更平滑">FXAA</td>
+					<td title="快速近似抗锯齿，使边缘更平滑">抗锯齿</td>
 					<td>
 						<label style="display: inline-block; margin-right: 20px">
 							<input class="fxaaEnabled" type="checkbox" />
 						</label>
-						<label style="display: inline-block; width: 90px">
+						<!-- 当前 FXAA 着色器未实现亚像素参数；实现并实测后再开放。
+<label style="display: inline-block; width: 90px">
 							子像素：
 							<input
 								class="fxaaSubpix"
@@ -203,6 +204,7 @@
 								style="width: 90%; vertical-align: middle"
 							/>
 						</label>
+						-->
 						<label style="display: inline-block; width: 90px">
 							边缘阈值：
 							<input

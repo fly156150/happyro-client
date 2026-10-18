@@ -27,7 +27,7 @@ class CAS {
 
 		// Uniforms
 		gl.uniform1f(_program.uniform.uContrast, GraphicsSettings.casContrast || 0.0);
-		gl.uniform1f(_program.uniform.uSharpening, GraphicsSettings.casSharpening || 1.0);
+		gl.uniform1f(_program.uniform.uSharpening, GraphicsSettings.casSharpening);
 		gl.uniform2f(_program.uniform.uTexelSize, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);

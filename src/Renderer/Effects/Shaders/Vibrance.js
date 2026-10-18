@@ -25,7 +25,7 @@ class Vibrance {
 
 		gl.useProgram(_program);
 
-		gl.uniform1f(_program.uniform.uVibrance, GraphicsSettings.vibrance || 0.15);
+		gl.uniform1f(_program.uniform.uVibrance, GraphicsSettings.vibrance);
 		gl.uniform3f(_program.uniform.uVibranceRGBBalance, 1.0, 1.0, 1.0);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);

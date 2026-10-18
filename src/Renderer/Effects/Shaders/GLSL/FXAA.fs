@@ -2,7 +2,8 @@
 precision mediump float;  
 
 uniform sampler2D uTexture;  
-uniform float uSubpix;  
+// Subpixel filtering is not implemented; keep its setting hidden.
+// uniform float uSubpix;
 uniform float uEdgeThreshold;  
 uniform float uEdgeThresholdMin;  
 uniform vec2 uTexelSize;  
