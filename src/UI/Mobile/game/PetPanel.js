@@ -46,6 +46,16 @@ export function createPetPanel(body, service) {
 		b.textContent = label;
 		b.dataset.action = action;
 		b.onclick = () => {
+			if (action === 'perform') {
+				cancel();
+				const result = service.command('perform');
+				if (result === '已发送请求，以服务器状态为准') service.close();
+				else {
+					feedback(result, 'error');
+					update();
+				}
+				return;
+			}
 			prepare(
 				action,
 				action === 'rename' ? $('[data-name]').value : undefined,

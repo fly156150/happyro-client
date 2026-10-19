@@ -53,3 +53,21 @@ it('dismisses an open pet confirmation when the owner dies or the pet disappears
  s.session.Entity.action=0;panel.update();body.querySelector('[data-action=feed]').click();
  s.entities.delete(20);panel.update();expect(body.querySelector('dialog')).toBeNull();expect(s.send).not.toHaveBeenCalled();
 });
+
+it('performs immediately without a confirmation and closes the interaction once', () => {
+ const service=open(),body=document.body.appendChild(document.createElement('div'));
+ createPetPanel(body,service);
+ const button=body.querySelector('[data-action=perform]');
+ button.click();button.click();
+ expect(body.querySelector('dialog')).toBeNull();
+ expect(s.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({packet:'COMMAND_PET',cSub:2}));
+ expect(interactionSnapshot()).toBeNull();
+});
+it('keeps the pet menu open when a performance is rejected after the pet disappears', () => {
+ const service=open(),body=document.body.appendChild(document.createElement('div'));
+ createPetPanel(body,service);s.entities.delete(20);
+ body.querySelector('[data-action=perform]').click();
+ expect(s.send).not.toHaveBeenCalled();
+ expect(interactionSnapshot()?.service).toBe(service);
+ expect(body.querySelector('dialog')).toBeNull();
+});
