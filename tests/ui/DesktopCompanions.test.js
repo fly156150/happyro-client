@@ -44,10 +44,16 @@ it('desktop attack toggles persist the value that actually drives each AI', () =
  }
 });
 it('uses translated egg names and retains the selected evolution branch', () => {
- Pet.root.innerHTML = '<input class="name"><button class="modify"></button><span class="accessory"></span><select class="command"></select>';
- Pet.setInformations({ szName: '波利', nLevel: 1, nFullness: 50, nRelationship: 950, ITID: 0, job: 1002 });
+ Pet.root.innerHTML = '<input class="name"><button class="modify"></button><span class="accessory"></span><div class="command"></div>';
+ Pet.init(); Pet.setInformations({ szName: '波利', nLevel: 1, nFullness: 50, nRelationship: 950, ITID: 0, job: 1002 });
  expect(Pet.root.querySelector('.accessory').textContent).toBe('未装备');
- expect([...Pet.root.querySelectorAll('option')].map(o => [o.value, o.textContent])).toEqual([['evolution_1002_9003', '进化为 中文物品 9003'], ['evolution_1002_9069', '进化为 中文物品 9069']]);
+ expect([...Pet.root.querySelectorAll('.game-select-option')].filter(o => o.dataset.value.startsWith('evolution_')).map(o => [o.dataset.value, o.querySelector('strong').textContent])).toEqual([['evolution_1002_9003', '进化为 中文物品 9003'], ['evolution_1002_9069', '进化为 中文物品 9069']]);
+ Pet.reqEvolution = vi.fn();
+ Pet.root.querySelector('.game-select-trigger').click();
+ Pet.root.querySelector('[data-value="evolution_1002_9069"]').click();
+ expect(Pet.reqEvolution).toHaveBeenCalledWith(1002, 9069);
+ expect(Pet.root.querySelector('.game-select-trigger span').textContent).toBe('指令');
+ expect(Pet.root.querySelector('.game-select-menu').hidden).toBe(true);
  Pet.setAccessory(10013); expect(Pet.accessory).toBe(true); expect(Pet.root.querySelector('.accessory').textContent).toBe('已装备');
 });
 it('submits the selected evolution egg and checks that branch’s materials', () => {
@@ -91,7 +97,7 @@ it('rejects a stale evolution window after the player summons a different pet', 
 });
 
 it('locks pet renaming until authoritative status arrives and refreshes when reopening', () => {
- Pet.root.innerHTML = '<input class="name"><button class="modify"></button><span class="accessory"></span><select class="command"></select>';
+ Pet.root.innerHTML = '<input class="name"><button class="modify"></button><span class="accessory"></span><div class="command"></div>';
  Pet.init();Pet.setInformations({ szName: '波利', nLevel: 1, nFullness: 50, nRelationship: 950, ITID: 0, job: 1002, bModified: 0 });
  Pet.reqNameEdit = vi.fn();Pet.reqRefresh = vi.fn();
  const input = Pet.root.querySelector('.name'),button = Pet.root.querySelector('.modify');input.value = 'ValidPet';

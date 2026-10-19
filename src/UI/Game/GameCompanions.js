@@ -124,8 +124,9 @@ export function commandGameCompanion(kind, action, value) {
 			break;
 	}
 	s.messageKind = action === 'aggressive' ? 'success' : 'pending';
-	s.message = action === 'aggressive' ? '攻击模式已更新' : '已发送请求，以服务器状态为准';
-	return s.message;
+	const result = action === 'aggressive' ? '攻击模式已更新' : '已发送请求，以服务器状态为准';
+	s.message = kind === 'mercenary' && action === 'aggressive' ? '' : result;
+	return result;
 }
 export function openGameCompanions(kind, canOperate = () => true) {
 	if (

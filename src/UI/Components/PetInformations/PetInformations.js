@@ -17,6 +17,8 @@ import UIManager from 'UI/UIManager.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import htmlText from './PetInformations.html?raw';
 import cssText from './PetInformations.css?raw';
+import selectCss from '../GameTools/GameSelect.css?raw';
+import { renderGameSelect, mountGameSelect, setGameSelectOptions } from '../GameTools/GameSelect.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import PACKETVER from 'Network/PacketVerManager.js';
 import Session from 'Engine/SessionStorage.js';
@@ -25,7 +27,7 @@ import EntityManager from 'Renderer/EntityManager.js';
 /**
  * Create Component
  */
-const PetInformations = new GUIComponent('PetInformations', cssText);
+const PetInformations = new GUIComponent('PetInformations', selectCss + cssText);
 
 PetInformations.render = () => htmlText;
 
@@ -49,6 +51,27 @@ const _preferences = Preferences.get(
  */
 let petAutoFeeding = 0;
 let renamePending = false;
+let commandOptions = [];
+
+function updateCommands(job) {
+ commandOptions = [
+  { value: 'default', label: '指令', disabled: true },
+  { value: 'feed', label: '喂食宠物' },
+  { value: 'action', label: '互动' },
+  { value: 'release', label: '返回蛋壳' },
+  { value: 'unequip', label: '卸下饰品' }
+ ];
+ const evolution = DB.getPetEvolutionByJob(job);
+ for (const targetEggID of Object.keys(evolution || {})) {
+  commandOptions.push({ value: `evolution_${job}_${targetEggID}`, label: `进化为 ${DB.getItemInfo(Number(targetEggID)).identifiedDisplayName}` });
+ }
+ const select = PetInformations.getRoot().querySelector('[data-game-select]');
+ if (select) setGameSelectOptions(select, { options: commandOptions, value: 'default' });
+}
+
+function resetCommand() {
+ setGameSelectOptions(PetInformations.getRoot().querySelector('[data-game-select]'), { options: commandOptions, value: 'default' });
+}
 
 function requestNameEdit(value) {
 	if (renamePending) return;
@@ -73,6 +96,7 @@ PetInformations.init = function init() {
 	if (closeBtn) {
 		closeBtn.addEventListener('mousedown', e => e.stopImmediatePropagation());
 		closeBtn.addEventListener('click', () => {
+			root.querySelector('[data-game-select]')?.dispatchEvent(new Event('game-select-close'));
 			this._host.style.display = 'none';
 		});
 	}
@@ -89,13 +113,15 @@ PetInformations.init = function init() {
 
 	const commandSelect = root.querySelector('.command');
 	if (commandSelect) {
-		commandSelect.addEventListener('change', function () {
-			const value = this.value;
+		commandSelect.innerHTML = renderGameSelect({ ariaLabel: '宠物指令', value: 'default', options: [{ value: 'default', label: '指令' }] });
+		mountGameSelect(commandSelect.querySelector('[data-game-select]'));
+		commandSelect.addEventListener('change', function (event) {
+			const value = event.target.value;
 
 			if (value.startsWith('evolution_')) {
 				const [baseJobID, targetEggID] = value.slice('evolution_'.length).split('_').map(Number);
 				PetInformations.reqEvolution(baseJobID, targetEggID);
-				this.value = 'default';
+				resetCommand();
 				return;
 			}
 
@@ -119,7 +145,7 @@ PetInformations.init = function init() {
 				default:
 			}
 
-			this.value = 'default';
+			resetCommand();
 		});
 	}
 
@@ -241,30 +267,7 @@ PetInformations.setInformations = function setInformations(info) {
 	const autoFeed = root.querySelector('.pet_auto_feed');
 	if (autoFeed) autoFeed.disabled = !DB.getPetByJobID(info.job)?.AutoFeeding;
 
-	const cmdSelect = root.querySelector('.command');
-
-	// remove old evolution options
-	if (cmdSelect) {
-		const oldOptions = cmdSelect.querySelectorAll('.evolution-option');
-		for (const opt of oldOptions) {
-			opt.remove();
-		}
-
-		const evolution = DB.getPetEvolutionByJob(info.job);
-
-		if (evolution) {
-			for (const targetEggID in evolution) {
-				const evoName = DB.getItemInfo(Number(targetEggID)).identifiedDisplayName;
-
-				const option = document.createElement('option');
-				option.className = 'evolution-option';
-				option.value = `evolution_${info.job}_${targetEggID}`;
-				option.textContent = `进化为 ${evoName}`;
-
-				cmdSelect.appendChild(option);
-			}
-		}
-	}
+	updateCommands(info.job);
 };
 
 /**

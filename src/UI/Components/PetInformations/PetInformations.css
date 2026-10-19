@@ -160,3 +160,23 @@
 	right: 5px;
 	width: 105px;
 }
+
+/* Compact desktop controls retain the game cursor through Common.css. */
+#PetInformations .modify {
+ min-width: 42px;
+ padding: 0 4px;
+ white-space: nowrap;
+ box-sizing: border-box;
+}
+#PetInformations .command .game-select,
+#PetInformations .command .game-select-trigger {
+ height: 22px;
+ font-size: 12px;
+}
+#PetInformations .command .game-select-menu {
+ width: 180px;
+}
+#PetInformations .command .game-select-option {
+ min-height: 26px;
+ font-size: 12px;
+}

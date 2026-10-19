@@ -18,6 +18,9 @@
 }
 
 .SkillList .titlebar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	width: 100%;
 	height: 17px;
 	background-color: white;
@@ -34,7 +37,8 @@
 }
 .SkillList .titlebar .text {
 	text-shadow: 1px 1px white;
-	vertical-align: -2px;
+	vertical-align: middle;
+	line-height: 13px;
 	white-space: nowrap;
 	/* chrome bug */
 	display: inline-block;
@@ -45,15 +49,20 @@
 }
 
 .SkillList .titlebar .left {
+	display: flex;
+	align-items: center;
+	gap: 3px;
 	margin-left: 3px;
 	float: left;
 }
 .SkillList .titlebar .right {
+	display: flex;
+	align-items: center;
 	float: right;
 	margin-right: 3px;
 }
 .SkillList .titlebar .clear {
-	clear: both;
+	display: none;
 }
 
 .SkillList .content {
