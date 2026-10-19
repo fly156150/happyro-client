@@ -35,3 +35,77 @@
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer > .container-quantity-group { grid-column: 1 / -1; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer > .container-transfer-submit { grid-column: 2; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='cart'] .interaction-footer > .container-remove-cart { grid-column: 3; }
+
+/* Storage chooses its counterpart before the transfer direction. */
+.panel[data-view='storage'] .container-toolbar .storage-modes {
+ flex: 0 1 72px;
+ min-width: 0;
+}
+.panel[data-view='storage'] .container-toolbar :is(.storage-modes, .container-source) > :is(select, .menu-select) {
+ width: 100%;
+ min-width: 0;
+}
+
+/* Phone portrait: counterpart and search first, then operation and item filters. */
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .warehouse-body .container-toolbar {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ gap: 6px;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .container-toolbar > .container-filters {
+ display: contents;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .container-toolbar .container-source {
+ grid-column: 1;
+ grid-row: 1;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .container-toolbar > input[type='search'] {
+ grid-column: 2 / -1;
+ grid-row: 1;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .container-toolbar .storage-modes {
+ grid-column: 1;
+ grid-row: 2;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .container-primary-filters > :is(select, .menu-select) {
+ grid-column: 2;
+ grid-row: 2;
+ min-width: 0;
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement='stacked']) .panel[data-view='storage'] .container-toolbar > .container-filters > :is(select, .menu-select) {
+ grid-column: 3;
+ grid-row: 2;
+ min-width: 0;
+}
+
+/* Wide storage: category ends at the left pane, subtype starts the right pane. */
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .warehouse-body .container-toolbar {
+ grid-template-columns: repeat(8, minmax(0, 1fr));
+ gap: 6px;
+}
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .container-toolbar > .container-filters {
+ display: contents;
+}
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .container-toolbar .container-source {
+ grid-column: 1;
+ grid-row: 1;
+ min-width: 0;
+}
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .container-toolbar .storage-modes {
+ grid-column: 2;
+ grid-row: 1;
+ min-width: 0;
+}
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .container-primary-filters > :is(select, .menu-select) {
+ grid-column: 3 / 5;
+ grid-row: 1;
+ min-width: 0;
+}
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .container-toolbar > .container-filters > :is(select, .menu-select) {
+ grid-column: 5 / 7;
+ grid-row: 1;
+ min-width: 0;
+}
+:host([data-menu-arrangement='wide'][data-menu-density]) .panel[data-view='storage'] .container-toolbar > input[type='search'] {
+ grid-column: 7 / 9;
+ grid-row: 1;
+}

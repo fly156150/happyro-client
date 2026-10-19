@@ -21,12 +21,13 @@ export function createContainerPanel(body, actions, initialSource) {
 		'<div class="container-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
 	const primary = initialSource;
 	const isCart = primary === 'cart';
+	let storagePeer = 'inventory';
 	body.classList.add('warehouse-body');
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector);
 	const { footer, status } = interactionFooter(body);
 	const sourceSelect = createMenuField('select');
-	sourceSelect.setAttribute('aria-label', '物品所在位置');
+	sourceSelect.setAttribute('aria-label', isCart ? '物品所在位置' : '背包或手推车');
 	const category = createMenuField('select');
 	category.setAttribute('aria-label', '物品分类');
 	for (const [key, text] of [
@@ -51,7 +52,18 @@ export function createContainerPanel(body, actions, initialSource) {
 	search.setAttribute('aria-label', `搜索${labels[primary]}物品`);
 	const modes = document.createElement('div');
 	modes.className = 'storage-modes menu-form-row';
-	{
+	const operationSelect = isCart ? null : createMenuField('select');
+	if (operationSelect) {
+		operationSelect.setAttribute('aria-label', '存取操作');
+		operationSelect.add(new Option('取出', 'withdraw'));
+		operationSelect.add(new Option('存入', 'deposit'));
+		operationSelect.onchange = () => {
+			source = operationSelect.value === 'withdraw' ? primary : storagePeer;
+			reset();
+			update();
+		};
+		modes.append(operationSelect);
+	} else {
 		for (const [value, title] of [
 			[primary, '取出'],
 			['inventory', '存入']
@@ -69,7 +81,7 @@ export function createContainerPanel(body, actions, initialSource) {
 	filters.className = 'container-filters menu-form-row';
 	const primaryFilters = document.createElement('div');
 	primaryFilters.className = 'container-filters container-primary-filters menu-form-row';
-	primaryFilters.append(modes, sourceField, category);
+	primaryFilters.append(...(isCart ? [modes, sourceField, category] : [sourceField, modes, category]));
 	filters.append(primaryFilters);
 	const subtype = createItemSubtypeFilter(() => {
 		update();
@@ -143,7 +155,11 @@ export function createContainerPanel(body, actions, initialSource) {
 		if (removeCart) footer.append(removeCart);
 	}
 	sourceSelect.onchange = () => {
-		source = sourceSelect.value;
+		if (isCart) source = sourceSelect.value;
+		else {
+			storagePeer = sourceSelect.value;
+			if (source !== primary) source = storagePeer;
+		}
 		reset();
 		update();
 	};
@@ -157,6 +173,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		return state.containers.filter(
 			entry =>
 				entry !== source &&
+				(isCart || entry === (source === primary ? storagePeer : primary)) &&
 				(!isCart || ['inventory', 'cart'].includes(entry)) &&
 				(source === primary || entry === primary)
 		);
@@ -283,20 +300,24 @@ export function createContainerPanel(body, actions, initialSource) {
 			lastCartRemoval = state.cartRemoval;
 			if (lastCartRemoval?.message) feedback(lastCartRemoval.message, lastCartRemoval.success ? 'success' : 'error');
 		}
-		for (const tab of modes.children) {
+		if (!isCart && !state.containers.includes(storagePeer)) storagePeer = 'inventory';
+		if (operationSelect) {
+			operationSelect.value = source === primary ? 'withdraw' : 'deposit';
+			operationSelect.disabled = !state.allowed || state.pending;
+		}
+		for (const tab of modes.querySelectorAll('button[data-mode]')) {
 			tab.setAttribute('aria-pressed', String((source === primary) === (tab.dataset.mode === primary)));
 			tab.disabled = !state.allowed || state.pending;
 		}
-		sourceField.hidden =
-			source === primary ||
-			state.containers.filter(entry => entry !== primary && (!isCart || entry === 'inventory')).length < 2;
-		const sources = state.containers.filter(entry => entry !== primary && (!isCart || entry === 'inventory'));
+		sourceField.hidden = isCart && (source === primary || state.containers.filter(entry => entry !== primary && entry === 'inventory').length < 2);
+		const sources = isCart ? state.containers.filter(entry => entry !== primary && entry === 'inventory') : ['inventory', 'cart'];
 		const optionsKey = sources.join(',');
 		if (sourceSelect.dataset.options !== optionsKey) {
 			sourceSelect.replaceChildren(...sources.map(key => new Option(labels[key], key)));
 			sourceSelect.dataset.options = optionsKey;
 		}
-		sourceSelect.value = source;
+		for (const option of sourceSelect.options) option.disabled = !state.containers.includes(option.value);
+		sourceSelect.value = isCart ? source : storagePeer;
 		sourceSelect.disabled = !state.allowed || state.pending;
 		const capacity = isCart ? actions.snapshot('cart').capacity : state.storageCapacity;
 		const unavailable = !state.containers.includes(source);
