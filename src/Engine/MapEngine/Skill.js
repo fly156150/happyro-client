@@ -821,9 +821,9 @@ SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos(id, level, x, y,
 	if (isHomun || isMerc) cancelCompanionSkill(entity);
 
 	if (skill) {
-		range = skill.attackRange + 1;
+		range = skill.attackRange + (isHomun || isMerc ? 0 : 1);
 	} else if (SkillInfo[id]) {
-		range = SkillInfo[id].AttackRange[level - 1] + 1;
+		range = SkillInfo[id].AttackRange[level - 1] + (isHomun || isMerc ? 0 : 1);
 	} else {
 		range = entity.attack_range;
 	}

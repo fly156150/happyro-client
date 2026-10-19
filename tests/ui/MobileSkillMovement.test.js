@@ -95,7 +95,7 @@ it.each([[8044,31,5],[8060,31,5],[8201,32,6],[8241,32,6]])('casts companion skil
  expect(state.search.mock.calls[0].slice(0,5)).toEqual([6,7,6,7,range]);
  expect(state.send.mock.calls[0][0]).toMatchObject({SKID:skill,targetID:id});
  state.selection.onUseSkillToPos(skill,1,9,10);
- expect(state.search.mock.calls[1].slice(0,5)).toEqual([6,7,9,10,range]);
+ expect(state.search.mock.calls[1].slice(0,5)).toEqual([6,7,9,10,range-1]);
  expect(state.send.mock.calls[1][0]).toMatchObject({SKID:skill,xPos:9,yPos:10});
 });
 it.each([8044,8201])('ignores unavailable companion %i without sending player movement', skill => {
@@ -123,4 +123,18 @@ it('reopens an owned vending store instead of sending another skill request',asy
  showOwnedVending.mockReturnValueOnce(true);state.send.mockClear();
  state.selection.onUseSkillToId(41,10);
  expect(showOwnedVending).toHaveBeenCalled();expect(state.send).not.toHaveBeenCalled();
+});
+
+it('moves a companion to the exact ground-skill boundary instead of casting one cell too early', () => {
+ state.companions.set(31,{GID:31,position:[0,0],amotionTick:0});
+ state.search.mockImplementation((x,y,tx,ty,range,out) => {
+  if (Math.max(Math.abs(tx-x),Math.abs(ty-y)) <= range) { out.push(x,y); return 1; }
+  out.push(x,y,1,0); return 2;
+ });
+ state.selection.onUseSkillToPos(8044,1,5,0);
+ expect(state.send.mock.calls[0][0]).toMatchObject({GID:31,dest:[1,0]});
+ expect(state.send.mock.calls.some(([p])=>p.SKID===8044)).toBe(false);
+ state.send.mockClear();state.companions.get(31).position=[1,0];
+ state.selection.onUseSkillToPos(8044,1,5,0);
+ expect(state.send).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({SKID:8044,xPos:5,yPos:0}));
 });
