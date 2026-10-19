@@ -11,7 +11,7 @@ export function createAutoCombatPanel(body, actions) {
 			<section class="auto-target-section" aria-labelledby="auto-target-title">
 				<h3 id="auto-target-title">攻击目标</h3>
 				<button type="button" data-all-species>全部魔物</button>
-				<p class="auto-help">可多选种类；未勾选时攻击全部魔物。</p>
+				<!-- <p class="auto-help">可多选种类；未勾选时攻击全部魔物。</p> -->
 				<div class="auto-species-list" data-auto-species aria-label="自动战斗目标"></div>
 				<section class="auto-range-settings" aria-labelledby="auto-range-title">
 					<h4 id="auto-range-title">范围设置 <span data-range-summary></span></h4>
@@ -29,7 +29,7 @@ export function createAutoCombatPanel(body, actions) {
 			<section class="auto-skill-section" aria-labelledby="auto-skills-title">
 				<div class="auto-section-heading"><h3 id="auto-skills-title">攻击方式</h3><span data-skill-count></span></div>
 				<button type="button" data-normal-attack>普通攻击</button>
-				<p class="auto-help">勾选技能后随机释放，使用已学最高等级；均不可用时使用普攻。</p>
+				<!-- <p class="auto-help">勾选技能后随机释放，使用已学最高等级；均不可用时使用普攻。</p> -->
 				<div class="auto-skill-list" data-auto-skills></div>
 			</section>
 		</div>
@@ -187,7 +187,6 @@ export function createAutoCombatPanel(body, actions) {
 		};
 		$('[data-auto-species]').append(button);
 	}
-	if (!species.size) $('[data-auto-species]').textContent = '附近暂无魔物，发现后可在这里选择。';
 	const selectedSpecies = () => [...chosenSpecies].map(id => ({ id, name: species.get(id) }));
 	const entries = actions.skills();
 	const chosenSkills = new Set(state.skills);

@@ -97,6 +97,7 @@
 	min-height: 34px;
 	flex-shrink: 0;
 }
+[data-all-species][aria-pressed='true'],
 [data-normal-attack][aria-pressed='true'],
 .auto-skill-card[aria-checked='true'] {
 	background: #493c26;
@@ -272,4 +273,10 @@
 .auto-species-card,
 .auto-teleport-toggle {
 	-webkit-tap-highlight-color: transparent;
+}
+
+/* Keep action buttons separated from the following selection lists. */
+.auto-layout [data-all-species],
+.auto-layout [data-normal-attack] {
+	margin-bottom: 10px;
 }

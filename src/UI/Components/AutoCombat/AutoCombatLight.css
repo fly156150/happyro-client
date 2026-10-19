@@ -49,6 +49,7 @@ button:focus-visible,
 .pickup-excluded { background: var(--desktop-card); border-color: var(--desktop-divider); border-radius: 6px; color: var(--desktop-text); }
 .combat-dialog :is(.auto-species-card, .auto-skill-card):hover { background: var(--desktop-button); border-color: #9ca3aa; }
 .combat-dialog :is(.auto-species-card, .auto-skill-card)[aria-checked='true'],
+.combat-dialog [data-all-species][aria-pressed='true'],
 .combat-dialog [data-normal-attack][aria-pressed='true'] { background: var(--desktop-selected); border-color: var(--desktop-selected-border); color: var(--desktop-text); }
 .combat-dialog .auto-species-check { border-color: var(--desktop-border); background: var(--desktop-card); color: var(--desktop-text); }
 .combat-dialog [aria-checked='true'] .auto-species-check { background: var(--desktop-success); border-color: var(--desktop-success); color: var(--desktop-card); }
@@ -89,3 +90,7 @@ button:focus-visible,
 .combat-dialog { padding: 0; gap: 0; overflow: hidden; }
 .combat-dialog > .combat-tabbar { flex: 0 0 auto; padding: 5px 10px 8px; border-bottom: 1px solid var(--desktop-divider); }
 .combat-dialog > :is(.desktop-combat-panel, .desktop-pickup-panel) { margin: 12px 16px 16px; min-height: 0; }
+
+/* An empty target list must not add another gap below the all-targets button. */
+.combat-dialog .auto-species-list:empty { display: none; }
+.combat-dialog .auto-species-list:empty + .auto-range-settings { margin-top: 0; }
