@@ -83,12 +83,15 @@ function onCaptureResult(pkt) {
  * @param {object} pkt - PACKET.ZC.PETEGG_LIST
  */
 function onPetList(pkt) {
-	if (Platform.isMobile) {
-		openGamePetEggs(pkt.eggList);
+	if (!pkt.eggList.length) {
+		const cancel = new PACKET.CZ.SELECT_PETEGG();
+		cancel.index = 0;
+		Network.sendPacket(cancel);
+		showToast(document.body, '没有可孵化的宠物蛋', 'info');
 		return;
 	}
-	if (!pkt.eggList.length) {
-		showToast(document.body, '没有可孵化的宠物蛋', 'info');
+	if (Platform.isMobile) {
+		openGamePetEggs(pkt.eggList);
 		return;
 	}
 

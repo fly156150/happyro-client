@@ -1,3 +1,4 @@
+import { PET_INCUBATOR_ID } from 'DB/Pets/PetRules.js';
 import { showToast } from 'UI/Components/Toast.js';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 
@@ -30,5 +31,6 @@ export function receiveItemOperationResult(entity, action, packet) {
 	const index = action === 'drop' ? packet.Index : action === 'card' ? packet.cardIndex : packet.index;
 	const success =
 		action === 'drop' ? packet.count > 0 : action === 'card' ? packet.result === 0 : Number(packet.result) === 1;
-	finishItemOperation(entity, action, index, success);
+	// The egg selector (or its empty-list message) is the incubator's feedback.
+	finishItemOperation(entity, action, index, action === 'use' && packet.id === PET_INCUBATOR_ID && success ? null : success);
 }

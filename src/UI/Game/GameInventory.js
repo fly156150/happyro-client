@@ -1,3 +1,5 @@
+import { PET_INCUBATOR_ID } from 'DB/Pets/PetRules.js';
+import EntityManager from 'Renderer/EntityManager.js';
 import { itemSubtypes } from './ItemSubtypes.js';
 import { createItemPreviewLoader } from './ItemPreview.js';
 import { equipmentSockets } from './EquipmentSockets.js';
@@ -98,6 +100,8 @@ export function createGameInventory(canOperate) {
 			const state = describe(entry);
 			if (state.reason) return state.reason;
 			if (state.action !== action) return '穿戴状态已经变化，请重新选择操作';
+			if (action === 'use' && id === PET_INCUBATOR_ID && EntityManager.get(Session.petId))
+				return '请先收回当前宠物';
 			if (action === 'unequip') {
 				beginItemOperation(Session.Entity, action, index);
 				Equipment.getUI().onUnEquip(index);
