@@ -13,6 +13,7 @@ export function createCompanionsPanel(body, service) {
 	body.dataset.companionKind = service.snapshot().kind;
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector);
+	const infoRows = new Map();
 	let dismiss,
 		gid,
 		nameDirty = false,
@@ -145,23 +146,36 @@ export function createCompanionsPanel(body, service) {
 							])
 				]
 			: [['状态', '暂无已召出的伴侣']];
-		$('[data-info]').replaceChildren();
-		for (const [label, value] of rows) {
-			const dt = document.createElement('dt'),
-				dd = document.createElement('dd');
-			dt.textContent = label;
-			if (label === '攻击模式') {
-				const badge = document.createElement('span');
-				badge.className = 'companion-attack-mode';
-				badge.dataset.mode = s.aggressive ? 'active' : 'passive';
-				badge.textContent = value;
-				dd.append(badge);
-			} else if (label === '自动喂食') {
-				dd.append(createAutoFeedStatus(s.autoFeed, true));
-			} else {
-				dd.textContent = value ?? '—';
+		const currentLabels = new Set(rows.map(([label]) => label));
+		for (const [label, row] of infoRows) {
+			if (!currentLabels.has(label)) {
+				row.term.remove();
+				row.value.remove();
+				infoRows.delete(label);
 			}
-			$('[data-info]').append(dt, dd);
+		}
+		for (const [label, value] of rows) {
+			let row = infoRows.get(label);
+			if (!row) {
+				const term = document.createElement('dt'), cell = document.createElement('dd');
+				term.textContent = label;
+				let content = cell;
+				if (label === '攻击模式') {
+					content = document.createElement('span');
+					content.className = 'companion-attack-mode';
+					cell.append(content);
+				} else if (label === '自动喂食') {
+					content = createAutoFeedStatus(s.autoFeed, true);
+					cell.append(content);
+				}
+				row = { term, value: cell, content };
+				infoRows.set(label, row);
+				$('[data-info]').append(term, cell);
+			}
+			const text = String(value ?? '—');
+			if (row.content.textContent !== text) row.content.textContent = text;
+			if (label === '攻击模式') row.content.dataset.mode = s.aggressive ? 'active' : 'passive';
+			if (label === '自动喂食') row.content.dataset.state = s.autoFeed ? 'on' : 'off';
 		}
 		for (const b of body.querySelectorAll('[data-action]'))
 			b.disabled = !s.allowed || (b.dataset.action === 'rename' && !s.canRename);
