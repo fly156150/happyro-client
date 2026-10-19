@@ -23,7 +23,7 @@ export function createCompanionsPanel(body, service) {
 		autofeed: '切换自动喂食',
 		dismiss: '解除',
 		return: '返回身边',
-		aggressive: '切换主动攻击'
+		aggressive: '切换攻击模式'
 	};
 	function cancel() {
 		dismiss?.();
@@ -80,7 +80,9 @@ export function createCompanionsPanel(body, service) {
 					? service.snapshot().kind === 'homunculus'
 						? '确认删除当前生命体？'
 						: '提前解除佣兵契约？'
-					: `确认${label}？`
+					: action === 'aggressive'
+						? `确认切换为${service.snapshot().aggressive ? '被动攻击' : '主动攻击'}？`
+						: `确认${label}？`
 			);
 		};
 		if (action === 'rename') $('[data-companion-name]').parentElement.append(button);
@@ -133,7 +135,15 @@ export function createCompanionsPanel(body, service) {
 			const dt = document.createElement('dt'),
 				dd = document.createElement('dd');
 			dt.textContent = label;
-			dd.textContent = value ?? '—';
+			if (label === '攻击模式') {
+				const badge = document.createElement('span');
+				badge.className = 'companion-attack-mode';
+				badge.dataset.mode = s.aggressive ? 'active' : 'passive';
+				badge.textContent = value;
+				dd.append(badge);
+			} else {
+				dd.textContent = value ?? '—';
+			}
 			$('[data-info]').append(dt, dd);
 		}
 		for (const b of body.querySelectorAll('[data-action]'))
