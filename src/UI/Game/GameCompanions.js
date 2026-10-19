@@ -1,3 +1,4 @@
+import { showToast } from 'UI/Components/Toast.js';
 import Session from 'Engine/SessionStorage.js';
 import EntityManager from 'Renderer/EntityManager.js';
 import Network from 'Network/NetworkManager.js';
@@ -61,6 +62,9 @@ export function receiveGameCompanionFeed(result) {
 	s.pending = null;
 	s.messageKind = result ? 'success' : 'error';
 	s.message = result ? '喂食成功' : '喂食失败，请检查生命体食物';
+	const interaction = interactionSnapshot();
+	if (interaction?.kind !== 'companions' || interaction.service.snapshot().kind !== 'homunculus')
+		showToast(document.body, s.message, s.messageKind);
 }
 export function canCommandGameCompanion(kind) {
 	const actor = entity(kind);

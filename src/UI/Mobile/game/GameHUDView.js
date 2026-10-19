@@ -131,6 +131,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	let interactionPress = null;
 	let petConfirmation = null;
 	let mercenaryConfirmation = null;
+	let homunculusConfirmation = null;
 	let snapshot = {};
 	let messages = [];
 	let unreadChat = 0;
@@ -192,7 +193,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (!event.target.closest('.combat, .battle-dock')) actions.cancelSceneInput();
 	});
 	listen($('[data-auto-toggle]'), 'click', () => {
-		if (snapshot.target?.player || snapshot.target?.pet || snapshot.target?.mercenary) actions.clearPlayerSelection();
+		if (snapshot.target?.player || snapshot.target?.pet || snapshot.target?.mercenary || snapshot.target?.homunculus) actions.clearPlayerSelection();
 		else actions.toggleAutoCombat();
 	});
 	listen($('[data-interact]'), 'click', () => actions.interact());
@@ -252,6 +253,28 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			if (action === 'dismiss') {
 				mercenaryConfirmation = { id: mercenary.id, dismiss: confirmAction(container, '提前解除佣兵契约？', perform, {
 					cancelled: () => { mercenaryConfirmation = null; }
+				}) };
+			} else perform();
+		});
+	}
+	for (const button of root.querySelectorAll('[data-homunculus-action]')) {
+		listen(button, 'click', () => {
+			homunculusConfirmation?.dismiss();
+			const homunculus = snapshot.target?.homunculus, action = button.dataset.homunculusAction;
+			const container = $('[data-homunculus-actions]');
+			const prepared = actions.prepareHomunculusAction(action, homunculus?.id);
+			if (prepared.error) {
+				showToast(container, prepared.error, 'error');
+				return;
+			}
+			const perform = () => {
+				homunculusConfirmation = null;
+				const error = prepared.execute();
+				if (error) showToast(container, error, 'error');
+			};
+			if (action === 'feed') {
+				homunculusConfirmation = { id: homunculus.id, dismiss: confirmAction(container, `给「${homunculus.name}」喂食？`, perform, {
+					cancelled: () => { homunculusConfirmation = null; }
 				}) };
 			} else perform();
 		});
@@ -837,14 +860,15 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			const targetLabel = species.length > 1 ? `${species.length} 种魔物` : species[0]?.name || '全部魔物';
 			text('[data-auto-target]', `${targetLabel} ▾`);
 			$('[data-auto-target]').title = species.map(entry => entry.name).join('、') || '全部魔物';
-			const player = next.target?.player, pet = next.target?.pet, mercenary = next.target?.mercenary;
-			const hasActions = Boolean(player || pet || mercenary);
+			const player = next.target?.player, pet = next.target?.pet, mercenary = next.target?.mercenary, homunculus = next.target?.homunculus;
+			const hasActions = Boolean(player || pet || mercenary || homunculus);
 			text('[data-auto-toggle]', hasActions ? '取消选择' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
 			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!hasActions && Boolean(next.autoCombat?.active)));
 			$('[data-auto-toggle]').classList.toggle('clear-selection', hasActions);
 			$('[data-player-actions]').hidden = !player;
 			$('[data-pet-actions]').hidden = !pet;
 			$('[data-mercenary-actions]').hidden = !mercenary;
+			$('[data-homunculus-actions]').hidden = !homunculus;
 			$('[data-target]').hidden = hasActions;
 			$('.battle-status').classList.toggle('has-player-actions', hasActions);
 			for (const button of root.querySelectorAll('[data-mercenary-action]')) button.disabled = !mercenary?.canOperate;
@@ -854,6 +878,14 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			if (mercenaryConfirmation && (!mercenary?.canOperate || mercenary.id !== mercenaryConfirmation.id)) {
 				mercenaryConfirmation.dismiss();
 				mercenaryConfirmation = null;
+			}
+			for (const button of root.querySelectorAll('[data-homunculus-action]')) button.disabled = !homunculus?.canOperate;
+			text('[data-homunculus-action=aggressive]', homunculus?.aggressive ? '主动' : '被动');
+			$('[data-homunculus-action=aggressive]').dataset.mode = homunculus?.aggressive ? 'active' : 'passive';
+			$('[data-homunculus-action=aggressive]').title = homunculus?.aggressive ? '当前主动攻击，点击切换为被动攻击' : '当前被动攻击，点击切换为主动攻击';
+			if (homunculusConfirmation && (!homunculus?.canOperate || homunculus.id !== homunculusConfirmation.id)) {
+				homunculusConfirmation.dismiss();
+				homunculusConfirmation = null;
 			}
 			for (const button of root.querySelectorAll('[data-pet-action]')) button.disabled = !pet?.canOperate;
 			if (petConfirmation && (!pet?.canOperate || pet.id !== petConfirmation.id)) {

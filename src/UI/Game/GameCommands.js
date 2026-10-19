@@ -201,6 +201,27 @@ export function prepareMercenaryAction(action, expectedId, openMercenary) {
 	};
 }
 
+/** Keep feeding bound to the selected homunculus and its original owner. */
+export function prepareHomunculusAction(action, expectedId, openHomunculus) {
+	const target = selectedTarget(), owner = Session.Entity;
+	const valid = () => Boolean(
+		Session.Playing && !Session.FreezeUI && owner && Session.Entity === owner &&
+		owner.action !== owner.ACTION.DIE && target && target === selectedTarget() &&
+		target.GID === expectedId && target.GID === Session.homunId &&
+		target.objecttype === target.constructor.TYPE_HOM && !target.remove_tick
+	);
+	if (!valid()) return { error: '生命体已离开或已切换，请重新选择' };
+	if (!['view', 'feed', 'return', 'aggressive'].includes(action)) return { error: '未知操作' };
+	return {
+		execute() {
+			if (!valid()) return '生命体已离开或已切换，请重新选择';
+			if (action === 'view') return openHomunculus() ? '' : '当前无法查看生命体';
+			const result = commandGameCompanion('homunculus', action);
+			return ['攻击模式已更新', '已发送请求，以服务器状态为准'].includes(result) ? '' : result;
+		}
+	};
+}
+
 export function targetSnapshot() {
 	const target = selectedTarget();
 	if (!target) return { name: '点击目标进行选择', attack: false, interaction: '' };
@@ -212,6 +233,8 @@ export function targetSnapshot() {
 			? { id: target.GID, name: target.display.name, canOperate: canCommandGamePet() } : null,
 		mercenary: target.objecttype === T.TYPE_MERC && target.GID === Session.mercId && !target.remove_tick
 			? { id: target.GID, name: target.display.name, canOperate: canCommandGameCompanion('mercenary'), aggressive: companionAttackMode('mercenary') } : null,
+		homunculus: target.objecttype === T.TYPE_HOM && target.GID === Session.homunId && !target.remove_tick
+			? { id: target.GID, name: target.display.name, canOperate: canCommandGameCompanion('homunculus'), aggressive: companionAttackMode('homunculus') } : null,
 		attack: canAttack(target),
 		interaction:
 			target.room?.display &&

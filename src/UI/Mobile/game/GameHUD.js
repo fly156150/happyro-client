@@ -159,6 +159,11 @@ HUD.onAppend = function () {
 		openAdventureTools: back => AdventureTools.openFromMenu(back),
 		openAdventureMap: (target, back) => AdventureTools.openMap(target, back),
 		setModal,
+		prepareHomunculusAction: (action, id) => {
+			autoCombat.stop();
+			return Commands.prepareHomunculusAction(action, id, () =>
+				openGameCompanions('homunculus', () => modal ? !previousFreeze : enabled()));
+		},
 		prepareMercenaryAction: (action, id) => {
 			autoCombat.stop();
 			return Commands.prepareMercenaryAction(action, id, () =>
