@@ -118,10 +118,6 @@ HomunInformations.init = function init() {
 		});
 	}
 
-	// If no aggressive level defined, default to 1
-	// otherwise toggle and untoggle to remain the same
-	this.toggleAggressive();
-	this.toggleAggressive();
 };
 
 HomunInformations.onAppend = function onAppend() {
@@ -529,9 +525,8 @@ HomunInformations.setHunger = function setHunger(val) {
 };
 
 HomunInformations.toggleAggressive = function toggleAggressive() {
-	const agr = localStorage.getItem('HOM_AGGRESSIVE') === 0 ? 1 : 0;
-	localStorage.setItem('HOM_AGGRESSIVE', agr);
 	AIDriver.HOM_AGGRESSIVE = !AIDriver.HOM_AGGRESSIVE;
+	localStorage.setItem('HOM_AGGRESSIVE', AIDriver.HOM_AGGRESSIVE ? '1' : '0');
 };
 
 HomunInformations.startAI = function startAI() {

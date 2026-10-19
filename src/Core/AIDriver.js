@@ -14,8 +14,8 @@ const msg = {};
 const resMsg = {};
 
 class AIDriver {
-	static HOM_AGGRESSIVE = false;
-	static MER_AGGRESSIVE = false;
+	static HOM_AGGRESSIVE = localStorage.getItem('HOM_AGGRESSIVE') === '1';
+	static MER_AGGRESSIVE = localStorage.getItem('MER_AGGRESSIVE') === '1';
 	static HO_AI = null;
 	static MER_AI = null;
 	static default_HO_AI = null;
@@ -247,8 +247,20 @@ class AIDriver {
 			ctx.GetActors = function () {
 				AIDriver.exec('status = MyState', isHoAI);
 				const res = [0];
+				const companionId = isHoAI ? Session.homunId : Session.mercId;
+				const companion = EntityManager.get(companionId);
+				const aggressive = isHoAI ? AIDriver.HOM_AGGRESSIVE : AIDriver.MER_AGGRESSIVE;
 				EntityManager.forEach(item => {
-					res.push(item.GID);
+					const hostile = [
+						Session.Entity.constructor.TYPE_MOB,
+						Session.Entity.constructor.TYPE_NPC_ABR,
+						Session.Entity.constructor.TYPE_NPC_BIONIC
+					].includes(item.objecttype);
+					const engaged = item.targetGID === Session.AID || item.targetGID === companionId ||
+						Session.Entity.targetGID === item.GID || companion?.targetGID === item.GID;
+					// Default AI scripts for some homunculus species acquire every visible monster.
+					// Passive mode exposes only an ongoing fight, including explicit player orders.
+					if (!hostile || aggressive || engaged) res.push(item.GID);
 				});
 				// aggressive logic
 				if (res.length > 3) {

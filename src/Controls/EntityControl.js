@@ -543,7 +543,7 @@ class EntityControl {
 					ContextMenu.addElement('喂食', () => {
 						HomunInformations.reqHomunFeed();
 					});
-					if (localStorage.getItem('HOM_AGGRESSIVE') == 0) {
+					if (localStorage.getItem('HOM_AGGRESSIVE') !== '1') {
 						ContextMenu.addElement('协助', () => {
 							HomunInformations.toggleAggressive();
 						});
@@ -562,7 +562,7 @@ class EntityControl {
 					ContextMenu.addElement('查看状态', () => {
 						MercenaryInformations.ui.toggle();
 					});
-					if (localStorage.getItem('MER_AGGRESSIVE') == 0) {
+					if (localStorage.getItem('MER_AGGRESSIVE') !== '1') {
 						ContextMenu.addElement('协助', () => {
 							MercenaryInformations.toggleAggressive();
 						});
