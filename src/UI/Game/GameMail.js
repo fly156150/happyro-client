@@ -83,7 +83,7 @@ export function openGameMail(canOperate = () => true) {
 			draft: { ...draft },
 			recipient,
 			attachments: attachments.map(i => ({ ...inventory.describe(i), identity: i.identity })),
-			inventory: inventory.snapshot().filter(i => !i.worn),
+			inventory: writing ? inventory.snapshot().filter(i => !i.worn) : [],
 			pending: Boolean(pending),
 			allowed: Boolean(allowed()),
 			message,
@@ -103,6 +103,7 @@ export function openGameMail(canOperate = () => true) {
 			const mail = list.find(m => key(m) === mailKey);
 			if (!mail) return;
 			selected = mailKey;
+			revision++;
 			request('REQ_READ_RODEX', mail, { kind: 'read', key: mailKey });
 		},
 		claim(type) {

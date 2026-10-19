@@ -314,7 +314,7 @@ export function createMailPanel(body, service) {
 		const mail = state.detail;
 		if (!mail || mail.openType !== tab) {
 			heading(detail, '邮件详情');
-			para(detail, '请选择一封邮件查看内容。', 'mail-empty');
+			para(detail, state.pending && state.selected ? '正在读取邮件…' : '请选择一封邮件查看内容。', 'mail-empty');
 			for (const label of ['领取金额', '领取物品', '删除邮件']) button(detailFooter, label, () => {}, true);
 			return;
 		}
@@ -358,8 +358,7 @@ export function createMailPanel(body, service) {
 			);
 		}
 	}
-	function render() {
-		const state = service.snapshot();
+	function render(state = service.snapshot()) {
 		const keepComposeScroll = state.writing && body.dataset.mailWriting === 'true';
 		const detailScroll = keepComposeScroll ? detail.scrollTop : 0;
 		const inventoryScroll = keepComposeScroll ? list.querySelector('.mail-item-list')?.scrollTop || 0 : 0;
@@ -383,7 +382,7 @@ export function createMailPanel(body, service) {
 	}
 	function update() {
 		const state = service.snapshot();
-		if (version !== state.revision) render();
+		if (version !== state.revision) render(state);
 		if (quantityDialog) {
 			const max = quantityDialog.capacity(state);
 			if (!max) clearReview();

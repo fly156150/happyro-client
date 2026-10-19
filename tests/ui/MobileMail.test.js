@@ -81,3 +81,14 @@ it('keeps notification on failed list loads and updates it from server refreshes
  receiveGameMail('list',{MailList:[]});expect(gameMailUnread()).toBe(false);
  receiveGameMail('list',{MailList:[{...mail,Isread:0}]});expect(gameMailUnread()).toBe(true);
 });
+
+it('shows selection and loading immediately before a mail response arrives', () => {
+ const service = open();
+ const body = document.createElement('div');
+ createMailPanel(body, service);
+ body.querySelector('.mail-row').click();
+ expect(body.querySelector('.mail-row').getAttribute('aria-pressed')).toBe('true');
+ expect(body.querySelector('.mail-detail').textContent).toContain('正在读取邮件');
+ expect(service.snapshot().pending).toBe(true);
+ expect(service.snapshot().inventory).toEqual([]);
+});
