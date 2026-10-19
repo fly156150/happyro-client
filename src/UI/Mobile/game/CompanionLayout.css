@@ -52,7 +52,7 @@
 
 /* Fill each wrapped action row while retaining the available space for its labels. */
 :host([data-menu-density]) .panel:is([data-view='pet'], [data-view='companions']:has(.companion-name:not([hidden])))
- .companion-footer .inventory-actions > button {
+ .companion-footer .inventory-actions > button:not([data-evolution-egg]) {
  flex: 1 0 auto;
 }
 
@@ -65,7 +65,7 @@
 :host([data-menu-density]) .panel .pet-evolution-requirement.is-missing strong,
 :host([data-menu-density]) .panel .pet-evolution-accessory { color: #f6d9a5; }
 :host([data-menu-density]) .panel [data-evolution] > h3 { margin: 0 0 6px; font-size: inherit; }
-:host([data-menu-density]) .panel [data-evolution] > button { margin-top: 10px; }
+:host([data-menu-density]) .panel[data-view='pet'] .companion-footer button[data-evolution-egg] { flex: 0 0 auto; width: auto; }
 
 /* Match the adventure tools' current-map switch: label inside one sliding track. */
 :host([data-menu-density]) .panel .companion-footer .companion-switch-control {

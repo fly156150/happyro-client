@@ -19,3 +19,35 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel:is([data-view='pet'], [data-view='companions']) .companion-footer:has(> .companion-name:not([hidden])) {
  row-gap: var(--panel-gap);
 }
+
+/* Keep the four primary pet actions on one row; align secondary actions to those columns. */
+:host([data-phone-screen][data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='pet']
+ .companion-footer .inventory-actions {
+ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) var(--companion-final-column); gap: 6px;
+ align-items: center; justify-content: stretch;
+}
+:host([data-phone-screen][data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='pet']
+ .companion-footer .inventory-actions > :is(button, .companion-switch-control) {
+ box-sizing: border-box; width: 100%; min-width: 0; max-width: 100%; margin: 0;
+ height: var(--panel-control); min-height: var(--panel-control); justify-self: stretch;
+}
+:host([data-phone-screen][data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='pet']
+ .companion-footer .inventory-actions > [data-action='unequip'] {
+ grid-column: 1 / span 2;
+}
+:host([data-phone-screen][data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='pet']
+ .companion-footer .inventory-actions > .companion-switch-control {
+ grid-column: 4;
+}
+
+:host([data-phone-screen][data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='pet']
+ .companion-footer .inventory-actions > button { padding-inline: 2px; }
+
+/* The rename row shares the action area's final column in either orientation. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .companion-footer .companion-name:not([hidden]) {
+ display: grid; grid-template-columns: minmax(0, 1fr) var(--companion-final-column);
+ gap: 6px; align-items: center;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .companion-footer .companion-name > :is(input, button) {
+ width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; justify-self: stretch;
+}

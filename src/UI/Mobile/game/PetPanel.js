@@ -6,7 +6,7 @@ export function createPetPanel(body, service) {
 	createCompanionLayout(body, {
 		nameAttribute: 'data-name',
 		nameLabel: '宠物名称',
-		sectionTitle: '进化',
+		sectionTitle: '',
 		contentAttribute: 'data-evolution',
 		refresh: true
 	});
@@ -118,10 +118,18 @@ export function createPetPanel(body, service) {
 		if (nextKey !== evoKey) {
 			evoKey = nextKey;
 			$('[data-evolution]').replaceChildren();
+			for (const button of body.querySelectorAll('[data-evolution-egg]')) button.remove();
 			if (!state.evolutions.length) {
 				const empty = document.createElement('p');
 				empty.textContent = '暂无可用进化';
 				$('[data-evolution]').append(empty);
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.textContent = '进化';
+				button.dataset.evolutionEgg = '';
+				button.disabled = true;
+				button.title = '暂无可用进化';
+				$('[data-actions]').insertBefore(button, $('[data-action=autofeed]').parentElement);
 			}
 			for (const evo of state.evolutions) {
 				const title = document.createElement('h3');
@@ -150,10 +158,10 @@ export function createPetPanel(body, service) {
 				}
 				const b = document.createElement('button');
 				b.type = 'button';
-				b.textContent = '进化为 ' + evo.name;
+				b.textContent = state.evolutions.length === 1 ? '进化' : '进化为 ' + evo.name;
 				b.dataset.evolutionEgg = String(evo.egg);
 				b.onclick = () => prepare('evolve', evo.egg, '确认将宠物进化为 ' + evo.name + '？');
-				$('[data-evolution]').append(b);
+				$('[data-actions]').insertBefore(b, $('[data-action=autofeed]').parentElement);
 			}
 		}
 		for (const button of body.querySelectorAll('button:not(.ui-confirm button)')) button.disabled = !state.allowed;
