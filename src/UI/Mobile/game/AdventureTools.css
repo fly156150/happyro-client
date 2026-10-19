@@ -2027,7 +2027,7 @@
 
 :host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure .adventure-content[data-feature='items'] .game-tools-tab {
 	grid-template-columns:repeat(4,minmax(0,1fr)) 35px 35px;
-	grid-template-rows:minmax(0,1.15fr) 21px minmax(0,.85fr) 9px 32px 0px 32px 4px auto;
+	grid-template-rows:minmax(0,1.15fr) 21px minmax(0,.85fr) 9px var(--panel-control) 6px var(--panel-control) 6px auto;
 	grid-template-areas:"map map map map map map" "divider divider divider divider divider divider" "list list list list list list" "controls-divider controls-divider controls-divider controls-divider controls-divider controls-divider" "search search search search search search" ". . . . . ." "filters filters filters filters pages pages" ". . . . . ." "actions actions actions actions actions actions";
 }
 
@@ -2086,7 +2086,7 @@
 :host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure .adventure-content[data-feature='items'] .catalog-toolbar > .game-select {
 	grid-row:7;
 	min-width:0;
-	height:28px;
+	height:var(--panel-control);
 	align-self:center;
 }
 

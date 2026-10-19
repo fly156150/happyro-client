@@ -60,3 +60,8 @@
 :host([data-menu-density][data-menu-arrangement='stacked']) .panel[data-view='inventory'] .inventory-toolbar > :is(select, .menu-select) {
  grid-row: 2;
 }
+
+/* Tablet toolbar and content panes share the same six-pixel seam. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-layout {
+ column-gap: 6px;
+}
