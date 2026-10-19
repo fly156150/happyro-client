@@ -21,7 +21,7 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 	let gesture;
 	let tappedSource;
 	function open(focusEvent, prompt) {
-		const source = prompt?.field || focusEvent.target;
+		const source = prompt?.fields?.[0] || prompt?.field || focusEvent.target;
 		if (!enabled() || close || !source.matches?.(editable) || source.disabled || source.readOnly) return;
 
 		focusEvent?.preventDefault();
@@ -55,7 +55,16 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 		field.value = source.value;
 		if (prompt?.validate)
 			field.addEventListener('input', () => field.setCustomValidity(prompt.validate(field.value)));
-		editor.querySelector('main').append(field);
+		const fields = [field];
+		for (const original of prompt?.fields?.slice(1) || []) {
+			const extra = original.cloneNode(true);
+			for (const attribute of ['id', 'name', 'style', 'class', 'autofocus']) extra.removeAttribute(attribute);
+			extra.value = original.value;
+			extra.setAttribute('enterkeyhint', 'done');
+			fields.push(extra);
+		}
+		overlay.toggleAttribute('data-multiple-fields', fields.length > 1);
+		editor.querySelector('main').append(...fields);
 		const originalInert = host.inert;
 		const abort = new AbortController();
 		let layoutWidth = window.innerWidth,
@@ -95,8 +104,8 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 		};
 		function done() {
 			if (prompt?.validate) field.setCustomValidity(prompt.validate(field.value));
-			if (!field.reportValidity()) return;
-			const value = field.value;
+			if (!fields.every(input => input.reportValidity())) return;
+			const value = prompt?.fields ? fields.map(input => input.value) : field.value;
 			close();
 			if (prompt) {
 				prompt.onConfirm(value);
@@ -122,9 +131,11 @@ export function createMobileInputEditor(host, { enabled = () => true } = {}) {
 			if (event.key === 'Escape') {
 				event.preventDefault();
 				close();
-			} else if (event.key === 'Enter' && field.tagName !== 'TEXTAREA') {
+			} else if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
 				event.preventDefault();
-				done();
+				const index = fields.indexOf(event.target);
+				if (index >= 0 && index < fields.length - 1) fields[index + 1].focus();
+				else done();
 			}
 		});
 		for (const type of ['keyup', 'keypress', 'pointerdown', 'pointerup', 'click', 'touchstart', 'touchend']) {

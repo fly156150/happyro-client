@@ -4,6 +4,73 @@
 }
 .vending-transfer-layout .vending-transfer button { padding: 0; width: var(--panel-control); min-width: 28px; }
 .interaction-panel .ui-confirm .interaction-field { display: grid; gap: 6px; margin-top: 10px; }
-.interaction-panel .ui-confirm input[data-title] { box-sizing: border-box; width: 100%; margin-bottom: 10px; }
+.interaction-panel .ui-confirm input[data-title] { box-sizing: border-box; width: 100%; margin: 0; }
 
 .vending-transfer { display:flex; flex-direction:column; justify-content:center; gap:var(--panel-gap); }
+
+/* Keep both filters inside the source column and aligned to its item list. */
+.panel[data-view='vending'] .vending-filters {
+ display: grid;
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 6px;
+ flex: 0 0 auto;
+ width: 100%;
+ min-width: 0;
+ box-sizing: border-box;
+ padding: var(--panel-gap) var(--panel-gap) 0;
+ margin: 0;
+}
+.panel[data-view='vending'] .vending-filters > :is(select, .menu-select) {
+ width: 100%;
+ min-width: 0;
+ margin: 0;
+}
+
+:host([data-menu-density]) .panel[data-view='vending'] .interaction-column-content.inventory-list {
+ display: grid;
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ grid-auto-rows: min-content;
+ align-content: start;
+ gap: 6px;
+}
+:host([data-menu-density]) .panel[data-view='vending'] .inventory-list > .inventory-item {
+ min-width: 0;
+ margin: 0;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending'] .interaction-columns {
+ grid-template-columns: minmax(0, 1fr);
+ grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending'] .interaction-columns.vending-transfer-layout {
+ grid-template-rows: minmax(0, 1.2fr) auto minmax(0, 1fr);
+ gap: 6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending'] .vending-transfer {
+ flex-direction: row-reverse;
+ gap: 6px;
+}
+:host([data-phone-screen][data-orientation='portrait']) .panel[data-view='vending'] .vending-transfer button {
+ transform: rotate(90deg);
+}
+
+.panel[data-view='vending'] [data-order] {
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+ white-space: normal;
+}
+.panel[data-view='vending'] [data-order] > .interaction-order-item {
+ margin: 0;
+ line-height: 1.4;
+ flex: 0 0 auto;
+}
+
+.panel[data-view='vending'] .interaction-footer {
+ --menu-action-min-width: max(72px, calc(2em + 32px));
+}
+.panel[data-view='vending'] .interaction-footer > :is([data-submit], [data-cancel]) {
+ box-sizing: border-box;
+ min-width: var(--menu-action-min-width);
+ padding-inline: 16px;
+ white-space: nowrap;
+}

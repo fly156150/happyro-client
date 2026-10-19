@@ -118,15 +118,15 @@ export function openVendingSetup(mode, slots) {
 			if (mode === 'buy') packet.LimitZeny = budget;
 			pending = true;
 			Network.sendPacket(packet);
-			return '等待服务器开店结果';
+			return '等待服务器摆摊结果';
 		},
 		fail() {
 			if (interactionSnapshot()?.token !== token) return;
 			ended = true;
 			showInteraction({
 				kind: 'notice',
-				title: '开店失败',
-				lines: ['服务器未接受开店请求，请检查物品、金额及摆摊条件后重新使用技能。'],
+				title: '摆摊失败',
+				lines: ['服务器未接受摆摊请求，请检查物品、金额及摆摊条件后重新使用技能。'],
 				close: () => clearInteraction('notice')
 			});
 		},

@@ -1,3 +1,6 @@
+import { requestMobileInput } from './MobileInputEditor.js';
+import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
+import ItemType from 'DB/Items/ItemType.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
 import { interactionColumns, interactionReview, interactionFooter } from './InteractionPanel.js';
@@ -21,6 +24,30 @@ export function createVendingPanel(body, service) {
 	const $ = selector => body.querySelector(selector);
 	let selected = null,
 		modal = null;
+	const category = createMenuField('select');
+	category.setAttribute('aria-label', '摆摊物品分类');
+	for (const [value, label] of [
+		['all', '全部'], ['usable', '消耗品'], ['equipment', '装备'],
+		['weapon', '武器'], ['armor', '防具'], ['card', '卡片'],
+		['ammo', '弹药'], ['pet', '宠物用品'], ['shadow', '影子装备'], ['other', '其他']
+	]) category.add(new Option(label, value));
+	const itemTypes = {
+		weapon: [ItemType.WEAPON], armor: [ItemType.ARMOR], card: [ItemType.CARD],
+		ammo: [ItemType.AMMO], pet: [ItemType.PETEGG, ItemType.PETARMOR], shadow: [ItemType.SHADOWGEAR]
+	};
+	const changeFilter = () => {
+		selected = null;
+		update();
+		$('.inventory-list').scrollTop = 0;
+	};
+	const subtype = createItemSubtypeFilter(changeFilter);
+	category.onchange = () => { subtype.reset(); changeFilter(); };
+	const filters = document.createElement('div');
+	filters.className = 'vending-filters menu-form-row';
+	filters.append(category, subtype.select);
+	const sourceList = $('.inventory-list');
+	sourceList.before(filters);
+
 	function button(text, action) {
 		const b = document.createElement('button');
 		b.type = 'button';
@@ -63,7 +90,6 @@ export function createVendingPanel(body, service) {
 			label.append('单价（Z）', price);
 			content.append(label);
 		}
-		content.append(description);
 		const dismiss = confirmAction(
 			body,
 			`${direction > 0 ? '加入摊位' : '移回物品'}：${item.name}`,
@@ -120,52 +146,57 @@ export function createVendingPanel(body, service) {
 		layout.insertBefore(arrows, layout.children[1]);
 		layout.classList.add('vending-transfer-layout');
 	}
-	const submit = button(initial.owned ? '关闭摊位' : '核对开店', () => {
+	const submit = button(initial.owned ? '关闭摊位' : '确认', () => {
 		const state = service.snapshot();
 		if (!state.allowed || modal || (!state.owned && !state.order.length)) return;
 		const signature = JSON.stringify(state.order);
-		const content = interactionReview(
-			(state.owned ? state.items : state.order).map(row => `${row.name} × ${row.count} · 单价 ${row.price} Z`),
-			state.owned ? '关闭后停止摆摊' : `合计：${state.total} Z`
-		);
+		const perform = (name, budget) => {
+			if (JSON.stringify(service.snapshot().order) !== signature) {
+				feedback('订单已变化，请重新核对', 'error');
+				return;
+			}
+			const result = state.owned ? service.closeStore() : service.submit(name, Number(budget));
+			feedback(result, ['已请求关闭摊位', '等待服务器摆摊结果'].includes(result) ? 'pending' : 'error');
+			update();
+		};
+		if (state.owned) {
+			const content = interactionReview(
+				state.items.map(row => `${row.name} × ${row.count} · 单价 ${row.price} Z`),
+				'关闭后停止摆摊'
+			);
+			confirmAction(body, '确认关闭摊位？', () => perform(), { content });
+			return;
+		}
 		const title = createMenuField();
 		title.placeholder = '请输入摊位名称';
 		title.setAttribute('aria-label', '摊位名称');
 		title.maxLength = 24;
 		title.required = true;
-		title.dataset.title = '';
-		const budget = createMenuField();
-		budget.type = 'number';
-		budget.min = '1';
-		budget.max = String(Math.min(state.money ?? 2147483647, 2147483647));
-		budget.step = '1';
-		budget.required = true;
-		budget.placeholder = '请输入收购预算';
-		budget.setAttribute('aria-label', '收购预算');
-		if (!state.owned) {
-			content.prepend(title);
-			if (state.mode === 'buy') content.append(budget);
+		const fields = [title];
+		if (state.mode === 'buy') {
+			const budget = createMenuField();
+			budget.type = 'number';
+			budget.inputMode = 'numeric';
+			budget.min = '1';
+			budget.max = String(Math.min(state.money ?? 2147483647, 2147483647));
+			budget.step = '1';
+			budget.required = true;
+			budget.placeholder = '请输入收购预算';
+			budget.setAttribute('aria-label', '收购预算');
+			fields.push(budget);
 		}
-		confirmAction(
-			body,
-			state.owned ? '确认关闭摊位？' : '核对开店',
-			() => {
-				if (JSON.stringify(service.snapshot().order) !== signature) {
-					feedback('订单已变化，请重新核对', 'error');
-					return;
-				}
-				const result = state.owned ? service.closeStore() : service.submit(title.value, Number(budget.value));
-				feedback(result, ['已请求关闭摊位', '等待服务器开店结果'].includes(result) ? 'pending' : 'error');
-				update();
-			},
-			{ content }
-		);
+		requestMobileInput(body.getRootNode().host, {
+			fields,
+			title: '摊位名称',
+			doneLabel: '确认',
+			onConfirm: ([name, budget]) => perform(name, budget)
+		});
 	});
 	submit.dataset.submit = '';
-	const cancel = button('取消开店', () => service.close());
+	const cancel = button('取消', () => service.close());
 	cancel.dataset.cancel = '';
 	cancel.hidden = Boolean(initial.owned);
-	footer.append(submit, cancel);
+	footer.append(cancel, submit);
 	const listNodes = [new Map(), new Map()];
 	function renderList(parent, items, side, state) {
 		const nodes = listNodes[side];
@@ -187,7 +218,8 @@ export function createVendingPanel(body, service) {
 				});
 				node.className = side ? 'inventory-item interaction-order-item' : 'inventory-item';
 				nodes.set(item.index, node);
-				parent.append(node);
+				if (side) parent.prepend(node);
+				else parent.append(node);
 			}
 			node.disabled = !state.allowed || Boolean(modal);
 			setListItemIcon(node, item);
@@ -210,7 +242,10 @@ export function createVendingPanel(body, service) {
 		submit.disabled = !state.allowed || Boolean(modal) || (!state.owned && !state.order.length);
 		cancel.disabled = Boolean(state.pending);
 
-		renderList($('.inventory-list'), state.items, 0, state);
+		const categoryItems = state.items.filter(item => category.value === 'all' ||
+			item.category === category.value || itemTypes[category.value]?.includes(item.type));
+		subtype.update(categoryItems, category.value);
+		renderList($('.inventory-list'), categoryItems.filter(item => subtype.matches(item)), 0, state);
 		const order = $('[data-order]');
 		if (state.owned) {
 			let log = order.querySelector('.vending-transactions');

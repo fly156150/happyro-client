@@ -126,3 +126,14 @@ textarea {
 :host([data-phone-screen][data-orientation='landscape'][data-editor-layout='strip']) section:has(textarea) {
  height: max(var(--modal-input-height, 36px), calc(var(--editor-available-height) - var(--editor-top-gap) - 4px));
 }
+
+:host([data-multiple-fields]) main {
+ display: grid;
+ gap: 10px;
+ height: auto;
+}
+:host([data-multiple-fields][data-editor-layout='strip']) main {
+ grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+ gap: 8px;
+ height: var(--modal-input-height, 36px);
+}
