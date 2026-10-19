@@ -26,7 +26,7 @@
 		padding: var(--panel-gap) 0 0;
 	}
 	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel :is(.shop-transfer, .bank-transfer) {
-		flex-direction: row;
+		flex-direction: row-reverse;
 	}
 	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel :is(.shop-transfer, .bank-transfer) button {
 		transform: rotate(90deg);

@@ -1,7 +1,7 @@
 /* Inventory menu layout; loaded after shared chrome. */
 :host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-toolbar {
  grid-template-columns: repeat(6, minmax(0, 1fr));
- column-gap: var(--panel-gap);
+ column-gap: 6px;
 }
 
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] .inventory-search {

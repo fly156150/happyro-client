@@ -50,3 +50,9 @@
  border: 1px solid #657584;
  border-radius: 6px;
 }
+
+/* Keep tablet adventure footers compact without shrinking touch controls. */
+:host([data-menu-density='spacious']) .mobile-adventure {
+ --menu-footer-padding: 8px;
+ --menu-footer-height: calc(var(--panel-control) + 2 * var(--menu-footer-padding) + 1px);
+}

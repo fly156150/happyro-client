@@ -128,3 +128,42 @@
  padding-block: var(--menu-footer-padding);
  align-items: center;
 }
+
+/* The pickup dialog owns its bottom spacing; do not stack menu-footer padding
+   with the dialog inset or stretch its buttons into extra grid rows. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] dialog.pickup-picker {
+ padding-bottom: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] dialog.pickup-picker > footer {
+ flex: 0 0 auto;
+ height: auto;
+ min-height: 0;
+ padding-block: 10px;
+ margin: 0;
+ align-items: center;
+ align-content: center;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] dialog.pickup-picker .pickup-picker-actions {
+ height: auto;
+ min-height: 0;
+ padding-block: 10px;
+ align-self: start;
+ align-items: center;
+}
+
+/* Modal padding already provides the outer inset; do not add menu-footer padding twice. */
+:host([data-menu-density][data-menu-arrangement]) :is(.panel[data-view], .mobile-adventure)
+ .ui-confirm > .ui-confirm-actions {
+ min-height: 0;
+ padding-block: 0;
+ margin-top: 12px;
+}
+:host([data-menu-density]) .ui-confirm .ui-confirm-body > p {
+ margin-bottom: 10px;
+ font-size: 14px;
+ font-weight: 400;
+ line-height: 1.4;
+}
+:host(:not([data-phone-screen])[data-menu-density]) .ui-confirm .ui-confirm-body > p {
+ font-size: 16px;
+}
