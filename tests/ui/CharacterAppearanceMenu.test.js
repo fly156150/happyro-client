@@ -26,7 +26,7 @@ it('uses the selected server mount label and keeps fallback selection visible', 
  expect(document.querySelector('.character-appearance-mount').textContent).toBe('骑乘外观：战狼');
  expect(document.querySelector('.character-appearance-hint')).toBeNull();
  render({ ...appearance, options: [defaults, { ...appearance.options[1], fallbackOnMount: true }] });
- expect(document.querySelector('.character-appearance-hint').textContent).toBe('当前外观无对应骑乘形态，骑乘时使用默认外观。');
+ expect(document.querySelector('.character-appearance-hint')).toBeNull();
  expect(document.querySelector('.game-select-value').value).toBe('42');
 });
 it('escapes server names, mount labels and unknown reason text', () => {

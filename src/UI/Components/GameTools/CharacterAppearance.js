@@ -13,5 +13,5 @@ export function renderCharacterAppearance(appearance, pending) {
 	return `<section class="character-appearance"><h4>职业外观</h4>${renderGameSelect({
 		name: 'character-appearance', ariaLabel: '职业外观', value: current,
 		options: options.map(option => ({ value: option.id, label: option.name })), disabled: pending || Boolean(reason)
-	})}${selected?.mountLabel ? `<p class="character-appearance-mount">骑乘外观：${escapeHtml(selected.mountLabel)}</p>` : ''}${selected?.fallbackOnMount ? '<p class="character-appearance-hint">当前外观无对应骑乘形态，骑乘时使用默认外观。</p>' : ''}${reason ? `<p class="character-appearance-reason">${escapeHtml(reasons[reason] || reason)}</p>` : ''}</section>`;
+	})}${selected?.mountLabel ? `<p class="character-appearance-mount">骑乘外观：${escapeHtml(selected.mountLabel)}</p>` : ''}${reason ? `<p class="character-appearance-reason">${escapeHtml(reasons[reason] || reason)}</p>` : ''}</section>`;
 }
