@@ -68,3 +68,30 @@
  flex: 0 0 var(--companion-final-column); width: var(--companion-final-column); min-width: 0;
  height: var(--panel-control); min-height: var(--panel-control); box-sizing: border-box;
 }
+
+/* Homunculus skill rows separate below each entry, never below the section heading. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='homunculus'] .companion-skill {
+ border-top: 0; border-bottom: 1px solid #35414d; padding: 6px 0;
+ gap: 8px; align-items: center; line-height: 1.4;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='homunculus'] .companion-footer {
+ --companion-final-column: calc(4 * var(--panel-label) + var(--panel-control) + 8px);
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='homunculus']
+ .companion-footer .inventory-actions[data-actions] {
+ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) repeat(2, var(--companion-final-column));
+ width: 100%; max-width: calc(5 * var(--companion-final-column) + 16px);
+ gap: 4px; justify-content: end; align-items: center; align-self: flex-end;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='homunculus']
+ .companion-footer .inventory-actions[data-actions] > :is(button, .companion-switch-control) {
+ width: 100%; min-width: 0; max-width: 100%; margin: 0; justify-self: stretch;
+ height: var(--panel-control); min-height: var(--panel-control); box-sizing: border-box;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='homunculus']
+ .companion-footer .inventory-actions[data-actions] > button { padding-inline: 2px; }
+
+/* In landscape, tall upgrade controls must not push skill text below the status rows. */
+:host([data-menu-density][data-menu-arrangement][data-orientation='landscape']) .panel[data-view='companions'] [data-companion-kind='homunculus'] .companion-skill {
+ align-items: flex-start;
+}

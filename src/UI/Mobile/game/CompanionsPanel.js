@@ -25,7 +25,7 @@ export function createCompanionsPanel(body, service) {
 		rename: '改名',
 		autofeed: '自动喂食',
 		dismiss: '解除',
-		return: '返回身边',
+		return: '返回',
 		aggressive: '切换攻击模式'
 	};
 	function cancel() {
@@ -66,9 +66,10 @@ export function createCompanionsPanel(body, service) {
 			}
 		);
 	}
-	const actionEntries = service.snapshot().kind === 'mercenary'
-		? ['return', 'aggressive', 'dismiss'].map(action => [action, labels[action]])
-		: Object.entries(labels);
+	const actionOrder = service.snapshot().kind === 'mercenary'
+		? ['return', 'aggressive', 'dismiss']
+		: ['feed', 'return', 'dismiss', 'autofeed', 'aggressive', 'rename'];
+	const actionEntries = actionOrder.map(action => [action, labels[action]]);
 	for (const [action, label] of actionEntries) {
 		const isSwitch = action === 'autofeed' || action === 'aggressive';
 		const control = action === 'autofeed' ? createAutoFeedSwitch()
@@ -98,7 +99,7 @@ export function createCompanionsPanel(body, service) {
 					? service.snapshot().kind === 'homunculus'
 						? '确认删除当前生命体？'
 						: '提前解除佣兵契约？'
-					: `确认${label}？`
+					: action === 'return' ? '确认返回身边？' : `确认${label}？`
 			);
 		};
 		if (action === 'rename') $('[data-companion-name]').parentElement.append(control);
