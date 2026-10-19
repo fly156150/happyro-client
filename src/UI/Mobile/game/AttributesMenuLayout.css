@@ -72,3 +72,25 @@
  white-space: nowrap;
  overflow-wrap: normal;
 }
+
+/* Use the companion status panel's framed, label/value presentation. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='attributes']
+ :is(.attribute-editor, .attribute-results) {
+ box-sizing: border-box; min-width: 0; min-height: 0; padding: 8px;
+ border: 1px solid #52606d; border-radius: 10px; background: #19212a;
+ overflow-y: auto; overscroll-behavior: contain;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-results > dl {
+ display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 12px;
+ margin: 0; padding: 0; border: 0; border-radius: 0; align-content: start;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-results > dl > :is(dt, dd) {
+ display: block; min-width: 0; min-height: 0; padding: 6px 0; margin: 0;
+ border: 0; border-bottom: 1px solid #35414d; background: none; color: inherit; font-size: inherit; line-height: 1.4;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-results > dl > dt {
+ text-align: left; font-weight: normal; white-space: normal; overflow-wrap: anywhere;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='attributes'] .attribute-results > dl > dd {
+ text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere;
+}
