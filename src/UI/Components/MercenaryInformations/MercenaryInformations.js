@@ -85,7 +85,7 @@ MercenaryInformations.init = function init() {
 
 	const skillBtn = root.querySelector('.skill');
 	if (skillBtn) {
-		skillBtn.addEventListener('mousedown', () => {
+		skillBtn.addEventListener('click', () => {
 			SkillListMH.mercenary.toggle();
 		});
 	}
@@ -123,7 +123,8 @@ MercenaryInformations.onRemove = function onRemove() {
 MercenaryInformations.onShortCut = function onShortCut(key) {
 	switch (key.cmd) {
 		case 'TOGGLE':
-			if (Session.mercId) {
+			if (!this._host) return;
+			if (Session.mercId && EntityManager.get(Session.mercId)) {
 				if (this._host.style.display === 'none') {
 					this._host.style.display = '';
 					this.focus();

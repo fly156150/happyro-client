@@ -45,3 +45,11 @@ it('resets refresh feedback before each server response',()=>{
  p.refresh();expect(p.snapshot().messageKind).toBe('pending');
  updateGamePetInfo(info);expect(p.snapshot().message).toBe('宠物状态已更新');
 });
+
+it('dismisses an open pet confirmation when the owner dies or the pet disappears', () => {
+ const service=open(),body=document.body.appendChild(document.createElement('div')),panel=createPetPanel(body,service);
+ body.querySelector('[data-action=feed]').click();expect(body.querySelector('dialog')).not.toBeNull();
+ s.session.Entity.action=s.session.Entity.ACTION.DIE;panel.update();expect(body.querySelector('dialog')).toBeNull();expect(s.send).not.toHaveBeenCalled();
+ s.session.Entity.action=0;panel.update();body.querySelector('[data-action=feed]').click();
+ s.entities.delete(20);panel.update();expect(body.querySelector('dialog')).toBeNull();expect(s.send).not.toHaveBeenCalled();
+});

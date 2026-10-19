@@ -17,6 +17,7 @@ function fixture() {
 	const Entity = {
 		TYPE_PC: 0,
 		TYPE_MOB: 5,
+		TYPE_PET: 7,
 		TYPE_HOM: 8,
 		TYPE_MERC: 9,
 		TYPE_FALCON: -6,
@@ -26,6 +27,8 @@ function fixture() {
 	const noop = vi.fn();
 	const context = vm.createContext({
 		Entity,
+		invalidateCompanionPrompts: vi.fn(),
+		PetEvolution: { invalidatePet: vi.fn() },
 		Session: { Entity: { GID: 99 } },
 		Date,
 		Map,
@@ -41,8 +44,11 @@ function fixture() {
 		StatusState: { EffectState: { INVISIBLE: 1 } },
 		PACKETVER: { value: 20211103 },
 		servantWeaponEffectIds: [],
-		HomunInformations: {},
-		MercenaryInformations: {},
+		HomunInformations: { stopAI: vi.fn(), stopAutoFeed: vi.fn(), ui: { hide: vi.fn() } },
+		PetInformations: { ui: { hide: vi.fn() } },
+		Platform: { isMobile: false },
+		SkillListMH: { homunculus: { ui: { hide: vi.fn() } }, mercenary: { ui: { hide: vi.fn() } } },
+		MercenaryInformations: { stopAI: vi.fn(), ui: { hide: vi.fn() } },
 		Escape: {},
 		haveSiegfriedItem: () => false
 	});
@@ -137,4 +143,19 @@ describe('player death entity lifecycle', () => {
 		expect(mob.remove_delay).toBe(5000);
 		expect(m.get(123)).toBeNull();
 	});
+});
+
+describe('companion information lifecycle', () => {
+ it.each([['TYPE_HOM', 'homunId', 'HomunInformations'], ['TYPE_MERC', 'mercId', 'MercenaryInformations'], ['TYPE_PET', 'petId', 'PetInformations']])('closes the owned %s window when the real entity disappears', (type, sessionKey, component) => {
+  const { c, m, entity, Entity } = fixture(); entity(Entity[type]); c.Session[sessionKey] = 123;
+  c.onEntityVanish({ GID: 123, type: Entity.VT.OUTOFSIGHT });
+  expect(m.get(123)).toBeNull(); expect(c[component].ui.hide).toHaveBeenCalledOnce();
+  if (type === 'TYPE_HOM') { expect(c.HomunInformations.stopAutoFeed).toHaveBeenCalledOnce(); expect(c.SkillListMH.homunculus.ui.hide).toHaveBeenCalledOnce(); }
+  if (type === 'TYPE_MERC') expect(c.SkillListMH.mercenary.ui.hide).toHaveBeenCalledOnce();
+ });
+ it('does not close the player’s companion window when another player’s companion disappears', () => {
+  const { c, entity, Entity } = fixture(); entity(Entity.TYPE_HOM); c.Session.homunId = 456;
+  c.onEntityVanish({ GID: 123, type: Entity.VT.OUTOFSIGHT });
+  expect(c.HomunInformations.ui.hide).not.toHaveBeenCalled();
+ });
 });

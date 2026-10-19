@@ -1,3 +1,5 @@
+import { confirmCompanionAction } from 'UI/Game/CompanionPrompt.js';
+import { normalizeCompanionName } from 'Utils/CompanionName.js';
 import { PET_EVOLUTION_INTIMACY } from 'DB/Pets/PetRules.js';
 import { showToast } from 'UI/Components/Toast.js';
 import Platform from 'UI/Platform.js';
@@ -192,6 +194,7 @@ function onPetInformationUpdate(pkt) {
 		}
 	}
 	const entity = EntityManager.get(pkt.GID);
+	const ownPet = pkt.GID === Session.petId;
 	let path;
 
 	if (!entity) {
@@ -206,23 +209,27 @@ function onPetInformationUpdate(pkt) {
 			break;
 
 		case 1: //
-			if (!Platform.isMobile) PetInformations.setIntimacy(pkt.data);
-			Session.pet.friendly = pkt.data;
+			if (ownPet) {
+				if (!Platform.isMobile) PetInformations.setIntimacy(pkt.data);
+				Session.pet.friendly = pkt.data;
+			}
 			break;
 
 		case 2: {
-			if (!Platform.isMobile) PetInformations.setHunger(pkt.data);
+			if (ownPet && !Platform.isMobile) PetInformations.setHunger(pkt.data);
 			entity.life.hp = pkt.data;
 			entity.life.hp_max = 100;
 			entity.life.update();
 
-			const oldHungry = Session.pet.hungry;
-			Session.pet.oldHungry = oldHungry;
-			Session.pet.hungry = pkt.data;
+			if (ownPet) {
+				Session.pet.oldHungry = Session.pet.hungry;
+				Session.pet.hungry = pkt.data;
+			}
 
 			break;
 		}
 		case 3: /// 3 = accessory ID
+			if (ownPet && !Platform.isMobile) PetInformations.setAccessory(pkt.data);
 			if (pkt.data) {
 				path = DB.getPetEquipPath(pkt.data);
 			}
@@ -293,7 +300,7 @@ function onPetAction(pkt) {
  */
 PetInformations.reqPetFeed = function reqPetFeed() {
 	// Are you sure you want to feed your pet ?
-	UIManager.showPromptBox(DB.getMessage(601), 'ok', 'cancel', () => {
+	confirmCompanionAction('pet', DB.getMessage(601), () => {
 		const pkt = new PACKET.CZ.COMMAND_PET();
 		pkt.cSub = 1;
 		Network.sendPacket(pkt);
@@ -334,7 +341,18 @@ PetInformations.reqUnEquipPet = function reqUnEquipPet() {
  *
  * @param {string} new pet name
  */
-PetInformations.reqNameEdit = function reqNameEdit(name) {
+PetInformations.reqRefresh = function reqRefresh() {
+	const packet = new PACKET.CZ.COMMAND_PET();
+	packet.cSub = 0;
+	Network.sendPacket(packet);
+};
+
+PetInformations.reqNameEdit = function reqNameEdit(value) {
+	const name = normalizeCompanionName(value);
+	if (!name) {
+		showToast(document.body, '名称不能为空，且最多为 23 个 UTF-8 字节', 'error');
+		return;
+	}
 	const pkt = new PACKET.CZ.RENAME_PET();
 	pkt.szName = name;
 	Network.sendPacket(pkt);
@@ -349,14 +367,18 @@ PetInformations.reqNameEdit = function reqNameEdit(name) {
  * @param {number} baseJobID - The Job ID of the base pet
  * @throws {Error} If the pet's friendly level is less than the Loyal threshold
  */
-PetInformations.reqEvolution = function reqEvolution(baseJobID) {
+PetInformations.reqEvolution = function reqEvolution(baseJobID, targetEggID) {
+	if (PetInformations.accessory) {
+		showToast(document.body, '请先卸下宠物饰品', 'error');
+		return;
+	}
 	if (Session.pet.friendly < PET_EVOLUTION_INTIMACY) {
 		ChatBox.addText(DB.getMessage(2576), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 		return;
 	} else {
 		// Call Evolution UI
 		PetEvolution.prepare();
-		PetEvolution.SetInfo(baseJobID);
+		PetEvolution.SetInfo(baseJobID, targetEggID);
 		PetEvolution.append();
 		PetEvolution.ui.show();
 		if (PetInformations.ui) {

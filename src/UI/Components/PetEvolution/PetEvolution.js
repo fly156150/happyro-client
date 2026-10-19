@@ -1,3 +1,8 @@
+import EntityManager from 'Renderer/EntityManager.js';
+import Session from 'Engine/SessionStorage.js';
+import { PET_EVOLUTION_INTIMACY } from 'DB/Pets/PetRules.js';
+import PetInformations from 'UI/Components/PetInformations/PetInformations.js';
+import { showToast } from 'UI/Components/Toast.js';
 import Platform from 'UI/Platform.js';
 import { receiveGamePetResult } from 'UI/Game/GamePet.js';
 /**
@@ -34,6 +39,8 @@ PetEvolution.render = () => htmlText;
  */
 let currentMaterials = [];
 let targetEvoPetEggId = 0;
+let evolutionContext = null;
+let requestPending = false;
 
 /**
  * @var {Preferences} Window preferences
@@ -99,6 +106,8 @@ PetEvolution.onRemove = function onRemove() {
 	// Clear variables
 	currentMaterials = [];
 	targetEvoPetEggId = 0;
+	evolutionContext = null;
+	requestPending = false;
 };
 
 /**
@@ -106,46 +115,57 @@ PetEvolution.onRemove = function onRemove() {
  *
  * @param {object} pet evolution info
  */
-PetEvolution.SetInfo = function SetInfo(baseJobID) {
+PetEvolution.SetInfo = function SetInfo(baseJobID, targetEggID) {
 	const root = PetEvolution.getRoot();
 	const baseData = DB.getPetByJobID(baseJobID);
 
-	if (!baseData) {
+	if (!baseData?.Evolution?.[targetEggID]) {
 		console.warn('Pet Base Data data not found');
 		return;
 	}
 
-	const evoData = DB.getPetByEggID(Number(Object.keys(baseData.Evolution)[0]));
+	const evoData = DB.getPetByEggID(targetEggID);
 	if (!evoData) {
 		console.warn('Evo Data data not found');
 		return;
 	}
 
-	Client.loadFile('data/texture/userinterface/illust/' + baseData.PetIllust, function (url) {
-		const el = root.querySelector('.base_pet_illust');
-		if (el) {
-			el.style.backgroundImage = `url(${url})`;
+	evolutionContext = {
+		owner: Session.Entity,
+		petId: Session.petId,
+		pet: EntityManager.get(Session.petId),
+		job: baseJobID
+	};
+	requestPending = false;
+	const submit = root.querySelector('.evolve');
+	if (submit) submit.disabled = false;
+
+	for (const [selector, illustration] of [
+		['.base_pet_illust', baseData.PetIllust],
+		['.target_pet_illust', evoData.PetIllust]
+	]) {
+		const element = root.querySelector(selector);
+		if (!element) continue;
+		element.style.backgroundImage = '';
+		if (illustration) {
+			Client.loadFile('data/texture/userinterface/illust/' + illustration, url => {
+				if (targetEvoPetEggId === evoData.PetEggID) element.style.backgroundImage = `url(${url})`;
+			});
 		}
-	});
-	Client.loadFile('data/texture/userinterface/illust/' + evoData.PetIllust, function (url) {
-		const el = root.querySelector('.target_pet_illust');
-		if (el) {
-			el.style.backgroundImage = `url(${url})`;
-		}
-	});
+	}
 
 	targetEvoPetEggId = evoData.PetEggID;
 
 	const basePetEggEl = root.querySelector('.base_petEggId');
 	if (basePetEggEl) {
-		basePetEggEl.textContent = baseData.PetString;
+		basePetEggEl.textContent = DB.getItemInfo(baseData.PetEggID).identifiedDisplayName;
 		basePetEggEl.setAttribute('data-index', baseData.PetEggID);
 		basePetEggEl.addEventListener('click', onItemInfo);
 	}
 
 	const targetPetEggEl = root.querySelector('.target_petEggId');
 	if (targetPetEggEl) {
-		targetPetEggEl.textContent = evoData.PetString;
+		targetPetEggEl.textContent = DB.getItemInfo(evoData.PetEggID).identifiedDisplayName;
 		targetPetEggEl.setAttribute('data-index', evoData.PetEggID);
 		targetPetEggEl.addEventListener('click', onItemInfo);
 	}
@@ -157,7 +177,6 @@ PetEvolution.SetInfo = function SetInfo(baseJobID) {
 	}
 	reqBox.innerHTML = '';
 
-	const targetEggID = Number(Object.keys(baseData.Evolution)[0]);
 	const materials = baseData.Evolution[targetEggID];
 
 	// Save materials for later checks
@@ -244,9 +263,29 @@ PetEvolution.hasEnoughMaterials = function () {
  * If the player does not have enough materials, display an error message.
  */
 function onRequestEvolve() {
+	if (requestPending) return;
+	if (
+		!evolutionContext ||
+		!Session.Playing ||
+		!Session.Entity ||
+		Session.Entity !== evolutionContext.owner ||
+		Session.petId !== evolutionContext.petId ||
+		!evolutionContext.pet ||
+		EntityManager.get(Session.petId) !== evolutionContext.pet ||
+		Session.pet.job !== evolutionContext.job ||
+		Session.Entity.action === Session.Entity.ACTION.DIE ||
+		Session.pet.friendly < PET_EVOLUTION_INTIMACY ||
+		PetInformations.accessory
+	) {
+		onClose();
+		showToast(document.body, '宠物状态已变化，请重新打开进化窗口', 'error');
+		return;
+	}
 	if (PetEvolution.hasEnoughMaterials() === true) {
 		const pkt = new PACKET.CZ.PET_EVOLUTION();
 		pkt.evolutionPetEggITID = targetEvoPetEggId;
+		requestPending = true;
+		PetEvolution.getRoot().querySelector('.evolve').disabled = true;
 		Network.sendPacket(pkt);
 	} else {
 		ChatBox.addText(DB.getMessage(2574), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
@@ -264,7 +303,13 @@ function onClose() {
 	// Clear variables
 	currentMaterials = [];
 	targetEvoPetEggId = 0;
+	evolutionContext = null;
+	requestPending = false;
 }
+
+PetEvolution.invalidatePet = function invalidatePet(gid) {
+	if (evolutionContext?.petId === gid) onClose();
+};
 
 /**
  * Get item info (open description window)
@@ -300,6 +345,10 @@ function onItemInfo(event) {
  * @param {PACKET.ZC.PET_EVOLUTION} pkt
  */
 function onPetEvolveResult(pkt) {
+	if (!Platform.isMobile && !requestPending) return;
+	requestPending = false;
+	const submit = PetEvolution.getRoot()?.querySelector('.evolve');
+	if (submit) submit.disabled = false;
 	if (Platform.isMobile) {
 		if (pkt) receiveGamePetResult('evolve', pkt.result);
 		return;

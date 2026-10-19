@@ -35,6 +35,20 @@ const HomunInformations = new GUIComponent('HomunInformations', cssText);
 HomunInformations.render = () => htmlText;
 
 HomunInformations.captureKeyEvents = true;
+HomunInformations.renamePending = false;
+HomunInformations.renameAllowed = true;
+
+HomunInformations.setRenamePending = function setRenamePending(pending) {
+	this.renamePending = pending;
+	const disabled = pending || !this.renameAllowed;
+	for (const selector of ['.name', '.modify']) {
+		const control = this.getRoot()?.querySelector(selector);
+		if (control) {
+			control.classList.toggle('disabled', disabled);
+			control.disabled = disabled;
+		}
+	}
+};
 
 /**
  * @var {Preferences} Window preferences (localStorage)
@@ -113,7 +127,7 @@ HomunInformations.init = function init() {
 
 	const skillBtn = root.querySelector('.skill');
 	if (skillBtn) {
-		skillBtn.addEventListener('mousedown', () => {
+		skillBtn.addEventListener('click', () => {
 			SkillListMH.homunculus.toggle();
 		});
 	}
@@ -195,6 +209,7 @@ function autoFeedCheck() {
  * Once remove from body, save user preferences
  */
 HomunInformations.onRemove = function onRemove() {
+	this.setRenamePending(false);
 	_preferences.show = this._host.style.display !== 'none';
 	_preferences.y = parseInt(this._host.style.top, 10);
 	_preferences.x = parseInt(this._host.style.left, 10);
@@ -211,7 +226,8 @@ HomunInformations.onRemove = function onRemove() {
 HomunInformations.onShortCut = function onShortCut(key) {
 	switch (key.cmd) {
 		case 'TOGGLE':
-			if (Session.homunId) {
+			if (!this._host) return;
+			if (Session.homunId && EntityManager.get(Session.homunId)) {
 				if (this._host.style.display === 'none') {
 					this._host.style.display = '';
 					this.focus();
@@ -280,107 +296,88 @@ HomunInformations.setInformations = function setInformations(info) {
 			nameInput.value = info.szName;
 		}
 	}
-	if (info.nLevel) {
+	if (info.nLevel !== undefined) {
 		const levelEl = root.querySelector('.level');
 		if (levelEl) {
 			levelEl.textContent = info.nLevel;
 		}
 	}
 
-	if (info.atk) {
+	if (info.atk !== undefined) {
 		const el = root.querySelector('.stats .atk');
 		if (el) {
 			el.textContent = info.atk;
 		}
 	}
-	if (info.Matk) {
+	if (info.Matk !== undefined) {
 		const el = root.querySelector('.stats .Matk');
 		if (el) {
 			el.textContent = info.Matk;
 		}
 	}
-	if (info.hit) {
+	if (info.hit !== undefined) {
 		const el = root.querySelector('.stats .hit');
 		if (el) {
 			el.textContent = info.hit;
 		}
 	}
-	if (info.critical) {
+	if (info.critical !== undefined) {
 		const el = root.querySelector('.stats .critical');
 		if (el) {
 			el.textContent = info.critical;
 		}
 	}
-	if (info.def) {
+	if (info.def !== undefined) {
 		const el = root.querySelector('.stats .def');
 		if (el) {
 			el.textContent = info.def;
 		}
 	}
-	if (info.Mdef) {
+	if (info.Mdef !== undefined) {
 		const el = root.querySelector('.stats .Mdef');
 		if (el) {
 			el.textContent = info.Mdef;
 		}
 	}
-	if (info.flee) {
+	if (info.flee !== undefined) {
 		const el = root.querySelector('.stats .flee');
 		if (el) {
 			el.textContent = info.flee;
 		}
 	}
-	if (info.aspd) {
+	if (info.aspd !== undefined) {
 		const el = root.querySelector('.stats .aspd');
 		if (el) {
 			el.textContent = Math.floor(200 - info.aspd / 10);
 		}
 	}
 
-	if (info.hp && info.maxHP) {
+	if (info.hp !== undefined && info.maxHP !== undefined) {
 		this.setHpSpBar('hp', info.hp, info.maxHP);
 	}
-	if (info.sp && info.maxSP) {
+	if (info.sp !== undefined && info.maxSP !== undefined) {
 		this.setHpSpBar('sp', info.sp, info.maxSP);
 	}
 
-	if (info.exp && info.maxEXP) {
+	if (info.exp !== undefined && info.maxEXP !== undefined) {
 		HomunInformations.base_exp = info.exp;
 		HomunInformations.base_exp_next = info.maxEXP;
 		this.setExp(info.exp, info.maxEXP);
 	}
 
-	if (info.nFullness) {
+	if (info.nFullness !== undefined) {
 		this.setHunger(info.nFullness);
 	}
-	if (info.nRelationship) {
+	if (info.nRelationship !== undefined) {
 		this.setIntimacy(info.nRelationship);
 	}
 
-	if (info.bModified < 5) {
-		const nameInput = root.querySelector('.name');
-		if (nameInput) {
-			nameInput.classList.remove('disabled');
-			nameInput.disabled = false;
-		}
-		const modBtn = root.querySelector('.modify');
-		if (modBtn) {
-			modBtn.classList.remove('disabled');
-			modBtn.disabled = false;
-		}
-	} else {
-		const nameInput = root.querySelector('.name');
-		if (nameInput) {
-			nameInput.classList.add('disabled');
-			nameInput.disabled = true;
-		}
-		const modBtn = root.querySelector('.modify');
-		if (modBtn) {
-			modBtn.classList.add('disabled');
-			modBtn.disabled = true;
-		}
+	if (info.bModified !== undefined) {
+		this.renameAllowed = !(info.bModified & 1);
+		this.setRenamePending(false);
 	}
 
-	if (info.SKPoint) {
+	if (info.SKPoint !== undefined) {
 		SkillListMH.homunculus.setPoints(info.SKPoint);
 	}
 };

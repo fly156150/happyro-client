@@ -1,3 +1,4 @@
+import { normalizeCompanionName } from 'Utils/CompanionName.js';
 /**
  * UI/Components/PetInformations/PetInformations.js
  *
@@ -18,6 +19,8 @@ import htmlText from './PetInformations.html?raw';
 import cssText from './PetInformations.css?raw';
 import KEYS from 'Controls/KeyEventHandler.js';
 import PACKETVER from 'Network/PacketVerManager.js';
+import Session from 'Engine/SessionStorage.js';
+import EntityManager from 'Renderer/EntityManager.js';
 
 /**
  * Create Component
@@ -45,6 +48,18 @@ const _preferences = Preferences.get(
  * Auto Feed Flag
  */
 let petAutoFeeding = 0;
+let renamePending = false;
+
+function requestNameEdit(value) {
+	if (renamePending) return;
+	if (!normalizeCompanionName(value)) {
+		PetInformations.reqNameEdit(value);
+		return;
+	}
+	renamePending = true;
+	for (const field of PetInformations.getRoot().querySelectorAll('.name, .modify')) field.disabled = true;
+	PetInformations.reqNameEdit(value);
+}
 
 /**
  * Initialize component
@@ -67,7 +82,7 @@ PetInformations.init = function init() {
 		modifyBtn.addEventListener('click', () => {
 			const input = root.querySelector('.name');
 			if (input) {
-				PetInformations.reqNameEdit(input.value);
+				requestNameEdit(input.value);
 			}
 		});
 	}
@@ -78,8 +93,8 @@ PetInformations.init = function init() {
 			const value = this.value;
 
 			if (value.startsWith('evolution_')) {
-				const baseJobID = Number(value.replace('evolution_', ''));
-				PetInformations.reqEvolution(baseJobID);
+				const [baseJobID, targetEggID] = value.slice('evolution_'.length).split('_').map(Number);
+				PetInformations.reqEvolution(baseJobID, targetEggID);
 				this.value = 'default';
 				return;
 			}
@@ -141,6 +156,7 @@ PetInformations.onAppend = function onAppend() {
  * Once remove from body, save user preferences
  */
 PetInformations.onRemove = function onRemove() {
+	renamePending = false;
 	_preferences.show = this._host.style.display !== 'none';
 	_preferences.y = parseInt(this._host.style.top, 10);
 	_preferences.x = parseInt(this._host.style.left, 10);
@@ -155,8 +171,10 @@ PetInformations.onRemove = function onRemove() {
 PetInformations.onShortCut = function onShortCut(key) {
 	switch (key.cmd) {
 		case 'TOGGLE':
+			if (!this._host || !EntityManager.get(Session.petId)) return;
 			if (this._host.style.display === 'none') {
 				this._host.style.display = '';
+				if (renamePending) PetInformations.reqRefresh();
 				this.focus();
 			} else {
 				this._host.style.display = 'none';
@@ -171,11 +189,14 @@ PetInformations.onShortCut = function onShortCut(key) {
  * @param {object} pet info
  */
 PetInformations.setInformations = function setInformations(info) {
+	renamePending = false;
 	const root = PetInformations.getRoot();
 
 	const nameInput = root.querySelector('.name');
 	if (nameInput) {
 		nameInput.value = info.szName;
+		nameInput.title = info.szName;
+		nameInput.setAttribute('aria-label', `宠物名称：${info.szName}`);
 	}
 
 	const levelEl = root.querySelector('.level');
@@ -186,10 +207,7 @@ PetInformations.setInformations = function setInformations(info) {
 	this.setHunger(info.nFullness);
 	this.setIntimacy(info.nRelationship);
 
-	const accessoryEl = root.querySelector('.accessory');
-	if (accessoryEl) {
-		accessoryEl.textContent = DB.getMessage(info.ITID ? 598 : 600);
-	}
+	this.setAccessory(info.ITID);
 
 	Client.loadFile(DB.getPetIllustPath(info.job), data => {
 		const contentEl = root.querySelector('.content');
@@ -236,13 +254,12 @@ PetInformations.setInformations = function setInformations(info) {
 
 		if (evolution) {
 			for (const targetEggID in evolution) {
-				const evoPet = DB.getPetByEggID(Number(targetEggID));
-				const evoName = evoPet ? evoPet.PetString || evoPet.PetName : `Evolution ${targetEggID}`;
+				const evoName = DB.getItemInfo(Number(targetEggID)).identifiedDisplayName;
 
 				const option = document.createElement('option');
 				option.className = 'evolution-option';
-				option.value = `evolution_${info.job}`;
-				option.textContent = `Evolution - ${evoName}`;
+				option.value = `evolution_${info.job}_${targetEggID}`;
+				option.textContent = `进化为 ${evoName}`;
 
 				cmdSelect.appendChild(option);
 			}
@@ -255,6 +272,12 @@ PetInformations.setInformations = function setInformations(info) {
  *
  * @param {number} intimacy
  */
+PetInformations.setAccessory = function setAccessory(itemId) {
+	this.accessory = Boolean(itemId);
+	const label = this.getRoot()?.querySelector('.accessory');
+	if (label) label.textContent = this.accessory ? '已装备' : '未装备';
+};
+
 PetInformations.setIntimacy = function setIntimacy(val) {
 	const root = PetInformations.getRoot();
 	const el = root.querySelector('.intimacy');
@@ -305,7 +328,7 @@ PetInformations.onKeyDown = function onKeyDown(event) {
 		}
 		if (event.which === KEYS.ENTER) {
 			if (focused.classList.contains('name')) {
-				PetInformations.reqNameEdit(focused.value);
+				requestNameEdit(focused.value);
 			}
 			event.stopImmediatePropagation();
 			return false;
@@ -323,6 +346,7 @@ PetInformations.onKeyDown = function onKeyDown(event) {
 PetInformations.reqPetFeed = function reqPetFeed() {};
 PetInformations.reqPetAction = function reqPetAction() {};
 PetInformations.reqNameEdit = function reqNameEdit() {};
+PetInformations.reqRefresh = function reqRefresh() {};
 PetInformations.reqUnEquipPet = function reqUnEquipPet() {};
 PetInformations.reqBackToEgg = function reqBackToEgg() {};
 PetInformations.reqEvolution = function reqEvolution() {};

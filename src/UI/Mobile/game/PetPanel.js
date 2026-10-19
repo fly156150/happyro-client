@@ -90,6 +90,7 @@ export function createPetPanel(body, service) {
 			nameDirty = false;
 			cancel();
 		}
+		if (!state.allowed) cancel();
 		if (!nameDirty) $('[data-name]').value = info?.szName || '';
 		const nextKey = JSON.stringify([state.evolutions, info?.nRelationship, state.accessory]);
 		if (nextKey !== evoKey) {

@@ -25,7 +25,7 @@ function createSkillListMH(type) {
 		cssText,
 		listOnly: true,
 		dragFrom: 'SkillListMH',
-		titlebarText: type === 'homunculus' ? 'Homunculus Skills' : 'Mercenary Skills',
+		titlebarText: type === 'homunculus' ? '生命体技能' : '佣兵技能',
 		containerSelector: '.SkillList',
 		preferenceDefaults: {
 			x: 100,

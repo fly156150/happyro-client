@@ -1,3 +1,6 @@
+import { confirmCompanionAction } from 'UI/Game/CompanionPrompt.js';
+import { normalizeCompanionName } from 'Utils/CompanionName.js';
+import { showToast } from 'UI/Components/Toast.js';
 import Platform from 'UI/Platform.js';
 import { updateGameCompanion, receiveGameCompanionFeed } from 'UI/Game/GameCompanions.js';
 /**
@@ -88,6 +91,7 @@ function onHomunInformation(pkt) {
 		return;
 	}
 
+	entity.display.name = pkt.szName;
 	entity.attack_range = pkt.ATKRange;
 	entity.life.hp = pkt.hp;
 	entity.life.hp_max = pkt.maxHP;
@@ -152,8 +156,6 @@ function onHomunParameterChange(pkt) {
 		return;
 	}
 
-	// UI update
-	if (!Platform.isMobile) HomunInformations.setInformations(pkt);
 
 	const entity = EntityManager.get(Session.homunId);
 
@@ -256,7 +258,7 @@ function onHomunInformationUpdate(pkt) {
  */
 HomunInformations.reqHomunFeed = function reqHomunFeed() {
 	// Are you sure you want to feed your homunculus ?
-	UIManager.showPromptBox(DB.getMessage(601), 'ok', 'cancel', () => {
+	confirmCompanionAction('homunculus', DB.getMessage(601), () => {
 		const pkt = new PACKET.CZ.COMMAND_MER();
 		pkt.type = 0x22f;
 		pkt.command = 1;
@@ -273,7 +275,7 @@ HomunInformations.sendHomunFeed = function sendHomunFeed() {
 
 HomunInformations.reqDeleteHomun = function reqDeleteHomun() {
 	// Are you sure that you want to delete?
-	UIManager.showPromptBox(DB.getMessage(356), 'ok', 'cancel', () => {
+	confirmCompanionAction('homunculus', DB.getMessage(356), () => {
 		const pkt = new PACKET.CZ.COMMAND_MER();
 		pkt.type = 0x22f;
 		pkt.command = 2;
@@ -334,11 +336,21 @@ HomunInformations.reqMoveTo = function reqMoveTo(GID, x = 0, y = 0) {
  *
  * @param {string} new homunculus name
  */
-HomunInformations.reqNameEdit = function reqNameEdit(name) {
+HomunInformations.reqNameEdit = function reqNameEdit(value) {
+	const entity = EntityManager.get(Session.homunId);
+	if (HomunInformations.renamePending || !HomunInformations.renameAllowed ||
+		!entity || entity.life.hp <= 0 || entity.remove_tick > 0 || !Session.Playing) return false;
+	const name = normalizeCompanionName(value);
+	if (!name) {
+		showToast(document.body, '名称不能为空，且最多为 23 个 UTF-8 字节', 'error');
+		return;
+	}
 	//msg 2904(2903)
 	const pkt = new PACKET.CZ.RENAME_MER();
 	pkt.name = name;
+	HomunInformations.setRenamePending(true);
 	Network.sendPacket(pkt);
+	return true;
 };
 
 /**

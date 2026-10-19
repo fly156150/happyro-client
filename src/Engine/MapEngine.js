@@ -1,3 +1,5 @@
+import { clearCompanionPrompts } from 'UI/Game/CompanionPrompt.js';
+import PetEvolution from 'UI/Components/PetEvolution/PetEvolution.js';
 import { handleArrivalPreview } from 'UI/Components/GameTools/ArrivalPreviewService.js';
 import recovery, { gameRecoveryReady } from './Recovery/GameRecovery.js';
 import { prepareAutoCombatTeleportMap, completeAutoCombatTeleportMap } from 'UI/Game/AutoCombatTeleport.js';
@@ -169,7 +171,9 @@ class MapEngine {
 	 * @param {string} mapName
 	 */
 	static init(ip, port, mapName) {
+		cancelCompanionDialogs();
 		Network.onDisconnect = () => {
+			cancelCompanionDialogs();
 			if (!recovery.disconnected()) UIManager.showErrorBox(DB.getMessage(1));
 		};
 		_mapName = mapName;
@@ -702,6 +706,7 @@ function onConnectionRefused(pkt) {
  * @param {object} pkt - PACKET.ZC.NPCACK_MAPMOVE
  */
 function onMapChange(pkt) {
+	cancelCompanionDialogs();
 	const generation = ++mapLoadGeneration;
 	const connectionId = Network.connectionId;
 	const isCurrentLoad = () => generation === mapLoadGeneration && connectionId === Network.connectionId && Session.Playing;
@@ -916,7 +921,13 @@ function onExitFail(pkt) {
 	ChatBox.addText(DB.getMessage(502), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 }
 
+function cancelCompanionDialogs() {
+	clearCompanionPrompts();
+	PetEvolution.invalidatePet(Session.petId);
+}
+
 function stopCompanionAI() {
+	cancelCompanionDialogs();
 	HomunInformations.stopAI();
 	MercenaryInformations.stopAI();
 }
