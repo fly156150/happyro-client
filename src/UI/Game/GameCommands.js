@@ -1,3 +1,5 @@
+import { canCommandGameCompanion, commandGameCompanion, companionAttackMode } from './GameCompanions.js';
+import { canCommandGamePet, commandGamePet } from './GamePet.js';
 import Friends from 'Engine/MapEngine/Friends.js';
 import Equipment from 'UI/Components/Equipment/Equipment.js';
 import Trade from 'UI/Components/Trade/Trade.js';
@@ -157,6 +159,48 @@ export function playerAction(action, expectedId, openPrivate) {
 	return '';
 }
 
+/** Bind confirmations to the selected pet object and owner, not a reusable GID. */
+export function preparePetAction(action, expectedId, openPet) {
+	const target = selectedTarget(), owner = Session.Entity;
+	const valid = () => Boolean(
+		Session.Playing && !Session.FreezeUI && owner && Session.Entity === owner &&
+		owner.action !== owner.ACTION.DIE && target && target === selectedTarget() &&
+		target.GID === expectedId && target.GID === Session.petId &&
+		target.objecttype === target.constructor.TYPE_PET && !target.remove_tick
+	);
+	if (!valid()) return { error: '宠物已离开或已切换，请重新选择' };
+	if (!['view', 'feed', 'perform', 'egg'].includes(action)) return { error: '未知操作' };
+	return {
+		execute() {
+			if (!valid()) return '宠物已离开或已切换，请重新选择';
+			if (action === 'view') return openPet() ? '' : '当前无法查看宠物';
+			const result = commandGamePet(action);
+			return result === '已发送请求，以服务器状态为准' ? '' : result;
+		}
+	};
+}
+
+/** Keep a dismissal confirmation bound to the original mercenary and owner. */
+export function prepareMercenaryAction(action, expectedId, openMercenary) {
+	const target = selectedTarget(), owner = Session.Entity;
+	const valid = () => Boolean(
+		Session.Playing && !Session.FreezeUI && owner && Session.Entity === owner &&
+		owner.action !== owner.ACTION.DIE && target && target === selectedTarget() &&
+		target.GID === expectedId && target.GID === Session.mercId &&
+		target.objecttype === target.constructor.TYPE_MERC && !target.remove_tick
+	);
+	if (!valid()) return { error: '佣兵已离开或已切换，请重新选择' };
+	if (!['view', 'return', 'aggressive', 'dismiss'].includes(action)) return { error: '未知操作' };
+	return {
+		execute() {
+			if (!valid()) return '佣兵已离开或已切换，请重新选择';
+			if (action === 'view') return openMercenary() ? '' : '当前无法查看佣兵';
+			const result = commandGameCompanion('mercenary', action);
+			return ['攻击模式已更新', '已发送请求，以服务器状态为准'].includes(result) ? '' : result;
+		}
+	};
+}
+
 export function targetSnapshot() {
 	const target = selectedTarget();
 	if (!target) return { name: '点击目标进行选择', attack: false, interaction: '' };
@@ -164,6 +208,10 @@ export function targetSnapshot() {
 	return {
 		name: target.display.name || '已选目标',
 		player: target.objecttype === T.TYPE_PC && target !== Session.Entity ? { id: target.GID, name: target.display.name, friend: Friends.isFriend(target.display.name) } : null,
+		pet: target.objecttype === T.TYPE_PET && target.GID === Session.petId && !target.remove_tick
+			? { id: target.GID, name: target.display.name, canOperate: canCommandGamePet() } : null,
+		mercenary: target.objecttype === T.TYPE_MERC && target.GID === Session.mercId && !target.remove_tick
+			? { id: target.GID, name: target.display.name, canOperate: canCommandGameCompanion('mercenary'), aggressive: companionAttackMode('mercenary') } : null,
 		attack: canAttack(target),
 		interaction:
 			target.room?.display &&

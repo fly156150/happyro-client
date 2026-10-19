@@ -47,7 +47,13 @@ export function updateGameCompanion(kind, values, gid) {
 	s.info = { ...s.info, ...values };
 }
 export function updateGameCompanionAutoFeed(value) {
-	state('homunculus').autoFeed = Boolean(value);
+	const s = state('homunculus');
+	s.autoFeed = Boolean(value);
+	if (s.pending === 'autofeed') {
+		s.pending = null;
+		s.message = '';
+		s.messageKind = 'info';
+	}
 }
 export function receiveGameCompanionFeed(result) {
 	const s = state('homunculus');
@@ -55,6 +61,67 @@ export function receiveGameCompanionFeed(result) {
 	s.pending = null;
 	s.messageKind = result ? 'success' : 'error';
 	s.message = result ? '喂食成功' : '喂食失败，请检查生命体食物';
+}
+export function canCommandGameCompanion(kind) {
+	const actor = entity(kind);
+	return Boolean(
+		Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE &&
+		actor && actor.action !== actor.ACTION.DIE && !actor.remove_tick && state(kind).info && !state(kind).pending
+	);
+}
+export function companionAttackMode(kind) {
+	return Boolean(AIDriver[kind === 'homunculus' ? 'HOM_AGGRESSIVE' : 'MER_AGGRESSIVE']);
+}
+function validateCompanionCommand(kind, action, value) {
+	if (!canCommandGameCompanion(kind)) return '当前无法操作';
+	const info = state(kind).info;
+	if (['feed', 'rename', 'autofeed'].includes(action) && kind !== 'homunculus') return '佣兵不支持此操作';
+	if (
+		action === 'rename' &&
+		((info.bModified & 1) ||
+			!value ||
+			new TextEncoder().encode(value).length > 23 ||
+			Array.from(value).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127))
+	)
+		return '名称无效或生命体已经改名';
+	if (!['feed', 'rename', 'autofeed', 'dismiss', 'return', 'aggressive'].includes(action)) return '未知操作';
+	return '';
+}
+/** Share the same commands between the full menu and selected-unit controls. */
+export function commandGameCompanion(kind, action, value) {
+	const error = validateCompanionCommand(kind, action, value);
+	if (error) return error;
+	const actor = entity(kind);
+	const aiKey = kind === 'homunculus' ? 'HOM_AGGRESSIVE' : 'MER_AGGRESSIVE';
+	const s = state(kind);
+	cancelCompanionSkill(actor);
+	switch (action) {
+		case 'feed':
+			s.pending = 'feed';
+			send('COMMAND_MER', { type: 0, command: 1 });
+			break;
+		case 'rename':
+			send('RENAME_MER', { name: value });
+			break;
+		case 'dismiss':
+			if (kind === 'homunculus') send('COMMAND_MER', { type: 0, command: 2 });
+			else send('MER_COMMAND', { command: 2 });
+			break;
+		case 'return':
+			send('REQUEST_MOVETOOWNER', { GID: actor.GID });
+			break;
+		case 'autofeed':
+			s.pending = 'autofeed';
+			send('CONFIG', { Config: 3, Value: s.autoFeed ? 0 : 1 });
+			break;
+		case 'aggressive':
+			AIDriver[aiKey] = !AIDriver[aiKey];
+			localStorage.setItem(aiKey, AIDriver[aiKey] ? '1' : '0');
+			break;
+	}
+	s.messageKind = action === 'aggressive' ? 'success' : 'pending';
+	s.message = action === 'aggressive' ? '攻击模式已更新' : '已发送请求，以服务器状态为准';
+	return s.message;
 }
 export function openGameCompanions(kind, canOperate = () => true) {
 	if (
@@ -77,32 +144,10 @@ export function openGameCompanions(kind, canOperate = () => true) {
 		Session.Playing &&
 		Session.Entity &&
 		Session.Entity.action !== Session.Entity.ACTION.DIE;
-	const allowed = () => {
-		const actor = entity(kind);
-		return Boolean(
-			active() &&
-			actor &&
-			actor.action !== actor.ACTION.DIE &&
-			!actor.remove_tick &&
-			state(kind).info &&
-			!state(kind).pending
-		);
-	};
-	const aiKey = kind === 'homunculus' ? 'HOM_AGGRESSIVE' : 'MER_AGGRESSIVE';
+	const allowed = () => active() && canCommandGameCompanion(kind);
 	function validate(action, value) {
-		if (!allowed()) return '当前无法操作';
-		const info = state(kind).info;
-		if (['feed', 'rename', 'autofeed'].includes(action) && kind !== 'homunculus') return '佣兵不支持此操作';
-		if (
-			action === 'rename' &&
-			((info.bModified & 1) ||
-				!value ||
-				new TextEncoder().encode(value).length > 23 ||
-				Array.from(value).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127))
-		)
-			return '名称无效或生命体已经改名';
-		if (!['feed', 'rename', 'autofeed', 'dismiss', 'return', 'aggressive'].includes(action)) return '未知操作';
-		return '';
+		if (!active()) return '当前无法操作';
+		return validateCompanionCommand(kind, action, value);
 	}
 	const service = {
 		setOperationGuard: value => {
@@ -125,7 +170,7 @@ export function openGameCompanions(kind, canOperate = () => true) {
 				message: s.message,
 				messageKind: s.messageKind,
 				autoFeed: s.autoFeed,
-				aggressive: Boolean(AIDriver[aiKey]),
+				aggressive: companionAttackMode(kind),
 				review,
 				skills: entity(kind)
 					? model.getSkills().map(skill => ({
@@ -157,34 +202,7 @@ export function openGameCompanions(kind, canOperate = () => true) {
 			review = null;
 			const error = validate(action, value);
 			if (error || actor !== entity(kind)) return error || '伴侣已变化，请重新确认';
-			const s = state(kind);
-			cancelCompanionSkill(actor);
-			switch (action) {
-				case 'feed':
-					s.pending = 'feed';
-					send('COMMAND_MER', { type: 0, command: 1 });
-					break;
-				case 'rename':
-					send('RENAME_MER', { name: value });
-					break;
-				case 'dismiss':
-					if (kind === 'homunculus') send('COMMAND_MER', { type: 0, command: 2 });
-					else send('MER_COMMAND', { command: 2 });
-					break;
-				case 'return':
-					send('REQUEST_MOVETOOWNER', { GID: actor.GID });
-					break;
-				case 'autofeed':
-					send('CONFIG', { Config: 3, Value: s.autoFeed ? 0 : 1 });
-					break;
-				case 'aggressive':
-					AIDriver[aiKey] = !AIDriver[aiKey];
-					localStorage.setItem(aiKey, AIDriver[aiKey] ? '1' : '0');
-					break;
-			}
-			s.messageKind = action === 'aggressive' ? 'success' : 'pending';
-			s.message = action === 'aggressive' ? '攻击模式已更新' : '已发送请求，以服务器状态为准';
-			return s.message;
+			return commandGameCompanion(kind, action, value);
 		},
 		learn(id, expectedLevel) {
 			const skill = service.snapshot().skills.find(s => s.SKID === id);

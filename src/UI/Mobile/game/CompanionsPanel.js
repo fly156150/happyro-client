@@ -1,3 +1,5 @@
+import { createCompanionSwitch, updateCompanionSwitch } from './CompanionSwitch.js';
+import { createAutoFeedSwitch, updateAutoFeedSwitch, createAutoFeedStatus } from './CompanionAutoFeed.js';
 import { createCompanionLayout } from './CompanionLayout.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -20,7 +22,7 @@ export function createCompanionsPanel(body, service) {
 	const labels = {
 		feed: '喂食',
 		rename: '改名',
-		autofeed: '切换自动喂食',
+		autofeed: '自动喂食',
 		dismiss: '解除',
 		return: '返回身边',
 		aggressive: '切换攻击模式'
@@ -65,14 +67,27 @@ export function createCompanionsPanel(body, service) {
 	}
 	for (const [action, label] of Object.entries(labels)) {
 		if (service.snapshot().kind === 'mercenary' && ['feed', 'rename', 'autofeed'].includes(action)) continue;
-		const button = document.createElement('button');
-		button.textContent = label;
+		const isSwitch = action === 'autofeed' || action === 'aggressive';
+		const control = action === 'autofeed' ? createAutoFeedSwitch()
+			: action === 'aggressive' ? createCompanionSwitch('被动攻击', '主动攻击') : document.createElement('button');
+		const button = isSwitch ? control.querySelector('input') : control;
+		if (!isSwitch) {
+			button.type = 'button';
+			button.textContent = label;
+		}
 		button.dataset.action = action;
 		button.onclick = () => {
 			cancel();
 			const error = service.prepare(action, action === 'rename' ? $('[data-companion-name]').value : undefined);
 			if (error) {
 				feedback(error, 'error');
+				update();
+				return;
+			}
+			if (isSwitch) {
+				const result = service.confirm();
+				if (!['已发送请求，以服务器状态为准', '攻击模式已更新'].includes(result)) feedback(result, 'error');
+				update();
 				return;
 			}
 			review(
@@ -80,13 +95,11 @@ export function createCompanionsPanel(body, service) {
 					? service.snapshot().kind === 'homunculus'
 						? '确认删除当前生命体？'
 						: '提前解除佣兵契约？'
-					: action === 'aggressive'
-						? `确认切换为${service.snapshot().aggressive ? '被动攻击' : '主动攻击'}？`
-						: `确认${label}？`
+					: `确认${label}？`
 			);
 		};
-		if (action === 'rename') $('[data-companion-name]').parentElement.append(button);
-		else $('[data-actions]').append(button);
+		if (action === 'rename') $('[data-companion-name]').parentElement.append(control);
+		else $('[data-actions]').append(control);
 	}
 	$('[data-companion-name]').oninput = () => {
 		nameDirty = true;
@@ -141,6 +154,8 @@ export function createCompanionsPanel(body, service) {
 				badge.dataset.mode = s.aggressive ? 'active' : 'passive';
 				badge.textContent = value;
 				dd.append(badge);
+			} else if (label === '自动喂食') {
+				dd.append(createAutoFeedStatus(s.autoFeed, true));
 			} else {
 				dd.textContent = value ?? '—';
 			}
@@ -148,6 +163,14 @@ export function createCompanionsPanel(body, service) {
 		}
 		for (const b of body.querySelectorAll('[data-action]'))
 			b.disabled = !s.allowed || (b.dataset.action === 'rename' && !s.canRename);
+		if (s.kind === 'homunculus') updateAutoFeedSwitch($('[data-action=autofeed]'), {
+			enabled: s.autoFeed, supported: true, allowed: s.allowed, pending: s.pending === 'autofeed'
+		});
+		updateCompanionSwitch($('[data-action=aggressive]'), {
+			checked: s.aggressive, disabled: !s.allowed,
+			text: s.aggressive ? '主动攻击' : '被动攻击',
+			title: s.aggressive ? '切换为被动攻击' : '切换为主动攻击'
+		});
 		const key = JSON.stringify([s.kind, s.skills]);
 		if (key !== skillKey) {
 			skillKey = key;

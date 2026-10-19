@@ -20,12 +20,13 @@
  font-weight: 600; line-height: 1.4; white-space: nowrap;
 }
 :host([data-menu-density]) .panel .companion-attack-mode[data-mode='active'] {
- color: #ffcc87; background: #543018; border-color: #b87836;
+ color: #f5f2e9; background: #483a25b8; border-color: #ecce94;
 }
 :host([data-menu-density]) .panel .companion-attack-mode[data-mode='passive'] {
  color: #a8ddff; background: #173c50; border-color: #4c879f;
 }
 :host([data-menu-density]) .panel .companion-footer {
+ --companion-final-column: calc(4 * var(--panel-label) + var(--panel-control) + 12px);
  flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px;
  border-top: 1px solid #52606d; padding-top: 6px;
 }
@@ -34,7 +35,7 @@
 }
 :host([data-menu-density]) .panel .companion-name > input { flex: 1; min-width: 0; width: 0; }
 :host([data-menu-density]) .panel .companion-footer .inventory-actions {
- display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin: 0; padding: 0;
+ display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; margin: 0; padding: 0;
 }
 :host([data-menu-density]) .panel .companion-footer button {
  flex: 0 0 auto; height: var(--panel-control); min-height: var(--panel-control); padding: 3px 6px; margin: 0;
@@ -65,3 +66,47 @@
 :host([data-menu-density]) .panel .pet-evolution-accessory { color: #f6d9a5; }
 :host([data-menu-density]) .panel [data-evolution] > h3 { margin: 0 0 6px; font-size: inherit; }
 :host([data-menu-density]) .panel [data-evolution] > button { margin-top: 10px; }
+
+/* Match the adventure tools' current-map switch: label inside one sliding track. */
+:host([data-menu-density]) .panel .companion-footer .companion-switch-control {
+ --companion-switch-width: var(--companion-final-column);
+ position: relative; display: inline-flex; flex: 0 0 auto; align-self: center;
+ width: var(--companion-switch-width); height: var(--panel-control); margin: 0; gap: 0;
+}
+:host([data-menu-density]) .panel .companion-switch-control > input {
+ position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+ opacity: 0; cursor: pointer; z-index: 1;
+}
+:host([data-menu-density]) .panel .companion-switch-control > span {
+ display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+ padding: 0 5px 0 var(--panel-control); border: 1px solid #65717b; border-radius: 999px;
+ background: #283541; color: #c9ced3; line-height: 1; white-space: nowrap;
+}
+.companion-switch-control > span::before {
+ content: ''; position: absolute; top: 4px; left: 4px;
+ width: calc(var(--panel-control) - 8px); height: calc(var(--panel-control) - 8px);
+ border-radius: 50%; background: #c9ced3; transition: left 150ms ease;
+}
+:host([data-menu-density]) .panel .companion-switch-control > input:checked + span {
+ padding: 0 var(--panel-control) 0 5px; border-color: #d8b86c; background: #66532c; color: #fff1c9;
+}
+.companion-switch-control > input:checked + span::before {
+ left: calc(100% - var(--panel-control) + 4px); background: #f3d992;
+}
+:host([data-menu-density]) .panel .companion-switch-control > input[data-action='aggressive']:checked + span {
+ color: #f5f2e9; border-color: #ecce94; background: #483a25b8;
+}
+.companion-switch-control > input[data-action='aggressive']:checked + span::before { background: #ecce94; }
+.companion-switch-control > input:focus-visible + span { outline: 2px solid #f3d992; outline-offset: 2px; }
+.companion-switch-control > input:disabled { cursor: default; }
+.companion-switch-control > input:disabled + span { opacity: .5; }
+:host([data-menu-density]) .panel .companion-autofeed-state {
+ display: inline-block; padding: 3px 8px; border: 1px solid; border-radius: 5px;
+ font-weight: 600; line-height: 1.4; white-space: nowrap;
+}
+:host([data-menu-density]) .panel .companion-autofeed-state[data-state='on'] { color: #a9e4b7; background: #203f2a; border-color: #4a9363; }
+:host([data-menu-density]) .panel .companion-autofeed-state[data-state='off'] { color: #c3ced8; background: #303b45; border-color: #677481; }
+:host([data-menu-density]) .panel .companion-autofeed-state[data-state='unsupported'] { color: #8b98a5; background: #242d35; border-color: #4b5864; }
+@media (prefers-reduced-motion: reduce) {
+ .companion-switch-control > span::before { transition: none; }
+}

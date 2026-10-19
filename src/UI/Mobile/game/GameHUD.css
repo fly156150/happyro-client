@@ -994,11 +994,15 @@ dd {
 }
 
 .battle-status.has-player-actions { flex-wrap: wrap; }
-.player-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%; }
-.player-actions[hidden], .battle-status [data-target][hidden] { display: none; }
-.player-actions button { min-width: 0; padding: 4px 2px; white-space: nowrap; }
-.player-actions button:disabled { opacity: .5; }
+.player-actions, .pet-actions, .mercenary-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%; }
+.player-actions[hidden], .pet-actions[hidden], .mercenary-actions[hidden], .battle-status [data-target][hidden] { display: none; }
+.player-actions button, .pet-actions button, .mercenary-actions button { min-width: 0; padding: 4px 2px; white-space: nowrap; }
+.player-actions button:disabled, .pet-actions button:disabled, .mercenary-actions button:disabled { opacity: .5; }
 
 [data-auto-toggle].clear-selection {
 	color: #ecce94; border-color: #ecce94; background: #483a25b8;
+}
+
+.mercenary-actions [data-mercenary-action='aggressive'][data-mode='passive'] {
+ color: #a8ddff; border-color: #4c879f; background: #173c50;
 }

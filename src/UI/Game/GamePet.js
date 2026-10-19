@@ -1,3 +1,4 @@
+import { showToast } from 'UI/Components/Toast.js';
 import { PET_EVOLUTION_INTIMACY } from 'DB/Pets/PetRules.js';
 import Renderer from 'Renderer/Renderer.js';
 import Session from 'Engine/SessionStorage.js';
@@ -64,6 +65,11 @@ export function updateGamePetState(pkt) {
 export function updateGamePetAutoFeed(value) {
 	const s = current();
 	s.autoFeed = Boolean(value);
+	if (s.pending === 'autofeed') {
+		s.pending = null;
+		s.message = '';
+		s.messageKind = 'info';
+	}
 }
 export function receiveGamePetResult(kind, result) {
 	const s = current();
@@ -72,6 +78,7 @@ export function receiveGamePetResult(kind, result) {
 	s.messageKind = (kind === 'evolve' ? result === 6 : Boolean(result)) ? 'success' : 'error';
 	if (kind === 'feed') s.message = result ? '喂食成功' : '喂食失败，请检查宠物食物';
 	if (kind === 'evolve') s.message = result === 6 ? '进化成功' : '进化失败，请检查亲密度、宠物状态及材料';
+	if (kind === 'feed' && interactionSnapshot()?.kind !== 'pet') showToast(document.body, s.message, s.messageKind);
 }
 function evolutions() {
 	const s = current();
@@ -96,6 +103,50 @@ function evolutions() {
 		};
 	});
 }
+/** Shared authority checks for the pet menu and the selected-pet action bar. */
+export function canCommandGamePet() {
+	const s = current();
+	const actor = s.gid === Session.petId && EntityManager.get(s.gid);
+	return Boolean(
+		Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE &&
+		actor && !actor.remove_tick && s.info && !s.pending
+	);
+}
+export function commandGamePet(action, value) {
+	if (!canCommandGamePet()) return '当前无法操作宠物';
+	const s = current();
+	if (action === 'rename') {
+		const name = String(value).trim();
+		if (
+			s.info.bModified ||
+			!name ||
+			new TextEncoder().encode(name).length > 23 ||
+			Array.from(name).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)
+		)
+			return '名称无效或宠物已经改名';
+		s.pending = 'rename';
+		send('RENAME_PET', { szName: name });
+	} else if (action === 'evolve') {
+		const evo = evolutions().find(e => e.egg === value);
+		if (s.accessory) return '请先卸下宠物饰品';
+		if (!evo?.ready) return '亲密度或进化材料不足';
+		s.pending = 'evolve';
+		send('PET_EVOLUTION', { evolutionPetEggITID: value });
+	} else if (action === 'autofeed') {
+		if (!DB.getPetByJobID(s.info.job)?.AutoFeeding) return '该宠物不支持自动喂食';
+		s.pending = 'autofeed';
+		send('CONFIG', { Config: 2, Value: s.autoFeed ? 0 : 1 });
+	} else {
+		const command = { feed: 1, perform: 2, egg: 3, unequip: 4 }[action];
+		if (!command) return '未知操作';
+		if (action === 'unequip' && !s.accessory) return '宠物未装备饰品';
+		if (action === 'feed') s.pending = 'feed';
+		send('COMMAND_PET', { cSub: command });
+	}
+	s.messageKind = 'pending';
+	s.message = '已发送请求，以服务器状态为准';
+	return s.message;
+}
 export function openGamePet(canOperate = () => true) {
 	if (!canOperate() || !Session.Playing || !Session.Entity || Session.Entity.action === Session.Entity.ACTION.DIE)
 		return null;
@@ -111,7 +162,7 @@ export function openGamePet(canOperate = () => true) {
 		const s = current();
 		return s.gid === Session.petId && Boolean(EntityManager.get(s.gid));
 	};
-	const allowed = () => active() && exists() && current().info && !current().pending;
+	const allowed = () => active() && canCommandGamePet();
 	const service = {
 		setOperationGuard: value => {
 			guard = value;
@@ -134,37 +185,7 @@ export function openGamePet(canOperate = () => true) {
 		},
 		command(action, value) {
 			if (!allowed()) return '当前无法操作宠物';
-			const s = current();
-			if (action === 'rename') {
-				const name = String(value).trim();
-				if (
-					s.info.bModified ||
-					!name ||
-					new TextEncoder().encode(name).length > 23 ||
-					Array.from(name).some(char => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127)
-				)
-					return '名称无效或宠物已经改名';
-				s.pending = 'rename';
-				send('RENAME_PET', { szName: name });
-			} else if (action === 'evolve') {
-				const evo = evolutions().find(e => e.egg === value);
-				if (s.accessory) return '请先卸下宠物饰品';
-				if (!evo?.ready) return '亲密度或进化材料不足';
-				s.pending = 'evolve';
-				send('PET_EVOLUTION', { evolutionPetEggITID: value });
-			} else if (action === 'autofeed') {
-				if (!DB.getPetByJobID(s.info.job)?.AutoFeeding) return '该宠物不支持自动喂食';
-				send('CONFIG', { Config: 2, Value: s.autoFeed ? 0 : 1 });
-			} else {
-				const command = { feed: 1, perform: 2, egg: 3, unequip: 4 }[action];
-				if (!command) return '未知操作';
-				if (action === 'unequip' && !s.accessory) return '宠物未装备饰品';
-				if (action === 'feed') s.pending = 'feed';
-				send('COMMAND_PET', { cSub: command });
-			}
-			s.messageKind = 'pending';
-			s.message = '已发送请求，以服务器状态为准';
-			return s.message;
+			return commandGamePet(action, value);
 		},
 		refresh() {
 			if (!active() || !exists() || current().pending) return;

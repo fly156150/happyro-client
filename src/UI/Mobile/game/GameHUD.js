@@ -159,6 +159,15 @@ HUD.onAppend = function () {
 		openAdventureTools: back => AdventureTools.openFromMenu(back),
 		openAdventureMap: (target, back) => AdventureTools.openMap(target, back),
 		setModal,
+		prepareMercenaryAction: (action, id) => {
+			autoCombat.stop();
+			return Commands.prepareMercenaryAction(action, id, () =>
+				openGameCompanions('mercenary', () => modal ? !previousFreeze : enabled()));
+		},
+		preparePetAction: (action, id) => {
+			autoCombat.stop();
+			return Commands.preparePetAction(action, id, () => openGamePet(() => modal ? !previousFreeze : enabled()));
+		},
 		playerAction: (action, id) => {
 			autoCombat.stop();
 			return Commands.playerAction(action, id, name => view.openPrivate(name));

@@ -1328,7 +1328,7 @@
 .panel :is(label, input[type='checkbox'], [role='checkbox'], [role='switch']) {
 	-webkit-tap-highlight-color: transparent;
 }
-.panel input[type='checkbox']:not(.game-switch):not(.settings-field input):not(.pickup-item input) {
+.panel input[type='checkbox']:not([role='switch']):not(.game-switch):not(.settings-field input):not(.pickup-item input) {
 	appearance: none;
 	-webkit-appearance: none;
 	box-sizing: border-box;
@@ -1340,11 +1340,11 @@
 	border-radius: 3px;
 	background: #253442;
 }
-.panel input[type='checkbox']:not(.game-switch):not(.settings-field input):not(.pickup-item input):checked {
+.panel input[type='checkbox']:not([role='switch']):not(.game-switch):not(.settings-field input):not(.pickup-item input):checked {
 	background: #a7803b;
 	border-color: #e6c17d;
 }
-.panel input[type='checkbox']:not(.game-switch):not(.settings-field input):not(.pickup-item input):checked::after {
+.panel input[type='checkbox']:not([role='switch']):not(.game-switch):not(.settings-field input):not(.pickup-item input):checked::after {
 	content: '';
 	position: absolute;
 	left: 5px;

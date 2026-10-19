@@ -1,3 +1,4 @@
+import { createAutoFeedSwitch, updateAutoFeedSwitch, createAutoFeedStatus } from './CompanionAutoFeed.js';
 import { createCompanionLayout } from './CompanionLayout.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -39,13 +40,23 @@ export function createPetPanel(body, service) {
 		['egg', '收回为宠物蛋'],
 		['unequip', '卸下饰品'],
 		['rename', '改名'],
-		['autofeed', '切换自动喂食']
+		['autofeed', '自动喂食']
 	]) {
-		const b = document.createElement('button');
-		b.type = 'button';
-		b.textContent = label;
+		const control = action === 'autofeed' ? createAutoFeedSwitch() : document.createElement('button');
+		const b = action === 'autofeed' ? control.querySelector('input') : control;
+		if (action !== 'autofeed') {
+			b.type = 'button';
+			b.textContent = label;
+		}
 		b.dataset.action = action;
 		b.onclick = () => {
+			if (action === 'autofeed') {
+				cancel();
+				const result = service.command('autofeed');
+				feedback(result, result === '已发送请求，以服务器状态为准' ? 'pending' : 'error');
+				update();
+				return;
+			}
 			if (action === 'perform') {
 				cancel();
 				const result = service.command('perform');
@@ -62,8 +73,8 @@ export function createPetPanel(body, service) {
 				`${label}${action === 'rename' ? '为「' + $('[data-name]').value + '」' : ''}？`
 			);
 		};
-		if (action === 'rename') $('[data-name]').parentElement.append(b);
-		else $('[data-actions]').append(b);
+		if (action === 'rename') $('[data-name]').parentElement.append(control);
+		else $('[data-actions]').append(control);
 	}
 	$('[data-refresh]').onclick = () => {
 		cancel();
@@ -92,7 +103,8 @@ export function createPetPanel(body, service) {
 			const dt = document.createElement('dt'),
 				dd = document.createElement('dd');
 			dt.textContent = label;
-			dd.textContent = value;
+			if (label === '自动喂食') dd.append(createAutoFeedStatus(state.autoFeed, state.supportsAutoFeed));
+			else dd.textContent = value;
 			$('[data-info]').append(dt, dd);
 		}
 		if (lastPet !== state.gid) {
@@ -149,7 +161,10 @@ export function createPetPanel(body, service) {
 		$('[data-name]').disabled = !state.allowed || Boolean(info?.bModified);
 		$('[data-action=rename]').disabled = !state.allowed || Boolean(info?.bModified);
 		$('[data-action=unequip]').disabled = !state.allowed || !state.accessory;
-		$('[data-action=autofeed]').disabled = !state.allowed || !state.supportsAutoFeed;
+		updateAutoFeedSwitch($('[data-action=autofeed]'), {
+			enabled: state.autoFeed, supported: state.supportsAutoFeed,
+			allowed: state.allowed, pending: state.pending === 'autofeed'
+		});
 		for (const button of body.querySelectorAll('[data-evolution-egg]'))
 			button.disabled =
 				!state.allowed || !state.evolutions.find(evo => evo.egg === Number(button.dataset.evolutionEgg))?.ready;

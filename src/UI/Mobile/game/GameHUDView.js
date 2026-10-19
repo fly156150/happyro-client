@@ -129,6 +129,8 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	let dismissBackdrop = false;
 	let lastTrigger;
 	let interactionPress = null;
+	let petConfirmation = null;
+	let mercenaryConfirmation = null;
 	let snapshot = {};
 	let messages = [];
 	let unreadChat = 0;
@@ -190,7 +192,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (!event.target.closest('.combat, .battle-dock')) actions.cancelSceneInput();
 	});
 	listen($('[data-auto-toggle]'), 'click', () => {
-		if (snapshot.target?.player) actions.clearPlayerSelection();
+		if (snapshot.target?.player || snapshot.target?.pet || snapshot.target?.mercenary) actions.clearPlayerSelection();
 		else actions.toggleAutoCombat();
 	});
 	listen($('[data-interact]'), 'click', () => actions.interact());
@@ -207,6 +209,51 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			if (action === 'trade' && player)
 				confirmAction(container, `向 ${player.name} 发起交易？`, perform);
 			else perform();
+		});
+	}
+	for (const button of root.querySelectorAll('[data-pet-action]')) {
+		listen(button, 'click', () => {
+			petConfirmation?.dismiss();
+			const pet = snapshot.target?.pet, action = button.dataset.petAction;
+			const container = $('[data-pet-actions]');
+			const prepared = actions.preparePetAction(action, pet?.id);
+			if (prepared.error) {
+				showToast(container, prepared.error, 'error');
+				return;
+			}
+			const perform = () => {
+				petConfirmation = null;
+				const error = prepared.execute();
+				if (error) showToast(container, error, 'error');
+			};
+			if (action === 'feed' || action === 'egg') {
+				const message = action === 'feed' ? `给「${pet.name}」喂食？` : `将「${pet.name}」收回为宠物蛋？`;
+				petConfirmation = { id: pet.id, dismiss: confirmAction(container, message, perform, {
+					cancelled: () => { petConfirmation = null; }
+				}) };
+			} else perform();
+		});
+	}
+	for (const button of root.querySelectorAll('[data-mercenary-action]')) {
+		listen(button, 'click', () => {
+			mercenaryConfirmation?.dismiss();
+			const mercenary = snapshot.target?.mercenary, action = button.dataset.mercenaryAction;
+			const container = $('[data-mercenary-actions]');
+			const prepared = actions.prepareMercenaryAction(action, mercenary?.id);
+			if (prepared.error) {
+				showToast(container, prepared.error, 'error');
+				return;
+			}
+			const perform = () => {
+				mercenaryConfirmation = null;
+				const error = prepared.execute();
+				if (error) showToast(container, error, 'error');
+			};
+			if (action === 'dismiss') {
+				mercenaryConfirmation = { id: mercenary.id, dismiss: confirmAction(container, '提前解除佣兵契约？', perform, {
+					cancelled: () => { mercenaryConfirmation = null; }
+				}) };
+			} else perform();
 		});
 	}
 	for (const button of root.querySelectorAll('[data-shortcut-page]'))
@@ -790,13 +837,29 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			const targetLabel = species.length > 1 ? `${species.length} 种魔物` : species[0]?.name || '全部魔物';
 			text('[data-auto-target]', `${targetLabel} ▾`);
 			$('[data-auto-target]').title = species.map(entry => entry.name).join('、') || '全部魔物';
-			text('[data-auto-toggle]', next.target?.player ? '取消选择' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
-			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!next.target?.player && Boolean(next.autoCombat?.active)));
-			const player = next.target?.player;
-			$('[data-auto-toggle]').classList.toggle('clear-selection', Boolean(player));
+			const player = next.target?.player, pet = next.target?.pet, mercenary = next.target?.mercenary;
+			const hasActions = Boolean(player || pet || mercenary);
+			text('[data-auto-toggle]', hasActions ? '取消选择' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
+			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!hasActions && Boolean(next.autoCombat?.active)));
+			$('[data-auto-toggle]').classList.toggle('clear-selection', hasActions);
 			$('[data-player-actions]').hidden = !player;
-			$('[data-target]').hidden = Boolean(player);
-			$('.battle-status').classList.toggle('has-player-actions', Boolean(player));
+			$('[data-pet-actions]').hidden = !pet;
+			$('[data-mercenary-actions]').hidden = !mercenary;
+			$('[data-target]').hidden = hasActions;
+			$('.battle-status').classList.toggle('has-player-actions', hasActions);
+			for (const button of root.querySelectorAll('[data-mercenary-action]')) button.disabled = !mercenary?.canOperate;
+			text('[data-mercenary-action=aggressive]', mercenary?.aggressive ? '主动' : '被动');
+			$('[data-mercenary-action=aggressive]').dataset.mode = mercenary?.aggressive ? 'active' : 'passive';
+			$('[data-mercenary-action=aggressive]').title = mercenary?.aggressive ? '当前主动攻击，点击切换为被动攻击' : '当前被动攻击，点击切换为主动攻击';
+			if (mercenaryConfirmation && (!mercenary?.canOperate || mercenary.id !== mercenaryConfirmation.id)) {
+				mercenaryConfirmation.dismiss();
+				mercenaryConfirmation = null;
+			}
+			for (const button of root.querySelectorAll('[data-pet-action]')) button.disabled = !pet?.canOperate;
+			if (petConfirmation && (!pet?.canOperate || pet.id !== petConfirmation.id)) {
+				petConfirmation.dismiss();
+				petConfirmation = null;
+			}
 			for (const button of root.querySelectorAll('[data-player-action]')) button.disabled = !player?.name || (button.dataset.playerAction === 'friend' && player.friend);
 			$('[data-player-action=friend]').title = player?.friend ? '已是好友' : '加好友';
 			$('[data-interact]').hidden = !next.target?.interaction || (player && next.target.interaction === '交易');
