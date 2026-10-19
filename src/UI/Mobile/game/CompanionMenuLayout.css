@@ -51,3 +51,20 @@
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view] .companion-footer .companion-name > :is(input, button) {
  width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; justify-self: stretch;
 }
+
+/* Mercenary skills use the same two-column rhythm and divided rules as status values. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='mercenary'] .companion-skill {
+ display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px;
+ border: 0; padding: 0; align-items: stretch;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='mercenary'] .companion-skill > span {
+ padding: 6px 0; border-bottom: 1px solid #35414d; line-height: 1.4;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='mercenary'] .companion-skill-meta {
+ text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-companion-kind='mercenary']
+ .companion-footer .inventory-actions > :is(button, .companion-switch-control) {
+ flex: 0 0 var(--companion-final-column); width: var(--companion-final-column); min-width: 0;
+ height: var(--panel-control); min-height: var(--panel-control); box-sizing: border-box;
+}
