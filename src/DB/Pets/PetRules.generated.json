@@ -1,0 +1,1273 @@
+{
+  "sources": {
+    "db/item_db.yml": "d6cf495fc47405cceb897ee11dc3bb43433dbae58b1f11e3d11a79c8acc46592",
+    "db/re/item_db.yml": "3c90cdea4b4384b460b7d36271210d8543936c8f03d8020e49acad1cc1952eb3",
+    "db/re/item_db_usable.yml": "5ce410ab09c21ee56c91876d9d4a2a89b624b220ddb17dc9fe5890322c6caca7",
+    "db/re/item_db_equip.yml": "8fd3b30bc96ebe945b331b7e8c4aa903dc5a886bfe677b8e39d6356cae3fcd93",
+    "db/re/item_db_etc.yml": "c035a2ab71bee4644851be29ecf2d3d12ce15fbdbd79596aefec37bfc8a74596",
+    "db/import/item_db.yml": "4904463d2ba6baf7ac90acdff9eff249d12469fe6ad6d5a6abe4baf9dfa85b07",
+    "db/mob_db.yml": "4ea93a5f2be879cead5a066605fa156156781a6d4f7e18df8e6c156678ac6feb",
+    "db/re/mob_db.yml": "1260adfe2f2ef24739bfbd5085db3c50997d4148813906572932cfb614aa2a9a",
+    "db/import/mob_db.yml": "5dc1d1d2517f1c0e82c4e465855ee908a6fb22da27a69ba779d7f363a9b22da3",
+    "db/pet_db.yml": "514589d92172940a6d50459c593e297ac49bfd001272bf3ff94dcd724e67ff8f",
+    "db/re/pet_db.yml": "2e4950ea21b466540fd061f960f6b1cf3e640442f90caea21b30c26d5457b645",
+    "db/import/pet_db.yml": "b4ce5d72629f31c95576ae9b061f7dfe1fb168cc502d0f82ead4eba88d182fb9"
+  },
+  "pets": {
+    "1002": {
+      "PetJobID": 1002,
+      "PetEggID": 9001,
+      "FoodID": 531,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9069": [
+          {
+            "MaterialID": 610,
+            "Amount": 10
+          },
+          {
+            "MaterialID": 619,
+            "Amount": 3
+          }
+        ]
+      }
+    },
+    "1004": {
+      "PetJobID": 1004,
+      "PetEggID": 9155,
+      "FoodID": 6108,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1005": {
+      "PetJobID": 1005,
+      "PetEggID": 9138,
+      "FoodID": 1000889,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1010": {
+      "PetJobID": 1010,
+      "PetEggID": 9103,
+      "FoodID": 1066,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1011": {
+      "PetJobID": 1011,
+      "PetEggID": 9006,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1014": {
+      "PetJobID": 1014,
+      "PetEggID": 9012,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1019": {
+      "PetJobID": 1019,
+      "PetEggID": 9014,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9071": [
+          {
+            "MaterialID": 537,
+            "Amount": 10
+          },
+          {
+            "MaterialID": 632,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 7101,
+            "Amount": 300
+          },
+          {
+            "MaterialID": 4031,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 522,
+            "Amount": 10
+          }
+        ]
+      }
+    },
+    "1023": {
+      "PetJobID": 1023,
+      "PetEggID": 9017,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9087": [
+          {
+            "MaterialID": 635,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 1124,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 931,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 2267,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 4066,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1026": {
+      "PetJobID": 1026,
+      "PetEggID": 9018,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1029": {
+      "PetJobID": 1029,
+      "PetEggID": 9021,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9090": [
+          {
+            "MaterialID": 639,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 10006,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 954,
+            "Amount": 300
+          },
+          {
+            "MaterialID": 732,
+            "Amount": 6
+          }
+        ]
+      }
+    },
+    "1031": {
+      "PetJobID": 1031,
+      "PetEggID": 9003,
+      "FoodID": 511,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1035": {
+      "PetJobID": 1035,
+      "PetEggID": 9008,
+      "FoodID": 716,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1040": {
+      "PetJobID": 1040,
+      "PetEggID": 9053,
+      "FoodID": 6111,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9131": [
+          {
+            "MaterialID": 953,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 12371,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 27029,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 990,
+            "Amount": 20
+          }
+        ]
+      }
+    },
+    "1041": {
+      "PetJobID": 1041,
+      "PetEggID": 9102,
+      "FoodID": 934,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9107": [
+          {
+            "MaterialID": 23256,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 7511,
+            "Amount": 200
+          },
+          {
+            "MaterialID": 969,
+            "Amount": 30
+          },
+          {
+            "MaterialID": 4248,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1042": {
+      "PetJobID": 1042,
+      "PetEggID": 9007,
+      "FoodID": 1002,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1049": {
+      "PetJobID": 1049,
+      "PetEggID": 9005,
+      "FoodID": 507,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1052": {
+      "PetJobID": 1052,
+      "PetEggID": 9011,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9106": [
+          {
+            "MaterialID": 707,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 940,
+            "Amount": 777
+          },
+          {
+            "MaterialID": 508,
+            "Amount": 200
+          },
+          {
+            "MaterialID": 4057,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1056": {
+      "PetJobID": 1056,
+      "PetEggID": 9015,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1057": {
+      "PetJobID": 1057,
+      "PetEggID": 9016,
+      "FoodID": 532,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9091": [
+          {
+            "MaterialID": 634,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 753,
+            "Amount": 2
+          },
+          {
+            "MaterialID": 7182,
+            "Amount": 300
+          },
+          {
+            "MaterialID": 4051,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1058": {
+      "PetJobID": 1058,
+      "PetEggID": 9106,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1063": {
+      "PetJobID": 1063,
+      "PetEggID": 9004,
+      "FoodID": 534,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9094": [
+          {
+            "MaterialID": 7198,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 705,
+            "Amount": 250
+          },
+          {
+            "MaterialID": 706,
+            "Amount": 30
+          },
+          {
+            "MaterialID": 4663,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1077": {
+      "PetJobID": 1077,
+      "PetEggID": 9013,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1087": {
+      "PetJobID": 1087,
+      "PetEggID": 9072,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1090": {
+      "PetJobID": 1090,
+      "PetEggID": 9069,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {
+        "9088": [
+          {
+            "MaterialID": 503,
+            "Amount": 20
+          },
+          {
+            "MaterialID": 2282,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 509,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 909,
+            "Amount": 200
+          }
+        ]
+      }
+    },
+    "1096": {
+      "PetJobID": 1096,
+      "PetEggID": 9088,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1101": {
+      "PetJobID": 1101,
+      "PetEggID": 9024,
+      "FoodID": 518,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1106": {
+      "PetJobID": 1106,
+      "PetEggID": 9129,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1107": {
+      "PetJobID": 1107,
+      "PetEggID": 9010,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9129": [
+          {
+            "MaterialID": 628,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 4082,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 7030,
+            "Amount": 300
+          },
+          {
+            "MaterialID": 919,
+            "Amount": 20
+          }
+        ]
+      }
+    },
+    "1109": {
+      "PetJobID": 1109,
+      "PetEggID": 9023,
+      "FoodID": 711,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9097": [
+          {
+            "MaterialID": 641,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 1039,
+            "Amount": 250
+          },
+          {
+            "MaterialID": 1009,
+            "Amount": 30
+          },
+          {
+            "MaterialID": 4122,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1110": {
+      "PetJobID": 1110,
+      "PetEggID": 9019,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9089": [
+          {
+            "MaterialID": 637,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 981,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 1021,
+            "Amount": 300
+          },
+          {
+            "MaterialID": 969,
+            "Amount": 3
+          }
+        ]
+      }
+    },
+    "1113": {
+      "PetJobID": 1113,
+      "PetEggID": 9002,
+      "FoodID": 508,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9092": [
+          {
+            "MaterialID": 7032,
+            "Amount": 20
+          },
+          {
+            "MaterialID": 7031,
+            "Amount": 10
+          },
+          {
+            "MaterialID": 531,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 4659,
+            "Amount": 1
+          }
+        ],
+        "9109": [
+          {
+            "MaterialID": 25290,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 529,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 530,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 4004,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1122": {
+      "PetJobID": 1122,
+      "PetEggID": 9032,
+      "FoodID": 7821,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1123": {
+      "PetJobID": 1123,
+      "PetEggID": 9033,
+      "FoodID": 7821,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1125": {
+      "PetJobID": 1125,
+      "PetEggID": 9034,
+      "FoodID": 7821,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1143": {
+      "PetJobID": 1143,
+      "PetEggID": 9043,
+      "FoodID": 6098,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1148": {
+      "PetJobID": 1148,
+      "PetEggID": 9050,
+      "FoodID": 6108,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1150": {
+      "PetJobID": 1150,
+      "PetEggID": 9112,
+      "FoodID": 25377,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1155": {
+      "PetJobID": 1155,
+      "PetEggID": 9022,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9098": [
+          {
+            "MaterialID": 640,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 6260,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 606,
+            "Amount": 150
+          },
+          {
+            "MaterialID": 4279,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1166": {
+      "PetJobID": 1166,
+      "PetEggID": 9070,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1167": {
+      "PetJobID": 1167,
+      "PetEggID": 9009,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9070": [
+          {
+            "MaterialID": 537,
+            "Amount": 10
+          },
+          {
+            "MaterialID": 627,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 517,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 949,
+            "Amount": 50
+          }
+        ]
+      }
+    },
+    "1170": {
+      "PetJobID": 1170,
+      "PetEggID": 9020,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1179": {
+      "PetJobID": 1179,
+      "PetEggID": 9045,
+      "FoodID": 6100,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1180": {
+      "PetJobID": 1180,
+      "PetEggID": 9095,
+      "FoodID": 25231,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9096": [
+          {
+            "MaterialID": 23187,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 1022,
+            "Amount": 999
+          },
+          {
+            "MaterialID": 10008,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 4159,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1188": {
+      "PetJobID": 1188,
+      "PetEggID": 9025,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9093": [
+          {
+            "MaterialID": 5367,
+            "Amount": 1
+          },
+          {
+            "MaterialID": 7277,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 7014,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 4328,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1190": {
+      "PetJobID": 1190,
+      "PetEggID": 9073,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1198": {
+      "PetJobID": 1198,
+      "PetEggID": 9128,
+      "FoodID": 1000552,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1200": {
+      "PetJobID": 1200,
+      "PetEggID": 9026,
+      "FoodID": 929,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1208": {
+      "PetJobID": 1208,
+      "PetEggID": 9037,
+      "FoodID": 7824,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9117": [
+          {
+            "MaterialID": 7005,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 1009,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 1059,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 4210,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1213": {
+      "PetJobID": 1213,
+      "PetEggID": 9087,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1214": {
+      "PetJobID": 1214,
+      "PetEggID": 9091,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1242": {
+      "PetJobID": 1242,
+      "PetEggID": 9061,
+      "FoodID": 6534,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1245": {
+      "PetJobID": 1245,
+      "PetEggID": 9029,
+      "FoodID": 911,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1269": {
+      "PetJobID": 1269,
+      "PetEggID": 9190,
+      "FoodID": 6111,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1275": {
+      "PetJobID": 1275,
+      "PetEggID": 9027,
+      "FoodID": 504,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9120": [
+          {
+            "MaterialID": 7047,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 511,
+            "Amount": 200
+          },
+          {
+            "MaterialID": 985,
+            "Amount": 30
+          },
+          {
+            "MaterialID": 4253,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1297": {
+      "PetJobID": 1297,
+      "PetEggID": 9107,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1299": {
+      "PetJobID": 1299,
+      "PetEggID": 9046,
+      "FoodID": 6104,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1301": {
+      "PetJobID": 1301,
+      "PetEggID": 9089,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1307": {
+      "PetJobID": 1307,
+      "PetEggID": 9096,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1369": {
+      "PetJobID": 1369,
+      "PetEggID": 9071,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1370": {
+      "PetJobID": 1370,
+      "PetEggID": 9055,
+      "FoodID": 6113,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1374": {
+      "PetJobID": 1374,
+      "PetEggID": 9052,
+      "FoodID": 6110,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1379": {
+      "PetJobID": 1379,
+      "PetEggID": 9054,
+      "FoodID": 6112,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9116": [
+          {
+            "MaterialID": 7120,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 510,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 935,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 4166,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1382": {
+      "PetJobID": 1382,
+      "PetEggID": 9036,
+      "FoodID": 7823,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1385": {
+      "PetJobID": 1385,
+      "PetEggID": 9035,
+      "FoodID": 7822,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1401": {
+      "PetJobID": 1401,
+      "PetEggID": 9044,
+      "FoodID": 6099,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1404": {
+      "PetJobID": 1404,
+      "PetEggID": 9048,
+      "FoodID": 6106,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1416": {
+      "PetJobID": 1416,
+      "PetEggID": 9047,
+      "FoodID": 6105,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1495": {
+      "PetJobID": 1495,
+      "PetEggID": 9051,
+      "FoodID": 6109,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1504": {
+      "PetJobID": 1504,
+      "PetEggID": 9049,
+      "FoodID": 6107,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1505": {
+      "PetJobID": 1505,
+      "PetEggID": 9042,
+      "FoodID": 6097,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1512": {
+      "PetJobID": 1512,
+      "PetEggID": 9093,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1513": {
+      "PetJobID": 1513,
+      "PetEggID": 9040,
+      "FoodID": 6095,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1519": {
+      "PetJobID": 1519,
+      "PetEggID": 9030,
+      "FoodID": 6115,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1586": {
+      "PetJobID": 1586,
+      "PetEggID": 9041,
+      "FoodID": 6096,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1622": {
+      "PetJobID": 1622,
+      "PetEggID": 9099,
+      "FoodID": 25233,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9108": [
+          {
+            "MaterialID": 23189,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 7442,
+            "Amount": 300
+          },
+          {
+            "MaterialID": 724,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 4340,
+            "Amount": 1
+          }
+        ],
+        "9118": [
+          {
+            "MaterialID": 7317,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 518,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 727,
+            "Amount": 10
+          },
+          {
+            "MaterialID": 4340,
+            "Amount": 1
+          }
+        ],
+        "9119": [
+          {
+            "MaterialID": 7317,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 518,
+            "Amount": 100
+          },
+          {
+            "MaterialID": 7449,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 4340,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1630": {
+      "PetJobID": 1630,
+      "PetEggID": 9039,
+      "FoodID": 6094,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1631": {
+      "PetJobID": 1631,
+      "PetEggID": 9030,
+      "FoodID": 6115,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1632": {
+      "PetJobID": 1632,
+      "PetEggID": 9100,
+      "FoodID": 25232,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9105": [
+          {
+            "MaterialID": 23188,
+            "Amount": 3
+          },
+          {
+            "MaterialID": 6100,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 7340,
+            "Amount": 200
+          },
+          {
+            "MaterialID": 4413,
+            "Amount": 1
+          }
+        ]
+      }
+    },
+    "1735": {
+      "PetJobID": 1735,
+      "PetEggID": 9119,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1736": {
+      "PetJobID": 1736,
+      "PetEggID": 9118,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1737": {
+      "PetJobID": 1737,
+      "PetEggID": 9120,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1754": {
+      "PetJobID": 1754,
+      "PetEggID": 9187,
+      "FoodID": 6105,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1773": {
+      "PetJobID": 1773,
+      "PetEggID": 9105,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "1782": {
+      "PetJobID": 1782,
+      "PetEggID": 9104,
+      "FoodID": 7564,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1815": {
+      "PetJobID": 1815,
+      "PetEggID": 9028,
+      "FoodID": 511,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1837": {
+      "PetJobID": 1837,
+      "PetEggID": 9056,
+      "FoodID": 6114,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1879": {
+      "PetJobID": 1879,
+      "PetEggID": 9031,
+      "FoodID": 7766,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "1963": {
+      "PetJobID": 1963,
+      "PetEggID": 9038,
+      "FoodID": 554,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2057": {
+      "PetJobID": 2057,
+      "PetEggID": 6221,
+      "FoodID": 0,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2081": {
+      "PetJobID": 2081,
+      "PetEggID": 6221,
+      "FoodID": 0,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2200": {
+      "PetJobID": 2200,
+      "PetEggID": 9057,
+      "FoodID": 512,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2210": {
+      "PetJobID": 2210,
+      "PetEggID": 9058,
+      "FoodID": 529,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2313": {
+      "PetJobID": 2313,
+      "PetEggID": 9059,
+      "FoodID": 528,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2336": {
+      "PetJobID": 2336,
+      "PetEggID": 9060,
+      "FoodID": 537,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2398": {
+      "PetJobID": 2398,
+      "PetEggID": 9062,
+      "FoodID": 531,
+      "AutoFeeding": false,
+      "Evolution": {}
+    },
+    "2995": {
+      "PetJobID": 2995,
+      "PetEggID": 9108,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3023": {
+      "PetJobID": 3023,
+      "PetEggID": 9131,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3495": {
+      "PetJobID": 3495,
+      "PetEggID": 9092,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3496": {
+      "PetJobID": 3496,
+      "PetEggID": 9094,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3636": {
+      "PetJobID": 3636,
+      "PetEggID": 9090,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3669": {
+      "PetJobID": 3669,
+      "PetEggID": 9097,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3670": {
+      "PetJobID": 3670,
+      "PetEggID": 9098,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "3790": {
+      "PetJobID": 3790,
+      "PetEggID": 9109,
+      "FoodID": 529,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "20373": {
+      "PetJobID": 20373,
+      "PetEggID": 9116,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "20420": {
+      "PetJobID": 20420,
+      "PetEggID": 9117,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    },
+    "20696": {
+      "PetJobID": 20696,
+      "PetEggID": 9123,
+      "FoodID": 1000227,
+      "AutoFeeding": false,
+      "Evolution": {
+        "9124": [
+          {
+            "MaterialID": 1000103,
+            "Amount": 500
+          },
+          {
+            "MaterialID": 7095,
+            "Amount": 50
+          },
+          {
+            "MaterialID": 7094,
+            "Amount": 10
+          }
+        ]
+      }
+    },
+    "20697": {
+      "PetJobID": 20697,
+      "PetEggID": 9124,
+      "FoodID": 537,
+      "AutoFeeding": true,
+      "Evolution": {}
+    }
+  }
+}
