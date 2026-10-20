@@ -203,11 +203,24 @@
  text-align: left;
 }
 
-/* Tablet catalog lists keep a smaller inset against the pane divider. */
+/* Tablet panes use equal clearances on both sides of their divider. */
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
  .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='items'], [data-feature='npcs'], [data-feature='character'])
  :is(.catalog-list, .monster-list, .character-job-list) {
- padding-right: 8px;
+ padding-right: 12px;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.catalog-layout, .monster-layout, .character-layout) {
+ column-gap: 0;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature] :is(.catalog-detail, .monster-detail, .character-detail-scroll) {
+ padding-left: 12px;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature] :is(.catalog-detail, .monster-detail) > :is(.catalog-action-panel, .summon-panel) {
+ margin-left: -12px;
+ padding-left: 12px;
 }
 /* Portrait tablets prioritize the map over its NPC name list. */
 :host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .mobile-adventure.game-tools-window
