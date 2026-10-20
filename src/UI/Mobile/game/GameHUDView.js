@@ -761,7 +761,8 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 					updateMessages();
 				},
 				chatComposer,
-				actions.chatChannelError
+				actions.chatChannelError,
+				close
 			);
 			updateMessages();
 		}

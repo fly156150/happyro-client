@@ -389,3 +389,13 @@ it('replaces auto combat with cancel selection for another player',()=>{
  expect(root.querySelector('[data-auto-toggle]').classList.contains('clear-selection')).toBe(false);
  click('[data-auto-toggle]');expect(actions.toggleAutoCombat).toHaveBeenCalledOnce();
 });
+
+it('dismisses the chat modal after sending an emotion command', () => {
+ click('[data-panel="chat"]');click('[data-chat-filter="public"]');
+ const input = root.querySelector('[aria-label="聊天内容"]');
+ input.value = '/lv';
+ root.querySelector('.chat-form').dispatchEvent(new Event('submit', {cancelable: true}));
+ expect(actions.sendChat).toHaveBeenCalledWith('/lv', 'public', '');
+ expect(root.querySelector('.backdrop').hidden).toBe(true);
+ expect(actions.setModal).toHaveBeenLastCalledWith(false);
+});

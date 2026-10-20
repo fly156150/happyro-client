@@ -123,3 +123,20 @@ it.each(['public','party','guild','clan'])('uses a speaking action only for othe
  const rows=q('.chat-log').children;expect(rows[0].querySelector('a')).toBeNull();expect(rows[1].querySelector('a').textContent).toBe('发言');expect(rows[2].querySelector('a')).toBeNull();expect(rows[3].querySelector('a').textContent).toBe('回复');
  rows[1].querySelector('a').click();expect(q(`[data-chat-filter="${channel}"]`).getAttribute('aria-pressed')).toBe('true');expect(s.send).not.toHaveBeenCalled();
 });
+
+it('closes after an accepted emotion but keeps text messages and rejected emotions open', async () => {
+ const close = vi.fn(), send = vi.fn(() => '');
+ createChatPanel(body, send, '', async () => ({lv: 'data:image/png;base64,AA=='}), 'public', undefined, undefined, undefined, close);
+ type('draft');
+ q('[data-emotions]').click();
+ await vi.waitFor(() => expect(q('[aria-label="爱心"]')).not.toBeNull());
+ send.mockReturnValueOnce('表情发送太快');
+ q('[aria-label="爱心"]').click();
+ expect(close).not.toHaveBeenCalled();
+ expect(q('.chat-emotions').hidden).toBe(false);
+ q('[aria-label="爱心"]').click();
+ expect(close).toHaveBeenCalledTimes(1);
+ expect(q('[aria-label="聊天内容"]').value).toBe('draft');
+ type('普通消息');submit();expect(close).toHaveBeenCalledTimes(1);
+ type('/lv');submit();expect(close).toHaveBeenCalledTimes(2);
+});

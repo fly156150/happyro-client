@@ -16,7 +16,8 @@ export function createChatPanel(
 	initialFilter = 'all',
 	onFilterChange,
 	composer = createChatComposer(),
-	channelError = () => ''
+	channelError = () => '',
+	onEmotionSent
 ) {
 	body.innerHTML = `
 		<div class="chat-conversation">
@@ -99,7 +100,7 @@ export function createChatPanel(
 		log.scrollTop = log.scrollHeight;
 		onFilterChange?.(filter);
 	}
-	for (const [value, label] of Object.entries({ all: '全部消息', ...chatChannelLabels })) {
+	for (const [value, label] of Object.entries({ all: '全部', ...chatChannelLabels })) {
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.dataset.chatFilter = value;
@@ -307,6 +308,7 @@ export function createChatPanel(
 			saveDraft();
 		}
 		hideEmotions();
+		if (emotion || chatEmotions.some(([command]) => text.trim() === `/${command}`)) onEmotionSent?.();
 	}
 	$('.chat-form').onsubmit = event => {
 		event.preventDefault();
