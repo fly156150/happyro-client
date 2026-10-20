@@ -935,7 +935,8 @@
 	min-height: 0;
 	overflow-y: auto;
 	padding-right: 8px;
-	border-right: 1px solid #465461;
+	/* Keep the divider independent of the shared scroll-gutter border. */
+	box-shadow: 1px 0 #465461;
 }
 .panel .chat-filters > button {
 	border: 0;
