@@ -77,7 +77,7 @@ export function createMailPanel(body, service) {
 		setListItemIcon(summary, item);
 		node(summary, 'span', 'mail-attachment-name', item.name);
 		node(summary, 'span', 'mail-attachment-count', `×${item.count}`);
-		if (remove) button(summary, '移除', remove);
+		if (remove) button(summary, '移除', remove).className = 'mail-attachment-remove';
 
 	}
 	function addAttachment(item) {
@@ -196,7 +196,7 @@ export function createMailPanel(body, service) {
 		amount.max = 2147483647;
 		amount.inputMode = 'numeric';
 		const attachments = node(detail, 'section', 'mail-attachments');
-		heading(attachments, `附件（${state.attachments.length}）`);
+		heading(attachments, `附件（${state.attachments.length}）`).classList.add('mail-detail-heading');
 		const attachmentList = node(attachments, 'div', 'mail-attachment-list');
 		for (const item of state.attachments) {
 			attachmentRow(attachmentList, item, () => service.remove(item.index, item.count));
@@ -270,8 +270,9 @@ export function createMailPanel(body, service) {
 				update();
 			}
 		};
+		const query = term.toLocaleLowerCase();
 		const rows = state.list.filter(
-			mail => mail.openType === tab && `${mail.title} ${mail.SenderName}`.includes(term)
+			mail => mail.openType === tab && `${mail.title} ${mail.SenderName}`.toLocaleLowerCase().includes(query)
 		);
 		const pages = Math.max(1, Math.ceil(rows.length / 8));
 		page = Math.min(page, pages - 1);
@@ -314,17 +315,19 @@ export function createMailPanel(body, service) {
 		next.setAttribute('aria-label', '下一页');
 		const mail = state.detail;
 		if (!mail || mail.openType !== tab) {
-			heading(detail, '邮件详情');
+			heading(detail, '邮件详情').classList.add('mail-detail-heading');
 			para(detail, state.pending && state.selected ? '正在读取邮件…' : '请选择一封邮件查看内容。', 'mail-empty');
 			for (const label of ['领取金额', '领取物品', '删除邮件']) button(detailFooter, label, () => {}, true);
 			return;
 		}
-		heading(detail, mail.title || '（无标题）');
-		para(detail, `寄件人：${mail.SenderName}`);
+		const title = heading(detail, mail.title || '（无标题）');
+		title.classList.add('mail-detail-heading');
+		node(title, 'small', 'mail-heading-meta', `寄件人：${mail.SenderName}`);
 		para(detail, toPlainRagnarokText(mail.Textcontent), 'mail-content');
 		const attachments = node(detail, 'section', 'mail-attachments');
-		heading(attachments, '附加金额与物品');
-		para(attachments, `${mail.zeny} Zeny`, 'mail-attachment-name');
+		const attachmentHeading = heading(attachments, '金额与物品');
+		attachmentHeading.classList.add('mail-detail-heading');
+		node(attachmentHeading, 'small', 'mail-heading-meta', `${mail.zeny} Zeny`);
 		const attachmentList = node(attachments, 'div', 'mail-attachment-list');
 		for (const item of mail.describedItems) {
 			attachmentRow(attachmentList, item);
@@ -365,6 +368,8 @@ export function createMailPanel(body, service) {
 			? list.querySelector('.mail-rows')?.scrollTop || 0 : 0;
 		const keepComposeScroll = state.writing && body.dataset.mailWriting === 'true';
 		const detailScroll = keepComposeScroll ? detail.scrollTop : 0;
+		const formScroll = keepComposeScroll ? detail.querySelector('.mail-form')?.scrollTop || 0 : 0;
+		const attachmentsScroll = keepComposeScroll ? detail.querySelector('.mail-attachments')?.scrollTop || 0 : 0;
 		const inventoryScroll = keepComposeScroll ? list.querySelector('.mail-item-list')?.scrollTop || 0 : 0;
 		version = state.revision;
 		layout.dataset.writing = String(state.writing);
@@ -381,6 +386,10 @@ export function createMailPanel(body, service) {
 		else renderInbox(state);
 		// Server replies rebuild compose content; retain both independently scrolled panels.
 		detail.scrollTop = detailScroll;
+		const form = detail.querySelector('.mail-form');
+		const attachments = detail.querySelector('.mail-attachments');
+		if (form) form.scrollTop = formScroll;
+		if (attachments) attachments.scrollTop = attachmentsScroll;
 		const inventory = list.querySelector('.mail-item-list');
 		if (inventory) inventory.scrollTop = inventoryScroll;
 		const messages = list.querySelector('.mail-rows');

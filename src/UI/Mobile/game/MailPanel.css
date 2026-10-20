@@ -376,14 +376,15 @@
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-field {
 	display: grid;
-	grid-template-columns: 5em minmax(0, 1fr);
+	grid-template-columns: minmax(0, 1fr);
 	align-items: center;
 	gap: 6px;
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-field:has(button) {
-	grid-template-columns: 5em minmax(0, 1fr) auto;
+	grid-template-columns: minmax(0, 1fr) auto;
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-field > span {
+	grid-column: 1 / -1;
 	padding: 0 2px;
 }
 :host([data-menu-density]) .panel[data-view='mail'] .mail-field:has(textarea) {
@@ -585,4 +586,85 @@
 	justify-content: center;
 	padding-block: 0;
 	font: 22px/1 Arial, sans-serif;
+}
+
+/* Reading headers match adventure character sections, with metadata on the right. */
+:host([data-menu-density]) .panel[data-view='mail'] .mail-detail-heading {
+ display: flex;
+ align-items: baseline;
+ justify-content: space-between;
+ flex-wrap: wrap;
+ gap: 4px 12px;
+ margin: 0 0 8px;
+ padding: 6px 8px;
+ border-left: 3px solid #ceaa70;
+ border-radius: 3px;
+ background: #2b3540;
+ color: #ffe1ae;
+ font-size: var(--panel-heading);
+ font-weight: 600;
+ overflow-wrap: anywhere;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-heading-meta {
+ min-width: 0;
+ margin-left: auto;
+ color: #c6d0db;
+ font-size: var(--panel-label);
+ font-weight: normal;
+ overflow-wrap: anywhere;
+}
+
+/* Reading and composing share one explicit gap below section headings. */
+:host([data-menu-density]) .panel[data-view='mail'] .mail-detail-heading {
+ margin-bottom: 0;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-detail-heading + :is(.mail-content, .mail-attachment-list, .mail-empty) {
+ margin-top: 10px;
+}
+:host([data-menu-density]) .panel[data-view='mail'] .mail-detail-heading + .mail-content {
+ padding-top: 0;
+}
+
+/* Attachment removal is a compact row action, not a full footer button. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-attachment-summary > .mail-attachment-remove:not([hidden]) {
+ box-sizing: border-box;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ width: auto;
+ min-width: 44px;
+ height: 28px;
+ min-height: 28px;
+ padding: 0 8px;
+ font-size: 12px;
+ line-height: 1.2;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-attachment-summary > .mail-attachment-remove:not([hidden]) {
+ min-width: 48px;
+ height: 34px;
+ min-height: 34px;
+ padding-inline: 10px;
+ font-size: 14px;
+}
+
+/* Compose fields and attachments occupy equal, independently scrolling frames. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-detail {
+ display: grid;
+ grid-template-rows: repeat(2, minmax(0, 1fr));
+ gap: 10px;
+ overflow: hidden;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-detail > :is(.mail-form, .mail-attachments) {
+ min-width: 0;
+ min-height: 0;
+ margin: 0;
+ padding: 8px;
+ border: 1px solid #52606d;
+ border-radius: 6px;
+ box-sizing: border-box;
+ overflow-y: auto;
+ overscroll-behavior-y: none;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-form > * {
+ flex-shrink: 0;
 }
