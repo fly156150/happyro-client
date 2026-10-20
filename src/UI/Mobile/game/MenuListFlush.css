@@ -1,0 +1,12 @@
+/* Optional spacing overrides; other lists retain their feature styles. */
+:host([data-menu-density]) [data-menu-list-spacing='flush-block'],
+:host([data-menu-density]) [data-menu-list-spacing='flush'] {
+ padding-block: 0 !important;
+ border-block-width: 0 !important;
+ scroll-padding-block: 0;
+}
+:host([data-menu-density]) [data-menu-list-spacing='flush'] {
+ padding-inline: 0 !important;
+ border-inline-width: 0 !important;
+ scroll-padding-inline: 0;
+}

@@ -17,7 +17,7 @@ export function createShortcutPanel(body, actions) {
 					<select aria-label="技能类型" data-skill-filter><option value="all">技能类型</option><option value="skills">全部技能</option></select>
 					<select aria-label="物品类型" data-item-filter><option value="all">物品类型</option></select>
 				</div>
-				<div class="shortcut-choices" data-menu-list="framed"></div><p data-filter-empty hidden>没有符合条件的技能或物品</p>
+				<div class="shortcut-choices"></div><p data-filter-empty hidden>没有符合条件的技能或物品</p>
 			</section>
 			<section class="shortcut-editor inventory-item-detail" aria-label="快捷键说明">
 				<div class="shortcut-current"><strong data-slot-title></strong></div>

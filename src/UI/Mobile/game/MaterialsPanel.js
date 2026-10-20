@@ -5,8 +5,8 @@ import { createFeedback } from 'UI/Components/Feedback.js';
 import { interactionColumns, interactionReview, interactionFooter, inputDraft } from './InteractionPanel.js';
 export function createMaterialsPanel(body, service) {
 	interactionColumns(body, [
-		{ title: '可用材料', className: 'inventory-list', list: true },
-		{ title: '已选材料', className: 'material-order', list: true },
+		{ title: '可用材料', className: 'inventory-list' },
+		{ title: '已选材料', className: 'material-order' },
 		{ title: '物品说明', className: 'inventory-detail' }
 	]);
 	const $ = selector => body.querySelector(selector);

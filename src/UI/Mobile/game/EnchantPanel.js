@@ -5,7 +5,7 @@ import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 export function createEnchantPanel(body, service) {
 	interactionColumns(body, [
-		{ title: '可附魔装备', className: 'inventory-list', list: true },
+		{ title: '可附魔装备', className: 'inventory-list' },
 		{ title: '附魔配置', className: 'inventory-detail' },
 		{ title: '装备与结果', className: 'interaction-result' }
 	]);

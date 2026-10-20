@@ -8,7 +8,7 @@ import { setListItemText } from './ListItemText.js';
 
 export function createSocialPanel(body, service, whisper) {
 	body.innerHTML =
-		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" data-menu-list="framed" aria-label="社交列表"></div><section class="inventory-detail" data-menu-list="framed" aria-label="社交详情"></section></div><nav class="social-tabs menu-tabs menu-bottom-tabs" aria-label="社交分类"><button type="button" data-social-tab="friends" aria-pressed="true">好友</button><button type="button" data-social-tab="party" aria-pressed="false">队伍</button><button type="button" data-social-tab="guild" aria-pressed="false">公会</button></nav><div class="social-footer menu-footer menu-footer--trailing"><div class="social-footer-actions"></div><button type="button" data-refresh>刷新公会</button></div>';
+		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="社交列表"></div><section class="inventory-detail" aria-label="社交详情"></section></div><nav class="social-tabs menu-tabs menu-bottom-tabs" aria-label="社交分类"><button type="button" data-social-tab="friends" aria-pressed="true">好友</button><button type="button" data-social-tab="party" aria-pressed="false">队伍</button><button type="button" data-social-tab="guild" aria-pressed="false">公会</button></nav><div class="social-footer menu-footer menu-footer--trailing"><div class="social-footer-actions"></div><button type="button" data-refresh>刷新公会</button></div>';
 	const $ = selector => body.querySelector(selector),
 		detail = $('.inventory-detail'),
 		list = $('.inventory-list');

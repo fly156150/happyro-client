@@ -187,7 +187,6 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	const excludedTitle = document.createElement('p');
 	const excluded = document.createElement('div');
 	excluded.className = 'pickup-excluded';
-	excluded.dataset.menuList = 'framed';
 	excluded.setAttribute('aria-label', '已排除物品');
 	const selected = new Set();
 	let closePicker, cancelClear;

@@ -20,15 +20,15 @@ export function createChatPanel(
 ) {
 	body.innerHTML = `
 		<div class="chat-conversation">
-			<nav class="chat-filters" data-menu-list="" aria-label="消息分类"></nav>
+			<nav class="chat-filters" data-menu-list-spacing="flush-block" aria-label="消息分类"></nav>
 			<section class="chat-contacts" aria-label="私聊对象" hidden>
 				<button type="button" data-new-private>＋ 新私聊</button>
-				<div class="chat-contact-list" data-menu-list=""></div>
+				<div class="chat-contact-list" data-menu-list-spacing="flush"></div>
 			</section>
 			<div class="chat-content">
 				<div class="chat-recipient" hidden></div>
-				<div class="chat-log" data-menu-list="" role="log" aria-label="聊天消息"></div>
-				<div class="chat-emotions" data-menu-list="" hidden aria-label="RO 表情"></div>
+				<div class="chat-log" data-menu-list-spacing="flush-block" role="log" aria-label="聊天消息"></div>
+				<div class="chat-emotions" data-menu-list-spacing="flush-block" hidden aria-label="RO 表情"></div>
 			</div>
 		</div>
 		<form class="chat-form">

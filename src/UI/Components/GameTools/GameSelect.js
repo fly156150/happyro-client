@@ -22,7 +22,7 @@ export function renderGameSelect({
 	return `<div class="game-select ${className}" data-game-select>
 		<input class="game-select-value ${className}" type="hidden"${name ? ` name="${escapeHtml(name)}"` : ''} value="${escapeHtml(selectedValue)}">
 		<button class="game-select-trigger" type="button" aria-label="${escapeHtml(ariaLabel)}" aria-haspopup="listbox" aria-expanded="false"${disabled ? ' disabled' : ''}><span>${escapeHtml(selected?.label || '')}</span><i></i></button>
-		<div class="game-select-menu" data-menu-list="framed" role="listbox" hidden>
+		<div class="game-select-menu" role="listbox" hidden>
 			${searchable ? `<input class="game-select-search" type="search" placeholder="搜索${escapeHtml(ariaLabel)}" aria-label="搜索${escapeHtml(ariaLabel)}">` : ''}
 			<div class="game-select-options">${options.map(option => optionMarkup(option, selectedValue)).join('')}</div>
 			<div class="game-select-empty" hidden>没有匹配项</div>

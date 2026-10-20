@@ -153,7 +153,7 @@ function mount(container, context = {}) {
 		<div class="monster-layout" data-menu-layout="split">
 			<section class="monster-browser">
 				<div class="monster-summary">正在加载魔物资料...</div>
-				<div class="monster-list" data-menu-list=""></div>
+				<div class="monster-list"></div>
 				<div class="monster-pagination" data-menu-pagination>
 					<button class="page-prev" type="button" aria-label="上一页"><span aria-hidden="true">‹</span></button>
 					<span class="page-label"></span>
@@ -349,7 +349,7 @@ function mount(container, context = {}) {
 				<div><span>体型</span><strong>${sizeNames[monster.size] || monster.size}</strong></div><div><span>经验</span><strong>${monster.baseExp} / ${monster.jobExp}</strong></div>
 			</div>
 			</div><div class="monster-resources">
-				<section class="monster-drops" data-menu-list="framed"><h4>掉落物品</h4>${
+				<section class="monster-drops"><h4>掉落物品</h4>${
 					state.drops
 						? `${renderDrops(state.drops[monster.id]?.mvpDrops, 'MVP 奖励')}${renderDrops(state.drops[monster.id]?.drops, '普通掉落') || '<p>无掉落资料</p>'}`
 						: state.dropsError
@@ -358,7 +358,7 @@ function mount(container, context = {}) {
 				}</section>
 				<section class="monster-locations">
 					<h4>出现地图</h4>
-					<div class="monster-location-list" data-menu-list="">${
+					<div class="monster-location-list">${
 						spawnMaps.length
 							? spawnMaps
 									.map(spawn => {

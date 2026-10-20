@@ -10,7 +10,7 @@ export function openPickupItemPicker(container, { excluded, image, clearImages, 
 	dialog.innerHTML = `
 		<div class="pickup-search"><input type="search" aria-label="搜索排除物品" placeholder="输入物品名称或 ID"><button type="button" data-search>搜索</button></div>
 		<div class="pickup-search-status" role="status" hidden></div>
-		<div class="pickup-results" data-menu-list="" aria-label="可选物品" tabindex="-1" autofocus></div>
+		<div class="pickup-results" aria-label="可选物品" tabindex="-1" autofocus></div>
 		<footer><span data-selected>已选 0 件</span><nav class="pickup-pagination" data-menu-pagination aria-label="物品搜索分页"><button type="button" data-previous aria-label="上一页" disabled><span class="pickup-page-label">上一页</span><span class="pickup-page-symbol" aria-hidden="true">‹</span></button><span data-page>1 / 1</span><button type="button" data-next aria-label="下一页" disabled><span class="pickup-page-label">下一页</span><span class="pickup-page-symbol" aria-hidden="true">›</span></button></nav>
 		<div class="pickup-picker-actions"><button type="button" data-cancel>取消</button><button type="button" data-confirm disabled>确认添加</button></div></footer>`;
 	const $ = selector => dialog.querySelector(selector);

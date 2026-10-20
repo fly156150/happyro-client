@@ -30,7 +30,7 @@ export function createAutoCombatPanel(body, actions) {
 				<div class="auto-section-heading"><h3 id="auto-skills-title">攻击方式</h3><span data-skill-count></span></div>
 				<button type="button" data-normal-attack>普通攻击</button>
 				<!-- <p class="auto-help">勾选技能后随机释放，使用已学最高等级；均不可用时使用普攻。</p> -->
-				<div class="auto-skill-list" data-menu-list="" data-auto-skills></div>
+				<div class="auto-skill-list" data-auto-skills></div>
 			</section>
 		</div>
 		<div class="auto-save-error" hidden><span data-auto-save-status role="status"></span></div>`;

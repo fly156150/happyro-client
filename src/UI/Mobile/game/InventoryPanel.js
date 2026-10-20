@@ -18,7 +18,7 @@ const itemTypes = {
 /** Touch-only inventory presentation. Actions receive inventory indices, never DOM-derived item data. */
 export function createInventoryPanel(body, actions) {
 	body.innerHTML =
-		'<div class="inventory-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" data-menu-list="framed" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
+		'<div class="inventory-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
 	const $ = selector => body.querySelector(selector);
 	const list = $('.inventory-list'),
 		detail = $('.inventory-detail');

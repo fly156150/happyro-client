@@ -4,7 +4,6 @@ export function interactionReview(lines, summary, warning = '') {
 	content.className = 'interaction-review';
 	const list = document.createElement('div');
 	list.className = 'interaction-review-lines';
-	list.dataset.menuList = '';
 	for (const line of lines) {
 		const p = document.createElement('p');
 		p.textContent = line;
@@ -62,7 +61,7 @@ export function interactionColumns(body, columns) {
 	layout.className = 'interaction-columns';
 	layout.dataset.menuLayout = 'columns';
 	layout.dataset.menuColumns = String(columns.length);
-	for (const { title, className, content, list } of columns) {
+	for (const { title, className, content } of columns) {
 		const column = document.createElement('section');
 		column.className = 'interaction-column';
 		const heading = document.createElement('h3');
@@ -70,7 +69,6 @@ export function interactionColumns(body, columns) {
 		heading.textContent = title;
 		const area = document.createElement('div');
 		area.className = `interaction-column-content ${className || ''}`;
-		if (list) area.dataset.menuList = '';
 		if (content) area.innerHTML = content;
 		column.append(heading, area);
 		layout.append(column);

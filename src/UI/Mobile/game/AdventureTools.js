@@ -1,4 +1,3 @@
-import menuListSpacingCSS from './MenuListSpacing.css?raw';
 import menuNarrowTabletCSS from './MenuNarrowTablet.css?raw';
 import menuButtonSizingCSS from './MenuButtonSizing.css?raw';
 import adventureMenuLayoutCSS from './AdventureMenuLayout.css?raw';
@@ -39,7 +38,7 @@ const Tools = new GUIComponent(
 		menuPortraitCSS +
 		menuContentLayoutCSS +
 		menuContentComponentsCSS +
-		menuNavigationCSS + menuChromeCSS + adventureMenuLayoutCSS + menuFormControlsCSS + menuButtonSizingCSS + menuNarrowTabletCSS + menuListSpacingCSS
+		menuNavigationCSS + menuChromeCSS + adventureMenuLayoutCSS + menuFormControlsCSS + menuButtonSizingCSS + menuNarrowTabletCSS
 );
 Tools.render = () => '<div class="adventure-mount mobile-menu-viewport"></div>';
 Tools.needFocus = false;

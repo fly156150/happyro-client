@@ -6,12 +6,12 @@ import { setListItemText, setListItemIcon } from './ListItemText.js';
 
 export function createTradePanel(body, service) {
 	const layout = interactionColumns(body, [
-		{ title: '可交易物品', className: 'inventory-list', list: true },
+		{ title: '可交易物品', className: 'inventory-list' },
 		{
 			title: '双方报价',
 			className: 'trade-offers',
 			content:
-				'<section><h3>我方物品</h3><div data-menu-list="" data-own></div></section><section><h3>对方物品</h3><div data-menu-list="" data-peer></div></section>'
+				'<section><h3>我方物品</h3><div data-own></div></section><section><h3>对方物品</h3><div data-peer></div></section>'
 		}
 	]);
 	layout.dataset.menuLayout = 'trade';

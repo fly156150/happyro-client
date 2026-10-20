@@ -14,9 +14,9 @@ export function createVendingPanel(body, service) {
 	const layout = interactionColumns(body, [
 		{
 			title: initial.owned ? (initial.mode === 'buy' ? '收购商品' : '在售商品') : '可选商品',
-			className: 'inventory-list', list: true
+			className: 'inventory-list'
 		},
-		{ title: initial.owned ? '成交记录' : '摊位清单', content: '<div data-order></div>', list: true }
+		{ title: initial.owned ? '成交记录' : '摊位清单', content: '<div data-order></div>' }
 	]);
 	layout.dataset.menuLayout = 'vending';
 	const feedback = createFeedback(body);

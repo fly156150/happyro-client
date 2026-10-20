@@ -13,7 +13,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 		</div>
 		<div class="catalog-layout" data-menu-layout="split">
 			<section class="catalog-browser">
-				<div class="catalog-summary">正在加载资料...</div><div class="catalog-list" data-menu-list=""></div>
+				<div class="catalog-summary">正在加载资料...</div><div class="catalog-list"></div>
 				<div class="catalog-pagination" data-menu-pagination><button class="catalog-prev" type="button" aria-label="上一页"><span aria-hidden="true">‹</span></button><span class="catalog-page"></span><button class="catalog-next" type="button" aria-label="下一页"><span aria-hidden="true">›</span></button></div>
 			</section>
 			<section class="catalog-detail"><div class="empty-detail">${options.emptyDetail}</div></section>

@@ -6,7 +6,7 @@ import { setListItemText } from './ListItemText.js';
 /** Move quantities between the catalogue and order; submit through the original service. */
 export function createShopPanel(body, service) {
 	body.innerHTML =
-		'<div class="shop-layout" data-menu-layout="shop"><section class="shop-catalog"><h3>商品列表</h3><div class="inventory-list shop-catalog-list" data-menu-list="" aria-label="商店物品"></div></section><div class="shop-transfer"></div><section class="shop-order"><h3>待购买物品</h3><div class="inventory-list shop-order-list" data-menu-list="" aria-label="待交易物品"></div></section><section class="inventory-detail" aria-label="物品详情">请选择物品查看说明</section></div><div class="shop-footer menu-footer"><span class="shop-summary"><span data-balance></span><span class="shop-summary-separator"> · </span><span data-total></span></span><div class="shop-actions"></div></div>';
+		'<div class="shop-layout" data-menu-layout="shop"><section class="shop-catalog"><h3>商品列表</h3><div class="inventory-list shop-catalog-list" aria-label="商店物品"></div></section><div class="shop-transfer"></div><section class="shop-order"><h3>待购买物品</h3><div class="inventory-list shop-order-list" aria-label="待交易物品"></div></section><section class="inventory-detail" aria-label="物品详情">请选择物品查看说明</section></div><div class="shop-footer menu-footer"><span class="shop-summary"><span data-balance></span><span class="shop-summary-separator"> · </span><span data-total></span></span><div class="shop-actions"></div></div>';
 	const $ = selector => body.querySelector(selector);
 	const feedback = createFeedback(body);
 	const lists = [new Map(), new Map()];
