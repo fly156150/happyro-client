@@ -117,3 +117,70 @@
  min-width: 0; margin: 0; color: #f5f2e9; overflow-wrap: anywhere; text-align: left;
  font-size: var(--panel-text); line-height: 1.5;
 }
+
+.panel[data-view='social'] .social-guild-overview {
+ margin-bottom: 14px;
+}
+.panel[data-view='social'] .social-guild-notice,
+.panel[data-view='social'] .social-guild-notice-editor {
+ display: flex;
+ flex-direction: column;
+ align-items: stretch;
+ gap: 10px;
+ padding: 12px 0 0;
+ border-top: 1px solid #52606d;
+ margin-top: 12px;
+ min-width: 0;
+}
+.panel[data-view='social'] .social-guild-notice-editor > label {
+ display: flex;
+ flex-direction: column;
+ align-items: stretch;
+ gap: 6px;
+ min-width: 0;
+ width: 100%;
+}
+.panel[data-view='social'] .social-guild-notice-editor textarea {
+ width: 100%;
+ min-height: 100px;
+ resize: vertical;
+}
+.panel[data-view='social'] .social-guild-notice h4 {
+ margin: 0;
+ color: #ffe1ae;
+ overflow-wrap: anywhere;
+}
+.panel[data-view='social'] .social-guild-notice p {
+ margin: 0;
+ white-space: pre-wrap;
+ overflow-wrap: anywhere;
+ line-height: 1.7;
+}
+
+.panel[data-view='social'] .social-guild-labels {
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 6px 8px;
+ margin-top: 10px;
+}
+.panel[data-view='social'] .social-guild-label {
+ display: inline-flex;
+ align-items: baseline;
+ gap: 6px;
+ max-width: 100%;
+ padding: 4px 8px;
+ border-radius: 5px;
+ background: #2b3540;
+ font-size: var(--panel-label);
+ line-height: 1.5;
+}
+.panel[data-view='social'] .social-guild-label-name {
+ flex-shrink: 0;
+ color: #aab8c5;
+}
+.panel[data-view='social'] .social-guild-label-value {
+ min-width: 0;
+ color: #f5f2e9;
+ overflow-wrap: anywhere;
+}

@@ -12,6 +12,8 @@ vi.mock('Engine/MapEngine/Guild.js',()=>({default:{requestPositionUpdate:state.p
 vi.mock('DB/DBManager.js',()=>({default:{getMapName:code=>code==='prontera.rsw'?'普隆德拉':'未知地图',getSkillDescription:()=> '公会技能说明'}}));
 vi.mock('DB/Skills/SkillInfo.generated.js',()=>({default:{10001:{SkillName:'公会技能'}}}));
 import {createGameSocial} from '../../src/UI/Game/GameSocial.js';
+const inputPrompt = vi.hoisted(() => vi.fn());
+vi.mock('../../src/UI/Mobile/game/MobileInputEditor.js', () => ({ requestMobileInput: inputPrompt }));
 import {createSocialPanel} from '../../src/UI/Mobile/game/SocialPanel.js';
 beforeEach(()=>{vi.clearAllMocks();state.session.isGuildMaster=true;state.session.Playing=true;state.entities=[];state.details=undefined;state.session.Entity.GUID=10;state.guild.skills[0].level=1;state.guild.points=2;state.session.hasParty=false;state.session.isPartyLeader=false;state.social.party=[];state.social.friends=[];});
 it('checks current master rights, position identity and tax bounds before sending a rank edit',()=>{
@@ -25,9 +27,25 @@ it('requires a nearby player of another guild and rejects stale relation removal
  service.act('guildAlliance',{name:'目标'});expect(state.ally).toHaveBeenCalledExactlyOnceWith(99);service.act('guildHostility',{name:'目标'});expect(state.hostile).toHaveBeenCalledExactlyOnceWith(99);
  service.act('removeGuildRelation',{GDID:21,relation:0});expect(state.relation).not.toHaveBeenCalled();service.act('removeGuildRelation',{GDID:20,relation:0});expect(state.relation).toHaveBeenCalledExactlyOnceWith(20,0);
 });
-it('renders rank management and requires a second confirmation without sending during initial render',()=>{
- const body=document.body.appendChild(document.createElement('div'));createSocialPanel(body,createGameSocial(()=>true,{slotName:()=> '空槽位',configure:state.configure}),vi.fn());body.querySelector('[data-social-tab=guild]').click();
- const tax=body.querySelector('[aria-label="职位 1 经验税率（0–50）"]');expect(tax).not.toBeNull();tax.value='20';const form=tax.closest('form');form.dispatchEvent(new Event('submit',{cancelable:true}));expect(state.position).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();expect(state.position).toHaveBeenCalledOnce();
+it('removes complex guild management and submits notice and dissolution from the footer',()=>{
+ const body=document.body.appendChild(document.createElement('div')),service=createGameSocial(()=>true);
+ const act=vi.spyOn(service,'act').mockReturnValue('已请求，等待服务器回复');
+ createSocialPanel(body,service,vi.fn());body.querySelector('[data-social-tab=guild]').click();
+ for(const text of ['公会技能','上传徽章','保存职位','申请同盟','设为敌对']) expect(body.textContent).not.toContain(text);
+ expect(body.textContent).toContain('邀请入会');expect(body.querySelector('input[type=file]')).toBeNull();
+ const footer=body.querySelector('.social-footer-actions');
+ const save=[...footer.querySelectorAll('button')].find(b=>b.textContent==='保存公告');
+ const dissolve=[...footer.querySelectorAll('button')].find(b=>b.textContent==='解散公会');
+ expect(save).toBeDefined();expect(dissolve.disabled).toBe(false);expect(body.querySelector('[aria-label="输入完整公会名称"]')).toBeNull();
+ const subject=body.querySelector('[aria-label="公告标题"]');subject.value='';subject.dispatchEvent(new Event('input',{bubbles:true}));expect(save.disabled).toBe(false);subject.value='公告';subject.dispatchEvent(new Event('input',{bubbles:true}));
+ const notice=body.querySelector('[aria-label="公告内容"]');notice.value='新的公告';notice.dispatchEvent(new Event('input',{bubbles:true}));
+ save.click();expect(act).not.toHaveBeenCalled();body.querySelector('dialog [data-confirm]').click();
+ expect(act).toHaveBeenCalledWith('guildNotice',{subject:'公告',notice:'新的公告'});
+ dissolve.click();
+ const confirm=body.querySelector('dialog [data-confirm]');confirm.click();expect(act).not.toHaveBeenCalledWith('breakGuild',expect.anything());
+ const name=body.querySelector('[aria-label="输入完整公会名称"]');name.value='公会';name.dispatchEvent(new Event('input',{bubbles:true}));
+ expect(dissolve.disabled).toBe(false);body.querySelector('dialog [data-confirm]').click();
+ expect(act).toHaveBeenCalledWith('breakGuild',{name:'公会'});
 });
 
 it('locks a guild skill upgrade until server state changes, then binds only an authorized learned level',()=>{
@@ -42,8 +60,19 @@ it('validates emblem bytes and rechecks the guild after asynchronous file readin
  const changed={...file,arrayBuffer:async()=>{state.session.Entity.GUID=11;return file.arrayBuffer();}};expect(await service.uploadEmblem(changed)).toContain('变化');expect(state.emblem).not.toHaveBeenCalled();
  await service.uploadEmblem(file);expect(state.emblem).toHaveBeenCalledOnce();
 });
-it('updates an asynchronously loaded emblem without replacing the notice draft',()=>{
- const body=document.body.appendChild(document.createElement('div')),panel=createSocialPanel(body,createGameSocial(()=>true,{slotName:()=> '空槽位'}),vi.fn());body.querySelector('[data-social-tab=guild]').click();const notice=body.querySelector('[aria-label="公告内容"]');notice.value='尚未提交的公告';state.guild.emblem='data:image/gif;base64,R0lGODlh';panel.update();expect(body.querySelector('[aria-label="公告内容"]')).toBe(notice);expect(notice.value).toBe('尚未提交的公告');expect(body.querySelector('[data-guild-emblem]').hidden).toBe(false);
+it('preserves notice drafts when hidden guild data changes',()=>{
+ const body=document.body.appendChild(document.createElement('div')),panel=createSocialPanel(body,createGameSocial(()=>true),vi.fn());
+ body.querySelector('[data-social-tab=guild]').click();const notice=body.querySelector('[aria-label="公告内容"]');notice.value='尚未提交的公告';
+ state.guild.emblem='data:image/gif;base64,R0lGODlh';state.guild.points=5;panel.update();
+ expect(body.querySelector('[aria-label="公告内容"]')).toBe(notice);expect(notice.value).toBe('尚未提交的公告');expect(body.querySelector('[data-guild-emblem]')).toBeNull();
+});
+it('places guild member whisper in the footer without position controls',()=>{
+ state.guild.members=[{AID:3,GID:4,CharName:'成员',GPositionID:1}];
+ const body=document.body.appendChild(document.createElement('div')),whisper=vi.fn();
+ createSocialPanel(body,createGameSocial(()=>true),whisper);body.querySelector('[data-social-tab=guild]').click();body.querySelector('[data-member="3:4"]').click();
+ const chat=[...body.querySelector('.social-footer-actions').querySelectorAll('button')].find(b=>b.textContent==='私聊');
+ expect(chat).toBeDefined();chat.click();expect(whisper).toHaveBeenCalledWith('成员');expect(body.querySelector('.inventory-detail').textContent).not.toContain('设置职位');
+ state.guild.members=[];
 });
 
 it('resolves a friend by both server identifiers and denies stale or externally blocked actions',()=>{
@@ -121,4 +150,20 @@ it('shows known friend levels and Chinese maps without reusing offline locations
  state.social.friends[0].State=1;panel.update();
  expect(body.querySelector('.social-member-facts').textContent).not.toContain('普隆德拉');
  expect(body.querySelector('.social-member-facts').textContent).toBe('等级未知地图未知');
+});
+
+it('uses the shared input prompt for footer guild invitations and keeps notice captions visible',()=>{
+ const body=document.body.appendChild(document.createElement('div')),service=createGameSocial(()=>true);
+ const act=vi.spyOn(service,'act').mockReturnValue('已请求，等待服务器回复');
+ createSocialPanel(body,service,vi.fn());body.querySelector('[data-social-tab=guild]').click();
+ const title=body.querySelector('[aria-label="公告标题"]');
+ expect(title.closest('label').classList.contains('social-role-field')).toBe(false);
+ expect(title.closest('label').querySelector('span').textContent).toBe('公告标题');
+ expect(body.querySelector('[aria-label="附近角色名"]')).toBeNull();
+ const invite=[...body.querySelector('.social-footer-actions').querySelectorAll('button')].find(b=>b.textContent==='邀请入会');
+ invite.click();expect(inputPrompt).toHaveBeenCalledOnce();
+ const options=inputPrompt.mock.calls[0][1];
+ expect(options.title).toBe('邀请入会');expect(options.validate('')).toBeTruthy();expect(options.validate('中'.repeat(8))).toBeTruthy();
+ options.onConfirm(' 新成员 ');expect(act).toHaveBeenCalledWith('inviteGuild',{name:'新成员'});
+ act.mockClear();body.querySelector('[data-social-tab=friends]').click();options.onConfirm('旧请求');expect(act).not.toHaveBeenCalled();
 });

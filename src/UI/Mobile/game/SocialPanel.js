@@ -1,4 +1,5 @@
 import DB from 'DB/DBManager.js';
+import { requestMobileInput } from './MobileInputEditor.js';
 import { createMenuField } from './MenuFormControls.js';
 import { SOCIAL_TEXT_LIMITS, validateSocialText } from 'Utils/SocialText.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -22,18 +23,11 @@ export function createSocialPanel(body, service, whisper) {
 		if (action === 'partyOptions')
 			return [snapshot.options.exp_share, snapshot.options.item_share, snapshot.options.item_sharing_type];
 		if (action === 'guildNotice') return [snapshot.guild?.notice.subject, snapshot.guild?.notice.notice];
-		if (action === 'editGuildPosition') {
-			const p = snapshot.guild?.positions.find(position => position.positionID === data.position);
-			return [p?.posName, p?.payRate, p?.right & 17];
-		}
-		if (action === 'guildPosition')
-			return snapshot.guild?.members.find(m => m.AID === data.AID && m.GID === data.GID)?.GPositionID;
+
 	}
 	function expectedValue(action, data) {
 		if (action === 'partyOptions') return [data.exp, data.pickup, data.division];
 		if (action === 'guildNotice') return [data.subject, data.notice];
-		if (action === 'editGuildPosition') return [data.name.trim(), data.tax, data.right];
-		if (action === 'guildPosition') return data.position;
 	}
 
 	const act = (action, data) => {
@@ -48,16 +42,7 @@ export function createSocialPanel(body, service, whisper) {
 		const message = service.act(action, data);
 		if (message === '已请求，等待服务器回复' && expected !== undefined)
 			saves.set(`${action}:${data.position ?? ''}`, { action, data, expected, start: Date.now() });
-		status(
-			message,
-			action === 'bindGuildSkill'
-				? message === '快捷键已设置'
-					? 'success'
-					: 'error'
-				: message === '已请求，等待服务器回复'
-					? 'pending'
-					: 'error'
-		);
+		status(message, message === '已请求，等待服务器回复' ? 'pending' : 'error');
 	};
 	function button(text, fn) {
 		const b = document.createElement('button');
@@ -99,7 +84,6 @@ export function createSocialPanel(body, service, whisper) {
 			['地图', mapName]
 		] : [
 			['公会', state.guildName || '未知'],
-			['职位', state.guild.positions.find(position => position.positionID === member.GPositionID)?.posName || '未知'],
 			['等级', member.Level ? `Lv.${member.Level}` : '未知']
 		];
 		const facts = document.createElement('dl');
@@ -116,7 +100,7 @@ export function createSocialPanel(body, service, whisper) {
 		if (rows.length) card.append(facts);
 		return card;
 	}
-	function form(title, fields, submit, confirm = false, autoSave = false) {
+	function form(title, fields, submit, confirm = false, autoSave = false, inFooter = false) {
 		const f = document.createElement('form');
 		f.className = 'social-form menu-form-row';
 		const inputs = {};
@@ -124,11 +108,11 @@ export function createSocialPanel(body, service, whisper) {
 			const l = document.createElement('label');
 			const caption = document.createElement('span');
 			caption.textContent = label;
-			if (!options && type === 'text') l.className = 'social-role-field';
+			if (!options && type === 'text' && name !== 'subject') l.className = 'social-role-field';
 			l.append(caption);
 			const input = createMenuField(options ? 'select' : type === 'textarea' ? 'textarea' : 'input');
 			input.setAttribute('aria-label', label);
-			if (!options && type === 'text') input.placeholder = label;
+			if (!options && type === 'text' && name !== 'subject') input.placeholder = label;
 			if (options) for (const [id, text] of options) input.add(new Option(text, id));
 			else {
 				if (type !== 'textarea') input.type = type;
@@ -147,14 +131,14 @@ export function createSocialPanel(body, service, whisper) {
 		const send = document.createElement('button');
 		send.type = 'submit';
 		send.textContent = title;
-		const footerAction = (category === 'friends' || category === 'party') && fields.length === 0;
+		const footerAction = inFooter || ((category === 'friends' || category === 'party') && fields.length === 0);
 		if (!autoSave) {
 			if (footerAction) {
 				send.type = 'button';
 				send.onclick = () => f.requestSubmit();
 				$('.social-footer-actions').append(send);
 				const updateEnabled = () => {
-					send.disabled = !state.allowed || Object.values(inputs).some(input => !input.value.trim() || !input.validity.valid);
+					send.disabled = !state.allowed || Object.entries(inputs).some(([name, input]) => !input.validity.valid || (name === 'name' && !input.value.trim()));
 				};
 				f.addEventListener('input', updateEnabled);
 				f.addEventListener('change', updateEnabled);
@@ -164,7 +148,7 @@ export function createSocialPanel(body, service, whisper) {
 		f.onsubmit = e => {
 			e.preventDefault();
 			const values = Object.fromEntries(Object.entries(inputs).map(([name, node]) => [name, node.value]));
-			if (confirm) confirmAction(footerAction ? body : f, `确认${title}？`, () => submit(values));
+			if (confirm) confirmAction(f, `确认${title}？`, () => submit(values));
 			else submit(values);
 		};
 		if (autoSave)
@@ -190,11 +174,6 @@ export function createSocialPanel(body, service, whisper) {
 		list.dataset.socialType = type;
 		$('[data-refresh]').hidden = type !== 'guild';
 		$('[data-refresh]').disabled = !state.allowed || !state.guild;
-		const emblem = detail.querySelector('[data-guild-emblem]');
-		if (emblem) {
-			emblem.hidden = !state.guild?.emblem;
-			if (state.guild?.emblem) emblem.src = state.guild.emblem;
-		}
 		const members =
 			type === 'friends' ? state.friends : type === 'party' ? state.party : state.guild?.members || [];
 		const next = JSON.stringify([
@@ -243,10 +222,6 @@ export function createSocialPanel(body, service, whisper) {
 			state.rights,
 			state.guild?.info,
 			state.guild?.notice,
-			state.guild?.positions,
-			state.guild?.relations,
-			state.guild?.history,
-			state.guildSkills
 		]);
 		if (key === lastKey) return;
 		lastKey = key;
@@ -271,7 +246,7 @@ export function createSocialPanel(body, service, whisper) {
 			detail.append(memberSummary(member, type, isSelf));
 			const chat = button('私聊', () => whisper(name));
 			chat.disabled = !state.allowed || isSelf;
-			(type === 'guild' ? detail : $('.social-footer-actions')).append(chat);
+			$('.social-footer-actions').append(chat);
 			if (type === 'friends') {
 				form('删除好友', [], () => act('removeFriend', member), true);
 			} else if (type === 'party') {
@@ -280,21 +255,6 @@ export function createSocialPanel(body, service, whisper) {
 					form('移出队伍', [], () => act('expelParty', member), true);
 				}
 			} else {
-				if (state.master && !isSelf)
-					form(
-						'设置职位',
-						[
-							[
-								'position',
-								'公会职位',
-								'',
-								member.GPositionID,
-								(state.guild.positions || []).map(p => [p.positionID, p.posName])
-							]
-						],
-						values => act('guildPosition', { ...member, position: Number(values.position) }),
-						true
-					);
 				if ((state.master || state.rights & 0x10) && member.AID !== state.self.AID)
 					form(
 						'移出公会',
@@ -363,153 +323,92 @@ export function createSocialPanel(body, service, whisper) {
 				form('创建公会', [['name', '公会名']], values => act('createGuild', values), true);
 				return;
 			}
-			const skillGroup = document.createElement('details'),
-				summary = document.createElement('summary');
-			summary.textContent = `公会技能 · 剩余点数 ${state.guild.points}`;
-			skillGroup.append(summary);
-			detail.append(skillGroup);
-			for (const skill of state.guildSkills) {
-				skillGroup.append(paragraph(`${skill.name} Lv.${skill.level}`), paragraph(skill.description));
-				if (skill.learnable)
-					skillGroup.append(
-						form(
-							`学习 ${skill.name} 一级`,
-							[],
-							() => act('learnGuildSkill', { id: skill.SKID, level: skill.level + 1 }),
-							true
-						)
-					);
-				if (state.master && skill.active)
-					skillGroup.append(
-						form(
-							`设置 ${skill.name} 快捷槽`,
-							[
-								['level', `${skill.name} 施放等级`, 'number', skill.level],
-								[
-									'slot',
-									`${skill.name} 快捷槽`,
-									'',
-									0,
-									Array.from({ length: 36 }, (_, index) => [
-										index,
-										`${index + 1}：${service.shortcutName(index)}`
-									])
-								]
-							],
-							values =>
-								act('bindGuildSkill', {
-									id: skill.SKID,
-									level: Number(values.level),
-									slot: Number(values.slot)
-								}),
-							true
-						)
-					);
+			const info = state.guild.info;
+			const overview = document.createElement('section');
+			overview.className = 'social-guild-overview';
+			const heading = document.createElement('h3');
+			heading.className = 'social-party-heading';
+			heading.textContent = state.guildName;
+			overview.append(heading);
+			if (info) {
+				const facts = document.createElement('div');
+				facts.className = 'social-guild-labels';
+				for (const [label, value] of [['等级', `Lv.${info.level}`], ['会长', info.masterName], ['成员', `${info.userNum}/${info.maxUserNum}`]]) {
+					const row = document.createElement('span'), term = document.createElement('span'), description = document.createElement('span');
+					row.className = 'social-guild-label';
+					term.className = 'social-guild-label-name';
+					description.className = 'social-guild-label-value';
+					term.textContent = label;
+					description.textContent = value;
+					row.append(term, description);
+					facts.append(row);
+				}
+				overview.append(facts);
+			} else overview.append(paragraph('正在获取公会信息'));
+			detail.append(overview);
+			if (!state.master) {
+				const notice = document.createElement('section');
+				notice.className = 'social-guild-notice';
+				const title = document.createElement('h4');
+				title.textContent = state.guild.notice.subject || '公会公告';
+				notice.append(title, paragraph(state.guild.notice.notice || '暂无公告'));
+				detail.append(notice);
 			}
-			if (state.master) {
-				const upload = document.createElement('form');
-				upload.className = 'social-form menu-form-row';
-				const file = createMenuField();
-				file.type = 'file';
-				file.accept = '.bmp,.gif,image/bmp,image/gif';
-				file.setAttribute('aria-label', '公会徽章文件');
-				const send = document.createElement('button');
-				send.type = 'submit';
-				send.textContent = '上传徽章';
-				upload.append(paragraph('徽章：BMP 不超过 1783 字节、24 位或以下；GIF 不超过 50 KB'), file, send);
-				upload.onsubmit = event => {
-					event.preventDefault();
-					const selectedFile = file.files[0];
-					if (!selectedFile) {
-						status('请选择徽章文件', 'error');
-						return;
-					}
-					confirmAction(upload, `确认上传徽章「${selectedFile.name}」？`, async () => {
-						send.disabled = true;
-						try {
-							const result = await service.uploadEmblem(selectedFile);
-							status(result, result === '已请求上传徽章，结果以服务器回复为准' ? 'pending' : 'error');
-						} catch {
-							status('无法读取徽章文件，请重新选择', 'error');
-						} finally {
-							send.disabled = false;
+			if (state.master || state.rights & 1) {
+				const invite = button('邀请入会', () => {
+					const guildName = state.guildName;
+					const field = createMenuField();
+					field.placeholder = '输入附近角色名';
+					field.required = true;
+					field.maxLength = SOCIAL_TEXT_LIMITS.name;
+					field.autocomplete = 'off';
+					requestMobileInput(body.getRootNode().host, {
+						field,
+						title: '邀请入会',
+						doneLabel: '邀请',
+						validate: value => !value.trim() ? '请输入角色名' : validateSocialText({ name: value.trim() }),
+						onConfirm: value => {
+							if (!overview.isConnected || service.snapshot().guildName !== guildName) return;
+							act('inviteGuild', { name: value.trim() });
 						}
 					});
-				};
-				detail.append(upload);
-			}
-			const info = state.guild.info;
-			const emblemImage = document.createElement('img');
-			emblemImage.dataset.guildEmblem = '';
-			emblemImage.alt = '公会徽章';
-			emblemImage.width = emblemImage.height = 48;
-			emblemImage.hidden = !state.guild.emblem;
-			if (state.guild.emblem) emblemImage.src = state.guild.emblem;
-			detail.append(emblemImage);
-			detail.append(
-				paragraph(state.guildName),
-				paragraph(
-					info
-						? `Lv.${info.level} · 会长：${info.masterName} · 成员：${info.userNum}/${info.maxUserNum}`
-						: '正在获取公会信息'
-				),
-				paragraph(state.guild.notice.subject),
-				paragraph(state.guild.notice.notice)
-			);
-			for (const relation of state.guild.relations) {
-				detail.append(paragraph(`${relation.relation === 0 ? '同盟' : '敌对'}：${relation.guildName}`));
-				if (state.master)
-					form(`解除与 ${relation.guildName} 的关系`, [], () => act('removeGuildRelation', relation), true);
+				});
+				invite.disabled = !state.allowed;
+				$('.social-footer-actions').append(invite);
 			}
 			if (state.master) {
-				form('申请同盟', [['name', '附近其他公会角色名']], values => act('guildAlliance', values), true);
-				form('设为敌对', [['name', '附近敌对角色名']], values => act('guildHostility', values), true);
-				for (const position of state.guild.positions) {
-					form(
-						`保存职位 ${position.positionID}`,
-						[
-							['name', `职位 ${position.positionID} 名称`, 'text', position.posName],
-							['tax', `职位 ${position.positionID} 经验税率（0–50）`, 'number', position.payRate],
-							[
-								'right',
-								`职位 ${position.positionID} 权限`,
-								'',
-								position.right & 17,
-								[
-									[0, '无管理权限'],
-									[1, '邀请成员'],
-									[16, '移出成员'],
-									[17, '邀请和移出成员']
-								]
-							]
-						],
-						values =>
-							act('editGuildPosition', {
-								...values,
-								position: position.positionID,
-								tax: Number(values.tax),
-								right: Number(values.right)
-							}),
-						true
-					);
-				}
-			}
-			for (const entry of state.guild.history)
-				detail.append(paragraph(`移出记录：${entry.charname} · ${entry.reason}`));
-			if (state.master || state.rights & 1)
-				form('邀请入会', [['name', '附近角色名']], values => act('inviteGuild', values));
-			if (state.master) {
-				form(
-					'修改公告',
+				const noticeForm = form(
+					'保存公告',
 					[
 						['subject', '公告标题', 'text', state.guild.notice.subject],
 						['notice', '公告内容', 'textarea', state.guild.notice.notice]
 					],
 					values => act('guildNotice', values),
+					true,
+					false,
 					true
 				);
-				form('解散公会', [['name', '输入完整公会名称']], values => act('breakGuild', values), true);
-			} else form('退出公会', [['reason', '离会原因']], values => act('leaveGuild', values), true);
+				noticeForm.classList.add('social-guild-notice-editor');
+				const dissolve = button('解散公会', () => {
+					const guildName = state.guildName;
+					const content = document.createElement('div');
+					content.className = 'social-form';
+					const name = createMenuField();
+					name.required = true;
+					name.placeholder = '输入完整公会名称';
+					name.setAttribute('aria-label', '输入完整公会名称');
+					const validate = () => name.setCustomValidity(name.value.trim() === guildName ? '' : '请输入完整公会名称');
+					name.oninput = validate;
+					validate();
+					content.append(name);
+					confirmAction(overview, `解散公会「${guildName}」？请输入完整名称确认，此操作不会保存公告。`, () => {
+						if (service.snapshot().guildName !== guildName) return status('公会已变化，请重新打开菜单', 'error');
+						act('breakGuild', { name: name.value });
+					}, { content });
+				});
+				dissolve.disabled = !state.allowed;
+				$('.social-footer-actions').append(dissolve);
+			} else form('退出公会', [['reason', '离会原因']], values => act('leaveGuild', values), true, false, true);
 		}
 		syncFooter();
 	}
