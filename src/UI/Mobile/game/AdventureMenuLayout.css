@@ -56,3 +56,165 @@
  --menu-footer-padding: 8px;
  --menu-footer-height: calc(var(--panel-control) + 2 * var(--menu-footer-padding) + 1px);
 }
+
+/* Adventure-only horizontal alignment: header, search and content share one inset. */
+:host([data-menu-density]) .mobile-adventure.game-tools-window {
+ --adventure-content-inline: 8px;
+}
+:host([data-menu-density='spacious']) .mobile-adventure.game-tools-window {
+ --adventure-content-inline: 16px;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.adventure-header, .catalog-toolbar, .monster-toolbar) {
+ padding-inline: var(--adventure-content-inline);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-list, .monster-list, .character-job-list, .catalog-detail, .monster-detail, .character-detail-scroll, .settings-scroll) {
+ box-sizing: border-box;
+ padding-inline: var(--adventure-content-inline);
+}
+/* The character scroller owns its inset, avoiding nested detail padding. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='character'] .character-detail {
+ padding-inline: 0;
+}
+/* Phone portrait uses display:contents for detail panes and search toolbars. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature] :is(.map-detail-body, .npc-detail-body, .monster-information, .item-detail-content) {
+ padding-inline: var(--adventure-content-inline);
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) :is(.catalog-search, .monster-search) {
+ margin-left: var(--adventure-content-inline);
+ width: calc(100% - var(--adventure-content-inline));
+}
+
+/* Footer actions end on the same edge as the header close button. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-action-panel, .summon-panel, .character-actions, .settings-footer) {
+ padding-right: var(--adventure-content-inline);
+}
+/* The character search already has toolbar padding; do not add a second inset. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='character'] .character-job-toolbar .catalog-search {
+ margin-left: 0;
+ width: auto;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='character'] .character-detail-scroll {
+ padding-left: 6px;
+}
+
+/* The phone character divider already separates panes; avoid doubling its inset. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='character'] .character-layout {
+ column-gap: 0;
+}
+
+/* Detail footers cancel only their parent's inset, then restore it once for buttons. */
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature] :is(.catalog-detail, .monster-detail) > :is(.catalog-action-panel, .summon-panel) {
+ margin-inline: calc(-1 * var(--adventure-content-inline));
+ padding-inline: var(--adventure-content-inline);
+ max-width: none;
+}
+/* Settings share the same physical content box for fields and the footer action. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .settings-form {
+ box-sizing: border-box;
+ padding-inline: var(--adventure-content-inline);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature] :is(.settings-scroll, .settings-footer) {
+ padding-inline: 0;
+ margin-inline: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .settings-footer > button {
+ justify-self: end;
+ margin-right: 0;
+}
+/* Job actions and progression share three equal columns in phone landscape. */
+:host([data-phone-screen][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window .character-detail-scroll
+ :is(.progression-form, .progression-form > .management-form-actions, .selected-job > .management-form-actions) {
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Item catalog adjustments stay inside adventure tools. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .catalog-list .item-thumb {
+ border: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .item-source-table :is(thead th, tbody td) {
+ text-align: left;
+}
+/* Reserve only two 32px page buttons, their 6px gap and the shared outer inset. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .catalog-search {
+ grid-area: search;
+ grid-column: 1 / -1;
+ width: calc(100% - 76px - 2 * var(--adventure-content-inline));
+ min-width: 0;
+ box-sizing: border-box;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .catalog-pagination {
+ grid-area: pages;
+ grid-column: 1 / -1;
+ justify-self: end;
+ width: calc(70px + var(--adventure-content-inline));
+ padding-right: var(--adventure-content-inline);
+ justify-content: flex-end;
+}
+
+/* The row owns thumbnail clearance; margins alone do not reserve button height. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .catalog-list .map-row {
+ box-sizing: border-box;
+ height: auto;
+ min-height: 46px;
+ padding-block: 3px;
+ align-items: center;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .catalog-list .map-thumb {
+ box-sizing: border-box;
+ height: 38px;
+ margin-block: 0;
+}
+/* Map search retains a real toolbar, so its inset must only be applied once. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .catalog-toolbar {
+ padding-left: var(--adventure-content-inline);
+ padding-right: 0;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .catalog-toolbar .catalog-search {
+ margin-left: 0;
+ width: 100%;
+}
+
+/* Table links must not inherit tablet action-button padding. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .item-source-table .item-source-monster {
+ padding: 0;
+ margin: 0;
+ min-height: 0;
+ height: auto;
+ text-align: left;
+}
+
+/* Tablet catalog lists keep a smaller inset against the pane divider. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='maps'], [data-feature='monsters'], [data-feature='items'], [data-feature='npcs'], [data-feature='character'])
+ :is(.catalog-list, .monster-list, .character-job-list) {
+ padding-right: 8px;
+}
+/* Portrait tablets prioritize the map over its NPC name list. */
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .map-detail-body {
+ grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+}
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .map-npc-text small {
+ display: none;
+}
