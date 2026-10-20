@@ -127,7 +127,7 @@ Trade.reqAddItem = function reqAddItem(index, count) {
  */
 function onAddItemResult(pkt) {
 	if (Platform.isMobile) {
-		currentGameTrade()?.acknowledge(pkt.Index, pkt.result === 0);
+		currentGameTrade()?.acknowledge(pkt.Index, pkt.result);
 		return;
 	}
 	switch (pkt.result) {

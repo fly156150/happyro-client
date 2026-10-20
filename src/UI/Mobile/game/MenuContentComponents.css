@@ -681,3 +681,127 @@
  :is(.catalog-list, .monster-list, .character-job-list, .map-npc-scroll) {
  overscroll-behavior-y: none;
 }
+
+/* Trade keeps three independently scrolling columns in every mobile orientation. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .interaction-columns {
+ display: grid;
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ grid-template-rows: minmax(0, 1fr);
+ min-height: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .trade-money-toolbar {
+ display: grid;
+ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr) auto;
+ gap: 6px;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .trade-money-toolbar > * {
+ min-width: 0;
+ width: 100%;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .interaction-column-content {
+ display: flex;
+ flex-direction: column;
+ gap: 6px;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .interaction-column-content > * {
+ flex-shrink: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .interaction-footer {
+ justify-content: flex-end;
+}
+
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] .interaction-column-title {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 6px;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='trade'] [data-trade-money] {
+ margin-left: auto;
+ font-size: var(--panel-label);
+ font-weight: normal;
+ overflow-wrap: anywhere;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] .interaction-columns {
+ grid-template-columns: minmax(0, 1fr);
+ grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] .interaction-column:nth-child(1) { grid-row: 3; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] .interaction-column:nth-child(2) { grid-row: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] .interaction-column:nth-child(3) { grid-row: 1; }
+
+/* Only the trade confirmation uses two independently scrollable offer columns. */
+:host([data-menu-density]) .panel[data-view='trade'] .ui-confirm:has(.trade-confirm-columns) {
+ width: min(640px, calc(100% - var(--menu-dialog-inset, 32px)));
+}
+:host([data-menu-density]) .panel[data-view='trade'] .ui-confirm:has(.trade-confirm-columns) .ui-confirm-body {
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .ui-confirm:has(.trade-confirm-columns) .ui-confirm-body > p {
+ flex-shrink: 0;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-columns {
+ display: grid;
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ gap: 10px;
+ min-height: 0;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-columns > section {
+ display: flex;
+ flex-direction: column;
+ min-width: 0;
+ min-height: 0;
+ border: 1px solid #52606d;
+ border-radius: 6px;
+ overflow: hidden;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-columns h3 {
+ display: flex;
+ justify-content: space-between;
+ flex-wrap: wrap;
+ gap: 4px 8px;
+ flex-shrink: 0;
+ margin: 0;
+ padding: 8px;
+ border-bottom: 1px solid #52606d;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-columns h3 > span {
+ margin-left: auto;
+ font-weight: normal;
+ overflow-wrap: anywhere;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-items {
+ min-height: 0;
+ overflow-y: auto;
+ overscroll-behavior-y: none;
+ padding: 8px;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-items > p {
+ margin: 0;
+ white-space: normal;
+ overflow-wrap: anywhere;
+}
+:host([data-menu-density]) .panel[data-view='trade'] .trade-confirm-items > p + p {
+ margin-top: 8px;
+}
+
+/* Phone portrait trade filters sit between the item list and final actions. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] > .panel-body {
+ display: flex;
+ flex-direction: column;
+ min-height: 0;
+ overflow: hidden;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] > .panel-body > .interaction-columns {
+ order: 0;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] > .panel-body > .trade-money-toolbar {
+ order: 1;
+ flex-shrink: 0;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='trade'] > .panel-body > .interaction-footer {
+ order: 2;
+ flex-shrink: 0;
+}

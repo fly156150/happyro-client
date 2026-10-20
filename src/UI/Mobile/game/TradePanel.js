@@ -1,5 +1,9 @@
+import { requestMobileInput } from './MobileInputEditor.js';
+import { createMenuField } from './MenuFormControls.js';
+import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
+import ItemType from 'DB/Items/ItemType.js';
 import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
-import { interactionColumns, interactionReview, interactionFooter, inputDraft } from './InteractionPanel.js';
+import { interactionColumns, interactionFooter, inputDraft } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
@@ -7,18 +11,44 @@ import { setListItemText, setListItemIcon } from './ListItemText.js';
 export function createTradePanel(body, service) {
 	const layout = interactionColumns(body, [
 		{ title: '可交易物品', className: 'inventory-list' },
-		{
-			title: '双方报价',
-			className: 'trade-offers',
-			content:
-				'<section><h3>我方物品</h3><div data-own></div></section><section><h3>对方物品</h3><div data-peer></div></section>'
-		}
+		{ title: '我方', className: 'trade-own' },
+		{ title: '对方', className: 'trade-peer' }
 	]);
 	layout.dataset.menuLayout = 'trade';
+	layout.querySelector('.trade-own').dataset.own = '';
+	layout.querySelector('.trade-peer').dataset.peer = '';
+	for (const side of ['own', 'peer']) {
+		const money = document.createElement('span');
+		money.dataset.tradeMoney = side;
+		layout.querySelector(`[data-${side}]`).previousElementSibling.append(money);
+	}
 	const toolbar = document.createElement('div');
 	toolbar.className = 'trade-money-toolbar';
-	toolbar.innerHTML =
-		'<label class="interaction-field">交易金额<input data-menu-control="field" data-money type="number" min="0" step="1" value="0"></label><div class="interaction-inline-actions"><button data-send-money>设置金额</button><button data-revert-money>撤销金额</button></div>';
+	toolbar.classList.add('menu-form-row');
+	const category = createMenuField('select');
+	category.setAttribute('aria-label', '交易物品分类');
+	for (const [value, label] of [
+		['all', '全部'], ['usable', '消耗品'], ['equipment', '装备'], ['weapon', '武器'],
+		['armor', '防具'], ['card', '卡片'], ['ammo', '弹药'], ['pet', '宠物用品'],
+		['shadow', '影子装备'], ['other', '其他']
+	]) category.add(new Option(label, value));
+	const itemTypes = {
+		weapon: [ItemType.WEAPON], armor: [ItemType.ARMOR], card: [ItemType.CARD],
+		ammo: [ItemType.AMMO], pet: [ItemType.PETEGG, ItemType.PETARMOR], shadow: [ItemType.SHADOWGEAR]
+	};
+	const changeFilter = () => { update(); body.querySelector('.inventory-list').scrollTop = 0; };
+	const subtype = createItemSubtypeFilter(changeFilter);
+	category.onchange = () => { subtype.reset(); changeFilter(); };
+	const search = createMenuField();
+	search.type = 'search';
+	search.placeholder = '搜索名称或 ID';
+	search.setAttribute('aria-label', '搜索交易物品');
+	search.oninput = changeFilter;
+	const moneyButton = document.createElement('button');
+	moneyButton.type = 'button';
+	moneyButton.dataset.sendMoney = '';
+	moneyButton.textContent = '设置金额';
+	toolbar.append(category, subtype.select, search, moneyButton);
 	body.prepend(toolbar);
 	const pickerContent = document.createElement('div');
 	pickerContent.dataset.picker = '';
@@ -26,7 +56,7 @@ export function createTradePanel(body, service) {
 		const add = pickerContent.querySelector('[data-add-item]');
 		confirmAction(
 			body,
-			add ? '加入交易' : '物品详情',
+			service.snapshot().items.find(item => item.index === selected)?.name || '交易数量',
 			() => {
 				add?.click();
 				quantityDraft = null;
@@ -46,9 +76,9 @@ export function createTradePanel(body, service) {
 	const $ = selector => (selector === '[data-picker]' ? pickerContent : body.querySelector(selector)),
 		nodes = new Map();
 	const { footer, status } = interactionFooter(body);
-	status.dataset.phase = '';
+	status.remove();
 	for (const [key, text] of [
-		['lock', '锁定报价'],
+		['lock', '锁定交易'],
 		['execute', '确认成交'],
 		['cancel', '取消交易']
 	]) {
@@ -59,20 +89,7 @@ export function createTradePanel(body, service) {
 		footer.append(button);
 	}
 	let quantityDraft, quantityInput;
-	$('[data-money]').required = true;
-	$('[data-money]').setAttribute('aria-label', '交易金额');
-	$('[data-money]').value = String(service.snapshot().money);
-	$('[data-money]').oninput = () => update();
-	$('[data-revert-money]').onclick = () => {
-		$('[data-money]').value = String(service.snapshot().money);
-		update();
-	};
 	function ready() {
-		if (Number($('[data-money]').value) !== service.snapshot().money || !$('[data-money]').checkValidity()) {
-			feedback('金额尚未设置，请先设置或撤销金额', 'error');
-			$('[data-money]').focus();
-			return false;
-		}
 		if (quantityDraft?.dirty()) {
 			feedback('物品数量尚未加入交易，请先加入或撤销修改', 'error');
 			quantityDraft.focus();
@@ -80,7 +97,6 @@ export function createTradePanel(body, service) {
 		}
 		return true;
 	}
-	let preview = null;
 	let selected = null,
 		pickerKey = '';
 	function action(result) {
@@ -100,7 +116,19 @@ export function createTradePanel(body, service) {
 		update();
 	}
 	$('[data-send-money]').onclick = () => {
-		if ($('[data-money]').reportValidity()) action(service.setMoney(Number($('[data-money]').value)));
+		const state = service.snapshot();
+		const amount = createMenuField();
+		amount.type = 'number';
+		amount.inputMode = 'numeric';
+		amount.min = '0';
+		amount.max = String(Math.min(state.balance ?? 2147483647, 2147483647));
+		amount.step = '1';
+		amount.value = state.money ? String(state.money) : '';
+		amount.setAttribute('aria-label', '交易金额');
+		requestMobileInput(body.getRootNode().host, {
+			fields: [amount], title: '设置金额', doneLabel: '确认',
+			onConfirm: ([value]) => action(service.setMoney(Number(value)))
+		});
 	};
 	$('[data-lock]').onclick = () => {
 		if (ready()) action(service.lock());
@@ -108,16 +136,28 @@ export function createTradePanel(body, service) {
 	$('[data-execute]').onclick = () => {
 		if (!ready()) return;
 		const state = service.snapshot();
-		const content = interactionReview(
-			[
-				'我方物品：',
-				...state.offered.map(row => `${row.name} × ${row.count}`),
-				'对方物品：',
-				...state.received.map(row => `${row.name} × ${row.count}`)
-			],
-			`我方金额：${state.money} Z\n对方金额：${state.peerMoney} Z`,
-			'请核对双方物品和金额，确认后等待服务器完成交易。'
-		);
+		const content = document.createElement('div');
+		content.className = 'trade-confirm-columns';
+		for (const [label, rows, money] of [
+			['我方', state.offered, state.money],
+			['对方', state.received, state.peerMoney]
+		]) {
+			const column = document.createElement('section');
+			const heading = document.createElement('h3');
+			heading.textContent = label;
+			const amount = document.createElement('span');
+			amount.textContent = `${money} Z`;
+			heading.append(amount);
+			const list = document.createElement('div');
+			list.className = 'trade-confirm-items';
+			for (const item of rows) {
+				const row = document.createElement('p');
+				row.textContent = `${item.name} × ${item.count}`;
+				list.append(row);
+			}
+			column.append(heading, list);
+			content.append(column);
+		}
 		const signature = JSON.stringify([state.offered, state.received, state.money, state.peerMoney]);
 		confirmAction(
 			body,
@@ -144,6 +184,10 @@ export function createTradePanel(body, service) {
 				node.remove();
 				nodes.delete(id);
 			}
+		const categoryItems = state.items.filter(item => category.value === 'all' || item.category === category.value || itemTypes[category.value]?.includes(item.type));
+		subtype.update(categoryItems, category.value);
+		const query = search.value.trim().toLocaleLowerCase();
+		const visible = new Set(categoryItems.filter(item => subtype.matches(item) && (!query || item.name.toLocaleLowerCase().includes(query) || String(item.ID).includes(query))).map(item => item.index));
 		for (const item of state.items) {
 			let node = nodes.get(item.index);
 			if (!node) {
@@ -152,7 +196,6 @@ export function createTradePanel(body, service) {
 				node.onclick = () => {
 					if (!ready()) return;
 					selected = item.index;
-					preview = null;
 					pickerKey = '';
 					update();
 					showPicker();
@@ -160,23 +203,20 @@ export function createTradePanel(body, service) {
 				nodes.set(item.index, node);
 				$('.inventory-list').append(node);
 			}
+			node.hidden = !visible.has(item.index);
 			node.disabled = !active || state.ownLocked;
 			setListItemIcon(node, item);
 			setListItemText(node, item.name, `× ${item.count}`);
 			node.setAttribute('aria-pressed', String(selected === item.index));
 		}
-		const item = preview
-			? state[preview.side].find(entry => entry.index === preview.index)
-			: state.items.find(entry => entry.index === selected);
-		const key = JSON.stringify([item?.index, item?.ID, item?.identity, preview]);
+		const item = state.items.find(entry => entry.index === selected);
+		const key = JSON.stringify([item?.index, item?.ID, item?.identity]);
 		if (key !== pickerKey) {
 			pickerKey = key;
 			const picker = $('[data-picker]');
 			picker.replaceChildren();
 			quantityDraft = null;
 			if (item) {
-				const text = document.createElement('p');
-				text.textContent = item.description;
 				const stepper = createQuantityStepper({ label: '交易数量', value: 1, min: 1, max: item.count });
 				const input = stepper.input;
 				quantityInput = input;
@@ -198,35 +238,28 @@ export function createTradePanel(body, service) {
 					if (result === '等待服务器确认物品') quantityDraft?.accept();
 					action(result);
 				};
-				const title = document.createElement('h3');
-				title.textContent = item.name;
-				picker.append(title);
-				if (preview) picker.append(text);
-				else {
+				{
 					const revert = document.createElement('button');
 					revert.type = 'button';
 					revert.textContent = '撤销修改';
 					revert.dataset.revertQuantity = '';
 					revert.onclick = () => quantityDraft.reset();
 					revert.hidden = true;
-					picker.append(stepper.element, button, text);
+					picker.append(stepper.element, button);
 					quantityDraft = inputDraft([input], update);
 				}
 			} else picker.textContent = '点击左侧物品设置数量';
 		}
-		if (item && !preview && quantityInput) quantityInput.max = String(item.count);
+		if (item && quantityInput) quantityInput.max = String(item.count);
 		for (const control of $('[data-picker]').querySelectorAll('input,button'))
 			control.disabled = !active || state.ownLocked;
 		const revert = $('[data-revert-quantity]');
 		if (revert) revert.hidden = !quantityDraft?.dirty();
-		$('[data-revert-money]').hidden =
-			Number($('[data-money]').value) === state.money && $('[data-money]').checkValidity();
-		$('[data-revert-money]').disabled = !active || state.ownLocked;
-		$('[data-money]').max = String(Math.min(state.balance ?? 2147483647, 2147483647));
 		for (const [selector, side, money] of [
 			['[data-own]', 'offered', state.money],
 			['[data-peer]', 'received', state.peerMoney]
 		]) {
+			$(`[data-trade-money="${side === 'offered' ? 'own' : 'peer'}"]`).textContent = `${money} Z`;
 			const parent = $(selector),
 				rows = state[side];
 			const signature = JSON.stringify([
@@ -235,30 +268,20 @@ export function createTradePanel(body, service) {
 			]);
 			if (parent.dataset.signature === signature) continue;
 			parent.dataset.signature = signature;
-			const balance = document.createElement('p');
-			balance.textContent = `金额：${money} Z`;
-			parent.replaceChildren(balance);
+			parent.replaceChildren();
 			for (const entry of rows) {
 				const button = document.createElement('button');
+				button.type = 'button';
 				setListItemText(button, entry.name, `× ${entry.count}`);
 				setListItemIcon(button, entry);
-				button.className = 'interaction-order-item';
-				button.onclick = () => {
-					if (!ready()) return;
-					preview = { side, index: entry.index };
-					selected = null;
-					pickerKey = '';
-					update();
-					showPicker();
-				};
+				button.className = 'inventory-item';
+
 				parent.append(button);
 			}
 		}
-		$('[data-phase]').textContent = state.status;
-		$('[data-money]').disabled = !active || state.ownLocked;
 		$('[data-send-money]').disabled = !active || state.ownLocked;
 		$('[data-lock]').disabled = !active || state.ownLocked;
-		$('[data-lock]').textContent = state.ownLocked ? '报价已锁定' : '锁定报价';
+		$('[data-lock]').textContent = state.ownLocked ? '交易已锁定' : '锁定交易';
 		$('[data-execute]').disabled = !active || !state.ownLocked || !state.peerLocked;
 		$('[data-execute]').textContent = '确认成交';
 		$('[data-cancel]').disabled = !state.allowed;

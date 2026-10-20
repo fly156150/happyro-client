@@ -1,3 +1,4 @@
+import { showToast } from 'UI/Components/Toast.js';
 import Session from 'Engine/SessionStorage.js';
 import DB from 'DB/DBManager.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
@@ -85,7 +86,8 @@ export function openGameTrade(name, callbacks) {
 			callbacks.add(0, value);
 			return '金额已发送，请核对后锁定报价';
 		},
-		acknowledge(index, success) {
+		acknowledge(index, result) {
+			const success = result === 0;
 			if (!owned() || pending?.type !== 'item' || pending.index !== index) return;
 			const request = pending;
 			pending = null;
@@ -94,7 +96,13 @@ export function openGameTrade(name, callbacks) {
 				Inventory.getUI().removeItem(index, request.item.count);
 				offered.set(index, request.item);
 			}
-			status = success ? '物品已加入；需要修改请取消后重新交易' : '服务器拒绝加入该物品';
+			status = success ? '物品已加入；需要修改请取消后重新交易' : ({
+				1: '对方负重不足',
+				2: '该物品不可交易',
+				3: '对方背包空间不足',
+				4: '对方该物品数量已达上限'
+			}[result] || '无法加入交易');
+			if (!success) showToast(document.body, status, 'error');
 		},
 		receive(item) {
 			if (!owned() || pending?.type === 'execute') return;
