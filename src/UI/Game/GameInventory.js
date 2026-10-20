@@ -94,7 +94,7 @@ export function createGameInventory(canOperate) {
 			return loadPreview(entry.item);
 		},
 		describe: item => describe({ item, worn: false }),
-		act(index, id, action, location) {
+		act(index, id, action, location, feedback) {
 			const entry = entries().find(({ item }) => item.index === index && item.ITID === id);
 			if (!entry) return '物品已经变化，请重新选择';
 			const state = describe(entry);
@@ -103,7 +103,7 @@ export function createGameInventory(canOperate) {
 			if (action === 'use' && id === PET_INCUBATOR_ID && EntityManager.get(Session.petId))
 				return '请先收回当前宠物';
 			if (action === 'unequip') {
-				beginItemOperation(Session.Entity, action, index);
+				beginItemOperation(Session.Entity, action, index, feedback);
 				Equipment.getUI().onUnEquip(index);
 			} else if (action === 'equip') {
 				if (
@@ -114,10 +114,10 @@ export function createGameInventory(canOperate) {
 						!(entry.item.location & location))
 				)
 					return '装备不适用于此部位';
-				beginItemOperation(Session.Entity, action, index);
+				beginItemOperation(Session.Entity, action, index, feedback);
 				Inventory.getUI().onEquipItem(index, location ?? entry.item.location);
 			} else {
-				beginItemOperation(Session.Entity, action, index);
+				beginItemOperation(Session.Entity, action, index, feedback);
 				if (action === 'card') Inventory.getUI().onUseCard(index);
 				else if (Inventory.getUI().onUseItem(index) === false) {
 					finishItemOperation(Session.Entity, action, index, null);

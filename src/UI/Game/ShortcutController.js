@@ -66,12 +66,13 @@ export function createShortcutController(data) {
 		if (!entry.available) return { message: entry.reason };
 		const binding = entry.binding;
 		if (!binding.isSkill) {
-			data.useItem(binding.ID);
-			return {};
+			return { message: data.useItem(binding.ID) };
 		}
 		const skill = data.skill(binding.ID);
 		executeSkillUse(skill, binding.count, {
-			onUseSkill: (id, level) => data.castId(id, level),
+			onUseSkill: (id, level) => {
+				if (data.castId(id, level) === false) message = '当前无法施放此技能';
+			},
 			onSelectTarget: (_, inf) => {
 				pending = { index, binding, inf, name: entry.name, caster: data.self(binding.ID) };
 				data.supportPicking(Boolean(inf & SKILL_INF.FRIEND));

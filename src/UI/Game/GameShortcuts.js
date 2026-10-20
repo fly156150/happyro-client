@@ -1,3 +1,4 @@
+import { createGameInventory } from './GameInventory.js';
 import { toPlainRagnarokText } from 'Utils/RagnarokText.js';
 import { skillTiers } from './SkillTiers.js';
 import Guild from 'UI/Components/Guild/Guild.js';
@@ -29,6 +30,7 @@ function caster(id) {
 
 export function createGameShortcuts(moving = () => false) {
 	const icons = new Map();
+	const inventory = createGameInventory(() => true);
 	function icon(file) {
 		if (!file) return '';
 		if (!icons.has(file)) {
@@ -102,7 +104,12 @@ export function createGameShortcuts(moving = () => false) {
 		castGround: (...args) => SkillTargetSelection.onUseSkillToPos(...args),
 		useItem: id => {
 			const item = Inventory.getUI().getItemById(id);
-			if (item) Inventory.getUI().useItem(item);
+			if (!item) return '道具已用完';
+			if (equipment.includes(item.type) && Inventory.getUI().equippedItems.includes(item.index))
+				return '该装备已穿戴';
+			return inventory.act(item.index, item.ITID, equipment.includes(item.type) ? 'equip' : 'use', undefined, {
+				notifySuccess: false
+			});
 		},
 		hasItem: id => {
 			const item = Inventory.getUI().getItemById(id);

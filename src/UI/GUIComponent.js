@@ -410,7 +410,9 @@ class GUIComponent {
 		for (const name in components) {
 			const other = components[name];
 			if (other === this || !other.__active) continue;
-			zList.push(parseInt(this._getZIndex(other), 10));
+			// Include stylesheet layers such as the mobile HUD, not just inline focus order.
+			const zIndex = other._host ? getComputedStyle(other._host).zIndex : this._getZIndex(other);
+			zList.push(parseInt(zIndex, 10));
 		}
 
 		this._setZIndex(this, Math.max(50, ...zList) + 1);

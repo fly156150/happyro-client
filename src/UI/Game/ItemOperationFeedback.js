@@ -8,22 +8,26 @@ onConnectionEnd(() => {
 	pending = new WeakMap();
 });
 
-/** Only menu requests receive feedback; unrelated inventory updates are silent. */
-export function beginItemOperation(entity, action, index) {
+/** Track explicit player requests; shortcuts only need failure notifications. */
+export function beginItemOperation(entity, action, index, { notifySuccess = true } = {}) {
 	if (!pending.has(entity)) pending.set(entity, new Map());
 	const requests = pending.get(entity),
 		key = `${action}:${index}`;
-	requests.set(key, (requests.get(key) || 0) + 1);
+	if (!requests.has(key)) requests.set(key, []);
+	requests.get(key).push({ notifySuccess });
 }
 export function finishItemOperation(entity, action, index, success) {
 	const requests = pending.get(entity),
 		key = `${action}:${index}`;
-	const count = requests?.get(key);
-	if (!count) return;
-	if (count === 1) requests.delete(key);
-	else requests.set(key, count - 1);
-	if (success === null) return;
-	showToast(document.body, `${labels[action]}${success ? '成功' : '失败'}`, success ? 'success' : 'error');
+	const queue = requests?.get(key);
+	if (!queue?.length) return;
+	const { notifySuccess } = queue.shift();
+	if (!queue.length) requests.delete(key);
+	if (success === null || (success && !notifySuccess)) return;
+	const message = !success && action === 'use'
+		? '使用失败，请检查物品的等级、职业及其它使用条件'
+		: `${labels[action]}${success ? '成功' : '失败'}`;
+	showToast(document.body, message, success ? 'success' : 'error');
 }
 
 /** Packet decoders normalize equipment result codes to booleans. */
