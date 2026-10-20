@@ -62,8 +62,11 @@ export function mountRemoteCatalogBrowser(container, options) {
 			button.addEventListener('click', () => {
 				state.selected =
 					state.items.find(item => String(options.key(item)) === button.dataset.catalogKey) || null;
-				renderList();
+				const scrollTop = list.scrollTop;
+				for (const row of list.querySelectorAll('[data-catalog-key]'))
+					row.classList.toggle('selected', row === button);
 				renderDetail();
+				list.scrollTop = scrollTop;
 			});
 		});
 		options.onListRendered?.(list, state.items);

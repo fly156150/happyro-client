@@ -65,3 +65,14 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-layout {
  column-gap: 6px;
 }
+
+/* Empty and selected details occupy the same portrait grid cells. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='inventory'] .inventory-empty-message {
+ grid-row: 1;
+ min-width: 0;
+ min-height: 0;
+ overflow: auto;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] .inventory-list {
+ overflow-anchor: none;
+}

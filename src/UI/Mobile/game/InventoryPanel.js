@@ -262,7 +262,12 @@ export function createInventoryPanel(body, actions) {
 					binding = false;
 					detailKey = '';
 					status('');
-					render();
+					const scrollTop = list.scrollTop;
+					for (const entry of buttons.values())
+						entry.setAttribute('aria-pressed', String(entry === node));
+					renderDetail();
+					// Replacing the adjacent detail must not move the inventory viewport.
+					list.scrollTop = scrollTop;
 					detail.querySelector('.inventory-item-description')?.scrollTo?.(0, 0);
 				});
 				node.className = 'inventory-item';

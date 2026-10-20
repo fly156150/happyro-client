@@ -8,6 +8,7 @@ import { toPlainRagnarokText } from 'Utils/RagnarokText.js';
 
 /** Mail owns its layout; the service owns server state and transaction validation. */
 export function createMailPanel(body, service) {
+	let inboxScrollKey = '';
 	let version = -1,
 		tab = 0,
 		page = 0,
@@ -359,6 +360,9 @@ export function createMailPanel(body, service) {
 		}
 	}
 	function render(state = service.snapshot()) {
+		const nextInboxKey = JSON.stringify([tab, term, page]);
+		const inboxScroll = !state.writing && inboxScrollKey === nextInboxKey
+			? list.querySelector('.mail-rows')?.scrollTop || 0 : 0;
 		const keepComposeScroll = state.writing && body.dataset.mailWriting === 'true';
 		const detailScroll = keepComposeScroll ? detail.scrollTop : 0;
 		const inventoryScroll = keepComposeScroll ? list.querySelector('.mail-item-list')?.scrollTop || 0 : 0;
@@ -379,6 +383,9 @@ export function createMailPanel(body, service) {
 		detail.scrollTop = detailScroll;
 		const inventory = list.querySelector('.mail-item-list');
 		if (inventory) inventory.scrollTop = inventoryScroll;
+		const messages = list.querySelector('.mail-rows');
+		if (messages) messages.scrollTop = inboxScroll;
+		inboxScrollKey = state.writing ? '' : JSON.stringify([tab, term, page]);
 	}
 	function update() {
 		const state = service.snapshot();

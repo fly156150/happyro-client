@@ -160,8 +160,12 @@ function mount(container, context = {}) {
 				}
 				selectedJobId = Number(button.dataset.jobId);
 
-				renderJobs();
+				const list = container.querySelector('.character-job-list');
+				const scrollTop = list.scrollTop;
+				for (const row of list.querySelectorAll('[data-job-id]'))
+					row.classList.toggle('selected', row === button);
 				renderDetail();
+				list.scrollTop = scrollTop;
 			});
 		});
 	}

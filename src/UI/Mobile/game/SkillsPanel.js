@@ -154,7 +154,11 @@ export function createSkillsPanel(body, actions) {
 					selected = skill.id;
 					key = '';
 					status('');
-					render();
+					const scrollTop = list.scrollTop;
+					for (const entry of nodes.values())
+						entry.setAttribute('aria-pressed', String(entry === node));
+					renderDetail();
+					list.scrollTop = scrollTop;
 					detail.scrollTop = 0;
 				detail.querySelector('.inventory-item-description')?.scrollTo(0, 0);
 				});

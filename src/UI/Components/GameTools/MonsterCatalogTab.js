@@ -245,12 +245,13 @@ function mount(container, context = {}) {
 		}
 		list.querySelectorAll('.monster-row').forEach(button => {
 			button.addEventListener('click', () => {
-				selectMonster(state.monsters.find(monster => monster.id === Number(button.dataset.id)));
+				selectMonster(state.monsters.find(monster => monster.id === Number(button.dataset.id)), false);
 			});
 		});
 	}
 
-	function selectMonster(monster) {
+	function selectMonster(monster, refreshList = true) {
+		const scrollTop = list.scrollTop;
 		state.selected = monster;
 		state.selectedSpawn =
 			listMonsterSpawnMaps(monster?.spawns, {
@@ -259,8 +260,11 @@ function mount(container, context = {}) {
 			})[0] || null;
 		state.status = '';
 		state.statusError = false;
-		renderList();
+		if (refreshList) renderList();
+		else for (const row of list.querySelectorAll('.monster-row'))
+			row.classList.toggle('selected', Number(row.dataset.id) === monster?.id);
 		renderDetail();
+		if (!refreshList) list.scrollTop = scrollTop;
 	}
 
 	function changePage(delta) {

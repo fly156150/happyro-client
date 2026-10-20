@@ -36,7 +36,9 @@ export function createQuestsPanel(body, actions) {
 				node.onclick = () => {
 					selected = q.questID;
 					detailKey = '';
+					const scrollTop = list.scrollTop;
 					update();
+					list.scrollTop = scrollTop;
 					detail.scrollTop = 0;
 					detail.querySelector('.quest-detail-content')?.scrollTo(0, 0);
 				};
