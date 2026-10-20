@@ -12,7 +12,6 @@
 | 梦罗克 | 160,255 | kaf_morocc2 | 160,258 |
 | 艾尔贝塔 | 31,229 | kaf_alberta | 28,229 |
 | 艾尔帕兰 | 143,116 | kaf_aldebaran | 143,119 |
-
 | 伊兹鲁德 | 128,145 | Kafra Employee#iz | 128,148 |
 | 朱诺 | 152,184 | kaf_yuno | 152,187 |
 | 里希塔乐镇 | 164,97 | kaf_lighthalzen | 164,100 |

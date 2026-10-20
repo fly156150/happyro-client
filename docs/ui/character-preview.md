@@ -1,33 +1,25 @@
-# iPad Character Sprite Rendering Compatibility
+# 角色预览与跨平台渲染
 
-## Symptom
+[UI 文档](README.md)
 
-On iPadOS, the same character could show misaligned body, hair, and head layers in the character selection or character creation screen. Typical symptoms were a duplicated head, leftover hair, or separated layers. The issue usually did not reproduce in macOS browsers. Third-party iPad browsers may still use the WebKit rendering path, so the browser name alone is not sufficient to classify the environment.
+## 精灵层与 Canvas
 
-## Cause
+角色预览由身体、头部、饰品、武器和盾牌等多个精灵层绘制到 2D Canvas。每个实体渲染开始时，`Entity.renderEntity()` 只获取一次 `renderTick`，所有层共用该时间计算 ACT 帧；不能在单层再次取当前时间，否则慢设备跨帧时可能出现身体与头发错位。
 
-The character preview is not a single image. Body, head, accessories, weapons, and shields are rendered as separate sprite layers into a 2D Canvas. The previous implementation amplified WebKit differences in two ways:
+2D 预览按字节写入 RGBA，避免依赖 `Uint32Array` 的本机字节序与共享缓冲布局。临时 Canvas 的实际尺寸与当前精灵一致，尺寸变化时重建 ImageData，防止复用较大图片的透明残留。地图场景的 WebGL 精灵路径独立维护。
 
-1. Each layer calculated its animation time independently. On slower devices, rendering the body could cross an animation-frame boundary before the head was rendered, causing different ACT frames and inconsistent layer coordinates.
-2. The temporary Canvas reused `ImageData` and wrote pixels through `Uint32Array`, while allowing the backing store to be larger than the current sprite. Some WebKit versions handle repeated transparent compositing and leftover regions inconsistently.
+## 职业外观与移动端选角
 
-## Fix
+角色预览接入服务端保存的职业外观，真实职业文字和功能判断保持不变。移动端选角卡片分离人物与姓名区域，统一底部基线；高大坐骑与机甲按顶部安全距离缩小，普通角色保持目标比例。
 
-- `Entity.renderEntity()` captures one `renderTick` at the start of an entity render and passes it to animation calculation for every layer.
-- Character-preview 2D Canvas rendering uses standard byte-wise RGBA writes, avoiding assumptions about native byte order and shared buffer layout.
-- The temporary Canvas backing store always matches the current sprite dimensions. `ImageData` is recreated when the dimensions change, preventing transparent regions from a previous larger sprite from being reused.
-- The WebGL sprite path used by map scenes is not affected by this compatibility path.
+服装、坐骑绑定和缺形态规则见根仓库[职业外观实现](../../../../docs/development/character-appearance/implementation.md)。移动端装备菜单没有人物 Canvas，不能把未提供的预览列为已验收功能。
 
-## Verification
+## 排查与验证
 
-1. Build the production client with `npm run build:pwa`.
-2. Fully close and reopen the PWA on iPadOS so that an old JavaScript bundle is not reused from cache.
-3. Open character selection and verify that the selected character's body, hair, and accessories remain aligned while switching characters and while the animation continues to play.
-4. If the issue returns, first lock the character animation to frame 0. If the layers are still misaligned, use Safari Web Inspector to inspect the target Canvas with `getImageData()`. Incorrect Canvas pixels indicate a drawing-pipeline issue; correct pixels with an incorrect screen result indicate a final WebKit compositing issue.
-
-## Maintenance
-
-New character-preview layers must receive the same `renderTick` captured by `renderEntity()`. Do not call `Date.now()` again inside an individual layer to select its animation frame, and do not reintroduce 32-bit pixel-layout assumptions into the iPad 2D Canvas path.
+1. 用 `npm run build:pwa` 构建完整 PWA，确认 Gateway 提供新产物后重开设备上的页面。
+2. 切换角色并观察动画中的身体、头发与饰品对齐；分别检查普通角色、高大坐骑和机甲。
+3. 如仍错位，先固定动画帧，检查目标 Canvas 的像素；像素本身错误时检查绘制流程，像素正确而画面错误时检查浏览器合成。
+4. 设备、系统与浏览器版本分别记录；本机模拟不能替代 iPadOS 实际渲染检查。
 
 ## 装备与角色列表
 

@@ -9,3 +9,7 @@
 | 文本与路径 | [编码契约](encoding.md) |
 
 本仓库维护客户端实现；跨仓库职业外观、技能审查及发布规则由 [HappyRO 根仓库](https://github.com/happyro/happyro)维护。上游来自 [roBrowserLegacy](https://github.com/MrAntares/roBrowserLegacy)。阶段过程从 changelog 和 Git 查询，当前限制写入对应主题，不保存重复交接副本。
+
+## 发布与变更记录
+
+本仓库随 HappyRO 统一版本交付，目标版本读取根仓库 `deploy/docker/VERSION`。准备中的功能和升级要求见[版本摘要](../../../changelog/releases/v0.5.0.md)，本仓库原始变化见 [changelog](../changelog/)。镜像构建与最终包验收按根仓库[发布流程](../../../docs/operations/docker-release.md)执行，文档整理不表示已经发布。
