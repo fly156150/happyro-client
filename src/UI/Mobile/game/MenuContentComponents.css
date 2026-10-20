@@ -339,6 +339,7 @@
 /* Empty messages use the whole list on every screen size. */
 :host([data-menu-density]) .panel .inventory-list > :is(.container-empty, [data-empty], .inventory-list-empty) {
  grid-column: 1 / -1; min-width: 0;
+ margin-block: 0;
 }
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .container-filters { padding-right: 0; gap: 6px; }
 :host([data-menu-density]) .panel:is([data-view='storage'], [data-view='cart']) .container-item-count { margin: 0; }
@@ -660,3 +661,15 @@
 
 /* Keep tablet wording while phone counters use the compact skills presentation. */
 :host([data-menu-density]) .panel .attribute-points-affix { display: none; }
+
+/* Empty-state paragraphs use their container's spacing, not prose margins. */
+:host([data-menu-density]) .panel :is(.shop-empty, [data-filter-empty]),
+:host([data-menu-density]) .panel[data-view='mail'] .mail-empty,
+:host([data-menu-density]) .panel[data-view='companions'] [data-skills] > p,
+:host([data-menu-density]) .panel[data-view='pet'] [data-evolution] > p {
+ margin-block: 0;
+}
+:host([data-menu-density]) .panel .inventory-list > .container-empty {
+ padding-block: 0;
+}
+

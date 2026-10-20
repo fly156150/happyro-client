@@ -38,13 +38,21 @@
  display: none;
 }
 
+/* Management and member headings share the taller member-header metrics. */
+.panel[data-view='social'] :is(.social-party-heading, .social-member-header) {
+ box-sizing: border-box;
+ min-height: calc(var(--panel-heading) * 1.5 + 16px);
+ padding: 8px 10px;
+ font-size: var(--panel-heading);
+ line-height: 1.5;
+}
+
 .panel[data-view='social'] .social-party-heading {
  display: flex;
  align-items: center;
  justify-content: flex-start;
  gap: 8px;
  margin: 0 0 8px;
- padding: 6px 8px;
  border-left: 3px solid #ceaa70;
  border-radius: 3px;
  background: #2b3540;
@@ -85,7 +93,7 @@
 }
 .panel[data-view='social'] .social-member-header {
  display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
- padding: 8px 10px; border-left: 3px solid #ceaa70; border-radius: 4px;
+ border-left: 3px solid #ceaa70; border-radius: 4px;
  background: #2b3540;
 }
 .panel[data-view='social'] .social-member-header h3 {
