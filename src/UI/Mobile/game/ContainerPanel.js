@@ -18,7 +18,7 @@ const itemTypes = {
 const labels = { inventory: '背包', storage: '仓库', cart: '手推车' };
 export function createContainerPanel(body, actions, initialSource) {
 	body.innerHTML =
-		'<div class="container-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
+		'<div class="container-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" data-menu-list="framed"></div><section class="inventory-detail"></section></div>';
 	const primary = initialSource;
 	const isCart = primary === 'cart';
 	let storagePeer = 'inventory';

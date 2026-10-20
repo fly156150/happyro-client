@@ -165,6 +165,7 @@ export function createMailPanel(body, service) {
 			update();
 		};
 		const inventory = node(list, 'div', 'mail-rows mail-item-list');
+		inventory.dataset.menuList = '';
 		const query = itemTerm.trim().toLocaleLowerCase();
 		const items = state.inventory.filter(
 			item =>
@@ -275,6 +276,7 @@ export function createMailPanel(body, service) {
 		const pages = Math.max(1, Math.ceil(rows.length / 8));
 		page = Math.min(page, pages - 1);
 		const messages = node(list, 'div', 'mail-rows');
+		messages.dataset.menuList = '';
 		for (const mail of rows.slice(page * 8, page * 8 + 8)) {
 			const row = button(messages, '', () => {
 				clearReview();

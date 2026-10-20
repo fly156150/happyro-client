@@ -93,7 +93,7 @@
  font-size: var(--panel-heading); line-height: 1.5;
 }
 .panel[data-view='social'] .social-member-status {
- flex: 0 0 auto; padding: 1px 7px; border: 1px solid #65717b;
+ display: inline-block; padding: 1px 7px; border: 1px solid #65717b;
  border-radius: 4px; font-size: var(--panel-label); line-height: 1.6;
  color: #bac4cd; background: #222b35; white-space: nowrap;
 }

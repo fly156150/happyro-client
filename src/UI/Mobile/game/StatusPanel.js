@@ -1,7 +1,7 @@
 /** Keep selection and scroll positions while remaining durations update. */
 export function createStatusPanel(body) {
 	body.innerHTML =
-		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="状态列表"></div><section class="inventory-detail" aria-label="状态说明"><p class="item-description"></p></section></div>';
+		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" data-menu-list="framed" aria-label="状态列表"></div><section class="inventory-detail" aria-label="状态说明"><p class="item-description"></p></section></div>';
 	const list = body.querySelector('.inventory-list');
 	const description = body.querySelector('.item-description');
 	const nodes = new Map();

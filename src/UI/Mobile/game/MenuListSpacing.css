@@ -1,0 +1,15 @@
+/* Opt-in scroll gutters. Borders stay outside the scrollport at every scroll offset.
+ * These three structural properties deliberately override feature padding/borders;
+ * feature styles still own grid, row spacing, sizing, background and radius. */
+:host([data-menu-density]) [data-menu-list] {
+ box-sizing: border-box;
+ padding: 0 !important;
+ border: var(--menu-list-inset) solid transparent !important;
+ background-clip: border-box;
+ scroll-padding: var(--menu-list-inset);
+}
+:host([data-menu-density]) [data-menu-list='framed'] {
+ border-width: calc(var(--menu-list-inset) + 1px) !important;
+ outline: 1px solid #52606d;
+ outline-offset: -1px;
+}

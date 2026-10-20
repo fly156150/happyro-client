@@ -23,6 +23,7 @@
 	--menu-edge-y: 12px;
 	--menu-dialog-inset: 32px;
 	--panel-gap: 6px;
+	--menu-list-inset: 6px;
 	--panel-control: 30px;
 	--panel-attribute-control: 26px;
 	--panel-attribute-width: 32px;
@@ -48,6 +49,7 @@
 	--menu-edge-x: 24px;
 	--menu-edge-y: 24px;
 	--panel-gap: 12px;
+	--menu-list-inset: 10px;
 	--panel-control: 44px;
 	--panel-attribute-control: 44px;
 	--panel-attribute-width: 56px;

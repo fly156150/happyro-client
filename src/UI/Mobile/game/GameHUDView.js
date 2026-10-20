@@ -1,3 +1,4 @@
+import menuListSpacingCSS from './MenuListSpacing.css?raw';
 import { bindChatPreviewLayout } from './ChatPreviewLayout.js';
 import menuNarrowTabletCSS from './MenuNarrowTablet.css?raw';
 import menuButtonSizingCSS from './MenuButtonSizing.css?raw';
@@ -90,7 +91,7 @@ ${menuContentComponentsCSS}
 ${companionLayoutCSS}
 ${menuNavigationCSS}
 ${menuActionButtonsCSS}
-${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}</style>${html}`;
+${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}${menuListSpacingCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const chatPreview = createChatPreview(root);

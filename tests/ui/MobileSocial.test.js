@@ -143,13 +143,17 @@ it('shows known friend levels and Chinese maps without reusing offline locations
  const service=createGameSocial(()=>true),body=document.body.appendChild(document.createElement('div'));
  const panel=createSocialPanel(body,service,vi.fn());
  body.querySelector('[data-member="9:8"]').click();
+ expect(body.querySelector('[aria-label="社交列表"]').dataset.menuList).toBe('framed');
+ expect(body.querySelector('[aria-label="社交详情"]').dataset.menuList).toBe('framed');
+ expect(body.querySelector('.social-member-header').textContent).toBe('好友');
+ expect(body.querySelector('.social-member-facts .social-member-status').textContent).toBe('在线');
  expect(body.querySelector('.social-member-facts').textContent).toContain('Lv.80');
  expect(body.querySelector('.social-member-facts').textContent).toContain('普隆德拉');
  state.details={baseLevel:81,mapName:'prontera'};
  panel.update();expect(body.querySelector('.social-member-facts').textContent).toContain('Lv.81');
  state.social.friends[0].State=1;panel.update();
  expect(body.querySelector('.social-member-facts').textContent).not.toContain('普隆德拉');
- expect(body.querySelector('.social-member-facts').textContent).toBe('等级未知地图未知');
+ expect(body.querySelector('.social-member-facts').textContent).toBe('状态离线等级未知地图未知');
 });
 
 it('uses the shared input prompt for footer guild invitations and keeps notice captions visible',()=>{

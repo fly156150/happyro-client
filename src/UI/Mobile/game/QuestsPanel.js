@@ -3,7 +3,7 @@ import { setListItemText } from './ListItemText.js';
 
 export function createQuestsPanel(body, actions) {
 	body.innerHTML =
-		'<div class="skills-toolbar menu-form-row"><select aria-label="任务分类"><option value="all">全部任务</option><option value="1">进行中</option><option value="0">已暂停</option><option value="2">已完成</option></select></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="任务列表"></div><section class="inventory-detail" aria-label="任务详情"></section></div><div class="quest-actions menu-footer menu-footer--trailing"></div>';
+		'<div class="skills-toolbar menu-form-row"><select aria-label="任务分类"><option value="all">全部任务</option><option value="1">进行中</option><option value="0">已暂停</option><option value="2">已完成</option></select></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" data-menu-list="framed" aria-label="任务列表"></div><section class="inventory-detail" aria-label="任务详情"></section></div><div class="quest-actions menu-footer menu-footer--trailing"></div>';
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),

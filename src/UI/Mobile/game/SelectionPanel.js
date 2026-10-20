@@ -5,7 +5,7 @@ import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 export function createSelectionPanel(body, service) {
 	body.innerHTML =
-		'<p data-warning></p><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="可选列表"></div><section class="inventory-detail" aria-label="选项详情"></section></div>';
+		'<p data-warning></p><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" data-menu-list="framed" aria-label="可选列表"></div><section class="inventory-detail" aria-label="选项详情"></section></div>';
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),

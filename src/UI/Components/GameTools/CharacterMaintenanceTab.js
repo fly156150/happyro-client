@@ -280,7 +280,7 @@ function mount(container, context = {}) {
 			}
 		)}</div>
 			<div class="character-layout" data-menu-layout="split"><section class="character-job-browser">
-			<div class="character-job-list"></div>
+			<div class="character-job-list" data-menu-list=""></div>
 		</section><section class="character-detail"></section></div>`;
 		const searchInput = container.querySelector('.character-job-toolbar .catalog-search');
 		const { input: groupInput } = mountGameSelect(container.querySelector('[data-game-select]'));

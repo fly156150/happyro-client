@@ -286,7 +286,7 @@ function mount(container, context = {}) {
 						<h4>NPC${mapNpcs.length ? `（${mapNpcs.length}）` : ''}</h4>
 						${
 							mapNpcs.length
-								? `<div class="map-npc-scroll"><ul>${mapNpcs
+								? `<div class="map-npc-scroll" data-menu-list=""><ul>${mapNpcs
 										.map(npc => {
 											const npcKey = npcCatalogKey(npc);
 											const available = npcAvailability[npcKey];

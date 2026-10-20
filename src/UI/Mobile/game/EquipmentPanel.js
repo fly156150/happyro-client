@@ -3,7 +3,7 @@ import { createFeedback } from 'UI/Components/Feedback.js';
 /** Independent touch equipment view; server snapshots own all item and stat values. */
 export function createEquipmentPanel(body, actions) {
 	body.innerHTML =
-		'<nav class="equipment-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--stacked" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><div class="equipment-stats" hidden></div><div class="equipment-actions inventory-actions menu-footer menu-footer--trailing"></div>';
+		'<nav class="equipment-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--stacked" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" data-menu-list="framed" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><div class="equipment-stats" hidden></div><div class="equipment-actions inventory-actions menu-footer menu-footer--trailing"></div>';
 	const $ = selector => body.querySelector(selector);
 	const slotsRoot = $('.equipment-slots'),
 		detail = $('.equipment-detail');
@@ -141,6 +141,7 @@ export function createEquipmentPanel(body, actions) {
 		preview.textContent = '选择装备查看说明';
 		const list = document.createElement('div');
 		list.className = 'equipment-picker-list';
+		list.dataset.menuList = 'framed';
 		list.dataset.slot = slot.key;
 		list.setAttribute('aria-label', '可更换装备');
 		content.append(list);
