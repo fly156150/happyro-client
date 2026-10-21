@@ -5,25 +5,25 @@ export function registrationError(username, password) {
 	if (!/_[mf]$/i.test(username)) return null;
 	const accountLength = encoder.encode(username.slice(0, -2)).length;
 	if (accountLength < 6) {
-		return '账号过短';
+		return '账号最少 6 个字节';
 	}
 	if (accountLength > 21) {
-		return '账号过长';
+		return '账号最多 21 个字节';
 	}
 	const passwordLength = encoder.encode(password).length;
 	if (passwordLength < 6) {
-		return '密码过短';
+		return '密码最少 6 个字节';
 	}
 	if (passwordLength > 23) {
-		return '密码过长';
+		return '密码最多 23 个字节';
 	}
 	return null;
 }
 
 // Source: happyro-server/src/login/registration.hpp (PACKETVER=20211103).
 const serverErrors = new Map([
-	[200, '账号过短'],
-	[201, '密码过短'],
+	[200, '账号最少 6 个字节'],
+	[201, '密码最少 6 个字节'],
 	[202, '账号已存在'],
 	[203, '注册过于频繁'],
 	[204, '账号保存失败'],
