@@ -1,5 +1,6 @@
 import { showToast } from 'UI/Components/Toast.js';
 import gameSession from './Auth/GameSession.js';
+import { registrationError, registrationServerError } from './Auth/RegistrationValidation.js';
 import recovery, { recoverLogin } from './Recovery/GameRecovery.js';
 /**
  * Engine/LoginEngine.js
@@ -258,6 +259,13 @@ class LoginEngine {
  * @param {string} password
  */
 function onConnectionRequest(username, password, persistent = false, ticket = null) {
+	if (!ticket) {
+		const error = registrationError(username, password);
+		if (error) {
+			UIManager.showMessageBox(error, 'ok', null, true);
+			return;
+		}
+	}
 	++authGeneration;
 	sessionTicketLogin = !!ticket;
 	keepLogin = persistent;
@@ -693,6 +701,7 @@ function onConnectionRefused(pkt) {
 	sessionTicketLogin = false;
 	WinLoading.remove();
 	let error = 9;
+	let message = registrationServerError(pkt.ErrorCode);
 	switch (pkt.ErrorCode) {
 		case 0:
 			error = 6;
@@ -881,10 +890,12 @@ function onConnectionRefused(pkt) {
 		case 5301:
 			error = 3539;
 			break;
+		default:
+			message ||= `未知错误（错误码：${pkt.ErrorCode}）`;
 	}
 
 	UIManager.showMessageBox(
-		DB.getMessage(error).replace('%s', pkt.blockDate),
+		message || DB.getMessage(error).replace('%s', pkt.blockDate),
 		'ok',
 		() => {
 			UIManager.removeComponents();

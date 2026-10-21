@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
+import { registrationError } from '../../src/Engine/Auth/RegistrationValidation.js';
 import Background from '../../src/UI/Mobile/Background.js';
 
 afterEach(() => Background.remove());
@@ -40,7 +41,7 @@ describe('mobile loading lifecycle', () => {
 		const fn = source.match(/function onConnectionRequest\([^]*?\n\}/)[0];
 		let waiting = false;
 		const request = vm.runInNewContext(`(${fn})`, {
-			authGeneration: 0, sessionTicketLogin: false, keepLogin: false,
+			authGeneration: 0, sessionTicketLogin: false, keepLogin: false, registrationError,
 			Sound: { play() {} }, _server: { address: 'test', port: 6900 }, _loginID: '',
 			WinLogin: { getUI: () => ({ remove() {} }) },
 			WinLoading: { append: () => { waiting = true; }, remove: () => { waiting = false; } },
