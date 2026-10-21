@@ -11,12 +11,12 @@ function escapeHtml(value) {
 		.replaceAll("'", '&#39;');
 }
 
-function applyColorCodes(text) {
+export function applyColorCodes(text) {
 	let hasOpenSpan = false;
 	const html = String(text ?? '').replace(/\^([0-9a-fA-F]{6})/g, (_, color) => {
 		const close = hasOpenSpan ? '</span>' : '';
-		hasOpenSpan = true;
-		return `${close}<span style="color:#${color}">`;
+		hasOpenSpan = color !== '000000';
+		return hasOpenSpan ? `${close}<span style="color:#${color}">` : close;
 	});
 	return hasOpenSpan ? `${html}</span>` : html;
 }
@@ -77,5 +77,5 @@ export function formatNPCMarkup(value) {
 			}
 			return `<${tag}${safeAttributes}>`;
 		});
-	return formatRagnarokMarkup(value, formatText).replace(/style="color:#000000"/g, 'style="color:inherit"');
+	return formatRagnarokMarkup(value, formatText);
 }

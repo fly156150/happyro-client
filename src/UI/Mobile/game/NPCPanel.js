@@ -1,3 +1,4 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import { createMenuField } from './MenuFormControls.js';
 import NpcNameTable from 'DB/NpcNameTable.js';
 import { formatNPCMarkup } from 'Utils/RagnarokText.js';
@@ -49,6 +50,7 @@ export function createNPCPanel(body, state) {
 	const footer = document.createElement('div');
 	footer.className = 'npc-actions menu-footer';
 	body.append(content, footer);
+	ensureReadableText(text);
 	updateNPCCutin(body, state);
 	function button(parent, label, respond) {
 		const node = document.createElement('button');

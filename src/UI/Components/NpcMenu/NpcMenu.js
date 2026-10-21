@@ -8,8 +8,9 @@
  * @author Vincent Thibault
  */
 
+import { applyColorCodes } from 'Utils/RagnarokText.js';
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import KEYS from 'Controls/KeyEventHandler.js';
-import DB from 'DB/DBManager.js';
 import Renderer from 'Renderer/Renderer.js';
 import UIManager from 'UI/UIManager.js';
 import GUIComponent from 'UI/GUIComponent.js';
@@ -132,6 +133,7 @@ NpcMenu.onKeyDown = function onKeyDown(event) {
 			divs.forEach(d => d.classList.remove('selected'));
 			if (divs[_index]) {
 				divs[_index].classList.add('selected');
+				ensureReadableText(content);
 				divs[_index].scrollIntoView({ block: 'nearest' });
 			}
 			break;
@@ -144,6 +146,7 @@ NpcMenu.onKeyDown = function onKeyDown(event) {
 			divs.forEach(d => d.classList.remove('selected'));
 			if (divs[_index]) {
 				divs[_index].classList.add('selected');
+				ensureReadableText(content);
 				divs[_index].scrollIntoView({ block: 'nearest' });
 			}
 			break;
@@ -177,7 +180,7 @@ NpcMenu.setMenu = function setMenu(menu, gid) {
 	for (let i = 0, count = list.length; i < count; ++i) {
 		if (list[i].length) {
 			const div = document.createElement('div');
-			div.innerHTML = DB.formatMsgToHtml(_escapeHTML(list[i]));
+			div.innerHTML = applyColorCodes(_escapeHTML(list[i]));
 			div.dataset.index = j++;
 			content.appendChild(div);
 		}
@@ -187,6 +190,7 @@ NpcMenu.setMenu = function setMenu(menu, gid) {
 	if (first) {
 		first.classList.add('selected');
 	}
+	ensureReadableText(content);
 };
 
 /** Place NPC choices beside their visible dialogue after append restores drag position. */
@@ -235,6 +239,7 @@ function selectIndex(div) {
 	const divs = content.querySelectorAll('div[data-index]');
 	divs.forEach(d => d.classList.remove('selected'));
 	div.classList.add('selected');
+	ensureReadableText(content);
 
 	_index = parseInt(div.dataset.index, 10);
 }

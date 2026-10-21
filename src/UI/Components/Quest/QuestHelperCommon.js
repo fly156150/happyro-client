@@ -16,6 +16,8 @@
  * @author Vincent Thibault
  */
 
+import { applyColorCodes as processColorCodes } from 'Utils/RagnarokText.js';
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import DB from 'DB/DBManager.js';
 import Client from 'Core/Client.js';
 import Preferences from 'Core/Preferences.js';
@@ -25,21 +27,6 @@ import GUIComponent from 'UI/GUIComponent.js';
 import 'UI/Elements/Elements.js';
 import ItemInfo from 'UI/Components/ItemInfo/ItemInfo.js';
 import Navigation from 'UI/Components/Navigation/Navigation.js';
-
-/**
- * Process text with color codes (^RRGGBB)
- * @param {string} text - The text to process
- * @returns {string} HTML with color spans
- */
-function processColorCodes(text) {
-	if (!text) {
-		return '';
-	}
-	text = String(text);
-	return text
-		.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => `<span style="color:#${color}">`)
-		.replace(/\^000000/g, '</span>');
-}
 
 /**
  * Process item tags in text (<ITEM>Name<INFO>ID</INFO></ITEM>)
@@ -281,6 +268,7 @@ export function createQuestHelper(config) {
 						deadlineEl.textContent = `截止时间 [${d.toLocaleString()}]`;
 					}
 				}
+				ensureReadableText(root);
 			}
 		: function setQuestInfo(quest) {
 				const root = QuestHelper.getRoot();
@@ -326,6 +314,7 @@ export function createQuestHelper(config) {
 				if (selectEl) {
 					selectEl.addEventListener('change', e => onSelectMonster(e));
 				}
+				ensureReadableText(root);
 			};
 
 	QuestHelper.clearQuestDesc = renewLayout

@@ -27,6 +27,7 @@ it('keeps buy/sell choice semantics and omits an empty action bar on result noti
 
 it('renders vending-machine emphasis and colors without allowing arbitrary HTML', () => {
  const body=document.body.appendChild(document.createElement('div'));
+ body.style.backgroundColor='#191f26';
  createNPCPanel(body,{mode:'next',lines:['喝一杯<i>清爽</i>的<b>碳酸水</b>，^2ECCFA清理^000000肚子。<br>下一行','<img src=x onerror=alert(1)><b onclick="alert(1)">危险</b><script>alert(1)</script>']});
  expect(body.querySelector('i').textContent).toBe('清爽');
  expect(body.querySelector('b').textContent).toBe('碳酸水');

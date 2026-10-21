@@ -8,6 +8,8 @@
  * @author Vincent Thibault
  */
 
+import { applyColorCodes as processColorCodes } from 'Utils/RagnarokText.js';
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import Renderer from 'Renderer/Renderer.js';
 import UIManager from 'UI/UIManager.js';
@@ -71,21 +73,6 @@ function processItemTags(text) {
 			return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
 		}
 	);
-}
-
-/**
- * Process color codes in text (^RRGGBB)
- */
-function processColorCodes(text) {
-	if (!text) {
-		return '';
-	}
-	text = String(text);
-	return text
-		.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => {
-			return `<span style="color:#${color}">`;
-		})
-		.replace(/\^000000/g, '</span>');
 }
 
 /**
@@ -269,6 +256,7 @@ NpcBox.setText = function setText(text, gid) {
 	const div = document.createElement('div');
 	div.innerHTML = processText(text);
 	content.appendChild(div);
+	ensureReadableText(div);
 };
 
 /**
