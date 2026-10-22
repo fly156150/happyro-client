@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import Session from '../../src/Engine/SessionStorage.js';
 import {
+	applyAdventureGameSettings,
 	loadCharacterAllocationLimits,
 	grantAdventureItem,
 	loadAdventureControlBootstrap,
@@ -91,5 +92,35 @@ it('reads normal allocation limits through the authenticated read-only endpoint'
  try {
   await expect(loadCharacterAllocationLimits()).resolves.toEqual(limits);
   expect(fetchMock).toHaveBeenCalledWith('/api/adventure-tools/character/allocation-limits',expect.objectContaining({headers:expect.objectContaining({'X-HappyRO-Character-ID':'150002'})}));
+ } finally { vi.unstubAllGlobals(); }
+});
+
+it('reuses failed settings requests, coalesces clicks and separates game sessions', async () => {
+ Session.AID = 2000001; Session.GID = 150002; Session.WebToken = 'settings-session';
+ let nonce = 1;
+ vi.stubGlobal('crypto', { getRandomValues: bytes => bytes.fill(nonce++) });
+ const fetchMock = vi.fn().mockRejectedValueOnce(new Error('connection lost'));
+ vi.stubGlobal('fetch', fetchMock);
+ try {
+  await expect(applyAdventureGameSettings({ job_exp_rate: 200, base_exp_rate: 300 })).rejects.toThrow('connection lost');
+  const original = JSON.parse(fetchMock.mock.calls[0][1].body).idempotency_key;
+  let resolve;
+  fetchMock.mockImplementationOnce(() => new Promise(done => { resolve = done; }));
+  const first = applyAdventureGameSettings({ base_exp_rate: 300, job_exp_rate: 200 });
+  const duplicate = applyAdventureGameSettings({ job_exp_rate: 200, base_exp_rate: 300 });
+  expect(first).toBe(duplicate);
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+  expect(JSON.parse(fetchMock.mock.calls[1][1].body).idempotency_key).toBe(original);
+  resolve({ ok: true, json: async () => ({ data: { values: {} } }) });
+  await first;
+  fetchMock.mockResolvedValue({ ok: true, json: async () => ({ data: {} }) });
+  await applyAdventureGameSettings({ base_exp_rate: 300, job_exp_rate: 200 });
+  expect(JSON.parse(fetchMock.mock.calls[2][1].body).idempotency_key).not.toBe(original);
+  fetchMock.mockRejectedValueOnce(new Error('lost again'));
+  await expect(applyAdventureGameSettings({ base_exp_rate: 400 })).rejects.toThrow('lost again');
+  const failed = JSON.parse(fetchMock.mock.calls[3][1].body).idempotency_key;
+  Session.WebToken = 'new-session';
+  await applyAdventureGameSettings({ base_exp_rate: 400 });
+  expect(JSON.parse(fetchMock.mock.calls[4][1].body).idempotency_key).not.toBe(failed);
  } finally { vi.unstubAllGlobals(); }
 });

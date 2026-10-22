@@ -119,9 +119,32 @@ export function grantAdventureItem(itemId, amount) {
 	});
 }
 
+let settingsSession = '';
+let pendingSettings = new Map();
+
 export function applyAdventureGameSettings(changes) {
-	return request('/game-settings', {
+	const session = JSON.stringify([Session.AID, Session.GID, Session.WebToken]);
+	if (session !== settingsSession) {
+		settingsSession = session;
+		pendingSettings = new Map();
+	}
+	const requests = pendingSettings;
+	const sortedChanges = Object.fromEntries(Object.entries(changes).sort(([left], [right]) => left.localeCompare(right)));
+	const fingerprint = JSON.stringify(sortedChanges);
+	let operation = requests.get(fingerprint);
+	if (!operation) {
+		operation = { key: createIdempotencyKey(), pending: null };
+		requests.set(fingerprint, operation);
+	}
+	if (operation.pending) return operation.pending;
+	operation.pending = request('/game-settings', {
 		method: 'PUT',
-		body: JSON.stringify({ changes })
+		body: JSON.stringify({ idempotency_key: operation.key, changes: sortedChanges })
+	}).then(result => {
+		requests.delete(fingerprint);
+		return result;
+	}).finally(() => {
+		operation.pending = null;
 	});
+	return operation.pending;
 }
