@@ -12,7 +12,6 @@ import {
 } from './AdventureControlService.js';
 import { escapeCatalogHtml } from './CatalogData.js';
 import { toPlainRagnarokText } from '../../../Utils/RagnarokText.js';
-import { requestConfirmation } from 'UI/Components/Confirmation.js';
 import { renderGameSelect, setGameSelectOptions } from './GameSelect.js';
 import { mountRemoteCatalogBrowser } from './RemoteCatalogBrowser.js';
 
@@ -95,8 +94,10 @@ function mount(container, context = {}) {
 	const assetUrls = new Map();
 	const dropSources = createItemDropSources(context);
 	const availableSubtypes = new Map();
+	const amounts = { item: '1', zeny: '' };
+	const resetAmounts = () => { amounts.item = '1'; amounts.zeny = ''; };
+	container.addEventListener('game-tools-close', resetAmounts);
 	let pending = null;
-	let amountValue = '1';
 	let active = true;
 	let browserApi;
 	const clearFeedback = () => browserApi?.refreshDetail();
@@ -132,14 +133,7 @@ function mount(container, context = {}) {
 		const allowed = Boolean(context.capabilities?.itemGrantAllowed);
 		const panel = document.createElement('div');
 		panel.className = 'catalog-action-panel item-grant-panel';
-		panel.innerHTML = `<label class="item-grant-quantity"><span aria-hidden="true">数量</span><input aria-label="数量" class="item-grant-amount" type="number" inputmode="numeric" min="1" max="2147483647" step="1"></label><button class="zeny-grant-open" type="button">发放 Zeny</button><button class="item-grant" type="button">发放物品</button><span class="catalog-status error" role="status" aria-live="polite"></span>`;
-		const input = panel.querySelector('.item-grant-amount');
-		if (context.mobile) input.closest('label').remove();
-		input.value = amountValue;
-		input.disabled = Boolean(pending);
-		input.addEventListener('input', () => {
-			amountValue = input.value;
-		});
+		panel.innerHTML = `<button class="zeny-grant-open" type="button">发放 Zeny</button><button class="item-grant" type="button">发放物品</button><span class="catalog-status error" role="status" aria-live="polite"></span>`;
 		const zeny = panel.querySelector('.zeny-grant-open');
 		const grant = panel.querySelector('.item-grant');
 		zeny.disabled = Boolean(pending) || !allowed;
@@ -149,37 +143,31 @@ function mount(container, context = {}) {
 			: item && !item.grantable
 				? '该特殊物品暂不支持直接发放'
 				: '';
-		zeny.addEventListener('click', () => void grantAmount('zeny', item, input));
-		grant.addEventListener('click', () => void grantAmount('item', item, input));
+		zeny.addEventListener('click', () => void grantAmount('zeny', item));
+		grant.addEventListener('click', () => void grantAmount('item', item));
 		detail.append(panel);
 	}
-	async function grantAmount(kind, item, input) {
+	async function grantAmount(kind, item) {
 		if (pending || !active || !context.capabilities?.itemGrantAllowed || (kind === 'item' && !item?.grantable))
 			return;
-		if (!context.mobile) amountValue = input.value;
-		let amount = Number(amountValue);
 		const max = kind === 'zeny' ? 2147483647 : 30000;
-		if (!context.mobile && (!Number.isInteger(amount) || amount < 1 || amount > max)) {
-			showToast(container, `请输入 1 至 ${max} 的整数${kind === 'zeny' ? '金额' : '数量'}`, 'error');
-			return;
-		}
 		const name = item?.names?.['zh-CN'] || item?.names?.['en-US'] || item?.AegisName;
-		const message =
-			kind === 'zeny'
-				? `确认向当前角色发放 ${amount.toLocaleString()} Zeny？`
-				: `确认向当前角色发放 ${amount} 个「${name}」到背包？`;
 		pending = kind;
 		browserApi.refreshDetail();
 		try {
-			if (context.mobile) {
-				amount = await requestGameToolsNumber(container, {
-					title: kind === 'zeny' ? '发放 Zeny' : `发放「${name}」到背包`,
-					label: '数量', value: Math.min(max, Math.max(1, Number(amountValue) || 1)),
-					min: 1, max, steps: true
-				});
-				if (amount === null || !active) return;
-				amountValue = String(amount);
-			} else if (!(await requestConfirmation(container, message)) || !active) return;
+			const amount = await requestGameToolsNumber(container, {
+				title: kind === 'zeny' ? '向当前角色发放 Zeny' : `发放「${name}」到背包`,
+				label: kind === 'zeny' ? '金额' : '数量', value: amounts[kind],
+				min: 1, max, steps: true,
+				stepMin: kind === 'zeny' ? 0 : 1,
+				stepButtons: kind === 'zeny' ? [
+					{ delta: -1000000, label: '-100万' }, { delta: -100000, label: '-10万' },
+					{ delta: 100000, label: '+10万' }, { delta: 1000000, label: '+100万' }
+				] : undefined,
+				onChange: value => { amounts[kind] = value; }
+			});
+			if (amount === null || !active) return;
+			amounts[kind] = String(amount);
 			if (kind === 'zeny') await grantAdventureZeny(amount);
 			else await grantAdventureItem(item.Id, amount);
 			if (active)
@@ -297,6 +285,7 @@ function mount(container, context = {}) {
 		},
 		cleanup() {
 			active = false;
+			container.removeEventListener('game-tools-close', resetAmounts);
 			dropSources.destroy();
 			container.removeEventListener('game-tools-reset-feedback', clearFeedback);
 			assetUrls.forEach(url => URL.revokeObjectURL(url));

@@ -24,8 +24,8 @@
 }
 .quantity-stepper .quantity-stepper-control:is(button),
 :host([data-menu-density]) .quantity-stepper .quantity-stepper-control:is(button) {
-	width: var(--quantity-control-height);
-	min-width: 30px;
+	width: auto;
+	min-width: var(--quantity-control-height);
 	font-size: 12px;
 	background: #394753;
 	cursor: pointer;

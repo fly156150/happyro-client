@@ -216,6 +216,7 @@ GameTools.toggle = function toggle() {
 		clearAdventureRouteFeedback();
 		for (const entry of mountedTabs.values()) {
 			entry.view.discardDrafts();
+			entry.container.dispatchEvent(new Event('game-tools-close'));
 			entry.container.dispatchEvent(new Event('game-tools-reset-feedback'));
 		}
 		this._host.style.display = 'none';

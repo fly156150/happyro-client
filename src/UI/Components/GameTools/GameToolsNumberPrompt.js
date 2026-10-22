@@ -1,11 +1,11 @@
 import { createQuantityStepper } from '../QuantityStepper.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 
-export function requestGameToolsNumber(container, { title, label, value, min, max, steps = false }) {
+export function requestGameToolsNumber(container, { title, label, value, min, max, steps = false, stepMin, stepButtons, onChange }) {
 	return new Promise(resolve => {
 		let content, input;
 		if (steps) {
-			const stepper = createQuantityStepper({ label: title, value, min, max });
+			const stepper = createQuantityStepper({ label: title, value, min, max, stepMin, stepButtons });
 			content = stepper.element;
 			input = stepper.input;
 		} else {
@@ -19,6 +19,7 @@ export function requestGameToolsNumber(container, { title, label, value, min, ma
 			input.setAttribute('aria-label', title);
 			content.append(caption, input);
 		}
+		input.addEventListener('input', () => onChange?.(input.value));
 		input.addEventListener('keydown', event => {
 			if (event.key === 'Enter') {
 				event.preventDefault();

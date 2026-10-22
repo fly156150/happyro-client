@@ -19,3 +19,18 @@ it('returns null on cancellation',async()=>{
  const result=requestGameToolsNumber(document.body,{title:'发放',label:'数量',value:1,min:1,max:30,steps:true});
  confirmAction.mock.lastCall[3].cancelled();expect(await result).toBeNull();
 });
+
+it('treats empty Zeny as zero for steps while requiring a positive amount',()=>{
+ const onChange=vi.fn();
+ requestGameToolsNumber(document.body,{title:'发放 Zeny',value:'',min:1,max:2147483647,steps:true,stepMin:0,onChange,
+ stepButtons:[{delta:-1000000,label:'-100万'},{delta:-100000,label:'-10万'},{delta:100000,label:'+10万'},{delta:1000000,label:'+100万'}]});
+ const {content}=confirmAction.mock.lastCall[3];
+ const input=content.querySelector('input'),buttons=content.querySelectorAll('button');
+ expect(input.value).toBe('');expect(input.checkValidity()).toBe(false);
+ expect([...buttons].map(b=>b.textContent)).toEqual(['-100万','-10万','+10万','+100万']);
+ buttons[2].click();expect(input.value).toBe('100000');expect(onChange).toHaveBeenLastCalledWith('100000');
+ buttons[3].click();expect(input.value).toBe('1100000');
+ buttons[0].click();expect(input.value).toBe('100000');
+ buttons[1].click();expect(input.value).toBe('0');expect(input.checkValidity()).toBe(false);
+ input.value='';input.dispatchEvent(new Event('input'));buttons[3].click();expect(input.value).toBe('1000000');
+});
