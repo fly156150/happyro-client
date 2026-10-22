@@ -133,7 +133,7 @@ export function createWinLogin({ name, htmlText, cssText }) {
 			);
 		} else {
 			UIManager.showPromptBox(
-				'自动注册：\n1. 在账号名末尾添加 _M（男）或 _F（女）\n2. 建议账号使用 6～21 位英文字母或数字，密码使用 6～23 位英文字母、数字或符号\n3. 输入要设置的密码后登录，例如：happyro_M',
+				'自动注册：\n1. 在账号名末尾添加 _M（男）或 _F（女）\n2. 输入要设置的密码后登录\n3. 例如：happyro_M',
 				'ok',
 				'cancel',
 				null,
