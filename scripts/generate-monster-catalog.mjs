@@ -7,11 +7,11 @@ import sharp from 'sharp';
 const projectRoot = path.resolve(import.meta.dirname, '..');
 const snapshotPath = path.resolve(
 	projectRoot,
-	process.env.MONSTER_CATALOG_SOURCE || '../happyro-admin/backend/resources/game-data/monsters/renewal.json'
+	process.env.MONSTER_CATALOG_SOURCE || '../happyro-api/resources/game-data/monsters/renewal.json'
 );
 const itemSnapshotPath = path.resolve(
 	projectRoot,
-	process.env.ITEM_CATALOG_SOURCE || '../happyro-admin/backend/resources/game-data/items/client-kro-20211105.json'
+	process.env.ITEM_CATALOG_SOURCE || '../happyro-api/resources/game-data/items/client-kro-20211105.json'
 );
 const imageDirectory = path.resolve(
 	projectRoot,
@@ -30,7 +30,7 @@ const snapshotBuffer = await fs.readFile(snapshotPath);
 const snapshot = JSON.parse(snapshotBuffer.toString('utf8'));
 const itemSnapshotBuffer = await fs.readFile(itemSnapshotPath);
 const itemSnapshot = JSON.parse(itemSnapshotBuffer.toString('utf8'));
-const serverItemSnapshotPath = path.resolve(projectRoot, '../happyro-admin/backend/resources/game-data/items/renewal.json');
+const serverItemSnapshotPath = path.resolve(projectRoot, '../happyro-api/resources/game-data/items/renewal.json');
 const serverItemSnapshot = JSON.parse((await fs.readFile(serverItemSnapshotPath)).toString('utf8'));
 const itemsByAegisName = new Map();
 const localizedItemsById = new Map(Object.entries(itemSnapshot.items));

@@ -7,16 +7,16 @@ import sharp from 'sharp';
 const projectRoot = path.resolve(import.meta.dirname, '..');
 const sourceDirectory = path.resolve(
 	projectRoot,
-	process.env.NPC_IMAGE_SOURCE || '../happyro-admin/backend/resources/game-data/world/npcs'
+	process.env.NPC_IMAGE_SOURCE || '../happyro-api/resources/game-data/world/npcs'
 );
 const outputDirectory = path.resolve(projectRoot, 'applications/pwa/data/world');
 const mapImageDirectory = path.resolve(
 	projectRoot,
-	process.env.MAP_IMAGE_SOURCE || '../happyro-admin/backend/resources/game-data/world/maps'
+	process.env.MAP_IMAGE_SOURCE || '../happyro-api/resources/game-data/world/maps'
 );
 const npcCatalogSource = path.resolve(
 	projectRoot,
-	process.env.NPC_CATALOG_SOURCE || '../happyro-admin/backend/resources/game-data/world/npc-catalog.json'
+	process.env.NPC_CATALOG_SOURCE || '../happyro-api/resources/game-data/world/npc-catalog.json'
 );
 const npcInstanceOutput = path.resolve(projectRoot, 'applications/pwa/data/navigation/npc-instances.json');
 const clientResourceManifest = path.resolve(
