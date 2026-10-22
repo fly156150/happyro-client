@@ -9,7 +9,7 @@
 
 import DB from 'DB/DBManager.js';
 import Client from 'Core/Client.js';
-import Preferences from 'Core/Preferences.js';
+import Renderer from 'Renderer/Renderer.js';
 import EntityManager from 'Renderer/EntityManager.js';
 import UIManager from 'UI/UIManager.js';
 import GUIComponent from 'UI/GUIComponent.js';
@@ -40,20 +40,6 @@ VendingReport._startY = 0;
 VendingReport._startHeight = 0;
 VendingReport._boundResizeDrag = null;
 VendingReport._boundResizeStop = null;
-
-/**
- * @var {Preferences} structure
- */
-const _preferences = Preferences.get(
-	'VendingReport',
-	{
-		x: 200,
-		y: 200,
-		width: 400,
-		height: 180
-	},
-	1.0
-);
 
 /**
  * Helper: query inside shadow root
@@ -136,6 +122,9 @@ VendingReport.init = function Init() {
  */
 VendingReport.onAppend = function OnAppend() {
 	this._host.style.display = '';
+	const rect = this._host.getBoundingClientRect();
+	this._host.style.left = `${Math.max(0, (Renderer.width - rect.width) / 2)}px`;
+	this._host.style.top = `${Math.max(0, (Renderer.height - rect.height) / 2)}px`;
 };
 
 /**
@@ -145,10 +134,7 @@ VendingReport.onRemove = function OnRemove() {
 	VendingReport.reset();
 	ItemInfo.remove();
 
-	// Save preferences
-	_preferences.y = parseInt(this._host.style.top, 10) || 0;
-	_preferences.x = parseInt(this._host.style.left, 10) || 0;
-	_preferences.save();
+	this.onResizeStop();
 
 	this._host.style.display = 'none';
 };
@@ -161,6 +147,7 @@ VendingReport.reset = function reset() {
 	const content = root.querySelector('.container .content');
 	if (content) {
 		content.querySelectorAll('.item').forEach(el => el.remove());
+		content.querySelector('.empty').hidden = false;
 	}
 };
 
@@ -265,6 +252,7 @@ VendingReport.addItemSub = function addItemSub(item) {
 		return false;
 	}
 
+	content.querySelector('.empty').hidden = true;
 	content.insertAdjacentHTML(
 		'beforeend',
 		`<div class="item" data-ITID="${item.ITID}" data-index="${item.shopindex}" data-id="${item.reportId}">` +

@@ -27,8 +27,10 @@
 			</div>
 		</div>
 		<div class="container">
-			<div class="nstore"><ui-text msg="407">名称</ui-text></div>
-			<input class="shopname" type="text" value="" maxlength="36" /><br />
+			<div class="shopname-row">
+				<label class="nstore" for="vending-shopname">摊位名称</label>
+				<input id="vending-shopname" class="shopname" type="text" value="" maxlength="36" />
+			</div>
 			<div class="content add_shop">
 				<ui-image src="basic_interface/itemwin_mid.bmp"></ui-image>
 			</div>
@@ -37,7 +39,7 @@
 			<ui-image src="basic_interface/btnbar_mid2.bmp"></ui-image>
 			<span class="WinBuy zenyLabel"><ui-text msg="2464">Zeny</ui-text></span>
 			<span class="WinBuy zenySpan">0</span>
-		<span class="WinBuy weightLabel">重量：</span>
+			<span class="WinBuy weightLabel">重量：</span>
 			<span class="WinBuy weightSpan">0/0</span>
 		</div>
 		<div class="footer">

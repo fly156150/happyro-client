@@ -66,12 +66,16 @@
 	padding-left: 20px;
 }
 
+#vending .shopname-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 5px;
+	padding-right: 4px;
+}
 #vending .nstore {
-	position: absolute;
-	top: 24px;
-	border: none;
-	padding-left: 2px;
-	outline: none;
+	flex: none;
+	white-space: nowrap;
 }
 #vending .limit {
 	position: absolute;
@@ -81,16 +85,16 @@
 	outline: none;
 }
 #vending input.shopname {
-	position: absolute;
-	left: 55px;
-	width: 310px;
+	flex: 1;
+	min-width: 0;
+	width: 0;
+	box-sizing: border-box;
+	height: 20px;
 	border: none;
 	background-color: #e9e9e9;
-	padding-left: 2px;
+	padding: 2px 4px;
+	font: inherit;
 	outline: none;
-}
-#vending input.shopname {
-	top: 22px;
 }
 #vending input.limitZeny {
 	top: 6px;

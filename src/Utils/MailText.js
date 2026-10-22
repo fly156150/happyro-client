@@ -2,7 +2,7 @@ export const MAIL_TEXT_LIMITS = { recipient: 23, title: 39, body: 499 };
 const bytes = value => new TextEncoder().encode(value).length;
 export function validateMailRecipient(name) {
 	return !name.trim() || /[\0\t\r\n]/.test(name) || bytes(name) > MAIL_TEXT_LIMITS.recipient
-		? '收件人姓名无效（最多 23 字节）'
+		? '收件人角色名无效（最多 23 字节）'
 		: '';
 }
 export function validateMailContent(title, body) {

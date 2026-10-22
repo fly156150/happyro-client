@@ -127,7 +127,7 @@ Sense.setWindow = function setWindow(pkt) {
 	_model.render = true;
 
 	// STATS
-	root.querySelector('#label_name').textContent = DB.getMessage(407);
+	root.querySelector('#label_name').textContent = '魔物名称';
 
 	const valueName = root.querySelector('#value_name');
 	valueName.innerHTML = `<a href="https://ratemyserver.net/mob_db.php?small=1&mob_id=${pkt.job}" target="_blank">${DB.getMonsterName(pkt.job)} </a>`;

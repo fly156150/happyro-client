@@ -776,7 +776,7 @@ Vending.onSubmit = function onSubmit() {
 	const count = _output.length;
 
 	const root = Vending.getRoot();
-	const shopname = root.querySelector('.shopname').value;
+	const shopname = root.querySelector('.shopname').value.trim();
 
 	let limitZeny;
 	let ctr = 0;
@@ -815,7 +815,7 @@ Vending.onSubmit = function onSubmit() {
 	pkt.storeList = output;
 
 	if (!shopname) {
-		VendingModelMessage.setInit(225);
+		VendingModelMessage.setInit('请输入摊位名称');
 		return;
 	} else {
 		this._shopname = shopname;

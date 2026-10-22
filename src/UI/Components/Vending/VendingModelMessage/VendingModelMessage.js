@@ -40,7 +40,7 @@ VendingModelMessage.init = function init() {
 VendingModelMessage.setInit = function setInit(numMessage) {
 	VendingModelMessage.append();
 	this._host.style.display = '';
-	const messageText = DB.getMessage(numMessage);
+	const messageText = typeof numMessage === 'string' ? numMessage : DB.getMessage(numMessage);
 	this._shadow.querySelector('.message').textContent = messageText;
 };
 
