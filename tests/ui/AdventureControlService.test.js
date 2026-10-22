@@ -4,6 +4,7 @@ import {
 	applyAdventureGameSettings,
 	loadCharacterAllocationLimits,
 	grantAdventureItem,
+	grantAdventureZeny,
 	loadAdventureControlBootstrap,
 	maintainCurrentCharacter,
 	searchAdventureItems
@@ -124,3 +125,75 @@ it('reuses failed settings requests, coalesces clicks and separates game session
   expect(JSON.parse(fetchMock.mock.calls[4][1].body).idempotency_key).not.toBe(failed);
  } finally { vi.unstubAllGlobals(); }
 });
+
+for (const [name, submit] of [
+	['item', () => grantAdventureItem(501, 3)],
+	['zeny', () => grantAdventureZeny(100)],
+	['character', () => maintainCurrentCharacter('character.heal', {})]
+]) {
+	it(`retries ${name} with its original key after a lost response and coalesces clicks`, async () => {
+		Session.AID = 2000001; Session.GID = 150002; Session.WebToken = `retry-${name}`;
+		let nonce = 1;
+		vi.stubGlobal('crypto', { getRandomValues: bytes => bytes.fill(nonce++) });
+		const fetchMock = vi.fn().mockRejectedValueOnce(new Error('response lost'));
+		vi.stubGlobal('fetch', fetchMock);
+		try {
+			await expect(submit()).rejects.toThrow('response lost');
+			const key = JSON.parse(fetchMock.mock.calls[0][1].body).idempotency_key;
+			let resolve;
+			fetchMock.mockImplementationOnce(() => new Promise(done => { resolve = done; }));
+			const first = submit(), second = submit();
+			expect(first).toBe(second);
+			expect(fetchMock).toHaveBeenCalledTimes(2);
+			expect(JSON.parse(fetchMock.mock.calls[1][1].body).idempotency_key).toBe(key);
+			resolve({ ok: true, json: async () => ({ data: { applied: true } }) });
+			await first;
+			fetchMock.mockResolvedValue({ ok: true, json: async () => ({ data: {} }) });
+			await submit();
+			expect(JSON.parse(fetchMock.mock.calls[2][1].body).idempotency_key).not.toBe(key);
+			fetchMock.mockRejectedValueOnce(new Error('lost again'));
+			await expect(submit()).rejects.toThrow();
+			const oldSessionKey = JSON.parse(fetchMock.mock.calls[3][1].body).idempotency_key;
+			Session.WebToken += '-new';
+			await submit();
+			expect(JSON.parse(fetchMock.mock.calls[4][1].body).idempotency_key).not.toBe(oldSessionKey);
+		} finally { vi.unstubAllGlobals(); }
+	});
+}
+
+it('allows a fresh command after a definitive offline rejection but preserves an unknown outcome', async () => {
+	Session.AID = 2000001; Session.GID = 150002; Session.WebToken = 'definitive-rejection';
+	let nonce = 1;
+	vi.stubGlobal('crypto', { getRandomValues: bytes => bytes.fill(nonce++) });
+	const fetchMock = vi.fn().mockResolvedValueOnce({ok:false,json:async()=>({error:{code:'character_offline'}})})
+		.mockResolvedValue({ok:false,json:async()=>({error:{code:'command_not_replayable'}})});
+	vi.stubGlobal('fetch', fetchMock);
+	try {
+		await expect(grantAdventureZeny(10)).rejects.toThrow();
+		await expect(grantAdventureZeny(10)).rejects.toThrow();
+		await expect(grantAdventureZeny(10)).rejects.toThrow();
+		const keys = fetchMock.mock.calls.map(([,options])=>JSON.parse(options.body).idempotency_key);
+		expect(keys[0]).not.toBe(keys[1]);
+		expect(keys[1]).toBe(keys[2]);
+	} finally { vi.unstubAllGlobals(); }
+});
+
+for (const [name, json] of [
+	['truncated JSON', async () => { throw new SyntaxError('truncated'); }],
+	['missing result', async () => ({})]
+]) {
+	it(`keeps the operation key when a successful response has ${name}`, async () => {
+		Session.AID = 2000001; Session.GID = 150002; Session.WebToken = name;
+		let nonce = 1;
+		vi.stubGlobal('crypto', {getRandomValues: bytes => bytes.fill(nonce++)});
+		const fetchMock = vi.fn().mockResolvedValueOnce({ok:true,json})
+			.mockResolvedValue({ok:true,json:async()=>({data:{applied:true}})});
+		vi.stubGlobal('fetch',fetchMock);
+		try {
+			await expect(grantAdventureItem(501,1)).rejects.toThrow();
+			await expect(grantAdventureItem(501,1)).resolves.toEqual({applied:true});
+			const keys=fetchMock.mock.calls.map(([,options])=>JSON.parse(options.body).idempotency_key);
+			expect(keys[1]).toBe(keys[0]);
+		} finally { vi.unstubAllGlobals(); }
+	});
+}

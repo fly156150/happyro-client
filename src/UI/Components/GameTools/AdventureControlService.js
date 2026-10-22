@@ -12,7 +12,10 @@ function headers() {
 
 async function requestBody(path, options = {}) {
 	const response = await fetch(`/api/adventure-tools${path}`, { ...options, headers: headers() });
-	const body = await response.json().catch(() => ({}));
+	const body = await response.json().catch(() => {
+		if (response.ok) throw new Error('无法解析服务器响应，请核对操作结果后重试');
+		return {};
+	});
 	if (!response.ok) {
 		const validation = body.errors ? Object.values(body.errors).flat()[0] : null;
 		const error = new Error(validation || body.message || body.error?.message || '操作失败，请稍后重试');
@@ -23,7 +26,9 @@ async function requestBody(path, options = {}) {
 }
 
 async function request(path, options = {}) {
-	return (await requestBody(path, options)).data;
+	const body = await requestBody(path, options);
+	if (!body || !Object.hasOwn(body, 'data')) throw new Error('服务器响应不完整，请核对操作结果后重试');
+	return body.data;
 }
 
 export async function loadAdventureAsset(path) {
@@ -40,6 +45,44 @@ function createIdempotencyKey() {
 	return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
+// Keep an uncertain write's key until its result is known. A second click is
+// a retry of that operation, not permission to execute the mutation again.
+let mutationSession = '';
+let pendingMutations = new Map();
+const rejectedBeforeExecution = new Set([
+	'validation_failed', 'forbidden', 'invalid_game_session', 'unauthenticated',
+	'rate_limited', 'character_offline', 'character_not_found', 'item_not_found',
+	'invalid_parameter', 'item_not_grantable', 'inventory_full',
+	'inventory_overweight', 'item_amount_exceeded', 'insufficient_zeny'
+]);
+
+function mutate(path, input) {
+	const session = JSON.stringify([Session.AID, Session.GID, Session.WebToken]);
+	if (session !== mutationSession) {
+		mutationSession = session;
+		pendingMutations = new Map();
+	}
+	const requests = pendingMutations;
+	const fingerprint = JSON.stringify([path, input]);
+	let operation = requests.get(fingerprint);
+	if (!operation) {
+		operation = { key: createIdempotencyKey(), pending: null };
+		requests.set(fingerprint, operation);
+	}
+	if (operation.pending) return operation.pending;
+	operation.pending = request(path, {
+		method: 'POST',
+		body: JSON.stringify({ ...input, idempotency_key: operation.key })
+	}).then(result => {
+		requests.delete(fingerprint);
+		return result;
+	}).catch(error => {
+		if (rejectedBeforeExecution.has(error.code)) requests.delete(fingerprint);
+		throw error;
+	}).finally(() => { operation.pending = null; });
+	return operation.pending;
+}
+
 export function loadAdventureControlBootstrap() {
 	return request('/bootstrap');
 }
@@ -53,10 +96,7 @@ export function loadCharacterAllocationLimits() {
 }
 
 export function maintainCurrentCharacter(type, payload) {
-	return request('/character/commands', {
-		method: 'POST',
-		body: JSON.stringify({ idempotency_key: createIdempotencyKey(), type, payload })
-	});
+	return mutate('/character/commands', { type, payload });
 }
 
 export function loadAdventureGameSettings() {
@@ -101,22 +141,11 @@ export function searchAdventureMaps({ query = '', onMap = '', currentMap = '', p
 }
 
 export function grantAdventureZeny(amount) {
-	return request('/currency/zeny/grants', {
-		method: 'POST',
-		body: JSON.stringify({ idempotency_key: createIdempotencyKey(), amount })
-	});
+	return mutate('/currency/zeny/grants', { amount });
 }
 
 export function grantAdventureItem(itemId, amount) {
-	return request('/items/grants', {
-		method: 'POST',
-		body: JSON.stringify({
-			idempotency_key: createIdempotencyKey(),
-			target: { type: 'self' },
-			item_id: itemId,
-			amount
-		})
-	});
+	return mutate('/items/grants', { target: { type: 'self' }, item_id: itemId, amount });
 }
 
 let settingsSession = '';
