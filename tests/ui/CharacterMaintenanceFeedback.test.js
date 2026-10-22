@@ -31,7 +31,7 @@ it.each([false, true])('keeps character actions working with mobile layout %s', 
 		expect(root.querySelector('.character-summary')).toBeNull();
 		expect(root.querySelector('.character-current-job')).toBeNull();
 		expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');
-		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['剑士', '骑乘与随行', '等级与点数', '基础属性', '四转属性']);
+		expect([...root.querySelectorAll('.character-detail-scroll > section > h4')].map(node => node.firstChild.textContent.trim())).toEqual(['剑士', '等级与点数', '基础属性', '四转属性']);
 	}
 	expect(root.querySelector('.character-summary')).toBeNull();
 	expect(root.querySelector('.selected-job').previousElementSibling.textContent).toBe('剑士 ID 1');

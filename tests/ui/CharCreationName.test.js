@@ -2,6 +2,8 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it, vi } from 'vitest';
 
+import { validateSocialText } from '../../src/Utils/SocialText.js';
+
 const source = readFileSync('src/Engine/CharEngine.js', 'utf8');
 const handler = source.match(/function onCharCreationRequest\([^]*?\n\}/)[0];
 
@@ -9,6 +11,7 @@ function submit(name) {
 	const sendPacket = vi.fn();
 	const showMessageBox = vi.fn();
 	const context = {
+		validateSocialText,
 		PACKETVER: { value: 20211103 },
 		PACKET: { CH: { MAKE_CHAR3: class {} } },
 		Network: { sendPacket },

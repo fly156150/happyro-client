@@ -10,7 +10,7 @@ vi.mock('UI/Game/GamePet.js',()=>({openGamePet:vi.fn()}));
 vi.mock('UI/Game/GameMail.js',()=>({openGameMail:vi.fn(),gameMailUnread:()=>false}));
 vi.mock('UI/Game/GameVending.js', () => ({showOwnedVending:vi.fn()}));
 vi.mock('UI/Game/GameSocial.js', () => ({ createGameSocial: () => ({ snapshot: () => ({ friends: [], party: [] }) }) }));
-vi.mock('UI/Game/GameChat.js', () => ({ createGameChat: () => ({ send: vi.fn() }), chatChannel: () => 'public' }));
+vi.mock('UI/Game/GameChat.js', () => ({ createGameChat: () => ({ send: vi.fn() }), chatChannel: () => 'public', chatChannelError: () => '' }));
 vi.mock('UI/Game/GameQuests.js', () => ({ createGameQuests: () => ({ snapshot: () => ({ quests: [] }) }) }));
 vi.mock('UI/Game/GameContainers.js', () => ({ createGameContainers: () => ({ snapshot: () => ({ items: [] }) }) }));
 vi.mock('UI/Game/GameSkills.js', () => ({ createGameSkills: () => ({ snapshot: () => ({ skills: [] }) }) }));

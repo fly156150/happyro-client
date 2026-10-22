@@ -4,7 +4,8 @@ let view;
 beforeEach(() => { vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} }); });
 afterEach(() => { view?.destroy(); document.body.replaceChildren(); vi.unstubAllGlobals(); });
 function mount() {
-	const root = document.createElement('div'); document.body.append(root);
+	const host = document.body.appendChild(document.createElement('div'));
+ const root = host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
 	const cleanup = vi.fn(), context = { capabilities: { itemGrantAllowed: true } }, close = vi.fn();
 	const tabs = ['maps','monsters','items','npcs','character','settings'].map(id => ({
 		id, label: id, mount: vi.fn((container, passed) => {
@@ -57,7 +58,8 @@ it('opens current character attributes before choosing another profession', () =
 });
 
 it('keeps the same window and close control while loading available tabs', () => {
- const root = document.createElement('div'); document.body.append(root);
+ const host = document.body.appendChild(document.createElement('div'));
+ const root = host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
  const close = vi.fn();
  view = createAdventureToolsView(root, {tabs:[],context:{},close});
  const window = root.querySelector('.game-tools-window');
@@ -72,7 +74,8 @@ it('keeps the same window and close control while loading available tabs', () =>
 });
 
 it('places menu return before close and delegates to the parent menu', () => {
- const root = document.createElement('div'); document.body.append(root);
+ const host = document.body.appendChild(document.createElement('div'));
+ const root = host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
  const close = vi.fn(), backToMenu = vi.fn();
  view = createAdventureToolsView(root, {tabs:[], context:{}, close, backToMenu});
  const back = root.querySelector('[data-menu-back]');

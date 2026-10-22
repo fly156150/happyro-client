@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 const engine = readFileSync('src/Engine/MapEngine/Homun.js', 'utf8');
 const request = engine.match(/HomunInformations\.reqNameEdit = function reqNameEdit\(value\) \{[\s\S]*?\n\};/)[0];
-const ui = readFileSync('src/UI/Components/HomunInformations/HomunInformations.js', 'utf8');
+const ui = readFileSync('src/UI/Components/HomunInformations/HomunInformations.js', 'utf8').replace(/\r\n/g, '\n');
 const pending = ui.match(/HomunInformations\.setRenamePending = function setRenamePending\(pending\) \{[\s\S]*?\n\};/)[0];
 
 test('live homunculus rename ignores duplicate clicks and unlocks only on authoritative state', () => {

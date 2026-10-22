@@ -1,3 +1,5 @@
+vi.mock('UI/Game/GameCompanions.js', () => ({canCommandGameCompanion:()=>false,commandGameCompanion:vi.fn(),companionAttackMode:()=>false}));
+vi.mock('UI/Game/GamePet.js', () => ({canCommandGamePet:()=>false,commandGamePet:vi.fn()}));
 vi.mock('Engine/MapEngine/Friends.js',()=>({default:{isFriend:()=>s.friend,addFriend:s.addFriend}}));
 vi.mock('UI/Components/Equipment/Equipment.js',()=>({default:{onCheckPlayerEquipment:s.equip}}));
 vi.mock('UI/Components/Trade/Trade.js', () => ({default:{reqExchange:s.trade}}));

@@ -4,9 +4,10 @@ import ItemNameOverrides from '../../src/DB/Items/ItemNameOverrides.generated.js
 
 describe('ItemNameOverrides', () => {
 	it('contains only reviewed differences from itemInfo', () => {
-		expect(Object.keys(ItemNameOverrides)).toHaveLength(791);
+		expect(Object.keys(ItemNameOverrides)).toHaveLength(790);
 		expect(Object.values(ItemNameOverrides).every(name => !/[\uac00-\ud7af]/.test(name))).toBe(true);
 		expect(ItemNameOverrides[1101]).toBeUndefined();
+		expect(ItemNameOverrides[4434]).toBeUndefined(); // Already matches reviewed itemInfo.
 		expect(ItemNameOverrides[909]).toBe('杰勒比结晶');
 	});
 

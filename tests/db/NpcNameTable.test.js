@@ -22,7 +22,7 @@ import NpcNameTranslations from '../../src/DB/NpcNameTranslations.zh-CN.json';
 
 describe('unified NPC name translations', () => {
 	it('matches every full source name used by the runtime NPC table', () => {
-		expect(Object.keys(NpcNameTranslations)).toHaveLength(4335);
+		expect(Object.keys(NpcNameTranslations)).toHaveLength(4349);
 		for (const [source, translated] of Object.entries(NpcNameTranslations)) {
 			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
 		}

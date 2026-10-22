@@ -1,3 +1,4 @@
+vi.mock('Renderer/EntityManager.js', () => ({ default: {get: vi.fn()} }));
 import DB from '../../src/DB/DBManager.js';
 import Client from 'Core/Client.js';
 vi.mock('Controls/MapControl.js', () => ({ default: { onRequestDropItem: vi.fn() } }));
@@ -73,6 +74,9 @@ it('loads selected item art lazily without revealing unidentified resources', as
  const inventory = createGameInventory(() => true);
  expect(Client.loadFile).not.toHaveBeenCalled();
  expect(await inventory.preview(2, 999)).toBeNull();
+ await inventory.preview(2, 501);
+ expect(Client.loadFile.mock.calls.map(call => call[0])).toEqual(['collection/item.bmp']);
+ s.items[0].type = 6;
  await inventory.preview(2, 501);
  expect(Client.loadFile.mock.calls.map(call => call[0])).toEqual(['collection/item.bmp', 'cardbmp/card-art.bmp']);
  Client.loadFile.mockClear();

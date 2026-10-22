@@ -1,3 +1,4 @@
+vi.mock('UI/Game/GameVending.js',()=>({showOwnedVending:()=>false}));
 import { beforeEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({
 	session: { TouchTargeting: false, autoFollow: false, Entity: null },

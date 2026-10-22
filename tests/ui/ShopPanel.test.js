@@ -18,7 +18,7 @@ it('moves entered quantities in both directions and keeps the description below 
 });
 it('submits directly once and locks the window while waiting',()=>{
  click('购买');expect(service.submit).toHaveBeenCalledOnce();expect(body.querySelector('dialog')).toBeNull();
- click('购买');expect(service.submit).toHaveBeenCalledOnce();expect(body.querySelector('.shop-status')).toBeNull();expect(body.querySelector('.shop-footer .shop-summary').textContent).toBe('余额：1000 Z · 购买合计：20 Z');expect(document.querySelector('.ui-toast')).toBeNull();
+ click('购买');expect(service.submit).toHaveBeenCalledOnce();expect(body.querySelector('.shop-status')).toBeNull();expect(body.querySelector('.shop-footer .shop-summary').textContent).toBe('余额：1,000 Z · 合计：20 Z');expect(document.querySelector('.ui-toast')).toBeNull();
  expect(body.querySelector('.shop-catalog-list button').disabled).toBe(true);
 });
 it('retains an entered quantity when limits change and prevents invalid transfers',()=>{
@@ -32,7 +32,7 @@ it('cancels quantity input if the selected item disappears',()=>{
 });
 it('shows sales proceeds, material requirements, and clears the order without submitting',()=>{
  state.mode='sell';state.items[0].materials=[{name:'材料',refine_level:5,amount:3}];panel.update();select();
- expect(body.querySelector('.shop-summary').textContent).toContain('出售合计');expect(body.querySelector('.shop-price').textContent).toContain('精炼 +5');
+ expect(body.querySelector('.shop-summary').textContent).toContain('合计：20 Z');expect(body.querySelector('.shop-price').textContent).toContain('精炼 +5');
  click('清空');expect(body.querySelector('.shop-order-list button')).toBeNull();expect(service.submit).not.toHaveBeenCalled();
  expect([...body.querySelectorAll('button')].find(n=>n.textContent==='出售').disabled).toBe(true);
 });

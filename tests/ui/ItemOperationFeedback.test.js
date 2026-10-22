@@ -33,7 +33,7 @@ it.each([
  ['equip', {index:2,result:true}, '穿戴成功'],
  ['equip', {index:2,result:false}, '穿戴失败'],
  ['unequip', {index:2,result:true}, '卸下成功'],
- ['use', {index:2,result:0}, '使用失败'],
+ ['use', {index:2,result:0}, '使用失败，请检查物品的等级、职业及其它使用条件'],
  ['card', {cardIndex:2,result:0}, '镶嵌成功'],
  ['card', {cardIndex:2,result:1}, '镶嵌失败']
 ])('uses the actual %s acknowledgement fields', (action,packet,message) => {

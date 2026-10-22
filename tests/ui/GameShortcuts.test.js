@@ -1,3 +1,5 @@
+vi.mock('UI/Components/Equipment/Equipment.js',()=>({default:{getUI:()=>({getItems:()=>[]})}}));
+vi.mock('Controls/MapControl.js',()=>({default:{}}));
 vi.mock('UI/Components/Guild/Guild.js', () => ({default:{getSocialSnapshot:()=>({skills:[]})}}));
 import { beforeEach, expect, it, vi } from 'vitest';
 const s = vi.hoisted(() => ({
@@ -13,7 +15,7 @@ vi.mock('UI/Components/ShortCut/ShortCut.js', () => ({
 }));
 vi.mock('UI/Components/Inventory/Inventory.js', () => ({
 	default: {
-		getUI: () => ({ list: s.items, getItemById: id => s.items.find(i => i.ITID === id), useItem: s.useItem })
+		getUI: () => ({ list: s.items, getItemById: id => s.items.find(i => i.ITID === id), onUseItem: s.useItem, onEquipItem: s.useItem, equippedItems: [] })
 	}
 }));
 vi.mock('UI/Components/SkillList/SkillList.js', () => ({ default: { getUI: () => ({ getSkills: () => s.skill.SKID < 8000 ? [s.skill] : [] }) } }));
@@ -69,7 +71,7 @@ it('updates item count and identity from live data and passes joystick ownership
 	expect(service.snapshot().slots[0].amount).toBe(4);
 	expect(service.snapshot().slots[0].icon).toContain('data:image');
 	service.use(0);
-	expect(s.useItem).toHaveBeenCalledWith(s.items[0]);
+	expect(s.useItem).toHaveBeenCalledWith(2);
 	s.items[0].count = 0;
 	service.use(0);
 	expect(s.useItem).toHaveBeenCalledTimes(1);
@@ -84,7 +86,7 @@ it('configures and uses non-stackable equipment even when packet data omits quan
  expect(s.configure).toHaveBeenCalledWith(0, false, 1201, 0);
  expect(service.snapshot().slots[0].amount).toBe(1);
  expect(service.snapshot().slots[0].available).toBe(true);
- service.use(0); expect(s.useItem).toHaveBeenCalledExactlyOnceWith(s.items[0]);
+ service.use(0); expect(s.useItem).toHaveBeenCalledExactlyOnceWith(7, undefined);
 });
 it('rejects a saved guild shortcut after leaving the guild or losing master rights',()=>{
  const originalSkill=s.skill;s.skill={SKID:10013,level:1,type:4,spcost:0};s.bindings=[{isSkill:true,ID:10013,count:1}];

@@ -1,3 +1,4 @@
+import {createMobileInputEditor} from '../../src/UI/Mobile/game/MobileInputEditor.js';
 import { afterEach, expect, it, vi } from 'vitest';
 import { createMaterialsPanel } from '../../src/UI/Mobile/game/MaterialsPanel.js';
 import { createRefinementPanel } from '../../src/UI/Mobile/game/RefinementPanel.js';
@@ -6,7 +7,14 @@ import { createSelectionPanel } from '../../src/UI/Mobile/game/SelectionPanel.js
 import { createTradePanel } from '../../src/UI/Mobile/game/TradePanel.js';
 import { createVendingPanel } from '../../src/UI/Mobile/game/VendingPanel.js';
 import { createContainerPanel } from '../../src/UI/Mobile/game/ContainerPanel.js';
-const mount = () => document.body.appendChild(document.createElement('div'));
+const editors = [];
+const mount = () => {
+ const host = document.body.appendChild(document.createElement('div'));
+ const body = host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
+ editors.push(createMobileInputEditor(host));
+ return body;
+};
+const editor = () => document.querySelector('[data-mobile-input-editor]')?.shadowRoot;
 const item = {
 	index: 1,
 	ID: 501,
@@ -24,6 +32,7 @@ const input = (field, value) => {
 	field.dispatchEvent(new Event('input', { bubbles: true }));
 };
 afterEach(() => {
+ for (const dispose of editors.splice(0)) dispose();
 	document.body.replaceChildren();
 	vi.restoreAllMocks();
 });
@@ -130,7 +139,7 @@ it('preserves smithing materials only for the same recipe and refreshes material
 	body.querySelectorAll('.inventory-item')[1].click();
 	expect(body.querySelector('select').value).toBe('0');
 });
-it('blocks trade locking with unapplied money and quantity, then reviews both sides', () => {
+it('confirms money separately, blocks unsaved quantity and rejects changed final offers', () => {
 	const body = mount(),
 		state = {
 			items: [item],
@@ -154,10 +163,11 @@ it('blocks trade locking with unapplied money and quantity, then reviews both si
 		cancel: vi.fn()
 	};
 	const panel = createTradePanel(body, service);
-	input(body.querySelector('[data-money]'), '50');
-	body.querySelector('[data-lock]').click();
-	expect(service.lock).not.toHaveBeenCalled();
-	body.querySelector('[data-revert-money]').click();
+ body.querySelector('[data-send-money]').click();
+ input(editor().querySelector('input'), '50');
+ expect(service.setMoney).not.toHaveBeenCalled();
+ editor().querySelector('[data-done]').click();
+ expect(service.setMoney).toHaveBeenCalledExactlyOnceWith(50);
 	body.querySelector('.inventory-item').click();
 	const quantity = body.querySelector('[aria-label="交易数量"]');
 	input(quantity, '5');
@@ -165,7 +175,7 @@ it('blocks trade locking with unapplied money and quantity, then reviews both si
 	body.querySelector('[data-lock]').click();
 	expect(service.lock).not.toHaveBeenCalled();
 	expect(quantity.value).toBe('5');
-	body.querySelector('[data-revert-quantity]').click();
+	body.querySelector('dialog [data-cancel]').click();
 	body.querySelector('[data-lock]').click();
 	expect(service.lock).toHaveBeenCalledOnce();
 	state.ownLocked = state.peerLocked = true;
@@ -189,19 +199,23 @@ it('preserves vending price drafts and requires saving before opening a store', 
 		};
 	const service = { snapshot: () => state, set: vi.fn(() => ''), submit: vi.fn(), close: vi.fn() };
 	const panel = createVendingPanel(body, service);
-	body.querySelector('[data-title]').value = '商店';
-	body.querySelector('.inventory-item').click();
+ body.querySelector('.inventory-item').click();
+ body.querySelector('[aria-label="加入摊位清单"]').click();
 	const price = body.querySelector('[aria-label="单价"]');
 	input(price, '30');
 	state.items[0] = { ...item, count: 10 };
 	panel.update();
 	expect(body.querySelector('[aria-label="单价"]')).toBe(price);
 	body.querySelector('[data-submit]').click();
-	expect(body.querySelector('dialog')).toBeNull();
-	button(body, '保存数量与单价').click();
-	expect(service.set).toHaveBeenCalledWith(1, 'one', 2, 30);
-	body.querySelector('[data-submit]').click();
-	expect(body.querySelector('.interaction-review-summary').textContent).toContain('20 Z');
+ expect(editor()).toBeUndefined();
+ expect(service.submit).not.toHaveBeenCalled();
+ body.querySelector('dialog [data-confirm]').click();
+ expect(service.set).toHaveBeenCalledWith(1, 'one', 3, 30);
+ body.querySelector('[data-submit]').click();
+ editor().querySelector('input').value = '商店';
+ expect(service.submit).not.toHaveBeenCalled();
+ editor().querySelector('[data-done]').click();
+ expect(service.submit).toHaveBeenCalledExactlyOnceWith('商店', NaN);
 });
 it('updates transfer limits and destinations without discarding quantity edits', () => {
 	const body = mount(),
@@ -212,8 +226,10 @@ it('updates transfer limits and destinations without discarding quantity edits',
 			storageCapacity: { current: 1, limit: 600 },
 			capacity: { current: 1, limit: 100 }
 		};
-	const service = { snapshot: () => state, transfer: vi.fn() };
+	const service = { snapshot: () => state, setCapacity: vi.fn(), preview: vi.fn(async () => null), transfer: vi.fn() };
 	const panel = createContainerPanel(body, service, 'storage');
+ const destination = body.querySelector('[aria-label="背包或手推车"]');
+ destination.value = 'cart'; destination.dispatchEvent(new Event('change'));
 	body.querySelector('.inventory-item').click();
 	const field = body.querySelector('.interaction-footer [aria-label="取出数量"]');
 	expect(field).not.toBeNull();
@@ -221,14 +237,14 @@ it('updates transfer limits and destinations without discarding quantity edits',
 	state.items[0] = { ...item, count: 10 };
 	state.containers = ['storage', 'cart'];
 	panel.update();
-	expect(body.querySelector('.inventory-detail select').parentElement.hidden).toBe(true);
-	expect(body.querySelector('.interaction-footer .container-capacity').textContent).toBe('仓库格数：1/600');
+	expect(body.querySelector('.container-transfer-target select').parentElement.hidden).toBe(true);
+	expect(service.setCapacity).toHaveBeenLastCalledWith(state.storageCapacity);
 	expect(field.value).toBe('15');
 	expect(field.max).toBe('10');
-	expect(body.querySelector('.inventory-detail select').value).toBe('cart');
+	expect(body.querySelector('.container-transfer-target select').value).toBe('cart');
 	button(body, '确认取出').click();
 	expect(service.transfer).not.toHaveBeenCalled();
-	button(body, '全部数量').click();
+	body.querySelector('[aria-label="全部数量"]').click();
 	button(body, '确认取出').click();
 	expect(service.transfer).toHaveBeenCalledWith('storage', 'cart', 1, 501, 10, item.identity);
 	state.allowed = false;
@@ -258,7 +274,7 @@ it('rejects an enchant confirmation when the selected equipment changed', () => 
 it('filters warehouse selection and separates deposits from withdrawals', () => {
  const body = mount();
  const state = {items:[{...item,identity:'a',name:'红色药水',category:'usable'}],containers:['inventory','storage','cart'],allowed:true,capacity:{current:1,limit:600}};
- const service = {snapshot:vi.fn(() => state),transfer:vi.fn()};
+ const service = {snapshot:vi.fn(() => state),setCapacity: vi.fn(), preview: vi.fn(async () => null), transfer:vi.fn()};
  const panel = createContainerPanel(body,service,'storage');
  body.querySelector('.inventory-item').click();
  expect(body.querySelector('.inventory-item').getAttribute('aria-pressed')).toBe('true');
@@ -267,11 +283,11 @@ it('filters warehouse selection and separates deposits from withdrawals', () => 
  expect(body.querySelector('.container-amount')).toBeNull();
  expect(body.querySelector('.container-empty').textContent).toContain('没有符合');
  input(body.querySelector('[type=search]'),'501');
- button(body,'存入').click();
+ const mode=body.querySelector('[aria-label="存取操作"]');mode.value='deposit';mode.dispatchEvent(new Event('change'));
  expect(service.snapshot).toHaveBeenCalledWith('inventory');
  body.querySelector('.inventory-item').click();
- expect([...body.querySelector('.inventory-detail select').options].map(o=>o.value)).toEqual(['storage']);
- expect(body.querySelector('.inventory-detail select').parentElement.hidden).toBe(true);
+ expect([...body.querySelector('.container-transfer-target select').options].map(o=>o.value)).toEqual(['storage']);
+ expect(body.querySelector('.container-transfer-target select').parentElement.hidden).toBe(true);
  expect(body.querySelector('[aria-label="存入数量"]')).not.toBeNull();
  state.pending=true; panel.update();
  expect(button(body,'确认存入').disabled).toBe(true);
@@ -283,7 +299,7 @@ it('filters container item types together with search and clears stale quantity 
  const body=mount();
  const types=[5,4,6,10,7,8,12];
  const state={allowed:true,containers:['inventory','storage'],items:types.map((type,index)=>({...item,index,type,ID:500+index,name:`物品${index}`,category:'other'}))};
- createContainerPanel(body,{snapshot:()=>state,transfer:vi.fn()},'storage');
+ createContainerPanel(body,{snapshot:()=>state,setCapacity: vi.fn(), preview: vi.fn(async () => null), transfer:vi.fn()},'storage');
  const category=body.querySelector('[aria-label="物品分类"]');
  for(const [key,count] of [['weapon',1],['armor',1],['card',1],['ammo',1],['pet',2],['shadow',1]]) {
   body.querySelector('.inventory-list').scrollTop=200;
@@ -314,7 +330,7 @@ it('keeps selected material rows stable and protects drafts when selecting from 
 
 it('moves cart quantities from the footer in both directions without offering unrelated storage', () => {
  const body=mount();
- const service={snapshot:source=>({items:[item],containers:['inventory','cart','storage'],allowed:true,capacity:source==='cart'?{current:1,limit:100,weight:10,maxWeight:8000}:null}),transfer:vi.fn(()=> '')};
+ const service={snapshot:source=>({items:[item],containers:['inventory','cart','storage'],allowed:true,capacity:source==='cart'?{current:1,limit:100,weight:10,maxWeight:8000}:null}),setCapacity: vi.fn(), preview: vi.fn(async () => null), transfer:vi.fn(()=> '')};
  createContainerPanel(body,service,'cart');
  body.querySelector('.inventory-item').click();
  const field=body.querySelector('[aria-label="取出数量"]');
@@ -325,7 +341,7 @@ it('moves cart quantities from the footer in both directions without offering un
  button(body,'存入').click();body.querySelector('.inventory-item').click();
  body.querySelector('[aria-label="存入数量"]').value='5';button(body,'确认存入').click();
  expect(service.transfer).toHaveBeenLastCalledWith('inventory','cart',1,501,5,'one');
- expect(body.querySelector('.container-capacity').textContent).toContain('手推车格数：1/100');
+ expect(service.setCapacity).toHaveBeenLastCalledWith({current:1,limit:100,weight:10,maxWeight:8000});
 });
 
 it('loads refinement list icons and announces every result once including repeated outcomes', () => {

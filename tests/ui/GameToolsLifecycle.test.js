@@ -8,7 +8,7 @@ vi.mock('UI/GUIComponent.js', () => ({
 	default: class {
 		constructor() {
 			this._host = document.createElement('div');
-			this._host.innerHTML = '<div class="tab-list"></div><div class="tab-content"></div>';
+			this._host.innerHTML = '<div class="tab-list"><div class="desktop-tab-group"></div></div><div class="tab-content"></div>';
 		}
 		getRoot() {
 			return this._host;

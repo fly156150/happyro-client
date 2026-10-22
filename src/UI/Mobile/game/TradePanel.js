@@ -28,17 +28,35 @@ export function createTradePanel(body, service) {
 	const category = createMenuField('select');
 	category.setAttribute('aria-label', '交易物品分类');
 	for (const [value, label] of [
-		['all', '全部'], ['usable', '消耗品'], ['equipment', '装备'], ['weapon', '武器'],
-		['armor', '防具'], ['card', '卡片'], ['ammo', '弹药'], ['pet', '宠物用品'],
-		['shadow', '影子装备'], ['other', '其他']
-	]) category.add(new Option(label, value));
+		['all', '全部'],
+		['usable', '消耗品'],
+		['equipment', '装备'],
+		['weapon', '武器'],
+		['armor', '防具'],
+		['card', '卡片'],
+		['ammo', '弹药'],
+		['pet', '宠物用品'],
+		['shadow', '影子装备'],
+		['other', '其他']
+	])
+		category.add(new Option(label, value));
 	const itemTypes = {
-		weapon: [ItemType.WEAPON], armor: [ItemType.ARMOR], card: [ItemType.CARD],
-		ammo: [ItemType.AMMO], pet: [ItemType.PETEGG, ItemType.PETARMOR], shadow: [ItemType.SHADOWGEAR]
+		weapon: [ItemType.WEAPON],
+		armor: [ItemType.ARMOR],
+		card: [ItemType.CARD],
+		ammo: [ItemType.AMMO],
+		pet: [ItemType.PETEGG, ItemType.PETARMOR],
+		shadow: [ItemType.SHADOWGEAR]
 	};
-	const changeFilter = () => { update(); body.querySelector('.inventory-list').scrollTop = 0; };
+	const changeFilter = () => {
+		update();
+		body.querySelector('.inventory-list').scrollTop = 0;
+	};
 	const subtype = createItemSubtypeFilter(changeFilter);
-	category.onchange = () => { subtype.reset(); changeFilter(); };
+	category.onchange = () => {
+		subtype.reset();
+		changeFilter();
+	};
 	const search = createMenuField();
 	search.type = 'search';
 	search.placeholder = '搜索名称或 ID';
@@ -126,7 +144,9 @@ export function createTradePanel(body, service) {
 		amount.value = state.money ? String(state.money) : '';
 		amount.setAttribute('aria-label', '交易金额');
 		requestMobileInput(body.getRootNode().host, {
-			fields: [amount], title: '设置金额', doneLabel: '确认',
+			fields: [amount],
+			title: '设置金额',
+			doneLabel: '确认',
 			onConfirm: ([value]) => action(service.setMoney(Number(value)))
 		});
 	};
@@ -184,10 +204,23 @@ export function createTradePanel(body, service) {
 				node.remove();
 				nodes.delete(id);
 			}
-		const categoryItems = state.items.filter(item => category.value === 'all' || item.category === category.value || itemTypes[category.value]?.includes(item.type));
+		const categoryItems = state.items.filter(
+			item =>
+				category.value === 'all' ||
+				item.category === category.value ||
+				itemTypes[category.value]?.includes(item.type)
+		);
 		subtype.update(categoryItems, category.value);
 		const query = search.value.trim().toLocaleLowerCase();
-		const visible = new Set(categoryItems.filter(item => subtype.matches(item) && (!query || item.name.toLocaleLowerCase().includes(query) || String(item.ID).includes(query))).map(item => item.index));
+		const visible = new Set(
+			categoryItems
+				.filter(
+					item =>
+						subtype.matches(item) &&
+						(!query || item.name.toLocaleLowerCase().includes(query) || String(item.ID).includes(query))
+				)
+				.map(item => item.index)
+		);
 		for (const item of state.items) {
 			let node = nodes.get(item.index);
 			if (!node) {
@@ -275,6 +308,12 @@ export function createTradePanel(body, service) {
 				setListItemText(button, entry.name, `× ${entry.count}`);
 				setListItemIcon(button, entry);
 				button.className = 'inventory-item';
+				button.onclick = () => {
+					const description = document.createElement('p');
+					description.className = 'item-description';
+					description.textContent = entry.description || '暂无物品说明';
+					confirmAction(body, entry.name, () => {}, { content: description });
+				};
 
 				parent.append(button);
 			}

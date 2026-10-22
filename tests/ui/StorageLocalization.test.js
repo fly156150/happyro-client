@@ -47,8 +47,9 @@ describe('storage localization and controls', () => {
 		expect(searchRule).toContain('width: 38px');
 		expect(searchRule).toContain('min-width: 38px');
 		expect(searchRule).toContain('height: 18px');
-		expect(searchRule).toContain('margin-left: 4px');
-		expect(css).toMatch(/#Storage \.footer \.search-input \{[\s\S]*width: 87px/);
+		expect(searchRule).toContain('margin-left: 0');
+		expect(css).toContain('gap: 4px');
+		expect(css).toMatch(/#Storage \.footer \.search-input \{[\s\S]*flex: 1;[\s\S]*min-width: 0/);
 	});
 
 	it('centers storage and opens inventory immediately to its left', () => {
