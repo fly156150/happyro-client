@@ -454,8 +454,8 @@ function onClickReadMail(e) {
 	e.stopImmediatePropagation();
 	const element = e.currentTarget;
 	const mid = element.id;
-	const openType = element.getAttribute('openType');
-	const id = mid.replace('mail_', '');
+	const openType = Number(element.getAttribute('openType'));
+	const id = BigInt(mid.replace('mail_', ''));
 	Rodex.requestReadRodex(openType, id);
 }
 
