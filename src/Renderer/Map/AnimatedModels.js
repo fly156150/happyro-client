@@ -74,6 +74,7 @@ function init(gl) {
 function free(gl) {
 	for (let i = 0; i < _animatedModels.length; i++) {
 		const model = _animatedModels[i];
+		model.disposed = true;
 		if (model.vao) {
 			gl.deleteVertexArray(model.vao);
 		}
@@ -378,13 +379,18 @@ function loadTexture(gl, model, path, index) {
 	Client.loadFile(
 		path,
 		function (data) {
+			if (model.disposed) return;
 			WebGL.texture(gl, data, function (texture) {
+				if (model.disposed) {
+					if (texture) gl.deleteTexture(texture);
+					return;
+				}
 				model.textureObjects[index] = texture;
 			});
 		},
 		function () {
 			// Texture not found, use a placeholder
-			model.textureObjects[index] = null;
+			if (!model.disposed) model.textureObjects[index] = null;
 		}
 	);
 }

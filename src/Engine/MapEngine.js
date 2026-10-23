@@ -1,3 +1,4 @@
+import { createMapLoadRecovery, createMapLoadRecoveryView } from './MapEngine/MapLoadRecovery.js';
 import { clearCompanionPrompts } from 'UI/Game/CompanionPrompt.js';
 import PetEvolution from 'UI/Components/PetEvolution/PetEvolution.js';
 import { handleArrivalPreview } from 'UI/Components/GameTools/ArrivalPreviewService.js';
@@ -144,6 +145,60 @@ import AchievementEngine from './MapEngine/Achievement.js';
  */
 let _mapName = '';
 let mapLoadGeneration = 0;
+let mapLoadContext = null;
+let activeMapPacket = null;
+let activeRecoveryAttempt;
+let exitRequestTimer = null;
+const mapLoadRecovery = createMapLoadRecovery({
+	view: createMapLoadRecoveryView(document),
+	onRecover: (mode, context) => {
+		if (!mapLoadContext?.pending || context.generation !== mapLoadContext.generation) {
+			throw new Error('地图加载状态已变化，请重试加载。');
+		}
+		// A late completion must not ACK the replacement map after this request.
+		mapLoadGeneration++;
+		MapRenderer.cancelLoad();
+		const packet = new PACKET.CZ.HAPPYRO_MAP_RECOVERY();
+		packet.generation = context.generation;
+		packet.action = mode === 'prontera' ? 1 : 0;
+		Network.sendPacket(packet);
+	},
+	onRetry: () => {
+		if (activeMapPacket) onMapChange(activeMapPacket, true);
+	},
+	onExit: () => onExitRequest()
+});
+
+function onMapLoadContext(pkt) {
+	if (!pkt.pending) {
+		if (mapLoadContext?.generation === pkt.generation) {
+			mapLoadContext.pending = 0;
+			mapLoadRecovery.loaded(activeRecoveryAttempt);
+		}
+		return;
+	}
+	const sameGeneration = mapLoadContext?.generation === pkt.generation;
+	mapLoadContext = {
+		generation: pkt.generation,
+		pending: pkt.pending,
+		recoveryMode: pkt.attempt === 2 ? 'prontera' : pkt.attempt === 1 ? 'previous' : null
+	};
+	if (sameGeneration) mapLoadRecovery.updateContext(mapLoadContext);
+}
+
+function onMapRecoveryResult(pkt) {
+	if (pkt.generation !== mapLoadContext?.generation) return;
+	mapLoadRecovery.handleResult(pkt);
+}
+
+function cancelMapLoadRecovery() {
+	mapLoadGeneration++;
+	mapLoadRecovery.cancel();
+	mapLoadContext = null;
+	activeMapPacket = null;
+	MapRenderer.cancelLoad();
+}
+
 
 /**
  * @type {boolean} is initialized
@@ -171,8 +226,10 @@ class MapEngine {
 	 * @param {string} mapName
 	 */
 	static init(ip, port, mapName) {
+		cancelMapLoadRecovery();
 		cancelCompanionDialogs();
 		Network.onDisconnect = () => {
+			cancelMapLoadRecovery();
 			cancelCompanionDialogs();
 			if (!recovery.disconnected()) UIManager.showErrorBox(DB.getMessage(1));
 		};
@@ -309,6 +366,8 @@ class MapEngine {
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_AVAILABILITY_RESULT, onNpcAvailabilityResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_TELEPORT_RESULT, onNpcTeleportResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_TELEPORT_RESULT, onMapTeleportResult);
+			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_LOAD_CONTEXT, onMapLoadContext);
+			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_RECOVERY_RESULT, onMapRecoveryResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_ARRIVAL_PREVIEW, handleArrivalPreview);
 			Network.hookPacket(PACKET.ZC.REFUSE_ENTER, onConnectionRefused);
 
@@ -695,6 +754,7 @@ function onConnectionAccepted(pkt) {
  * @param {object} pkt - PACKET.ZC.REFUSE_ENTER
  */
 function onConnectionRefused(pkt) {
+	cancelMapLoadRecovery();
 	recovery.cancel();
 	UIManager.getComponent('WinLoading').remove();
 	UIManager.showErrorBox(DB.getMessage(9)); // MSI_ACCESS_DENIED = Rejected from Server.
@@ -705,7 +765,10 @@ function onConnectionRefused(pkt) {
  *
  * @param {object} pkt - PACKET.ZC.NPCACK_MAPMOVE
  */
-function onMapChange(pkt) {
+function onMapChange(pkt, forceReload = false) {
+	activeMapPacket = { ...pkt };
+	activeRecoveryAttempt = mapLoadRecovery.begin({ ...mapLoadContext, mapName: pkt.mapName });
+	const recoveryAttempt = activeRecoveryAttempt;
 	cancelCompanionDialogs();
 	const generation = ++mapLoadGeneration;
 	const connectionId = Network.connectionId;
@@ -715,6 +778,18 @@ function onMapChange(pkt) {
 	stopAutoPickup();
 	GameTools.prepareMapTransition();
 	Navigation.prepareMapTransition();
+	let cameraReady;
+	MapRenderer.onReady = () => {
+		if (!isCurrentLoad()) return;
+		mapLoadRecovery.loaded(recoveryAttempt);
+		Network.sendPacket(new PACKET.CZ.NOTIFY_ACTORINIT());
+		cameraReady?.then(() => {
+			if (isCurrentLoad()) gameRecoveryReady(prepareRecoveryLogin);
+		});
+	};
+	MapRenderer.onError = error => {
+		if (isCurrentLoad()) mapLoadRecovery.failed(error, recoveryAttempt);
+	};
 	MapRenderer.onLoad = () => {
 		if (!isCurrentLoad()) return;
 		Session.Entity.set({
@@ -782,7 +857,7 @@ function onMapChange(pkt) {
 
 		// Initialize camera
 		Camera.setTarget(Session.Entity);
-		const cameraReady = Camera.init();
+		cameraReady = Camera.init();
 
 		// Add Game UI
 		appendGameComponent(MiniMap.getUI());
@@ -858,8 +933,7 @@ function onMapChange(pkt) {
 		// Reload plugins
 		PluginManager.init();
 
-		// Map loaded
-		Network.sendPacket(new PACKET.CZ.NOTIFY_ACTORINIT());
+		// The renderer confirms readiness after all scene initialization completes.
 
 		// Rates Info
 		if (Session.ratesInfo) {
@@ -873,9 +947,6 @@ function onMapChange(pkt) {
 			Session.requestCashShop = false;
 		}
 
-		cameraReady.then(() => {
-			if (isCurrentLoad()) gameRecoveryReady(prepareRecoveryLogin);
-		});
 
 		// send request blocking play cancel
 		if (PACKETVER.value >= 20130320) {
@@ -883,7 +954,7 @@ function onMapChange(pkt) {
 		}
 	};
 
-	MapRenderer.setMap(pkt.mapName);
+	MapRenderer.setMap(pkt.mapName, { force: forceReload });
 }
 
 /**
@@ -907,7 +978,7 @@ async function onExitRequest() {
 	Network.sendPacket(pkt);
 
 	// Wait a second, if no answer from the server, then close it.
-	Events.setTimeout(() => {
+	exitRequestTimer = setTimeout(() => {
 		onExitSuccess();
 	}, 1000);
 }
@@ -938,6 +1009,9 @@ function stopCompanionAI() {
  * @param {object} pkt - PACKET.ZC.REFUSE_QUIT
  */
 function onExitSuccess() {
+	clearTimeout(exitRequestTimer);
+	exitRequestTimer = null;
+	cancelMapLoadRecovery();
 	stopCompanionAI();
 	recovery.cancel();
 	if (PACKETVER.value >= 20170315 && Session.WebToken) {
@@ -991,6 +1065,7 @@ function onRestartAnswer(pkt) {
 		// Have to wait 10sec
 		ChatBox.addText(DB.getMessage(502), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
 	} else {
+		cancelMapLoadRecovery();
 		recovery.cancel();
 		stopCompanionAI();
 		stopAutoPickup();
@@ -1404,6 +1479,7 @@ function onConfigUpdate(type, val) {
  * Go back from map-server to char-server
  */
 function prepareRecoveryLogin() {
+	cancelMapLoadRecovery();
 	stopCompanionAI();
 	mapLoadGeneration++;
 	Network.close();

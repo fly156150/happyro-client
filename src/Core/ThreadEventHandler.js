@@ -35,6 +35,8 @@ function sendLog() {
  *
  * @param {object} event - EventHandler
  */
+let activeMap = null;
+
 onmessage = function receive(event) {
 	const msg = event.data;
 
@@ -133,28 +135,40 @@ onmessage = function receive(event) {
 			}
 			break;
 
-		// Start loading a map
+		case 'CANCEL_MAP':
+			if (activeMap && activeMap.generation === msg.data.generation) {
+				activeMap.cancel();
+				activeMap = null;
+			}
+			break;
+
+		// Stream only the current map; cancellation settles the old callback too.
 		case 'LOAD_MAP': {
+			activeMap?.cancel();
+			const { filename, generation } = msg.data;
 			const map = new MapLoader();
-
-			map.onprogress = function (progress) {
-				postMessage({ type: 'MAP_PROGRESS', data: progress });
+			let settled = false;
+			const complete = (success, error) => {
+				if (settled) return;
+				settled = true;
+				if (msg.uid) postMessage({ uid: msg.uid, arguments: [success, error] });
 			};
-
-			map.onload = function (success, error) {
-				if (msg.uid) {
-					postMessage({
-						uid: msg.uid,
-						arguments: [success, error, msg.data]
-					});
+			const request = {
+				generation,
+				cancel() {
+					map.cancel();
+					complete(false, { code: 'cancelled', resource: filename, message: '地图加载已取消' });
 				}
 			};
-
-			map.ondata = function (type, data) {
-				postMessage({ type: type, data: data });
+			activeMap = request;
+			map.onprogress = progress => {
+				if (activeMap === request) postMessage({ type: 'MAP_PROGRESS', data: { generation, data: progress } });
 			};
-
-			map.load(msg.data);
+			map.onload = complete;
+			map.ondata = (type, data) => {
+				if (activeMap === request) postMessage({ type, data: { generation, data } });
+			};
+			map.load(filename);
 			break;
 		}
 	}

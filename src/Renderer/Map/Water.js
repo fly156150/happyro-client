@@ -69,7 +69,10 @@ let _waterOpacity = 0.9;
  * @param {object} gl context
  * @param {object} water data
  */
+let loadGeneration = 0;
+
 function init(gl, water) {
+	const generation = ++loadGeneration;
 	// Water informations
 	_vertCount = water.vertCount;
 	_waveHeight = water.waveHeight;
@@ -95,6 +98,10 @@ function init(gl, water) {
 	gl.bufferData(gl.ARRAY_BUFFER, water.mesh, gl.STATIC_DRAW);
 
 	function onTextureLoaded(texture, index) {
+		if (generation !== loadGeneration) {
+			if (texture) gl.deleteTexture(texture);
+			return;
+		}
 		_textures[index] = texture;
 	}
 
@@ -176,6 +183,7 @@ function render(gl, modelView, projection, fog, light, tick) {
  * @param {object} gl context
  */
 function free(gl) {
+	loadGeneration++;
 	let i;
 
 	if (_buffer) {

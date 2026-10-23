@@ -15479,6 +15479,31 @@ PACKET.ZC.HAPPYRO_MAP_TELEPORT_RESULT = function PACKET_ZC_HAPPYRO_MAP_TELEPORT_
 };
 PACKET.ZC.HAPPYRO_MAP_TELEPORT_RESULT.size = 32;
 
+// Map-load recovery has no client-selected map or coordinates.
+PACKET.CZ.HAPPYRO_MAP_RECOVERY = function PACKET_CZ_HAPPYRO_MAP_RECOVERY() {
+	this.generation = 0;
+	this.action = 0;
+};
+PACKET.CZ.HAPPYRO_MAP_RECOVERY.prototype.build = function () {
+	const writer = new BinaryWriter(7);
+	writer.writeShort(0x0d0c);
+	writer.writeULong(this.generation);
+	writer.writeUChar(this.action);
+	return writer;
+};
+PACKET.ZC.HAPPYRO_MAP_LOAD_CONTEXT = function PACKET_ZC_HAPPYRO_MAP_LOAD_CONTEXT(fp) {
+	this.generation = fp.readULong();
+	this.attempt = fp.readUChar();
+	this.pending = fp.readUChar();
+};
+PACKET.ZC.HAPPYRO_MAP_LOAD_CONTEXT.size = 8;
+PACKET.ZC.HAPPYRO_MAP_RECOVERY_RESULT = function PACKET_ZC_HAPPYRO_MAP_RECOVERY_RESULT(fp) {
+	this.generation = fp.readULong();
+	this.status = fp.readUChar();
+	this.destination = fp.readUChar();
+};
+PACKET.ZC.HAPPYRO_MAP_RECOVERY_RESULT.size = 8;
+
 // 0xcfa - HappyRO live NPC availability request
 PACKET.CZ.HAPPYRO_NPC_AVAILABILITY = function PACKET_CZ_HAPPYRO_NPC_AVAILABILITY() {
 	this.requestId = 0;

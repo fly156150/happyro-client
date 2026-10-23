@@ -73,6 +73,8 @@ let _height = 0;
  * @param {object} fog structure
  * @param {object} light structure
  */
+let loadGeneration = 0;
+
 function render(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program.uniform;
 	const attribute = _program.attribute;
@@ -255,6 +257,7 @@ function initTileColor2(gl, tilescolor, width, height) {
  * @param {Array} textures 's filename
  */
 function initTextures(gl, textures) {
+	const generation = loadGeneration;
 	// Find texture size
 	const count = textures.length;
 	const textureCols = Math.round(Math.sqrt(count));
@@ -270,6 +273,7 @@ function initTextures(gl, textures) {
 	let loaded = 0;
 
 	function onTextureCompleteBuildAtlas(success, index) {
+		if (generation !== loadGeneration) return;
 		if (success) {
 			const x = (index % textureCols) * 258;
 			const y = Math.floor(index / textureCols) * 258;
@@ -318,6 +322,7 @@ function onTextureAtlasComplete(gl, atlas) {
  * @param {object} data - ground
  */
 function init(gl, data) {
+	loadGeneration++;
 	_vertCount = data.meshVertCount;
 	_width = data.width;
 	_height = data.height;
@@ -352,6 +357,7 @@ function init(gl, data) {
  * @param {object} gl context
  */
 function free(gl) {
+	loadGeneration++;
 	if (_lightmap) {
 		gl.deleteTexture(_lightmap);
 		_lightmap = null;

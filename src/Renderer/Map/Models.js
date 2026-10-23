@@ -49,6 +49,8 @@ let _pendingTextures = 0;
  * Objects sharing the same texture with contiguous vertex ranges are merged
  * into a single draw call, reducing GPU state changes.
  */
+let loadGeneration = 0;
+
 function buildBatches() {
 	_batches.length = 0;
 	let current = null;
@@ -85,6 +87,7 @@ function buildBatches() {
  * @param {object} data ( models )
  */
 function init(gl, data) {
+	const generation = ++loadGeneration;
 	const objects = data.infos;
 	const count = objects.length;
 	_objects.length = count;
@@ -104,6 +107,10 @@ function init(gl, data) {
 	gl.bufferData(gl.ARRAY_BUFFER, data.buffer, gl.STATIC_DRAW);
 
 	function onTextureLoaded(texture, index) {
+		if (generation !== loadGeneration) {
+			if (texture) gl.deleteTexture(texture);
+			return;
+		}
 		_objects[index].texture = texture;
 		_objects[index].complete = true;
 		_pendingTextures--;
@@ -217,6 +224,7 @@ function render(gl, modelView, projection, normalMat, fog, light) {
  * @param {object} gl context
  */
 function free(gl) {
+	loadGeneration++;
 	let i, count;
 
 	if (_buffer) {

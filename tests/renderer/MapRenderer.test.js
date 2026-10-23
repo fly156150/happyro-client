@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
+	thread: { hook: vi.fn(), send: vi.fn() },
 	soundManager: { stop: vi.fn() },
 	bgm: { stop: vi.fn() },
 	uiManager: { removeComponents: vi.fn() },
@@ -16,6 +17,7 @@ const mocks = vi.hoisted(() => ({
 	renderer: {
 		stop: vi.fn(),
 		getContext: vi.fn(() => ({})),
+		remove: vi.fn(),
 		render: vi.fn()
 	},
 	entityManager: { free: vi.fn() },
@@ -25,7 +27,7 @@ const mocks = vi.hoisted(() => ({
 	joystickUI: { onRestore: vi.fn() }
 }));
 
-vi.mock('Core/Thread.js', () => ({ default: {} }));
+vi.mock('Core/Thread.js', () => ({ default: mocks.thread }));
 vi.mock('Audio/SoundManager.js', () => ({ default: mocks.soundManager }));
 vi.mock('Audio/BGM.js', () => ({ default: mocks.bgm }));
 vi.mock('DB/DBManager.js', () => ({ default: {} }));
@@ -82,6 +84,7 @@ describe('MapRenderer joystick restoration', () => {
 		MapRenderer.loading = false;
 		MapRenderer.currentMap = 'prontera.gat';
 		MapRenderer.onLoad = vi.fn();
+		MapRenderer.onReady = vi.fn();
 		mocks.mouse.intersect = true;
 	});
 
@@ -108,5 +111,68 @@ describe('MapRenderer joystick restoration', () => {
 		expect(MapRenderer.onLoad).not.toHaveBeenCalled();
 		expect(MapRenderer.loading).toBe(true);
 		expect(MapRenderer.currentMap).toBe('geffen.gat');
+	});
+});
+
+
+describe('map loading failure and generation isolation', () => {
+	let free;
+	beforeEach(() => {
+		vi.clearAllMocks();
+		MapRenderer.loading = false; MapRenderer.currentMap = ''; MapRenderer.loadGeneration = 0;
+		MapRenderer.onError = vi.fn(); MapRenderer.onLoad = vi.fn(); MapRenderer.onReady = vi.fn();
+		free = vi.spyOn(MapRenderer, 'free').mockImplementation(() => {});
+	});
+	afterEach(() => free.mockRestore());
+	function start(name) {
+		MapRenderer.setMap(name);
+		mocks.background.setLoading.mock.calls.at(-1)[0]();
+		return mocks.thread.send.mock.calls.findLast(([type]) => type === 'LOAD_MAP');
+	}
+	it('clears a failed map and reports resource details instead of retaining the loading lock', () => {
+		const [, request, complete] = start('missing.gat');
+		complete(false, { code: 'missing_resource', resource: 'data\\missing.rsw', message: 'missing' });
+		expect(MapRenderer.loading).toBe(false); expect(MapRenderer.currentMap).toBe('');
+		expect(MapRenderer.onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ mapName: 'missing.gat', generation: request.generation, resource: 'data\\missing.rsw' }));
+		expect(MapRenderer.onLoad).not.toHaveBeenCalled();
+		start('missing.gat'); expect(MapRenderer.loading).toBe(true);
+	});
+	it('ignores old worker events and completion after a new map takes over', () => {
+		const [, old, completeOld] = start('old.gat');
+		const [, current] = start('new.gat');
+		const onWorld = mocks.thread.hook.mock.calls.findLast(([type]) => type === 'MAP_WORLD')[1];
+		onWorld({ generation: old.generation, data: null }); completeOld(false, { message: 'obsolete failure' });
+		expect(MapRenderer.onError).not.toHaveBeenCalled(); expect(MapRenderer.currentMap).toBe('new.gat');
+		expect(current.generation).toBeGreaterThan(old.generation);
+	});
+	it('ignores a delayed loading-background callback after cancellation', () => {
+		MapRenderer.setMap('old.gat'); const delayed = mocks.background.setLoading.mock.calls.at(-1)[0];
+		MapRenderer.cancelLoad(); delayed();
+		expect(mocks.thread.send.mock.calls.some(([type]) => type === 'LOAD_MAP')).toBe(false);
+		expect(free).not.toHaveBeenCalled();
+	});
+	it('routes renderer data initialization errors to recovery', () => {
+		const [, request] = start('broken.gat');
+		mocks.thread.hook.mock.calls.findLast(([type]) => type === 'MAP_WORLD')[1]({ generation: request.generation, data: null });
+		expect(MapRenderer.onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ code: 'render_failed' }));
+		expect(MapRenderer.loading).toBe(false);
+	});
+	it('does not announce readiness when same-map render startup throws', () => {
+		MapRenderer.currentMap = 'prontera.gat';
+		mocks.renderer.render.mockImplementationOnce(() => { throw new Error('render startup failed'); });
+		MapRenderer.setMap('prontera.gat');
+		expect(MapRenderer.onLoad).toHaveBeenCalledOnce(); expect(MapRenderer.onReady).not.toHaveBeenCalled();
+		expect(MapRenderer.onError).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ code: 'render_failed' }));
+	});
+	it('does not complete a delayed same-map transition after cancellation', () => {
+		MapRenderer.currentMap = 'prontera.gat';
+		mocks.background.remove.mockImplementationOnce(() => {});
+		MapRenderer.setMap('prontera.gat'); const callback = mocks.background.remove.mock.calls.at(-1)[0];
+		MapRenderer.cancelLoad(); callback();
+		expect(MapRenderer.onLoad).not.toHaveBeenCalled(); expect(MapRenderer.onReady).not.toHaveBeenCalled();
+	});
+	it('forces a completed map to load again when explicitly requested', () => {
+		MapRenderer.currentMap = 'prontera.gat'; MapRenderer.setMap('prontera.gat', { force: true });
+		expect(mocks.background.setLoading).toHaveBeenCalledOnce(); expect(MapRenderer.loading).toBe(true);
 	});
 });

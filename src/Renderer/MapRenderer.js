@@ -68,6 +68,8 @@ class MapRenderer {
 	 */
 	static currentMap = '';
 
+	static loadGeneration = 0;
+
 	/**
 	 * @var {object} Global Light Structure
 	 */
@@ -115,11 +117,9 @@ class MapRenderer {
 	 *
 	 * @param {string} mapname to load
 	 */
-	static setMap(mapname) {
-		// TODO: stop the map loading, and start to load the new map.
-		if (this.loading) {
-			return;
-		}
+	static setMap(mapname, { force = false } = {}) {
+		if (this.loading) this.cancelLoad();
+		const generation = ++this.loadGeneration;
 
 		// Support for instance map
 		// Is it always 3 digits ?
@@ -134,7 +134,7 @@ class MapRenderer {
 		Cursor.setType(Cursor.ACTION.DEFAULT);
 
 		// Don't reload a map when it's just a local teleportation
-		if (this.currentMap !== mapname) {
+		if (force || this.currentMap !== mapname) {
 			this.loading = true;
 			BGM.stop();
 			this.currentMap = mapname;
@@ -142,39 +142,108 @@ class MapRenderer {
 			// Parse the filename (ugly RO)
 			const filename = mapname.replace(/\.gat$/i, '.rsw');
 
-			Background.setLoading(function () {
-				// Hooking Thread
-				Thread.hook('MAP_PROGRESS', onProgressUpdate.bind(MapRenderer));
-				Thread.hook('MAP_WORLD', onWorldComplete.bind(MapRenderer));
-				Thread.hook('MAP_GROUND', onGroundComplete.bind(MapRenderer));
-				Thread.hook('MAP_ALTITUDE', onAltitudeComplete.bind(MapRenderer));
-				Thread.hook('MAP_MODELS', onModelsComplete.bind(MapRenderer));
-				Thread.hook('MAP_ANIMATED_MODEL', onAnimatedModelComplete.bind(MapRenderer));
-
-				// Start Loading
-				MapRenderer.free();
-				Renderer.remove();
-				Thread.send('LOAD_MAP', filename, onMapComplete.bind(MapRenderer));
+			Background.setLoading(() => {
+				if (!this.loading || generation !== this.loadGeneration) return;
+				const handlers = {
+					MAP_PROGRESS: onProgressUpdate,
+					MAP_WORLD: onWorldComplete,
+					MAP_GROUND: onGroundComplete,
+					MAP_ALTITUDE: onAltitudeComplete,
+					MAP_MODELS: onModelsComplete,
+					MAP_ANIMATED_MODEL: onAnimatedModelComplete
+				};
+				for (const [type, handler] of Object.entries(handlers)) {
+					Thread.hook(type, event => {
+						if (!this.loading || generation !== this.loadGeneration || event.generation !== generation)
+							return;
+						try {
+							handler.call(this, event.data);
+						} catch (error) {
+							this.failLoad(generation, {
+								code: 'render_failed',
+								resource: filename,
+								message: error.message
+							});
+						}
+					});
+				}
+				try {
+					this.free();
+					Renderer.remove();
+					Thread.send('LOAD_MAP', { filename, generation }, (success, error) => {
+						if (!this.loading || generation !== this.loadGeneration) return;
+						if (!success) {
+							this.failLoad(generation, error);
+							return;
+						}
+						try {
+							onMapComplete.call(this, generation);
+						} catch (cause) {
+							this.failLoad(generation, {
+								code: 'render_failed',
+								resource: filename,
+								message: cause.message
+							});
+						}
+					});
+				} catch (error) {
+					this.failLoad(generation, { code: 'render_failed', resource: filename, message: error.message });
+				}
 			});
 
 			return;
 		}
 
-		const gl = Renderer.getContext();
-		EntityManager.free();
-		Damage.free(gl);
-		EffectManager.free(gl);
-		JoystickUI.onRestore();
+		this.loading = true;
+		try {
+			const gl = Renderer.getContext();
+			EntityManager.free();
+			Damage.free(gl);
+			EffectManager.free(gl);
+			JoystickUI.onRestore();
 
-		// Basic TP
+			// Basic TP
+			Mouse.intersect = false;
+			Background.remove(() => {
+				if (!this.loading || generation !== this.loadGeneration) return;
+				try {
+					this.onLoad();
+					Sky.setUpCloudData();
+					Renderer.render(this.onRender);
+					Mouse.intersect = true;
+					this.onReady();
+					this.loading = false;
+				} catch (error) {
+					this.failLoad(generation, { code: 'render_failed', resource: mapname, message: error.message });
+				}
+			});
+		} catch (error) {
+			this.failLoad(generation, { code: 'render_failed', resource: mapname, message: error.message });
+		}
+	}
+
+	/** Invalidate all pending worker and background callbacks. */
+	static cancelLoad() {
+		const generation = this.loadGeneration;
+		const wasLoading = this.loading;
+		this.loadGeneration++;
+		this.loading = false;
+		this.currentMap = '';
+		if (wasLoading) Thread.send('CANCEL_MAP', { generation });
+	}
+
+	static failLoad(generation, error) {
+		if (!this.loading || generation !== this.loadGeneration) return;
+		const mapName = this.currentMap;
+		this.cancelLoad();
+		try {
+			this.free();
+		} catch (cleanupError) {
+			console.error('Map cleanup failed', cleanupError);
+		}
+		Renderer.stop();
 		Mouse.intersect = false;
-		Background.remove(() => {
-			MapRenderer.onLoad();
-			Sky.setUpCloudData();
-
-			Renderer.render(MapRenderer.onRender);
-			Mouse.intersect = true;
-		});
+		this.onError({ ...error, mapName, generation });
 	}
 
 	/**
@@ -344,6 +413,13 @@ class MapRenderer {
 	 * Callback to execute once the map is loaded
 	 */
 	static onLoad() {}
+
+	static onError(error) {
+		UIManager.showErrorBox(error.message).ui.css('zIndex', 1000);
+	}
+
+	/** Called only after scene initialization and rendering startup succeed. */
+	static onReady() {}
 }
 
 /**
@@ -478,15 +554,9 @@ function registerPostProcessModules(gl) {
 /**
  * Once the map finished to load
  */
-function onMapComplete(success, error) {
+function onMapComplete(generation) {
 	const worldResource = this.currentMap.replace(/\.gat$/i, '.rsw');
 	const mapInfo = DB.getMap(worldResource);
-
-	// Problem during loading ?
-	if (!success) {
-		UIManager.showErrorBox(error).ui.css('zIndex', 1000);
-		return;
-	}
 
 	// Play BGM
 	BGM.play((mapInfo && mapInfo.mp3) || '01.mp3');
@@ -514,16 +584,25 @@ function onMapComplete(success, error) {
 
 	// Starting to render
 	Background.remove(() => {
-		MapRenderer.loading = false;
+		if (!MapRenderer.loading || generation !== MapRenderer.loadGeneration) return;
+		try {
+			MapRenderer.onLoad();
+			Sky.setUpCloudData();
+			ScreenEffectManager.startMapflagEffect(worldResource);
 
-		MapRenderer.onLoad();
-		Sky.setUpCloudData();
-		ScreenEffectManager.startMapflagEffect(worldResource);
-
-		// Display game
-		Renderer.show();
-		Renderer.render(MapRenderer.onRender);
-		Mouse.intersect = true;
+			// Display game
+			Renderer.show();
+			Renderer.render(MapRenderer.onRender);
+			Mouse.intersect = true;
+			MapRenderer.onReady();
+			MapRenderer.loading = false;
+		} catch (error) {
+			MapRenderer.failLoad(generation, {
+				code: 'render_failed',
+				resource: worldResource,
+				message: error.message
+			});
+		}
 	});
 }
 

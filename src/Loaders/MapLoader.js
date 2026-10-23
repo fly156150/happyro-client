@@ -16,7 +16,9 @@ import FileManager from 'Core/FileManager.js';
  * @param {array} file list to load
  */
 class Loader {
-	constructor(list) {
+	constructor(list, owner) {
+		this.owner = owner;
+		this.generation = owner.generation;
 		this.files = list;
 		this.list = list.slice(0);
 		this.offset = 0;
@@ -61,37 +63,40 @@ class Loader {
 	 */
 	_next() {
 		// Possible problem with setTimeout
-		if (!this.list.length) {
+		if (!this.owner.isActive(this.generation) || !this.list.length) {
 			return;
 		}
 
 		const filename = this.list.shift();
-		FileManager.load(filename, data => {
-			// Store the result
-			this.out[this.files.indexOf(filename)] = data;
-			this.offset++;
+		FileManager.load(
+			filename,
+			this.owner.guard(this.generation, filename, data => {
+				// Store the result
+				this.out[this.files.indexOf(filename)] = data;
+				this.offset++;
 
-			// Start the progress
-			if (this.onprogress && this.offset <= this.count) {
-				this.onprogress(this.offset, this.count);
-			}
-
-			// Ended ?
-			if (this.offset === this.count) {
-				this.onload(this.out, this.files);
-				return;
-			}
-
-			// Continue the queue
-			if (this.list.length) {
-				// To fix "too much recursion" on Firefox
-				if (++Loader.count % 50 === 0) {
-					setTimeout(() => this._next(), 4);
-				} else {
-					this._next();
+				// Start the progress
+				if (this.onprogress && this.offset <= this.count) {
+					this.onprogress(this.offset, this.count);
 				}
-			}
-		});
+
+				// Ended ?
+				if (this.offset === this.count) {
+					this.onload(this.out, this.files);
+					return;
+				}
+
+				// Continue the queue
+				if (this.list.length) {
+					// To fix "too much recursion" on Firefox
+					if (++Loader.count % 50 === 0) {
+						setTimeout(() => this._next(), 4);
+					} else {
+						this._next();
+					}
+				}
+			})
+		);
 	}
 }
 /**
@@ -100,6 +105,61 @@ class Loader {
  * @param {string} mapname
  */
 class MapLoader {
+	generation = 0;
+	active = false;
+
+	isActive(generation) {
+		return this.active && this.generation === generation;
+	}
+
+	cancel() {
+		this.active = false;
+		this.generation++;
+	}
+
+	fail(resource, error, code = 'invalid_resource') {
+		if (!this.active) return;
+		this.active = false;
+		this.onload(false, {
+			code,
+			resource,
+			message:
+				code === 'missing_resource'
+					? `找不到地图文件「${resource}」！`
+					: `地图资源「${resource}」加载失败：${error?.message || error || '无效数据'}`
+		});
+	}
+
+	guard(generation, resource, callback) {
+		return (...args) => {
+			if (!this.isActive(generation)) return;
+			try {
+				return callback(...args);
+			} catch (error) {
+				this.fail(resource, error);
+			}
+		};
+	}
+
+	loadRequired(resource, generation, callback) {
+		const ready = this.guard(generation, resource, (data, error) => {
+			if (!data) {
+				this.fail(
+					resource,
+					error,
+					!error || /Can't get file|not found/i.test(error) ? 'missing_resource' : 'invalid_resource'
+				);
+				return;
+			}
+			callback(data);
+		});
+		try {
+			FileManager.load(resource, ready);
+		} catch (error) {
+			if (this.isActive(generation)) this.fail(resource, error);
+		}
+	}
+
 	constructor(mapname) {
 		if (mapname) {
 			this.load(mapname);
@@ -146,7 +206,13 @@ class MapLoader {
 	 * @param {string} mapname
 	 */
 	load(mapname) {
-		// Initialize the loading
+		// Each load owns its callbacks, including already queued downloads.
+		this.cancel();
+		this.active = true;
+		const generation = this.generation;
+		this.offset = 0;
+		this.fileCount = 0;
+		this._animatedModels = [];
 		this.setProgress(0);
 
 		const loader = this;
@@ -163,38 +229,23 @@ class MapLoader {
 
 		// loading world
 		function onWorldReady(resourceWorld) {
-			if (!resourceWorld) {
-				loader.onload(false, `找不到文件「${mapname}」！`);
-				return;
-			}
-
 			world = resourceWorld;
 			loader.setProgress(1);
 
 			// Load Altitude
-			FileManager.load(`data\\${getFilePath(world.files.gat)}`, onAltitudeReady);
+			loader.loadRequired(`data\\${getFilePath(world.files.gat)}`, generation, onAltitudeReady);
 		}
 
 		// Loading altitude
 		function onAltitudeReady(altitude) {
-			if (!altitude) {
-				loader.onload(false, `找不到文件「${world.files.gat}」！`);
-				return;
-			}
-
 			loader.setProgress(2);
 			loader.ondata('MAP_ALTITUDE', altitude.compile());
 
-			FileManager.load(`data\\${getFilePath(world.files.gnd)}`, onGroundReady);
+			loader.loadRequired(`data\\${getFilePath(world.files.gnd)}`, generation, onGroundReady);
 		}
 
 		// Load ground
 		function onGroundReady(ground) {
-			if (!ground) {
-				loader.onload(false, `找不到文件「${world.files.gnd}」！`);
-				return;
-			}
-
 			loader.setProgress(3);
 
 			// Compiling ground
@@ -213,20 +264,24 @@ class MapLoader {
 			}
 
 			// Loading Gound and Water textures
-			loader.loadGroundTextures(world, compiledGround, function onLoaded(waters, textures) {
-				world.water.images = waters;
-				compiledGround.textures = textures;
+			loader.loadGroundTextures(
+				world,
+				compiledGround,
+				loader.guard(generation, `data\\${getFilePath(mapname)}`, function onLoaded(waters, textures) {
+					world.water.images = waters;
+					compiledGround.textures = textures;
 
-				loader.ondata('MAP_WORLD', world.compile());
-				loader.ondata('MAP_GROUND', compiledGround);
+					loader.ondata('MAP_WORLD', world.compile());
+					loader.ondata('MAP_GROUND', compiledGround);
 
-				// Start loading models
-				loader.loadModels(world.models, ground);
-			});
+					// Start loading models
+					loader.loadModels(world.models, ground);
+				})
+			);
 		}
 
 		// Start loading World Resource file
-		FileManager.load(`data\\${getFilePath(mapname)}`, onWorldReady);
+		loader.loadRequired(`data\\${getFilePath(mapname)}`, generation, onWorldReady);
 	}
 
 	/**
@@ -254,7 +309,7 @@ class MapLoader {
 		}
 
 		// Start loading
-		const loader = new Loader(textures);
+		const loader = new Loader(textures, this);
 
 		// On progress
 		loader.onprogress = () => {
@@ -290,7 +345,7 @@ class MapLoader {
 			}
 		}
 
-		const loader = new Loader(files);
+		const loader = new Loader(files, this);
 
 		// Update the progressbar
 		loader.onprogress = () => {
@@ -428,7 +483,7 @@ class MapLoader {
 		}
 
 		// Load texture
-		const loader = new Loader(textures);
+		const loader = new Loader(textures, this);
 
 		// On Progress
 		loader.onprogress = (index, _count) => {
@@ -455,6 +510,7 @@ class MapLoader {
 				this.sendAnimatedModels(this._animatedModels);
 			}
 
+			this.active = false;
 			this.onload(true);
 		};
 
