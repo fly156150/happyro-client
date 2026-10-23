@@ -1,3 +1,4 @@
+import { storageTitle } from '../../src/UI/Components/Storage/StorageLabels.js';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -18,7 +19,10 @@ describe('storage localization and controls', () => {
 	it('keeps the normal storage title localized after server metadata arrives', () => {
 		const source = read('src/Engine/MapEngine/Storage.js');
 
-		expect(source).toContain("InvTypeName === 'Storage' ? '仓库' : InvTypeName || '仓库'");
+		expect(source).toContain('storageTitle(InvTypeName)');
+		expect(storageTitle('Storage')).toBe('仓库');
+		expect(storageTitle('Guild Storage')).toBe('公会仓库');
+		expect(storageTitle('活动仓库')).toBe('活动仓库');
 	});
 
 	it('uses the shared game select for expanded-storage ordering', () => {

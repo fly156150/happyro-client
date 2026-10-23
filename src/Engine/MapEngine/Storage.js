@@ -1,3 +1,4 @@
+import { storageTitle } from 'UI/Components/Storage/StorageLabels.js';
 import { acknowledgeStorageTransfer } from 'UI/Game/StorageTransfer.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import Equipment from 'UI/Components/Equipment/Equipment.js';
@@ -48,7 +49,7 @@ function onStorageInfo(pkt) {
 			const token = {};
 			showInteraction({
 				kind: 'storage',
-				title: InvTypeName === 'Storage' ? '仓库' : InvTypeName || '仓库',
+				title: storageTitle(InvTypeName),
 				token,
 				close: () => {
 					if (interactionSnapshot()?.token === token) Storage.onClosePressed();
@@ -63,7 +64,7 @@ function onStorageInfo(pkt) {
 		if (PACKETVER.value >= 20181002) {
 			Storage.getUI()
 				.ui.find('.titlebar .text')
-				.text(InvTypeName === 'Storage' ? '仓库' : InvTypeName || '仓库');
+				.text(storageTitle(InvTypeName));
 		}
 	}
 	Storage.getUI().setItemInfo(pkt.curCount, pkt.maxCount);
