@@ -70,8 +70,8 @@
 .item-source-table th { white-space: nowrap; }
 .item-source-table tbody tr:last-child td { border-bottom: 0; }
 .item-source-table th:nth-child(2), .item-source-table td:nth-child(2),
-.item-source-table th:nth-child(3), .item-source-table td:nth-child(3) { text-align: center; white-space: nowrap; }
-.item-source-table th:nth-child(4), .item-source-table td:nth-child(4) { text-align: right; white-space: nowrap; }
+.item-source-table th:nth-child(3), .item-source-table td:nth-child(3) { white-space: nowrap; }
+.item-source-table th:nth-child(4), .item-source-table td:nth-child(4) { white-space: nowrap; }
 .item-source-table .source-name { width: 25%; }
 .item-source-table .source-id { width: 16%; }
 .item-source-table .source-level { width: 12%; }
