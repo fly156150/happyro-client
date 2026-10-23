@@ -197,7 +197,7 @@ HUD.onAppend = function () {
 		},
 		autoCombat: {
 			snapshot: () => autoCombat.snapshot(),
-			targets: () => autoCombat.targets(),
+			mapSpecies: () => autoCombat.mapSpecies(),
 			skills: () => autoCombat.skills(),
 			configure: (...args) => autoCombat.configure(...args)
 		},

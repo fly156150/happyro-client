@@ -121,71 +121,74 @@ export function createAutoCombatPanel(body, actions) {
 	}
 	refreshTeleport();
 	const species = new Map(state.species.map(entry => [entry.id, entry.name]));
-	for (const target of actions.targets()) species.set(target.species, target.name);
 	const chosenSpecies = new Set(state.species.map(entry => entry.id));
-	for (const [id, name] of species) {
-		// One native button owns activation; there is no nested label/control activation.
-		const button = document.createElement('button');
-		button.type = 'button';
-		button.className = 'auto-species-card';
-		button.dataset.species = String(id);
-		button.setAttribute('role', 'checkbox');
-		button.setAttribute('aria-checked', String(chosenSpecies.has(id)));
-		const check = document.createElement('span');
-		check.className = 'auto-species-check';
-		check.setAttribute('aria-hidden', 'true');
-		const title = document.createElement('span');
-		title.textContent = name;
-		button.append(check, title);
-		const toggle = () => {
-			if (chosenSpecies.has(id)) chosenSpecies.delete(id);
-			else chosenSpecies.add(id);
-			updateSummary();
-		};
-		let press = null;
-		const scroller = $('.auto-target-section');
-		button.onpointerdown = event => {
-			if (event.button !== 0 || press) return;
-			// Avoid focus scrolling the list between press and release.
-			event.preventDefault();
-			press = {
-				id: event.pointerId,
-				x: event.clientX,
-				y: event.clientY,
-				scroll: scroller.scrollTop,
-				moved: false
+	const speciesList = $('[data-auto-species]');
+	function renderSpecies() {
+		speciesList.replaceChildren();
+		for (const [id, name] of species) {
+			// One native button owns activation; there is no nested label/control activation.
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.className = 'auto-species-card';
+			button.dataset.species = String(id);
+			button.setAttribute('role', 'checkbox');
+			button.setAttribute('aria-checked', String(chosenSpecies.has(id)));
+			const check = document.createElement('span');
+			check.className = 'auto-species-check';
+			check.setAttribute('aria-hidden', 'true');
+			const title = document.createElement('span');
+			title.textContent = name;
+			button.append(check, title);
+			const toggle = () => {
+				if (chosenSpecies.has(id)) chosenSpecies.delete(id);
+				else chosenSpecies.add(id);
+				updateSummary();
 			};
-			button.setPointerCapture(event.pointerId);
-		};
-		button.onpointermove = event => {
-			if (press?.id === event.pointerId && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 8)
-				press.moved = true;
-		};
-		button.onpointerup = event => {
-			if (press?.id !== event.pointerId) return;
-			const start = press;
-			press = null;
-			const bounds = button.getBoundingClientRect();
-			if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
-			if (
-				!start.moved &&
-				Math.hypot(event.clientX - start.x, event.clientY - start.y) <= 8 &&
-				scroller.scrollTop === start.scroll &&
-				event.clientX >= bounds.left &&
-				event.clientX <= bounds.right &&
-				event.clientY >= bounds.top &&
-				event.clientY <= bounds.bottom
-			)
-				toggle();
-		};
-		button.onpointercancel = button.onlostpointercapture = () => {
-			press = null;
-		};
-		// Pointer activation is handled once above. Keep keyboard/assistive activation native.
-		button.onclick = event => {
-			if (event.detail === 0) toggle();
-		};
-		$('[data-auto-species]').append(button);
+			let press = null;
+			const scroller = $('.auto-target-section');
+			button.onpointerdown = event => {
+				if (event.button !== 0 || press) return;
+				// Avoid focus scrolling the list between press and release.
+				event.preventDefault();
+				press = {
+					id: event.pointerId,
+					x: event.clientX,
+					y: event.clientY,
+					scroll: scroller.scrollTop,
+					moved: false
+				};
+				button.setPointerCapture(event.pointerId);
+			};
+			button.onpointermove = event => {
+				if (press?.id === event.pointerId && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 8)
+					press.moved = true;
+			};
+			button.onpointerup = event => {
+				if (press?.id !== event.pointerId) return;
+				const start = press;
+				press = null;
+				const bounds = button.getBoundingClientRect();
+				if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
+				if (
+					!start.moved &&
+					Math.hypot(event.clientX - start.x, event.clientY - start.y) <= 8 &&
+					scroller.scrollTop === start.scroll &&
+					event.clientX >= bounds.left &&
+					event.clientX <= bounds.right &&
+					event.clientY >= bounds.top &&
+					event.clientY <= bounds.bottom
+				)
+					toggle();
+			};
+			button.onpointercancel = button.onlostpointercapture = () => {
+				press = null;
+			};
+			// Pointer activation is handled once above. Keep keyboard/assistive activation native.
+			button.onclick = event => {
+				if (event.detail === 0) toggle();
+			};
+			speciesList.append(button);
+		}
 	}
 	const selectedSpecies = () => [...chosenSpecies].map(id => ({ id, name: species.get(id) }));
 	const entries = actions.skills();
@@ -295,4 +298,34 @@ export function createAutoCombatPanel(body, actions) {
 	$('.auto-save-error').append(retry);
 	updateSummary();
 	ready = true;
+	renderSpecies();
+	async function loadSpecies() {
+		const notice = document.createElement('p');
+		notice.className = 'auto-help';
+		notice.setAttribute('role', 'status');
+		notice.textContent = '正在加载当前地图魔物…';
+		speciesList.append(notice);
+		try {
+			const entries = await actions.mapSpecies();
+			if (!body.contains(speciesList)) return;
+			for (const entry of entries) species.set(entry.id, entry.name);
+			renderSpecies();
+			if (!species.size) {
+				notice.textContent = '当前地图没有配置魔物';
+				speciesList.append(notice);
+			}
+		} catch {
+			if (!body.contains(speciesList)) return;
+			notice.textContent = '地图魔物加载失败';
+			const retry = document.createElement('button');
+			retry.type = 'button';
+			retry.textContent = '重试';
+			retry.onclick = () => {
+				notice.remove();
+				loadSpecies();
+			};
+			notice.append(retry);
+		}
+	}
+	loadSpecies();
 }

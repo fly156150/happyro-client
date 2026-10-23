@@ -11,7 +11,7 @@ beforeEach(() => {
 		snapshot: () => state,
 		start: vi.fn(() => { state.active = true; state.status = '寻找附近目标'; return true; }),
 		stop: vi.fn(message => { state.active = false; state.status = message || '自动战斗已停止'; }),
-		targets: () => [{ species: 1002, name: '波利' }],
+		mapSpecies: () => [{ id: 1002, name: '波利' }],
 		skills: () => [{ id: 5, name: '狂击', level: 3 }], configure: vi.fn(() => true)
 	};
 	saved = pickupDefaults();
@@ -27,8 +27,8 @@ it('offers a visible start/stop control with accessible state', () => {
 	click('[data-combat-toggle]'); expect(actions.stop).toHaveBeenCalledOnce();
 	expect(root.querySelector('[data-combat-toggle]').getAttribute('aria-checked')).toBe('false');
 });
-it('uses the shared species, skill and range editor and saves without starting combat', () => {
-	click('[data-settings]'); expect(view.isOpen()).toBe(true); expect(actions.stop).not.toHaveBeenCalled();
+it('uses the shared species, skill and range editor and saves without starting combat', async () => {
+	click('[data-settings]'); await Promise.resolve(); expect(view.isOpen()).toBe(true); expect(actions.stop).not.toHaveBeenCalled();
 	click('[data-species="1002"]'); root.querySelector('[data-auto-skills] [data-skill="5"]').click();
 	click('[data-range="search"][data-delta="1"]');
 	expect(actions.configure).toHaveBeenLastCalledWith([{ id: 1002, name: '波利' }], [5], { search: 21, activity: 30 }, { enabled: true, waitSeconds: 2, intervalSeconds: 2 });

@@ -1,3 +1,5 @@
+import { loadAutoCombatMapSpecies } from './AutoCombatMapSpecies.js';
+import { getCurrentAdventureMap } from 'UI/Components/GameTools/AdventureActionService.js';
 import { takeAutomationPickupTurn, cancelAutomationPickup } from './GameAutomation.js';
 import { requestAutoCombatTeleport, isAutoCombatTeleportPending } from './AutoCombatTeleport.js';
 import Navigation from 'UI/Components/Navigation/Navigation.js';
@@ -158,5 +160,5 @@ export function createGameAutoCombat(enabled) {
 		},
 		loadAutoCombatSettings(settingsKey)
 	);
-	return controller;
+	return { ...controller, mapSpecies: () => loadAutoCombatMapSpecies(getCurrentAdventureMap()) };
 }
