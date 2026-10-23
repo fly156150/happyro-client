@@ -31,7 +31,7 @@ it('uses the shared species, skill and range editor and saves without starting c
 	click('[data-settings]'); expect(view.isOpen()).toBe(true); expect(actions.stop).not.toHaveBeenCalled();
 	click('[data-species="1002"]'); root.querySelector('[data-auto-skills] [data-skill="5"]').click();
 	click('[data-range="search"][data-delta="1"]');
-	expect(actions.configure).toHaveBeenLastCalledWith([{ id: 1002, name: '波利' }], [5], { search: 21, activity: 30 }, { enabled: false, waitSeconds: 5, intervalSeconds: 2 });
+	expect(actions.configure).toHaveBeenLastCalledWith([{ id: 1002, name: '波利' }], [5], { search: 21, activity: 30 }, { enabled: true, waitSeconds: 2, intervalSeconds: 2 });
 	expect(view.isOpen()).toBe(true); expect(actions.start).not.toHaveBeenCalled();
  click('[data-close]');
 	expect(root.activeElement).toBe(root.querySelector('[data-settings]'));

@@ -13,7 +13,7 @@ it('selects the nearest of the chosen species, replaces dead targets and waits f
 	targets = targets.slice(1); controller.tick();
 	expect(data.act).toHaveBeenLastCalledWith(targets[0], null);
 	targets = [mob(3, 1003)]; controller.tick();
-	expect(controller.snapshot()).toMatchObject({ active: true, status: '等待附近目标' });
+	expect(controller.snapshot()).toMatchObject({ active: true, status: '无目标，2 秒后随机瞬移' });
 	targets.push(mob(4)); controller.tick();
 	expect(data.act).toHaveBeenLastCalledWith(targets[1], null);
 });
@@ -96,6 +96,7 @@ it('does not resume after an explicit stop during movement or after moving away 
 
 it('waits continuously without targets, resets on pickup or movement, and teleports only when enabled', () => {
  targets = []; data.teleport = vi.fn(() => '正在随机瞬移'); data.teleportBusy = () => false;
+ controller.configure([], [], { search: 20, activity: 30 }, { enabled: false, waitSeconds: 2, intervalSeconds: 2 });
  controller.start(); time = 10000; controller.tick(); expect(data.teleport).not.toHaveBeenCalled();
  controller.configure([], [], { search: 20, activity: 30 }, { enabled: true, waitSeconds: 5, intervalSeconds: 10 });
  controller.start(); time = 14999; controller.tick(); expect(data.teleport).not.toHaveBeenCalled();
@@ -118,10 +119,10 @@ it('rejects invalid teleport timing without altering the configuration', () => {
  for (const teleport of [{ enabled: true, waitSeconds: 0, intervalSeconds: 10 }, { enabled: true, waitSeconds: 5, intervalSeconds: 0 }, { enabled: true, waitSeconds: 5.5, intervalSeconds: 10 }]) {
   expect(controller.configure([], [], { search: 20, activity: 30 }, teleport)).toBe(false);
  }
- expect(controller.snapshot().teleport.enabled).toBe(false);
+ expect(controller.snapshot().teleport.enabled).toBe(true);
 });
-it('defaults to a two-second teleport interval and accepts one second', () => {
- expect(controller.snapshot().teleport.intervalSeconds).toBe(2);
+it('enables teleport with two-second defaults and accepts a one-second interval', () => {
+ expect(controller.snapshot().teleport).toEqual({ enabled: true, waitSeconds: 2, intervalSeconds: 2 });
  expect(controller.configure([], [], { search: 20, activity: 30 }, { enabled: true, waitSeconds: 5, intervalSeconds: 1 })).toBe(true);
 });
 

@@ -16,6 +16,7 @@ import Camera from '../../src/Renderer/Camera.js';
 
 it.each([16, 100, 250])('restores landscape distance without overshoot with %i ms frames', frame => {
 	Camera.target = { position: [0, 0, 0] };
+	Camera.altitudeRange = -65; Camera.MIN_ZOOM = 1; Camera.MAX_ZOOM = 5;
 	Camera.zoom = Camera.zoomFinal = 110;
 	Camera.lastTick = 0;
 	let tick = 0;
@@ -31,4 +32,14 @@ it.each([16, 100, 250])('restores landscape distance without overshoot with %i m
 		expect(Camera.zoom).toBeCloseTo(target, 5);
 		expect(Camera.zoomFinal).toBe(110);
 	}
+});
+
+it.each([[1, 65], [500, 325]])('clamps configured camera distance %i to map limits', (configured, expected) => {
+ viewport.portrait = false;
+ Camera.target = { position: [0, 0, 0] };
+ Camera.altitudeRange = -65; Camera.MIN_ZOOM = 1; Camera.MAX_ZOOM = 5;
+ Camera.zoom = Camera.zoomFinal = configured; Camera.lastTick = 0;
+ Camera.update(1000);
+ expect(Camera.zoom).toBe(expected);
+ expect(Camera.zoomFinal).toBe(configured);
 });

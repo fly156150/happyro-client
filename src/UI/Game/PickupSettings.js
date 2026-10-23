@@ -1,3 +1,4 @@
+import { getClientDefaults } from 'Core/ClientDefaults.js';
 import Session from 'Engine/SessionStorage.js';
 import ItemType from 'DB/Items/ItemType.js';
 
@@ -8,10 +9,7 @@ export const pickupCategories = [
 	['other', '其它']
 ];
 export const pickupDefaults = () => ({
-	enabled: false,
-	range: 5,
-	batchSeconds: 5,
-	categories: pickupCategories.map(([id]) => id),
+	...getClientDefaults('pickup'),
 	excluded: []
 });
 export function pickupCategory(type) {

@@ -287,7 +287,7 @@ class Renderer {
 		Mouse.screen.width = this.width = width;
 		Mouse.screen.height = this.height = height;
 
-		const quality = Configs.get('quality', 100) / 100;
+		const quality = GraphicsSettings.quality / 100;
 		width *= quality;
 		height *= quality;
 
@@ -417,7 +417,7 @@ class Renderer {
 				canvasWidth: this.canvas.width,
 				canvasHeight: this.canvas.height,
 				dpr: window.devicePixelRatio,
-				quality: Configs.get('quality', 100),
+				quality: GraphicsSettings.quality,
 				fpsLimit: this.frameLimit,
 				sound: AudioSettings.Sound.play,
 				bloom: GraphicsSettings.bloom,

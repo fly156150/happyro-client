@@ -176,7 +176,6 @@ function apply() {
 	}
 
 	Configs.set('saveFiles', _preferences.saveFiles);
-	Configs.set('quality', Graphics.quality);
 }
 
 export default { save, load };

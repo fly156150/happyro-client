@@ -9,7 +9,6 @@
  */
 
 import FPS from 'UI/Components/FPS/FPS.js';
-import Configs from 'Core/Configs.js';
 import Context from 'Core/Context.js';
 import Preferences from 'Core/Preferences.js';
 import GraphicsSettings from 'Preferences/Graphics.js';
@@ -167,7 +166,6 @@ function onUpdateQualityDetails() {
 	GraphicsSettings.quality = parseInt(this.value, 10);
 	GraphicsSettings.save();
 
-	Configs.set('quality', GraphicsSettings.quality);
 	Renderer.resize();
 }
 
@@ -367,7 +365,6 @@ function onResetToDefaults() {
 		}
 	});
 	GraphicsSettings.save();
-	Configs.set('quality', GraphicsSettings.quality);
 	Renderer.resize();
 	document.body.classList.toggle('custom-cursor', GraphicsSettings.cursor);
 	if (previousPixelPerfect !== GraphicsSettings.pixelPerfectSprites) {

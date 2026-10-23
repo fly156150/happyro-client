@@ -1,8 +1,8 @@
+import { getClientDefaults } from 'Core/ClientDefaults.js';
 import { loadPickupSettings, savePickupSettings, pickupDefaults, validPickupSettings } from './PickupSettings.js';
 import Interface, { defaultInterfaceSettings } from 'Preferences/Interface.js';
 import Graphics from 'Preferences/Graphics.js';
 import Audio from 'Preferences/Audio.js';
-import Configs from 'Core/Configs.js';
 import Renderer from 'Renderer/Renderer.js';
 import BGM from 'Audio/BGM.js';
 import Sound from 'Audio/SoundManager.js';
@@ -34,6 +34,7 @@ export const graphicsFields = [
 	['casSharpening', '锐化强度', 0, 1, 0.05]
 ];
 export function settingsSnapshot(defaults = false) {
+	const audioDefaults = getClientDefaults('audio');
 	const graphics = Object.fromEntries(
 		graphicsFields.map(([key]) => [key, (defaults ? Graphics.defaults : Graphics)[key]])
 	);
@@ -49,7 +50,7 @@ export function settingsSnapshot(defaults = false) {
 		audio: Object.fromEntries(
 			['BGM', 'Sound'].map(key => [
 				key,
-				defaults ? { play: true, volume: 0.5 } : { play: Audio[key].play, volume: Audio[key].volume }
+				defaults ? audioDefaults[key] : { play: Audio[key].play, volume: Audio[key].volume }
 			])
 		)
 	};
@@ -101,7 +102,6 @@ export function saveGameSettings(draft) {
 	Graphics.save();
 	Audio.save();
 	if (previous.graphics.quality !== Graphics.quality) {
-		Configs.set('quality', Graphics.quality);
 		Renderer.resize();
 	}
 	// Renderer reads fpslimit on every frame. Do not start a second render loop.

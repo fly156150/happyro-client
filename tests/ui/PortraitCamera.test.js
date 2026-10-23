@@ -9,18 +9,18 @@ async function camera(width, height) {
 }
 it('adds five phone portrait steps without accumulating across rotations or altering saved preferences', async () => {
  const { default: preferences, viewportCameraZoom } = await camera(390, 844);
- expect(viewportCameraZoom(preferences.zoom, 15, 325)).toBe(185);
- expect(preferences.zoom).toBe(110);
- platform.orientation = 'landscape'; expect(viewportCameraZoom(preferences.zoom, 15, 325)).toBe(110);
- platform.orientation = 'portrait'; expect(viewportCameraZoom(preferences.zoom, 15, 325)).toBe(185);
+ expect(viewportCameraZoom(preferences.zoom, 15, 325)).toBe(170);
+ expect(preferences.zoom).toBe(95);
+ platform.orientation = 'landscape'; expect(viewportCameraZoom(preferences.zoom, 15, 325)).toBe(95);
+ platform.orientation = 'portrait'; expect(viewportCameraZoom(preferences.zoom, 15, 325)).toBe(170);
  expect(viewportCameraZoom(125, 15, 325)).toBe(200);
  expect(viewportCameraZoom(150, 15, 162.5)).toBe(162.5);
 });
 it('adds two tablet portrait steps and preserves landscape and desktop framing', async () => {
  let cameraModule = await camera(768, 1024);
- expect(cameraModule.viewportCameraZoom(140, 15, 325)).toBe(170);
- platform.orientation = 'landscape'; expect(cameraModule.viewportCameraZoom(140, 15, 325)).toBe(140);
- platform.orientation = 'portrait'; expect(cameraModule.viewportCameraZoom(140, 15, 325)).toBe(170);
+ expect(cameraModule.viewportCameraZoom(cameraModule.default.zoom, 15, 325)).toBe(155);
+ platform.orientation = 'landscape'; expect(cameraModule.viewportCameraZoom(cameraModule.default.zoom, 15, 325)).toBe(125);
+ platform.orientation = 'portrait'; expect(cameraModule.viewportCameraZoom(cameraModule.default.zoom, 15, 325)).toBe(155);
  platform.isMobile = false; cameraModule = await camera(390, 844);
  expect(cameraModule.viewportCameraZoom(125, 15, 325)).toBe(125);
 });

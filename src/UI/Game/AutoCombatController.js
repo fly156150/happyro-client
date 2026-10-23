@@ -1,6 +1,9 @@
+import { getClientDefaults } from 'Core/ClientDefaults.js';
+
 export const AUTO_COMBAT_RANGE_LIMITS = { min: 1, searchMax: 50, activityMax: 100 };
 
-export const AUTO_COMBAT_TELEPORT_DEFAULTS = { enabled: false, waitSeconds: 5, intervalSeconds: 2 };
+const defaults = getClientDefaults('autoCombat');
+export const AUTO_COMBAT_TELEPORT_DEFAULTS = defaults.teleport;
 export function validAutoCombatTeleport(value) {
 	return (
 		value &&
@@ -17,7 +20,7 @@ export function validAutoCombatTeleport(value) {
 /** Nearby combat policy. Runtime adapters own pathfinding, packets and live skill checks. */
 export function createAutoCombatController(
 	data,
-	configuration = { species: [], skills: [], ranges: { search: 20, activity: 30 } }
+	configuration = { species: [], skills: [], ranges: defaults.ranges }
 ) {
 	let active = false,
 		pausedForMovement = false,

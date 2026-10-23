@@ -1,0 +1,367 @@
+{
+  "fields": {
+    "CLIENT_CAMERA_DESKTOP_ZOOM": {
+      "path": "camera.desktopZoom",
+      "type": "number",
+      "default": 125,
+      "min": 1,
+      "max": 325
+    },
+    "CLIENT_CAMERA_PHONE_LANDSCAPE_ZOOM": {
+      "path": "camera.phoneLandscapeZoom",
+      "type": "number",
+      "default": 95,
+      "min": 1,
+      "max": 325
+    },
+    "CLIENT_CAMERA_PHONE_PORTRAIT_ZOOM": {
+      "path": "camera.phonePortraitZoom",
+      "type": "number",
+      "default": 170,
+      "min": 1,
+      "max": 325
+    },
+    "CLIENT_CAMERA_TABLET_LANDSCAPE_ZOOM": {
+      "path": "camera.tabletLandscapeZoom",
+      "type": "number",
+      "default": 125,
+      "min": 1,
+      "max": 325
+    },
+    "CLIENT_CAMERA_TABLET_PORTRAIT_ZOOM": {
+      "path": "camera.tabletPortraitZoom",
+      "type": "number",
+      "default": 155,
+      "min": 1,
+      "max": 325
+    },
+    "CLIENT_CAMERA_SMOOTH": {
+      "path": "camera.smooth",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_AUTO_COMBAT_SEARCH_RANGE": {
+      "path": "autoCombat.ranges.search",
+      "type": "number",
+      "default": 20,
+      "min": 1,
+      "max": 50,
+      "integer": true
+    },
+    "CLIENT_AUTO_COMBAT_ACTIVITY_RANGE": {
+      "path": "autoCombat.ranges.activity",
+      "type": "number",
+      "default": 30,
+      "min": 1,
+      "max": 100,
+      "integer": true
+    },
+    "CLIENT_AUTO_TELEPORT_ENABLED": {
+      "path": "autoCombat.teleport.enabled",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_AUTO_TELEPORT_WAIT_SECONDS": {
+      "path": "autoCombat.teleport.waitSeconds",
+      "type": "number",
+      "default": 2,
+      "min": 1,
+      "max": 60,
+      "integer": true
+    },
+    "CLIENT_AUTO_TELEPORT_INTERVAL_SECONDS": {
+      "path": "autoCombat.teleport.intervalSeconds",
+      "type": "number",
+      "default": 2,
+      "min": 1,
+      "max": 300,
+      "integer": true
+    },
+    "CLIENT_AUTO_PICKUP_ENABLED": {
+      "path": "pickup.enabled",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_AUTO_PICKUP_RANGE": {
+      "path": "pickup.range",
+      "type": "number",
+      "default": 5,
+      "min": 1,
+      "max": 15,
+      "integer": true
+    },
+    "CLIENT_AUTO_PICKUP_BATCH_SECONDS": {
+      "path": "pickup.batchSeconds",
+      "type": "number",
+      "default": 5,
+      "min": 1,
+      "max": 30,
+      "integer": true
+    },
+    "CLIENT_AUTO_PICKUP_CATEGORIES": {
+      "path": "pickup.categories",
+      "type": "list",
+      "default": [
+        "equipment",
+        "consumable",
+        "card",
+        "other"
+      ],
+      "options": [
+        "equipment",
+        "consumable",
+        "card",
+        "other"
+      ]
+    },
+    "CLIENT_GRAPHICS_QUALITY": {
+      "path": "graphics.quality",
+      "type": "number",
+      "default": 100,
+      "min": 25,
+      "max": 100
+    },
+    "CLIENT_GRAPHICS_FPS_LIMIT": {
+      "path": "graphics.fpslimit",
+      "type": "number",
+      "default": 60,
+      "options": [
+        -1,
+        30,
+        60,
+        90,
+        120
+      ]
+    },
+    "CLIENT_GRAPHICS_PERFORMANCE_MODE": {
+      "path": "graphics.performanceMode",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_VIEW_AREA": {
+      "path": "graphics.viewArea",
+      "type": "number",
+      "default": 14,
+      "min": 4,
+      "max": 20
+    },
+    "CLIENT_GRAPHICS_CURSOR": {
+      "path": "graphics.cursor",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_GRAPHICS_PIXEL_PERFECT_SPRITES": {
+      "path": "graphics.pixelPerfectSprites",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_BLOOM_ENABLED": {
+      "path": "graphics.bloom",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_BLUR_ENABLED": {
+      "path": "graphics.blur",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_FXAA_ENABLED": {
+      "path": "graphics.fxaaEnabled",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_VIBRANCE_ENABLED": {
+      "path": "graphics.vibranceEnabled",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_CARTOON_ENABLED": {
+      "path": "graphics.cartoonEnabled",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_CAS_ENABLED": {
+      "path": "graphics.casEnabled",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_GRAPHICS_BLOOM_INTENSITY": {
+      "path": "graphics.bloomIntensity",
+      "type": "number",
+      "default": 0.5,
+      "min": 0.1,
+      "max": 3
+    },
+    "CLIENT_GRAPHICS_BLUR_AREA": {
+      "path": "graphics.blurArea",
+      "type": "number",
+      "default": 14,
+      "min": 3,
+      "max": 20
+    },
+    "CLIENT_GRAPHICS_BLUR_INTENSITY": {
+      "path": "graphics.blurIntensity",
+      "type": "number",
+      "default": 3,
+      "min": 2,
+      "max": 10
+    },
+    "CLIENT_GRAPHICS_FXAA_EDGE_THRESHOLD": {
+      "path": "graphics.fxaaEdgeThreshold",
+      "type": "number",
+      "default": 0.125,
+      "min": 0.063,
+      "max": 0.333
+    },
+    "CLIENT_GRAPHICS_VIBRANCE": {
+      "path": "graphics.vibrance",
+      "type": "number",
+      "default": 0.15,
+      "min": -0.9,
+      "max": 0.9
+    },
+    "CLIENT_GRAPHICS_CARTOON_POWER": {
+      "path": "graphics.cartoonPower",
+      "type": "number",
+      "default": 1.5,
+      "min": 0.1,
+      "max": 9.9
+    },
+    "CLIENT_GRAPHICS_CARTOON_EDGE_SLOPE": {
+      "path": "graphics.cartoonEdgeSlope",
+      "type": "number",
+      "default": 1.5,
+      "min": 1.5,
+      "max": 5.9
+    },
+    "CLIENT_GRAPHICS_CAS_CONTRAST": {
+      "path": "graphics.casContrast",
+      "type": "number",
+      "default": 0,
+      "min": 0,
+      "max": 1
+    },
+    "CLIENT_GRAPHICS_CAS_SHARPENING": {
+      "path": "graphics.casSharpening",
+      "type": "number",
+      "default": 1,
+      "min": 0,
+      "max": 1
+    },
+    "CLIENT_BGM_ENABLED": {
+      "path": "audio.BGM.play",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_BGM_VOLUME": {
+      "path": "audio.BGM.volume",
+      "type": "number",
+      "default": 0.5,
+      "min": 0,
+      "max": 1
+    },
+    "CLIENT_SOUND_ENABLED": {
+      "path": "audio.Sound.play",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_SOUND_VOLUME": {
+      "path": "audio.Sound.volume",
+      "type": "number",
+      "default": 0.5,
+      "min": 0,
+      "max": 1
+    },
+    "CLIENT_TOAST_DURATION_SECONDS": {
+      "path": "interface.toastDuration",
+      "type": "number",
+      "default": 2,
+      "min": 1,
+      "max": 10,
+      "integer": true
+    },
+    "CLIENT_CHAT_PREVIEW_COMPACT_LINES": {
+      "path": "interface.chatPreviewCompactLines",
+      "type": "number",
+      "default": 3,
+      "options": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    "CLIENT_CHAT_PREVIEW_SPACIOUS_LINES": {
+      "path": "interface.chatPreviewSpaciousLines",
+      "type": "number",
+      "default": 5,
+      "options": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    "CLIENT_CHAT_PREVIEW_TABS": {
+      "path": "interface.chatPreviewTabs",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_MAP_FOG": {
+      "path": "map.fog",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_MAP_LIGHTMAP": {
+      "path": "map.lightmap",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_MAP_EFFECTS": {
+      "path": "map.effect",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_MAP_MIN_EFFECTS": {
+      "path": "map.mineffect",
+      "type": "boolean",
+      "default": false
+    },
+    "CLIENT_MAP_SHOW_MISS": {
+      "path": "map.miss",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_MAP_SHOW_NAME_STYLE": {
+      "path": "map.showname",
+      "type": "boolean",
+      "default": true
+    },
+    "CLIENT_MAP_SMOOTH_LIGHT": {
+      "path": "map.smoothlight",
+      "type": "number",
+      "default": 0,
+      "options": [
+        0,
+        1,
+        2
+      ]
+    },
+    "CLIENT_MAP_AURA": {
+      "path": "map.aura",
+      "type": "number",
+      "default": 1,
+      "options": [
+        0,
+        1,
+        2
+      ]
+    }
+  }
+}

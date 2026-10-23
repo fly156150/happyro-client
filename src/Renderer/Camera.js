@@ -508,7 +508,10 @@ class Camera {
 		// Zoom
 		const maximum =
 			Math.abs(this.altitudeRange) * (DB.isIndoor(this.currentMap) ? this.MAX_ZOOM_INDOOR : this.MAX_ZOOM);
-		const zoom = viewportCameraZoom(this.zoomFinal, this.zoomStep * this.zoomStepMult, maximum);
+		const zoom = Math.max(
+			Math.abs(this.altitudeRange) * this.MIN_ZOOM,
+			Math.min(maximum, viewportCameraZoom(this.zoomFinal, this.zoomStep * this.zoomStepMult, maximum))
+		);
 		// Rotation or a slow frame must not move the camera beyond its target.
 		this.zoom += (zoom - this.zoom) * Math.min(lerp * 2.0, 1.0);
 

@@ -10,11 +10,11 @@ it('keeps configured species when it is absent nearby and saves multiple skills 
 	expect(body.querySelector('[data-species="1003"]').getAttribute('aria-checked')).toBe('true');
 	body.querySelector('[data-auto-skills] [data-skill="19"]').click();
 
-	expect(actions.configure).toHaveBeenLastCalledWith([{ id: 1002, name: '波利' }, { id: 1003, name: '土波利' }], [5, 19], { search: 20, activity: 30 }, { enabled: false, waitSeconds: 5, intervalSeconds: 2 });
+	expect(actions.configure).toHaveBeenLastCalledWith([{ id: 1002, name: '波利' }, { id: 1003, name: '土波利' }], [5, 19], { search: 20, activity: 30 }, { enabled: true, waitSeconds: 2, intervalSeconds: 2 });
 	expect(actions.close).not.toHaveBeenCalled();
 	expect(body.querySelector('[data-pick-species]')).toBeNull();
 	body.querySelector('[data-all-species]').click();
-	expect(actions.configure).toHaveBeenLastCalledWith([], [5, 19], { search: 20, activity: 30 }, { enabled: false, waitSeconds: 5, intervalSeconds: 2 }); expect(actions.close).not.toHaveBeenCalled();
+	expect(actions.configure).toHaveBeenLastCalledWith([], [5, 19], { search: 20, activity: 30 }, { enabled: true, waitSeconds: 2, intervalSeconds: 2 }); expect(actions.close).not.toHaveBeenCalled();
 });
 
 it('ignores list gaps and scrolling, but toggles a full skill row and clears via normal attack', () => {
@@ -34,7 +34,7 @@ it('ignores list gaps and scrolling, but toggles a full skill row and clears via
 
 it('keeps teleport timing disabled until enabled and saves preferences without starting', () => {
  const body = document.body.appendChild(document.createElement('div'));
- const actions = { snapshot: () => ({ species: [], skills: [], ranges: { search: 20, activity: 30 } }), targets: () => [], skills: () => [], configure: vi.fn(), close: vi.fn() };
+ const actions = { snapshot: () => ({ species: [], skills: [], ranges: { search: 20, activity: 30 }, teleport: { enabled: false, waitSeconds: 5, intervalSeconds: 2 } }), targets: () => [], skills: () => [], configure: vi.fn(), close: vi.fn() };
  createAutoCombatPanel(body, actions);
  const wait = body.querySelector('[data-teleport-key="waitSeconds"][data-delta="1"]');
  expect(wait.disabled).toBe(true); body.querySelector('[data-auto-teleport]').click(); expect(wait.disabled).toBe(false);

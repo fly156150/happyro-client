@@ -1,0 +1,22 @@
+import { afterEach, expect, it, vi } from 'vitest';
+const state = vi.hoisted(() => ({ quality: 80, fpslimit: 60 }));
+vi.mock('Preferences/Graphics.js', () => ({ default: state }));
+vi.mock('Core/Configs.js', () => ({ default: { get: () => 100 } }));
+vi.mock('UI/Background.js', () => ({ default: { resize: vi.fn() } }));
+vi.mock('UI/CursorManager.js', () => ({ default: {} }));
+vi.mock('Controls/MouseEventHandler.js', () => ({ default: { screen: {} } }));
+vi.mock('Renderer/Camera.js', () => ({ default: { projection: new Float32Array(16) } }));
+vi.mock('Renderer/Effects/PostProcess.js', () => ({ default: { recreateFbo: vi.fn() } }));
+vi.mock('Core/MemoryManager.js', () => ({ default: {} }));
+vi.mock('UI/UIManager.js', () => ({ default: { fixResizeOverflow: vi.fn() } }));
+import Renderer from '../../src/Renderer/Renderer.js';
+afterEach(() => vi.unstubAllGlobals());
+it.each([80, 50, 100])('uses effective graphic preferences at first render and after resize (%i%%)', async quality => {
+	vi.stubGlobal('innerWidth', 800); vi.stubGlobal('innerHeight', 600); vi.stubGlobal('devicePixelRatio', 2);
+	state.quality = quality; Renderer.gl = { viewport: vi.fn() }; Renderer.contextLost = false;
+	Renderer.resize();
+	expect(Renderer.canvas.width).toBe(800 * quality / 100 * 2);
+	expect(Renderer.canvas.height).toBe(600 * quality / 100 * 2);
+	expect(Renderer.width).toBe(800); expect(Renderer.canvas.style.width).toBe('800px');
+	await vi.dynamicImportSettled();
+});

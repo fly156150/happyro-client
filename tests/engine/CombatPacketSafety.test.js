@@ -79,7 +79,7 @@ it('keeps the connection and automatic combat running after a vanished target, t
 	expect(() => socket.onMessage(first.buffer)).not.toThrow(); socket.onMessage(next.slice(3).buffer);
 	expect(following).toHaveBeenCalledOnce(); expect(disconnected).not.toHaveBeenCalled();
 	expect(console.error).not.toHaveBeenCalled();
-	combat.tick(); expect(combat.snapshot()).toMatchObject({ active: true, target: '', status: '等待附近目标' });
+	combat.tick(); expect(combat.snapshot()).toMatchObject({ active: true, target: '', status: '无目标，2 秒后随机瞬移' });
 	targets = [{ id: 90, species: 1002, name: '新目标', position: [12, 10] }];
 	combat.tick(); expect(combat.snapshot()).toMatchObject({ active: true, target: '新目标' });
 	expect(act).toHaveBeenLastCalledWith(targets[0], null); combat.stop();

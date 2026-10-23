@@ -9,6 +9,7 @@
  */
 
 import Preferences from 'Core/Preferences.js';
+import { getClientDefaults } from 'Core/ClientDefaults.js';
 import Platform from 'UI/Platform.js';
 import { menuDensity } from 'UI/Mobile/game/MenuLayout.js';
 
@@ -16,13 +17,15 @@ import { menuDensity } from 'UI/Mobile/game/MenuLayout.js';
 const spacious =
 	menuDensity(Math.max(window.innerWidth, window.innerHeight), Math.min(window.innerWidth, window.innerHeight)) ===
 	'spacious';
-// Two normal zoom-out steps (15 each) beyond the phone default.
-export const DEFAULT_CAMERA_ZOOM = Platform.isMobile ? (spacious ? 140 : 110) : 125;
+const defaults = getClientDefaults('camera');
+const landscapeZoom = spacious ? defaults.tabletLandscapeZoom : defaults.phoneLandscapeZoom;
+const portraitZoom = spacious ? defaults.tabletPortraitZoom : defaults.phonePortraitZoom;
+export const DEFAULT_CAMERA_ZOOM = Platform.isMobile ? landscapeZoom : defaults.desktopZoom;
 
 /** Apply mobile portrait framing without changing the saved zoom. */
 export function viewportCameraZoom(zoom, step, maximum) {
 	return Platform.isMobile && Platform.orientation === 'portrait'
-		? Math.min(zoom + (spacious ? 2 : 5) * step, maximum)
+		? Math.min(zoom + ((portraitZoom - landscapeZoom) / 15) * step, maximum)
 		: zoom;
 }
 
@@ -32,7 +35,7 @@ export function viewportCameraZoom(zoom, step, maximum) {
 export default Preferences.get(
 	'Camera',
 	{
-		smooth: true,
+		smooth: defaults.smooth,
 		zoom: DEFAULT_CAMERA_ZOOM,
 		indoorZoom: DEFAULT_CAMERA_ZOOM
 	},

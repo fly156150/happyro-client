@@ -2,7 +2,7 @@ import {afterEach,beforeEach,it,expect,vi} from 'vitest';
 const s=vi.hoisted(()=>({graphics:{save:vi.fn(),defaults:{}},audio:{save:vi.fn(),BGM:{play:true,volume:.5},Sound:{play:true,volume:.5}},resize:vi.fn(),config:vi.fn(),bgm:{setVolume:vi.fn(),stop:vi.fn(),play:vi.fn(),filename:'test.mp3'},sound:{setVolume:vi.fn(),stop:vi.fn()}}));
 vi.mock('Preferences/Graphics.js',()=>({default:s.graphics}));
 vi.mock('Preferences/Audio.js',()=>({default:s.audio}));
-vi.mock('Core/Configs.js',()=>({default:{set:s.config}}));
+vi.mock('Core/Configs.js',()=>({default:{set:s.config,get:(_key,fallback)=>fallback}}));
 vi.mock('Renderer/Renderer.js',()=>({default:{resize:s.resize}}));
 vi.mock('Audio/BGM.js',()=>({default:s.bgm}));
 vi.mock('Audio/SoundManager.js',()=>({default:s.sound}));
@@ -13,7 +13,7 @@ const disposers = [];
 afterEach(() => { disposers.splice(0).forEach(dispose => dispose()); document.body.replaceChildren(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 beforeEach(()=>{vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });Object.assign(Interface,defaultInterfaceSettings);localStorage.clear();HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};Interface.toastDuration=2;vi.clearAllMocks();for(const [key,,range] of graphicsFields)s.graphics[key]=range===undefined?false:Array.isArray(range)?60:range;s.graphics.screensize='1024x768';s.graphics.defaults=Object.fromEntries(graphicsFields.map(([key])=>[key,s.graphics[key]]));s.audio.BGM={play:true,volume:.5};s.audio.Sound={play:true,volume:.5};});
 it('rejects the entire invalid draft without applying partial values',()=>{const draft=settingsSnapshot();draft.graphics.quality=100;draft.audio.Sound.volume=2;expect(saveGameSettings(draft)).toContain('未保存');expect(s.graphics.quality).toBe(25);expect(s.graphics.save).not.toHaveBeenCalled();});
-it('applies graphics and audio once without restarting BGM or a renderer loop on an unrelated save',()=>{const draft=settingsSnapshot();draft.graphics.quality=100;draft.graphics.fpslimit=30;draft.audio.Sound.play=false;draft.audio.BGM.volume=.8;expect(saveGameSettings(draft)).toContain('已保存');expect(s.resize).toHaveBeenCalledOnce();expect(s.config).toHaveBeenCalledWith('quality',100);expect(s.sound.setVolume).toHaveBeenCalledWith(.5);expect(s.sound.stop).toHaveBeenCalledOnce();expect(s.bgm.setVolume).toHaveBeenCalledWith(.8);expect(s.bgm.play).not.toHaveBeenCalled();expect(s.graphics.screensize).toBe('1024x768');saveGameSettings(draft);expect(s.resize).toHaveBeenCalledOnce();expect(s.bgm.setVolume).toHaveBeenCalledOnce();});
+it('applies graphics and audio once without restarting BGM or a renderer loop on an unrelated save',()=>{const draft=settingsSnapshot();draft.graphics.quality=100;draft.graphics.fpslimit=30;draft.audio.Sound.play=false;draft.audio.BGM.volume=.8;expect(saveGameSettings(draft)).toContain('已保存');expect(s.resize).toHaveBeenCalledOnce();expect(s.sound.setVolume).toHaveBeenCalledWith(.5);expect(s.sound.stop).toHaveBeenCalledOnce();expect(s.bgm.setVolume).toHaveBeenCalledWith(.8);expect(s.bgm.play).not.toHaveBeenCalled();expect(s.graphics.screensize).toBe('1024x768');saveGameSettings(draft);expect(s.resize).toHaveBeenCalledOnce();expect(s.bgm.setVolume).toHaveBeenCalledOnce();});
 
 function mount(service = {}) {
  const host = document.body.appendChild(document.createElement('div'));

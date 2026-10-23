@@ -548,6 +548,7 @@ window.ROConfigBase = {
 `;
 	fs.writeFileSync(dist + platform + '/Config.js', configContent, { encoding: 'utf8' });
 	fs.copyFileSync('./applications/pwa/Config.runtime.js', dist + platform + '/Config.runtime.js');
+	fs.copyFileSync('./src/Core/ClientDefaults.schema.json', dist + platform + '/client-defaults.schema.json');
 	fs.copyFileSync('./applications/pwa/Config.happyro.js', dist + platform + '/Config.happyro.js');
 }
 
@@ -709,6 +710,7 @@ function writeBuildInfo() {
 		'Online.js',
 		'Config.js',
 		'Config.happyro.js',
+		'client-defaults.schema.json',
 		'data/navigation/catalog.json',
 		'data/navigation/graph.json',
 		'data/monsters/catalog.json',
