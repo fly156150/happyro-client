@@ -202,10 +202,6 @@
 	min-height: 44px;
 	padding: 8px 14px;
 }
-:host([data-menu-density='spacious']) [data-status-icons] img {
-	width: 28px;
-	height: 28px;
-}
 :host([data-menu-density='spacious']) .map {
 	width: 144px;
 	gap: 3px;

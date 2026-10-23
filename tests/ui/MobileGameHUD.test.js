@@ -13,6 +13,7 @@ beforeEach(() => {
 afterEach(() => {
  vi.unstubAllGlobals(); view.destroy(); host.remove(); clearChatFeed(); vi.restoreAllMocks(); });
 const click = selector => root.querySelector(selector).click();
+const openStatusMenu = () => { click('[data-panel="menu"]'); [...root.querySelectorAll('.menu-grid button')].find(button => button.textContent === '状态').click(); };
 
 describe('mobile game HUD', () => {
 	it('updates live values and details without replacing chat input', () => {
@@ -156,7 +157,7 @@ it('uses the same low HP threshold as the character gauge', () => {
 
 it('shows status titles beside live descriptions and preserves selection until expiry', () => {
  view.update({...state,statuses:[{id:1,title:'加速术',description:'提升移动速度',seconds:10},{id:2,title:'天使之赐福',description:'提升属性',seconds:20}]});
- click('[data-panel="status"]');
+ openStatusMenu();
  expect(root.querySelector('.inventory-list').textContent).toBe('加速术10秒天使之赐福20秒');
  click('[data-status="2"]');const node=root.querySelector('[data-status="2"]');
  view.update({...state,statuses:[{id:1,title:'加速术',description:'提升移动速度',seconds:9},{id:2,title:'天使之赐福',description:'提升属性',seconds:19}]});
@@ -175,7 +176,7 @@ it.each([[2000000,'34m'],[1200000,'20m'],[1000000,'17m'],[999000,'999'],[1000,'1
 });
 
 it('returns from submenus and keeps shop messages out of menu buttons', () => {
- click('[data-panel="status"]');expect(root.querySelector('[data-back]').hidden).toBe(false);
+ openStatusMenu();expect(root.querySelector('[data-back]').hidden).toBe(false);
  click('[data-back]');expect(root.querySelector('.panel').dataset.view).toBe('menu');expect(root.querySelector('[data-back]').hidden).toBe(true);
  actions.showOwnedVending=()=>false;
  const button=[...root.querySelectorAll('button')].find(b=>b.textContent==='我的摊位');button.click();
@@ -306,7 +307,7 @@ it('opens standalone camera controls next to status and clears transparent styli
  expect(actions.camera.mock.calls).toEqual([['reset'],['left'],['right'],['zoomIn'],['zoomOut'],['up'],['down']]);
  expect(actions.setModal).toHaveBeenLastCalledWith(true);
  click('[data-close]');expect(actions.setModal).toHaveBeenLastCalledWith(false);
- click('[data-panel=status]');expect(root.querySelector('.backdrop').classList.contains('camera-backdrop')).toBe(false);
+ openStatusMenu();expect(root.querySelector('.backdrop').classList.contains('camera-backdrop')).toBe(false);
  expect(root.querySelector('.camera-section')).toBeNull();
 });
 
@@ -406,10 +407,20 @@ it('renders every status and opens the tapped effect while retaining nodes acros
  expect(root.querySelectorAll('.status-effect')).toHaveLength(13);
  const button = root.querySelector('[data-effect="11"]');
  button.click();
- expect(root.querySelector('.inventory-detail').textContent).toBe('说明11');
+ expect(root.querySelector('.status-description').textContent).toContain('说明11');
+ expect(root.querySelector('.status-description').hidden).toBe(false);
+ expect(root.querySelector('.backdrop').hidden).toBe(true);
  view.update({...state, statuses: statuses.map(s => ({...s, seconds: 29}))});
  expect(root.querySelector('[data-effect="11"]')).toBe(button);
  expect(button.getAttribute('aria-label')).toBe('状态11 · 29秒');
+ expect(root.querySelector('.status-description').textContent).toContain('29秒');
+ button.click();
+ expect(root.querySelector('.status-description').hidden).toBe(true);
+ button.click();
+ document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+ expect(root.querySelector('.status-description').hidden).toBe(true);
+ button.click();
  view.update({...state, statuses: []});
  expect(root.querySelectorAll('.status-effect')).toHaveLength(0);
+ expect(root.querySelector('.status-description').hidden).toBe(true);
 });

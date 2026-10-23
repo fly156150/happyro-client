@@ -1,3 +1,4 @@
+import { createStatusIconsView } from './StatusIconsView.js';
 import menuListFlushCSS from './MenuListFlush.css?raw';
 import { bindChatPreviewLayout } from './ChatPreviewLayout.js';
 import menuNarrowTabletCSS from './MenuNarrowTablet.css?raw';
@@ -95,6 +96,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const chatPreview = createChatPreview(root);
+	const statusIcons = createStatusIconsView(root);
 	const releaseNotificationInset = bindHUDNotificationInset(root);
 	let settingsCleanup;
 	let combatSettingsCleanup;
@@ -910,40 +912,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			}
 			text('[data-map-name]', next.mapName);
 			text('[data-coordinates]', next.position?.map(Math.floor).join(', '));
-			const icons = $('[data-status-icons]');
-			const statuses = next.statuses || [];
-			const ids = new Set(statuses.map(status => String(status.id)));
-			for (const node of [...icons.children]) {
-				if (!ids.has(node.dataset.effect)) node.remove();
-			}
-			for (const [index, status] of statuses.entries()) {
-				let button = [...icons.children].find(node => node.dataset.effect === String(status.id));
-				if (!button) {
-					button = document.createElement('button');
-					button.type = 'button';
-					button.className = 'status-effect';
-					button.dataset.effect = status.id;
-					button.dataset.panel = 'status';
-					button.onclick = () => {
-						open('status');
-						statusPanel.select(status.id);
-					};
-				}
-				const label = `${status.title}${status.seconds == null ? '' : ` · ${status.seconds}秒`}`;
-				button.title = label;
-				button.setAttribute('aria-label', label);
-				if (button.dataset.icon !== (status.icon || '')) {
-					button.dataset.icon = status.icon || '';
-					button.replaceChildren();
-					if (status.icon) {
-						const img = document.createElement('img');
-						img.src = status.icon;
-						img.alt = '';
-						button.append(img);
-					} else button.textContent = status.title?.slice(0, 1) || '状';
-				}
-				if (icons.children[index] !== button) icons.insertBefore(button, icons.children[index] || null);
-			}
+			statusIcons.update(next.statuses || []);
 			drawMap($('[data-mini-map]'));
 			renderDetails();
 			inventoryPanel?.update();
@@ -1071,6 +1040,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		destroy() {
 			releaseChatPreviewLayout();
 			chatPreview.destroy();
+			statusIcons.destroy();
 			releaseNotificationInset();
 			menuSelects.destroy();
 			close(false);
