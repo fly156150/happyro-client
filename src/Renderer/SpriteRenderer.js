@@ -433,6 +433,8 @@ class SpriteRenderer {
 		gl.uniform1f(uniform.uFogFar, fog.far);
 		gl.uniform3fv(uniform.uFogColor, fog.color);
 
+		// Ground rendering leaves another texture unit active; diffuse sprites use unit zero.
+		gl.activeTexture(gl.TEXTURE0);
 		// Textures
 		gl.uniform1i(uniform.uDiffuse, 0);
 		gl.uniform1i(uniform.uPalette, 1);
