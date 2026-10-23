@@ -99,10 +99,10 @@ class Background {
 			return;
 		}
 
-		// Generate default loadings
-		_loading.length = 10;
-		for (i = 1; i <= 10; ++i) {
-			_loading[i - 1] = `loading${i < 10 ? '0' + i : i}.jpg`;
+		// Official kRO 2021-11-05 provides loading00.jpg through loading07.jpg.
+		_loading.length = 8;
+		for (i = 0; i < 8; ++i) {
+			_loading[i] = `loading0${i}.jpg`;
 		}
 	}
 
