@@ -306,10 +306,10 @@ export function createQuest(config) {
 
 		const mob_name = _questList[questID].hunt_list[huntID].mobName;
 		const quest_info = DB.getQuestInfo(questID);
-		const chat_quest_text = `Mission [${quest_info.Title}], you killed [${mob_name}]. (${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount})`;
+		const chat_quest_text = `任务【${quest_info.Title}】：击败${mob_name}（${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount}）`;
 		let self_msg;
 		if (_questList[questID].hunt_list[huntID].maxCount == _questList[questID].hunt_list[huntID].huntCount) {
-			self_msg = `${mob_name} [Completed]`;
+			self_msg = `${mob_name}【已完成】`;
 		} else {
 			self_msg = `${mob_name} [${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount}]`;
 		}
@@ -396,16 +396,16 @@ export function createQuest(config) {
 				ul_id = '#cooldown-quest-list';
 				li_text =
 					'<li> <div class="quest-item-icon"> <div class="quest-item-icon-image">' +
-					' <span class="quest-item-icon-image-text">Quest</span> </div> </div>  <div class="quest-item-title"> <span class="quest-item-title-text">' +
+					' <span class="quest-item-icon-image-text">任务</span> </div> </div>  <div class="quest-item-title"> <span class="quest-item-title-text">' +
 					title +
 					'</span>  </div> <div class="quest-item-display"> <div class="quest-item-display-image"> <span class="quest-item-display-image-text"></span> </div></div><div class="quest-item-summary"><span class="quest-item-summary-text">' +
 					summary +
-					'</span></div>				<div class="quest-item-toggle"><div class="quest-item-toggle-image"><span class="quest-item-toggle-image-text">Toggle</span></div></div></li>';
+					'</span></div>				<div class="quest-item-toggle"><div class="quest-item-toggle-image"><span class="quest-item-toggle-image-text">切换状态</span></div></div></li>';
 			} else if (quest.active == 1) {
 				ul_id = '#active-quest-list';
 				li_text =
 					'<li> <div class="quest-item-icon"> <div class="quest-item-icon-image">' +
-					' <span class="quest-item-icon-image-text">Quest</span> </div> </div>  <div class="quest-item-title"> <span class="quest-item-title-text">' +
+					' <span class="quest-item-icon-image-text">任务</span> </div> </div>  <div class="quest-item-title"> <span class="quest-item-title-text">' +
 					title +
 					'</span>  </div> <div class="quest-item-display"> <button id="' +
 					show_id +
@@ -413,18 +413,18 @@ export function createQuest(config) {
 					summary +
 					'</span></div>				<div class="quest-item-toggle"><button id="' +
 					toggle_id +
-					'" class="quest-item-toggle-image"><span class="quest-item-toggle-image-text">Toggle</span></button></div></li>';
+					'" class="quest-item-toggle-image"><span class="quest-item-toggle-image-text">切换状态</span></button></div></li>';
 			} else {
 				ul_id = '#inactive-quest-list';
 				li_text =
 					'<li> <div class="quest-item-icon"> <div class="quest-item-icon-image">' +
-					' <span class="quest-item-icon-image-text">Quest</span> </div> </div>  <div class="quest-item-title"> <span class="quest-item-title-text">' +
+					' <span class="quest-item-icon-image-text">任务</span> </div> </div>  <div class="quest-item-title"> <span class="quest-item-title-text">' +
 					title +
 					'</span>  </div> <div class="quest-item-display"> <div class="quest-item-display-image"> <span class="quest-item-display-image-text"></span> </div></div><div class="quest-item-summary"><span class="quest-item-summary-text">' +
 					summary +
 					'</span></div>				<div class="quest-item-toggle"><button id="' +
 					toggle_id +
-					'" class="quest-item-toggle-image"><span class="quest-item-toggle-image-text">Toggle</span></button></div></li>';
+					'" class="quest-item-toggle-image"><span class="quest-item-toggle-image-text">切换状态</span></button></div></li>';
 			}
 
 			const ul = root.querySelector(ul_id);

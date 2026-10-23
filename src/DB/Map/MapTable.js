@@ -4125,6 +4125,24 @@ const MapInfo = {
 		notifyEnter: true,
 		displayName: '最后试炼幻境洞窟'
 	},
+	'tra_fild01.rsw': {
+		backgroundBmp: 'field_s2',
+		signName: { mainTitle: '基础训练场' },
+		notifyEnter: true,
+		displayName: '基础训练场'
+	},
+	'tra_fild02.rsw': {
+		backgroundBmp: 'field_s2',
+		signName: { mainTitle: '1/10 训练场' },
+		notifyEnter: true,
+		displayName: '1/10 训练场'
+	},
+	'tra_fild03.rsw': {
+		backgroundBmp: 'field_s2',
+		signName: { mainTitle: '1/100 训练场' },
+		notifyEnter: true,
+		displayName: '1/100 训练场'
+	},
 	'tra_fild.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
@@ -5726,6 +5744,12 @@ const MapInfo = {
 		},
 		notifyEnter: true,
 		displayName: 'PvP : Room Payon'
+	},
+	'new_5-4.rsw': {
+		backgroundBmp: 'field_s2',
+		signName: { mainTitle: '训练场' },
+		notifyEnter: true,
+		displayName: '训练场'
 	},
 	'new_1-4.rsw': {
 		backgroundBmp: 'field_s2',

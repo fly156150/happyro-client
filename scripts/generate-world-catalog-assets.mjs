@@ -4,6 +4,14 @@ import path from 'node:path';
 import process from 'node:process';
 import sharp from 'sharp';
 
+const args = process.argv.slice(2);
+const paint = (code, text) => args.includes('--no-color') ? text : `\x1b[${code}m${text}\x1b[0m`;
+if (!args.length || args.includes('--help') || args.every(arg => arg === '--no-color')) {
+ console.log(`\n${paint('1;36', 'HappyRO world catalog assets')}\n\n${paint('1;33', 'Usage')}\n  ${paint('1;32', 'generate')} [--no-color]\n\n${paint('1;33', 'Example')}\n  ${paint('36', 'npm run catalog:world -- --no-color')}\n`);
+ process.exit(0);
+}
+if (args[0] !== 'generate' || args.slice(1).some(arg => arg !== '--no-color')) throw new Error('Expected generate [--no-color]');
+
 const projectRoot = path.resolve(import.meta.dirname, '..');
 const sourceDirectory = path.resolve(
 	projectRoot,
@@ -21,7 +29,7 @@ const npcCatalogSource = path.resolve(
 const npcInstanceOutput = path.resolve(projectRoot, 'applications/pwa/data/navigation/npc-instances.json');
 const clientResourceManifest = path.resolve(
 	projectRoot,
-	process.env.CLIENT_RESOURCE_MANIFEST || '../../work/grf-extract/kro-20211105/data/manifest.json'
+	process.env.CLIENT_RESOURCE_MANIFEST || '../../work/resources/maps/manifest.json'
 );
 const serverMapConfig = path.resolve(
 	projectRoot,
@@ -38,19 +46,11 @@ async function generateSupportedMapTable() {
 	const resourceManifestContents = await fs.readFile(clientResourceManifest, 'utf8');
 	const serverMapConfigContents = await fs.readFile(serverMapConfig, 'utf8');
 	const resourceManifest = JSON.parse(resourceManifestContents);
-	const resourceExtensions = new Map();
-	for (const file of resourceManifest.files || []) {
-		const match = String(file.path || '').match(/^data\/([^/]+)\.(rsw|gat|gnd)$/i);
-		if (!match) continue;
-		const mapName = match[1].toLocaleLowerCase();
-		if (!resourceExtensions.has(mapName)) resourceExtensions.set(mapName, new Set());
-		resourceExtensions.get(mapName).add(match[2].toLocaleLowerCase());
-	}
-	const clientMaps = new Set(
-		[...resourceExtensions]
-			.filter(([, extensions]) => ['rsw', 'gat', 'gnd'].every(extension => extensions.has(extension)))
-			.map(([mapName]) => mapName)
-	);
+	if (resourceManifest.schema !== 'happyro-runtime-map-resources/v1') throw new Error('Generate the current runtime map resource inventory first');
+	const available = new Set(resourceManifest.files.map(file => file.path.toLowerCase()));
+	const clientMaps = new Set(resourceManifest.maps
+		.filter(map => [map.world, map.ground, map.altitude].every(file => available.has(file.toLowerCase())))
+		.map(map => map.name));
 	const serverMaps = new Set(
 		[...serverMapConfigContents.matchAll(/^\s*map:\s*([a-z0-9_@-]+)\s*$/gim)].map(match =>
 			match[1].toLocaleLowerCase()

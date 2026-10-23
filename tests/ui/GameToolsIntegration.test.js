@@ -62,12 +62,29 @@ describe('game tools integration', () => {
 		const hash = createHash('sha256');
 		for (const name of images) hash.update(readFileSync(resolve(imageRoot, name)));
 		expect(catalog.source.sha256).toBe(hash.digest('hex'));
-		expect(catalog.mapImages.length).toBe(537);
+		const mapImageRoot = resolve(projectRoot, '../happyro-api/resources/game-data/world/maps');
+		const mapImages = readdirSync(mapImageRoot).filter(name => name.endsWith('.png'))
+			.map(name => name.slice(0, -4)).sort();
+		expect([...catalog.mapImages].sort()).toEqual(mapImages);
+		expect(catalog.mapImages).toContain('tra_fild02');
 		expect(catalog.mapImages).toContain('prontera');
 		expect(catalog).not.toHaveProperty('npcInstances');
 		for (const atlas of new Set(Object.values(catalog.sprites).map(sprite => sprite.atlas))) {
 			expect(existsSync(resolve(projectRoot, `applications/pwa/data/world/npc-atlas-${atlas}.webp`))).toBe(true);
 		}
+	});
+
+	it('includes every restored classic instructor with its current server navigation identity', () => {
+		const catalog = JSON.parse(read('../happyro-api/resources/game-data/world/npc-catalog.json'));
+		const classic = catalog.entries.filter(npc => npc.source.path === 'npc/re/jobs/novice/novice.txt');
+		expect(classic).toHaveLength(115);
+		for (const npc of classic) {
+			expect(npc.game_visible, npc.id).toBe(true);
+			expect(npc.navigation.class, npc.id).toBe(npc.sprite_id);
+		}
+		const ninja = catalog.entries.find(npc => npc.id.includes('Suspicious Man#nq'));
+		expect(ninja.navigation.class).toBe(881);
+		expect(ninja.navigation.class).toBe(ninja.sprite_id);
 	});
 
 	it('ships the localized NPC instance table as a fetched navigation resource', () => {
