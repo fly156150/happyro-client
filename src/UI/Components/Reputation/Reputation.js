@@ -40,7 +40,11 @@ const _preferences = Preferences.get(
  * @var Reputation UI
  * Store Background Images Data
  */
-let bg, bg_highlight, indicator_empty, indicator_blue, indicator_red;
+const bg = 'var(--reputation-bg)';
+const bg_highlight = 'var(--reputation-highlight)';
+const indicator_empty = 'var(--reputation-empty)';
+const indicator_blue = 'var(--reputation-blue)';
+const indicator_red = 'var(--reputation-red)';
 
 /**
  * @var Reputation UI
@@ -93,12 +97,18 @@ Reputation.captureKeyEvents = true;
 Reputation.init = function init() {
 	const root = _root();
 
-	// Store our image assets
-	Client.loadFile(DB.INTERFACE_PATH + 'reputation/bg_info.bmp', d => (bg = d));
-	Client.loadFile(DB.INTERFACE_PATH + 'reputation/bg_highlight.bmp', d => (bg_highlight = d));
-	Client.loadFile(DB.INTERFACE_PATH + 'reputation/light_empty.bmp', d => (indicator_empty = d));
-	Client.loadFile(DB.INTERFACE_PATH + 'reputation/light_blue.bmp', d => (indicator_blue = d));
-	Client.loadFile(DB.INTERFACE_PATH + 'reputation/light_red.bmp', d => (indicator_red = d));
+	// Entries may render before asynchronous skin images arrive. CSS variables
+	// update existing entries without resetting their points, filters or paging.
+	for (const [name, file] of [
+		['bg', 'bg_info'], ['highlight', 'bg_highlight'], ['empty', 'light_empty'],
+		['blue', 'light_blue'], ['red', 'light_red']
+	]) {
+		const property = `--reputation-${name}`;
+		this._host.style.setProperty(property, 'none');
+		Client.loadFile(DB.INTERFACE_PATH + `reputation/${file}.bmp`, url => {
+			this._host.style.setProperty(property, `url("${url}")`);
+		});
+	}
 
 	// Binds
 	this.draggable(root.querySelector('.titlebar'));
@@ -338,7 +348,7 @@ function updateGroupTotalPoints(groupId) {
 
 	if (!reputeIds || !reputeIds.length) {
 		if (indicator) {
-			indicator.style.backgroundImage = `url(${indicator_empty})`;
+			indicator.style.backgroundImage = indicator_empty;
 		}
 		if (pointsValue) {
 			pointsValue.textContent = '0';
@@ -355,11 +365,11 @@ function updateGroupTotalPoints(groupId) {
 	// Update indicator
 	if (indicator) {
 		if (totalPoints > 0) {
-			indicator.style.backgroundImage = `url(${indicator_blue})`;
+			indicator.style.backgroundImage = indicator_blue;
 		} else if (totalPoints < 0) {
-			indicator.style.backgroundImage = `url(${indicator_red})`;
+			indicator.style.backgroundImage = indicator_red;
 		} else {
-			indicator.style.backgroundImage = `url(${indicator_empty})`;
+			indicator.style.backgroundImage = indicator_empty;
 		}
 	}
 
@@ -502,7 +512,7 @@ function renderReputePage(pageIndex) {
 			const id = Number(el.dataset.reputeId);
 
 			if (id === Reputation.highlight.reputeId) {
-				el.style.backgroundImage = `url(${bg_highlight})`;
+				el.style.backgroundImage = bg_highlight;
 
 				// Consume Highlight
 				Reputation.highlight.consumed = true;
@@ -526,7 +536,7 @@ function createReputeEntry(reputeId, info) {
 	const wrapper = document.createElement('div');
 	wrapper.className = 'rep_group_wrapper';
 	wrapper.dataset.reputeId = reputeId;
-	wrapper.style.backgroundImage = `url(${bg})`;
+	wrapper.style.backgroundImage = bg;
 
 	// Name
 	const name = document.createElement('div');
@@ -544,7 +554,7 @@ function createReputeEntry(reputeId, info) {
 		const indicator = document.createElement('div');
 		indicator.className = `rep_group_indicator indicator_${i}`;
 		indicator.dataset.index = i;
-		indicator.style.backgroundImage = `url(${indicator_empty})`;
+		indicator.style.backgroundImage = indicator_empty;
 		indicatorWrapper.appendChild(indicator);
 	}
 
@@ -587,9 +597,9 @@ function updateReputeUI(reputeId, points) {
 		el.style.backgroundImage =
 			index < fullIndicators
 				? points >= 0
-					? `url(${indicator_blue})`
-					: `url(${indicator_red})`
-				: `url(${indicator_empty})`;
+					? indicator_blue
+					: indicator_red
+				: indicator_empty;
 	});
 
 	// Update points text
@@ -731,7 +741,7 @@ function onReputeOpen(pkt) {
 function clearHighlights() {
 	const root = _root();
 	root.querySelectorAll('.rep_group_wrapper').forEach(el => {
-		el.style.backgroundImage = `url(${bg})`;
+		el.style.backgroundImage = bg;
 		el.dataset.highlight = 'false';
 	});
 }
