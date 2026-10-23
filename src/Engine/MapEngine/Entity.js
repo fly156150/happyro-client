@@ -611,16 +611,18 @@ function onEntityAction(pkt) {
 				if (DB.isBow(DB.getWeaponType(srcEntity.weapon, true))) {
 					delayTime = (m_attackMotion + 8 / m_motionSpeed) * m_motionSpeed * 24.0;
 					pkt.attackMT += delayTime;
-					const EF_Init_Par = {
-						effectId: 'ef_arrow_projectile',
-						ownerAID: dstEntity.GID,
-						otherAID: srcEntity.GID,
-						startTick: Renderer.tick + pkt.attackMT,
-						otherPosition: srcEntity.position
-					};
-					EffectManager.spam(EF_Init_Par);
+					if (dstEntity) {
+						const EF_Init_Par = {
+							effectId: 'ef_arrow_projectile',
+							ownerAID: dstEntity.GID,
+							otherAID: srcEntity.GID,
+							startTick: Renderer.tick + pkt.attackMT,
+							otherPosition: srcEntity.position
+						};
+						EffectManager.spam(EF_Init_Par);
+					}
 				}
-			} else if (srcEntity.job in AttackEffect.PROJECTILE) {
+			} else if (dstEntity && srcEntity.job in AttackEffect.PROJECTILE) {
 				// Non player projectiles
 				const EF_Init_Par = {
 					effectId: AttackEffect.PROJECTILE[srcEntity.job],
@@ -630,7 +632,7 @@ function onEntityAction(pkt) {
 					otherPosition: srcEntity.position
 				};
 				EffectManager.spam(EF_Init_Par);
-			} else if (srcEntity.job in AttackEffect.SPAWN) {
+			} else if (dstEntity && srcEntity.job in AttackEffect.SPAWN) {
 				// Non player special ranged attack
 				const EF_Init_Par = {
 					effectId: AttackEffect.SPAWN[srcEntity.job],
@@ -897,7 +899,7 @@ function onEntityAction(pkt) {
 			break;
 	}
 
-	if (pkt?.damage > 0) {
+	if (dstEntity && pkt?.damage > 0) {
 		if (srcEntity.GID === Session.Entity.GID) {
 			// I deal damage
 			ChatBox.addText(

@@ -258,6 +258,7 @@ read.callback = null;
  * @param {Uint8Array} buffer
  */
 function receive(buf) {
+	const socket = _socket;
 	if (ArrayBuffer.isView(buf)) buf = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
 	let id, packet;
 	let length = 0;
@@ -360,9 +361,15 @@ function receive(buf) {
 			//}
 
 
-			// Call controller
+			// A game/UI handler failure must not discard the rest of this byte stream.
 			if (packet.callback) {
-				packet.callback(packet.instance);
+				try {
+					packet.callback(packet.instance);
+				} catch (error) {
+					console.error(`[Network] Packet handler error for 0x${id.toString(16)} (${packet.name}):`, error);
+				}
+				// The callback may intentionally leave or replace the current connection.
+				if (_socket !== socket) return;
 			}
 		} else {
 			if (packetDump) {

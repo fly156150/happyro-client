@@ -192,3 +192,31 @@ it('reads a 20211103 talkie message without consuming the following packet', () 
 		expect(disconnected).not.toHaveBeenCalled();
 	}
 });
+
+it('logs a failed handler and preserves every following packet and partial packet boundary', () => {
+	const packet = new Uint8Array(bytes());
+	for (let split = 1; split < packet.length; split++) {
+		received.mockReset();
+		const error = new TypeError('battle presentation failed');
+		received.mockImplementationOnce(() => { throw error; });
+		const first = new Uint8Array(packet.length * 2 + split);
+		first.set(packet); first.set(packet, packet.length); first.set(packet.slice(0, split), packet.length * 2);
+		expect(() => socket.onMessage(first.buffer)).not.toThrow();
+		expect(received).toHaveBeenCalledTimes(2);
+		socket.onMessage(packet.slice(split).buffer);
+		expect(received).toHaveBeenCalledTimes(3);
+		expect(console.error).toHaveBeenCalledWith(expect.stringContaining('0xcfb'), error);
+	}
+	expect(disconnected).not.toHaveBeenCalled();
+});
+
+it('does not process the old stream tail if a handler closes its connection before throwing', () => {
+	const packet = new Uint8Array(bytes()), combined = new Uint8Array(packet.length * 2);
+	combined.set(packet); combined.set(packet, packet.length);
+	received.mockImplementationOnce(() => { Network.close(); throw new Error('closed during callback'); });
+	expect(() => socket.onMessage(combined.buffer)).not.toThrow();
+	expect(received).toHaveBeenCalledOnce();
+	connect(); socket.onMessage(packet.buffer);
+	expect(received).toHaveBeenCalledTimes(2);
+	expect(disconnected).not.toHaveBeenCalled();
+});
