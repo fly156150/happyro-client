@@ -362,6 +362,13 @@
         1,
         2
       ]
+    },
+    "CLIENT_SCRIPT_TEXT_MIN_CONTRAST": {
+      "path": "scriptText.minContrast",
+      "type": "number",
+      "default": 4.5,
+      "min": 4.5,
+      "max": 7
     }
   }
 }

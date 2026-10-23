@@ -1,4 +1,7 @@
+import { getClientDefaults } from 'Core/ClientDefaults.js';
+
 /** Contrast correction for script text. Call after inserting into the styled document. */
+const minimumContrast = getClientDefaults('scriptText').minContrast;
 const cache = new Map();
 const originalColors = new WeakMap();
 
@@ -21,14 +24,14 @@ export function readableColor(color, background) {
 	const key = `${color}|${background}`;
 	if (cache.has(key)) return cache.get(key);
 	let result = color.slice(0, 3);
-	if (contrastRatio(result, background) < 4.5) {
+	if (contrastRatio(result, background) < minimumContrast) {
 		const end = contrastRatio([255, 255, 255], background) >= contrastRatio([0, 0, 0], background) ? 255 : 0;
 		const mix = amount => color.slice(0, 3).map(c => c + (end - c) * amount);
 		let low = 0,
 			high = 1;
 		for (let i = 0; i < 24; i++) {
 			const mid = (low + high) / 2;
-			if (contrastRatio(mix(mid), background) < 4.5) low = mid;
+			if (contrastRatio(mix(mid), background) < minimumContrast) low = mid;
 			else high = mid;
 		}
 		result = mix(high).map(c => (end === 255 ? Math.ceil(c) : Math.floor(c)));
