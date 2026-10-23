@@ -94,3 +94,15 @@ button:focus-visible,
 /* An empty target list must not add another gap below the all-targets button. */
 .combat-dialog .auto-species-list:empty { display: none; }
 .combat-dialog .auto-species-list:empty + .auto-range-settings { margin-top: 0; }
+
+/* Persistent desktop controls: state and action remain visible outside settings. */
+.combat-toolbar { display: flex; gap: 8px; pointer-events: auto; }
+.combat-toolbar .combat-launcher { width: 42px; height: 42px; }
+.combat-toolbar .combat-launcher:hover { background-color: #fff4d7; border-color: #af8841; color: #70511e; }
+.combat-toolbar .combat-launcher[aria-checked='true'] { background-color: #d9eddf; border-color: #44835a; color: #245e38; box-shadow: inset 0 0 0 1px #44835a, 0 2px 6px #0002; }
+.combat-toolbar .combat-launcher[aria-checked='true']:hover { background-color: #c2e2cc; }
+.assist-state { position: absolute; right: 5px; bottom: 5px; width: 6px; height: 6px; border-radius: 50%; background: #929ba3; }
+[aria-checked='true'] .assist-state { background: #2b7644; box-shadow: 0 0 0 2px #f2fff5; }
+.combat-launcher::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 10px); right: 0; width: max-content; padding: 7px 10px; border: 1px solid #c6cdd2; border-radius: 6px; background: #fffffff5; color: #303940; box-shadow: 0 3px 12px #0003; font-size: 12px; pointer-events: none; opacity: 0; visibility: hidden; }
+.combat-launcher:hover::after, .combat-launcher:focus-visible::after { opacity: 1; visibility: visible; }
+.assist-feedback { position: absolute; bottom: 54px; right: 0; width: max-content; max-width: 280px; padding: 8px 12px; border-radius: 6px; background: #fff6e5; border: 1px solid #c6a76b; color: #704b21; pointer-events: none; }

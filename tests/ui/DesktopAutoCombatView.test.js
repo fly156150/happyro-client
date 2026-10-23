@@ -21,11 +21,11 @@ beforeEach(() => {
 afterEach(() => { view.destroy(); document.body.replaceChildren(); });
 const click = selector => root.querySelector(selector).click();
 it('offers a visible start/stop control with accessible state', () => {
-	click('[data-settings]'); click('[data-toggle]'); expect(actions.start).toHaveBeenCalledOnce();
-	expect(root.querySelector('[data-toggle]').getAttribute('aria-checked')).toBe('true');
+	click('[data-combat-toggle]'); expect(view.isOpen()).toBe(false); expect(actions.start).toHaveBeenCalledOnce();
+	expect(root.querySelector('[data-combat-toggle]').getAttribute('aria-checked')).toBe('true');
 	expect(root.querySelector('[data-status]')).toBeNull();
-	click('[data-toggle]'); expect(actions.stop).toHaveBeenCalledOnce();
-	expect(root.querySelector('[data-toggle]').getAttribute('aria-checked')).toBe('false');
+	click('[data-combat-toggle]'); expect(actions.stop).toHaveBeenCalledOnce();
+	expect(root.querySelector('[data-combat-toggle]').getAttribute('aria-checked')).toBe('false');
 });
 it('uses the shared species, skill and range editor and saves without starting combat', () => {
 	click('[data-settings]'); expect(view.isOpen()).toBe(true); expect(actions.stop).not.toHaveBeenCalled();
@@ -45,9 +45,9 @@ it('cancels unsaved settings with Escape and keeps keyboard focus inside the dia
 	expect(view.isOpen()).toBe(false); expect(actions.configure).not.toHaveBeenCalled();
 });
 it('stops after a rejected start and retains unsaved settings after persistence failure', () => {
-	actions.start.mockReturnValue(false); click('[data-settings]'); click('[data-toggle]');
+	actions.start.mockReturnValue(false); click('[data-settings]'); click('[data-combat-toggle]');
 	expect(actions.stop).toHaveBeenCalledWith('当前不能开始自动战斗');
- expect(root.querySelector('[data-toggle]').getAttribute('aria-checked')).toBe('false');
+ expect(root.querySelector('[data-combat-toggle]').getAttribute('aria-checked')).toBe('false');
 	click('[data-settings]'); actions.configure.mockReturnValue(false); click('[data-range="search"][data-delta="1"]');
 	expect(view.isOpen()).toBe(true); expect(root.querySelector('[data-auto-save-status]').textContent).toContain('保存失败');
 });
@@ -68,47 +68,38 @@ it('keeps combat running when opening the editor', () => {
 it('saves changes immediately and closes without confirmation', () => {
  view.open(); click('[data-range="search"][data-delta="1"]');
  click('[data-tab="pickup"]');
- const toggle=root.querySelector('[data-pickup="enabled"]'); toggle.checked=true; toggle.dispatchEvent(new Event('input'));
+ expect(root.querySelector('[data-pickup="enabled"]')).toBeNull(); click('[data-close]'); click('[data-pickup-toggle]'); view.open(); click('[data-tab="pickup"]');
  expect(saved.enabled).toBe(true); click('[data-close]'); expect(view.isOpen()).toBe(false);
- view.open(); expect(root.querySelector('[data-pickup="enabled"]').checked).toBe(true);
+ view.open(); expect(root.querySelector('[data-pickup-toggle]').getAttribute('aria-checked')).toBe('true');
 });
 it('flushes numeric changes on close and preserves the last valid value for invalid input', () => {
  view.open(); click('[data-tab="pickup"]');
- const toggle=root.querySelector('[data-pickup="enabled"]'); toggle.checked=true; toggle.dispatchEvent(new Event('input'));
+ expect(root.querySelector('[data-pickup="enabled"]')).toBeNull(); click('[data-close]'); click('[data-pickup-toggle]'); view.open(); click('[data-tab="pickup"]');
  const range=root.querySelector('[data-pickup="range"]'); range.value='99'; range.dispatchEvent(new Event('input'));
  expect(saved.range).toBe(5); expect(range.getAttribute('aria-invalid')).toBe('true');
  range.value='8'; range.dispatchEvent(new Event('input')); click('[data-close]'); expect(saved.range).toBe(8);
  expect(actions.configure).not.toHaveBeenCalled(); expect(view.isOpen()).toBe(false);
 });
 
-it('keeps combat controls inside their tab across closing and reopening', () => {
- click('[data-settings]');
- const toggle = root.querySelector('[data-toggle]');
- expect(toggle.closest('[role="tabpanel"]').id).toBe('combat-panel');
- click('[data-toggle]');
+it('keeps all enable controls outside the settings dialog and synchronizes changes', () => {
+ click('[data-combat-toggle]'); click('[data-pickup-toggle]'); view.open();
+ expect(root.querySelector('.combat-dialog [data-combat-toggle], .combat-dialog [data-pickup-toggle]')).toBeNull();
+ expect(root.querySelector('.pickup-enabled')).toBeNull();
+ expect(root.querySelector('[data-pickup="enabled"]')).toBeNull();
  click('[data-tab="pickup"]');
- expect(toggle.closest('[hidden]')).not.toBeNull();
- expect(root.querySelector('#pickup-panel').hidden).toBe(false);
- expect(root.querySelector('.combat-indicator')).toBeNull();
- expect(actions.stop).not.toHaveBeenCalled();
- click('[data-close]'); click('[data-settings]');
- expect(root.querySelector('[data-toggle]')).toBe(toggle);
- expect(toggle.closest('[hidden]')).toBeNull();
- expect(toggle.getAttribute('aria-checked')).toBe('true');
- click('[data-toggle]');
- expect(actions.stop).toHaveBeenCalledOnce();
+ const range=root.querySelector('[data-pickup="range"]');range.value='8';range.dispatchEvent(new Event('input'));
+ saved.enabled=false; window.dispatchEvent(new Event('happyro-pickup-settings'));
+ expect(root.querySelector('[data-pickup-toggle]').getAttribute('aria-checked')).toBe('false');
+ click('[data-close]');expect(saved.enabled).toBe(false);expect(saved.range).toBe(8);
+ expect(state.active).toBe(true);actions.stop();view.update(state);
+ expect(root.querySelector('[data-combat-toggle]').getAttribute('aria-label')).toBe('开启自动战斗');
 });
-
-it('keeps the pickup master switch outside scrolling content across reopening', () => {
- view.open();
- const row=root.querySelector('.pickup-enabled');
- expect(row.parentElement.matches('.desktop-pickup-panel')).toBe(true);
- expect(root.querySelector('.desktop-pickup-scroll .pickup-enabled')).toBeNull();
- const toggle=row.querySelector('input');toggle.checked=true;toggle.dispatchEvent(new Event('input'));
- expect(saved.enabled).toBe(true);
- click('[data-close]');expect(root.querySelector('.pickup-enabled')).toBeNull();
- view.open();expect(root.querySelectorAll('.pickup-enabled')).toHaveLength(1);
- expect(root.querySelector('.pickup-enabled input').checked).toBe(true);
+it('preserves pickup options and does not claim success when storage fails', () => {
+ saved.range=9;saved.excluded=[{id:501,name:'红色药水'}];
+ click('[data-pickup-toggle]');expect(saved).toMatchObject({enabled:true,range:9,excluded:[{id:501,name:'红色药水'}]});
+ pickup.save.mockReturnValue(false);click('[data-pickup-toggle]');
+ expect(root.querySelector('[data-pickup-toggle]').getAttribute('aria-checked')).toBe('true');
+ expect(root.querySelector('[role="status"]').textContent).toContain('保存失败');
 });
 
 it('opens skill details on desktop right-click without changing combat selection', () => {
