@@ -155,7 +155,7 @@ GameTools.mountTab = function mountTab(tab, reopening = false) {
 				this.selectTab('monsters');
 				mountedTabs.get('monsters')?.container.dispatchEvent(new CustomEvent('game-tools-open-monster', { detail: id }));
 			},
-			returnToItem: () => this.selectTab('items'),
+			returnToCatalog: () => this.selectTab('items'),
 			get capabilities() {
 				return capabilities;
 			}

@@ -1594,3 +1594,22 @@
 .character-riding-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--desktop-border, #465461); border-radius: var(--desktop-radius, 6px); }
 .character-riding-row p { margin: 4px 0 0; }
 .character-riding-row .management-form-actions { grid-column: auto; margin: 0; }
+
+/* Map monster details follow the item-source table visual style. */
+.map-catalog-tab .map-detail-body {
+ grid-template-rows: 100% auto;
+ overflow: auto;
+}
+.map-monsters { grid-column: 1 / -1; min-width: 0; }
+/* Shared item-source styles own borders, colors, links and spacing. */
+.item-source-scroll.map-monster-scroll { overflow: visible; }
+.item-source-table.map-monster-table { color: inherit; }
+.item-source-table.map-monster-table :is(th, td):nth-child(n) { white-space: normal; overflow-wrap: anywhere; text-align: left; }
+
+.map-monster-table :is(th, td):nth-child(1) { width: 26%; }
+.map-monster-table :is(th, td):nth-child(2) { width: 10%; }
+.map-monster-table :is(th, td):nth-child(3) { width: 20%; }
+.map-monster-table :is(th, td):nth-child(4) { width: 16%; }
+.map-monster-table :is(th, td):nth-child(5) { width: 28%; }
+
+.game-tools-window .map-monsters.item-source-group > h5 { margin: 8px 0 10px; }

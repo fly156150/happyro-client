@@ -30,18 +30,18 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 	const layout = new MutationObserver(updateBack);
 	layout.observe(host, { attributes: true, attributeFilter: ['data-menu-arrangement', 'data-phone-screen'] });
 	const scrolls = new Map();
-	let savedItem = null;
+	let savedSource = null;
 	let availableTabs = tabs;
-	function discardSavedItem() {
-		savedItem?.cleanup?.();
-		savedItem?.tabView?.destroy();
-		savedItem = null;
+	function discardSavedSource() {
+		savedSource?.cleanup?.();
+		savedSource?.tabView?.destroy();
+		savedSource = null;
 	}
 	function openMonster(id) {
 		const tab = availableTabs.find(candidate => candidate.id === 'monsters');
-		if (!tab || active?.id !== 'items') return;
-		savedItem = { container: content.firstElementChild, cleanup, tabView, detail, scrolls: new Map(scrolls) };
-		savedItem.container.remove();
+		if (!tab || !['items', 'maps'].includes(active?.id)) return;
+		savedSource = { tab: active, container: content.firstElementChild, cleanup, tabView, detail, scrolls: new Map(scrolls) };
+		savedSource.container.remove();
 		cleanup = null;
 		tabView = null;
 		open(tab, { initialMonsterId: id });
@@ -78,13 +78,13 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		container.className = 'game-tools-tab';
 		container.dataset.tabId = tab.id;
 		content.append(container);
-		if (tab.id === 'items' && savedItem) {
-			container.replaceWith(savedItem.container);
-			cleanup = savedItem.cleanup;
-			tabView = savedItem.tabView;
-			detail = savedItem.detail;
-			for (const [node, offset] of savedItem.scrolls) scrolls.set(node, offset);
-			savedItem = null;
+		if (tab.id === savedSource?.tab.id) {
+			container.replaceWith(savedSource.container);
+			cleanup = savedSource.cleanup;
+			tabView = savedSource.tabView;
+			detail = savedSource.detail;
+			for (const [node, offset] of savedSource.scrolls) scrolls.set(node, offset);
+			savedSource = null;
 			content.classList.toggle('show-detail', detail);
 			back.textContent = '返回列表';
 			updateBack();
@@ -92,8 +92,8 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			tabView.restore();
 			return;
 		}
-		if (tab.id !== 'monsters') discardSavedItem();
-		cleanup = tab.mount(container, { ...context, ...target, openMonster, returnToItem: () => open(availableTabs.find(candidate => candidate.id === 'items')) });
+		if (tab.id !== 'monsters') discardSavedSource();
+		cleanup = tab.mount(container, { ...context, ...target, openMonster, returnLabel: savedSource?.tab.id === 'maps' ? '返回地图' : '返回物品', returnToCatalog: () => { if (savedSource) open(savedSource.tab); } });
 		tabView = trackTabView(container);
 		showList();
 		if (tab.id === 'character') {
@@ -153,7 +153,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			resize.disconnect();
 			layout.disconnect();
 			disposeTab();
-			discardSavedItem();
+			discardSavedSource();
 			root.replaceChildren();
 		}
 	};

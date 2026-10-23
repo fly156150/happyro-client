@@ -1,3 +1,4 @@
+import { createMapMonsterTable } from './MapMonsterTable.js';
 import { requestArrivalPreview } from './ArrivalPreviewService.js';
 import DB from 'DB/DBManager.js';
 import { getMapChannel } from 'DB/Map/MapChannels.js';
@@ -43,6 +44,7 @@ function npcAvailabilityLabel(available) {
 
 function mount(container, context = {}) {
 	container.classList.add('world-catalog-tab', 'map-catalog-tab');
+	const monsterTable = createMapMonsterTable(context);
 	let actionState = {};
 	let routeState = {};
 	let selectedCoordinate = null;
@@ -298,12 +300,14 @@ function mount(container, context = {}) {
 								: '<p class="map-npc-empty">该地图没有可显示的 NPC</p>'
 						}
 					</section>
+					<section class="map-monsters" aria-label="地图魔物"></section>
 					</div>
 					<div class="catalog-action-panel">
 						<button class="catalog-route${routeActive ? ' is-active' : ''}" aria-busy="${Boolean(routePending)}" title="${!sameMap ? '寻路仅支持角色当前所在地图' : !routeTarget ? '请先选择目标位置' : routeUnavailable ? '无法寻路到所选位置' : ''}" type="button" ${routeTarget && sameMap && !routePending && !routeUnavailable ? '' : 'disabled'}>${routePending ? '计算中…' : routeActive ? '停止寻路' : '开始寻路'}</button>
 					<button class="catalog-teleport" type="button" ${canTeleportHere ? '' : 'disabled'}>${actionState.npcPending && selectedNpc ? '正在传送...' : '传送到这里'}</button>
 					<span class="catalog-status error">${escapeCatalogHtml(mapStatus)}</span>
 				</div>`;
+			monsterTable.render(detail.querySelector('.map-monsters'), map.mapName);
 			const canvas = detail.querySelector('.catalog-map');
 			const picker = detail.querySelector('.catalog-map-picker');
 			let lastPositionKey = '';
@@ -417,6 +421,7 @@ function mount(container, context = {}) {
 	}, 500);
 
 	return () => {
+		monsterTable.destroy();
 		arrivalAbort?.abort();
 		loadToken += 1;
 		mapNpcsToken += 1;

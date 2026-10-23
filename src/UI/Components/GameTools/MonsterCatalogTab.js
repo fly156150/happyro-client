@@ -1,3 +1,4 @@
+import { elementNames } from './MonsterLabels.js';
 import { loadMonsterCatalog, loadMonsterDrops } from './MonsterCatalogAssets.js';
 import preferences from 'Preferences/AdventureTools.js';
 import { renderCatalogEmptyState } from './CatalogEmptyState.js';
@@ -39,18 +40,7 @@ const raceNames = {
 	Player_Human: '人类玩家',
 	Player_Doram: '喵族玩家'
 };
-const elementNames = {
-	Neutral: '无',
-	Water: '水',
-	Earth: '地',
-	Fire: '火',
-	Wind: '风',
-	Poison: '毒',
-	Holy: '圣',
-	Dark: '暗',
-	Ghost: '念',
-	Undead: '不死'
-};
+
 const sizeNames = { Small: '小型', Medium: '中型', Large: '大型' };
 const resultMessages = [
 	'召唤成功',
@@ -85,7 +75,7 @@ function mount(container, context = {}) {
 	container.classList.add('monster-tab');
 	let destroyed = false;
 	let requestedMonsterId = context.initialMonsterId;
-	let showReturnToItem = Boolean(requestedMonsterId);
+	let showReturnToCatalog = Boolean(requestedMonsterId);
 	const state = {
 		catalog: null,
 		drops: null,
@@ -175,7 +165,7 @@ function mount(container, context = {}) {
 		if (!requestedMonsterId || !state.catalog) return;
 		const id = requestedMonsterId;
 		requestedMonsterId = null;
-		showReturnToItem = true;
+		showReturnToCatalog = true;
 		search.value = String(id);
 		if (scopeFilter) scopeFilter.checked = false;
 		container.querySelector('[data-game-select] [data-value="all"]').click();
@@ -281,7 +271,7 @@ function mount(container, context = {}) {
 
 	function renderActionPanel(summonDisabled = true, teleportEnabled = false, status = '') {
 		return `<div class="summon-panel">
-			${context.mobile && showReturnToItem ? '<button class="monster-return-item" type="button">返回物品</button>' : ''}
+			${context.mobile && showReturnToCatalog ? `<button class="monster-return-catalog" type="button">${escapeHtml(context.returnLabel)}</button>` : ''}
 			<button class="summon-button" type="button" ${summonDisabled ? 'disabled' : ''}>${state.pending ? '召唤中...' : '召唤'}</button>
 			<button class="monster-map-teleport" type="button" ${teleportEnabled ? '' : 'disabled'}>传送到地图</button>
 			<span class="summon-status error" role="status" aria-live="polite">${escapeHtml(status)}</span>
@@ -441,9 +431,9 @@ function mount(container, context = {}) {
 			summary.textContent = '魔物资料加载失败';
 		});
 	container.addEventListener('click', event => {
-		if (event.target.closest('.monster-return-item')) {
-			showReturnToItem = false;
-			context.returnToItem?.();
+		if (event.target.closest('.monster-return-catalog')) {
+			showReturnToCatalog = false;
+			context.returnToCatalog?.();
 			return;
 		}
 		if (!event.target.closest('.monster-drops-retry')) return;

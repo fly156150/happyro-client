@@ -104,14 +104,14 @@ it.each([true, false])('opens a drop monster without saving scope and shows retu
  const catalog=JSON.parse(readFileSync('applications/pwa/data/monsters/catalog.json'));
  const drops=JSON.parse(readFileSync('applications/pwa/data/monsters/drops.json'));
  vi.stubGlobal('fetch',vi.fn(async url=>({ok:true,json:async()=>String(url).endsWith('/drops.json')?drops:catalog})));
- const returnToItem=vi.fn();
+ const returnToCatalog=vi.fn();
  root=document.createElement('div');document.body.append(root);
- cleanup=tab.mount(root,{mobile,initialMonsterId:1002,returnToItem});await vi.advanceTimersByTimeAsync(0);
+ cleanup=tab.mount(root,{mobile,initialMonsterId:1002,returnLabel:"返回物品",returnToCatalog});await vi.advanceTimersByTimeAsync(0);
  expect(root.querySelector('.monster-row.selected').dataset.id).toBe('1002');
  expect(root.querySelector('.catalog-scope-filter').checked).toBe(false);
  expect(preferences.monsterCurrentMap).toBe(true);
  root.dispatchEvent(new CustomEvent('game-tools-open-monster',{detail:1039}));
  expect(root.querySelector('.monster-row.selected').dataset.id).toBe('1039');
- if(mobile){root.querySelector('.monster-return-item').click();expect(returnToItem).toHaveBeenCalledOnce();}
- else expect(root.querySelector('.monster-return-item')).toBeNull();
+ if(mobile){root.querySelector('.monster-return-catalog').click();expect(returnToCatalog).toHaveBeenCalledOnce();}
+ else expect(root.querySelector('.monster-return-catalog')).toBeNull();
 });

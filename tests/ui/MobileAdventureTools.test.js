@@ -84,22 +84,23 @@ it('places menu return before close and delegates to the parent menu', () => {
  back.click(); expect(backToMenu).toHaveBeenCalledOnce(); expect(close).not.toHaveBeenCalled();
 });
 
-it('returns from a drop monster to the same item DOM and destroys suspended views on close', () => {
+it.each(['items', 'maps'])('returns from a monster to the same %s view and destroys suspended views on close', source => {
  const {root,tabs,cleanup}=mount();
- root.querySelector('[data-tool="items"]').click();
+ root.querySelector(`[data-tool="${source}"]`).click();
  const item=root.querySelector('.game-tools-tab');
  item.querySelector('input').value='123';
  const list=item.querySelector('.catalog-list');list.scrollTop=70;
- const itemContext=tabs.find(tab => tab.id === 'items').mount.mock.calls[0][1];
+ const itemContext=tabs.find(tab => tab.id === source).mount.mock.calls[0][1];
  itemContext.openMonster(1002);
  expect(view.activeFeature()).toBe('monsters');
  const monsterContext=tabs[1].mount.mock.calls[0][1];
  expect(monsterContext.initialMonsterId).toBe(1002);
- monsterContext.returnToItem();
+ expect(monsterContext.returnLabel).toBe(source === 'maps' ? '返回地图' : '返回物品');
+ monsterContext.returnToCatalog();
  expect(root.querySelector('.game-tools-tab')).toBe(item);
  expect(item.querySelector('input').value).toBe('123');
  expect(list.scrollTop).toBe(70);
- expect(tabs.find(tab => tab.id === 'items').mount).toHaveBeenCalledOnce();
+ expect(tabs.find(tab => tab.id === source).mount).toHaveBeenCalledOnce();
  itemContext.openMonster(1039);
  const count=cleanup.mock.calls.length;
  view.destroy();expect(cleanup).toHaveBeenCalledTimes(count+2);

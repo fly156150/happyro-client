@@ -231,3 +231,9 @@
  .adventure-content[data-feature='maps'] .map-npc-text small {
  display: none;
 }
+
+/* Keep the map usable above the monster table, including narrow portrait layouts. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature='maps'] .map-detail-body {
+ grid-template-rows: 100% auto;
+ overflow: auto;
+}
