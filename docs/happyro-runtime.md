@@ -13,3 +13,7 @@
 ## 中文资源
 
 散装覆盖由 Gateway `DATA_OVERRIDE_PATH` 提供。卡片前缀以 UTF-8 读取。物品显示名来自运行目录 LUB。完整链路见根仓库 `docs/localization/client-resources.md`。
+
+## 部署默认值
+
+`src/Core/ClientDefaults.schema.json` 定义 53 项客户端默认值，完整 PWA 构建发布同一份 schema；Gateway 动态下发 `Config.runtime.js`。玩家已保存设置优先，脚本文字对比度属于部署策略。完整变量、范围和生效方式见[环境变量参考](https://happyro.kugarocks.com/deploy/environment-variables)。

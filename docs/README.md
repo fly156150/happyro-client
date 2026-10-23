@@ -12,4 +12,4 @@
 
 ## 发布与变更记录
 
-本仓库随 HappyRO 统一版本交付，目标版本读取根仓库 `deploy/docker/VERSION`。准备中的功能和升级要求见[版本摘要](../../../changelog/releases/v0.5.0.md)，本仓库原始变化见 [changelog](../changelog/)。镜像构建与最终包验收按根仓库[发布流程](../../../docs/operations/docker-release.md)执行，文档整理不表示已经发布。
+本仓库随 HappyRO 统一版本交付，目标版本读取根仓库 `deploy/docker/VERSION`。历史交付摘要见[版本摘要](../../../changelog/releases/v0.5.0.md)，本仓库原始变化见 [changelog](../changelog/)。镜像构建与最终包验收按根仓库[发布流程](../../../docs/operations/docker-release.md)执行。
