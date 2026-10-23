@@ -506,6 +506,7 @@ function onParameterChange(pkt) {
 			break;
 
 		case StatusProperty.JOBLEVEL:
+			Session.Entity.joblevel = amount;
 			BasicInfo.getUI().update('jlvl', amount);
 			SkillList.getUI().onLevelUp();
 			break;
