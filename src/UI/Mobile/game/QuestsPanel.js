@@ -1,3 +1,4 @@
+import { formatDateTime } from 'Utils/DateTime';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
 
@@ -77,7 +78,7 @@ export function createQuestsPanel(body, actions) {
 		title.textContent = q.title;
 		content.append(title, paragraph(q.summary), paragraph(q.description));
 		for (const hunt of q.objectives) content.append(paragraph(`${hunt.name}：${hunt.count} / ${hunt.total}`));
-		if (q.end_time) content.append(paragraph(`截止时间：${new Date(q.end_time * 1000).toLocaleString()}`));
+		if (q.end_time) content.append(paragraph(`截止时间：${formatDateTime(q.end_time * 1000)}`));
 		for (const reward of q.rewards) content.append(paragraph(`${reward.name} × ${reward.ItemNum}`));
 		if (q.reward_exp_base || q.reward_exp_job)
 			content.append(paragraph(`经验：${q.reward_exp_base} / 职业经验：${q.reward_exp_job}`));

@@ -1,3 +1,4 @@
+import { dateParts } from 'Utils/DateTime';
 /**
  * UI/Components/CheckAttendance/CheckAttendance.js
  *
@@ -153,9 +154,10 @@ CheckAttendance.updateUI = function updateUI() {
 					? `${attendance_count} Day attendance success`
 					: `Click the item to claim day ${current_day} reward`;
 
-			const end_date = new Date(`${end[1]}-${end[2]}-${end[3]}`);
-			const now_date = new Date();
-			const remaining_days = Math.round(Math.abs((end_date.getTime() - now_date.getTime()) / (1000 * 3600 * 24)));
+			const today = dateParts(Date.now());
+			const endDay = Date.UTC(Number(end[1]), Number(end[2]) - 1, Number(end[3]));
+			const currentDay = Date.UTC(Number(today.year), Number(today.month) - 1, Number(today.day));
+			const remaining_days = Math.max(0, Math.round((endDay - currentDay) / 86400000) + 1);
 
 			const totalDaysEl = root.querySelector('.total-days');
 			if (totalDaysEl) {

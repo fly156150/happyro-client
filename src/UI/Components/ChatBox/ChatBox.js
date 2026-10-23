@@ -1,3 +1,4 @@
+import { formatDateTime, displayTimeZone } from 'Utils/DateTime';
 /**
  * UI/Components/ChatBox/ChatBox.js
  *
@@ -1546,11 +1547,7 @@ ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
 	const root = _root();
 	let data;
 
-	const tzoffset = new Date().getTimezoneOffset() * 60000;
-	let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
-	localISOTime = localISOTime.replace('T', ' ');
-	const timezone = new Date().getTimezoneOffset() / 60;
-	const date = `${localISOTime} (GMT ${timezone > 0 ? '-' : '+'}${Math.abs(timezone).toString()})`;
+	const date = `${formatDateTime(Date.now())} (${displayTimeZone()})`;
 
 	const contentEl = root.querySelector(`.content[data-content="${ChatBox.activeTab}"]`);
 

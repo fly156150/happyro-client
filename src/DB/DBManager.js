@@ -1,3 +1,4 @@
+import { dateParts } from 'Utils/DateTime';
 import PetRules from './Pets/PetRules.generated.json';
 import ItemServices from './Items/ItemServices.json';
 import ItemServiceDescriptions from './Items/ItemServiceDescriptions.zh-CN.json';
@@ -3708,16 +3709,16 @@ class DB {
 	 * @returns {string} Formatted date string (MM/DD HH:mm)
 	 */
 	static formatUnixDate(unixTimestamp) {
-		const d = new Date(unixTimestamp * 1000);
+		const d = dateParts(unixTimestamp * 1000);
 
 		return (
-			String(d.getMonth() + 1).padStart(2, '0') +
+			d.month +
 			'/' +
-			String(d.getDate()).padStart(2, '0') +
+			d.day +
 			' ' +
-			String(d.getHours()).padStart(2, '0') +
+			d.hour +
 			':' +
-			String(d.getMinutes()).padStart(2, '0')
+			d.minute
 		);
 	}
 

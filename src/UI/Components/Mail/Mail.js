@@ -1,3 +1,4 @@
+import { dateParts } from 'Utils/DateTime';
 /**
  * UI/Components/Mail/Mail.js
  *
@@ -899,10 +900,10 @@ function prettifyZeny(value) {
  */
 function formateDeleteTime(value) {
 	const ts_ms = value * 1000;
-	const date_ob = new Date(ts_ms);
-	const year = date_ob.getFullYear();
-	const month = `0${date_ob.getMonth() + 1}`.slice(-2);
-	const date = `0${date_ob.getDate()}`.slice(-2);
+	const date_ob = dateParts(ts_ms);
+	const year = date_ob.year;
+	const month = date_ob.month;
+	const date = date_ob.day;
 
 	return `${month} ${date} ${String(year).substring(2, 4)}`;
 }

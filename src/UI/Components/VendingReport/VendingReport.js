@@ -1,3 +1,4 @@
+import { dateParts } from 'Utils/DateTime';
 /**
  * UI/Components/VendingReport/VendingReport.js
  *
@@ -447,18 +448,18 @@ VendingReport.getItemByIndex = function getItemByIndex(index) {
  * @returns {string} Formatted date string (MM/DD HH:mm)
  */
 function formatUnixDate(unixTimestamp) {
-	const d = new Date(unixTimestamp * 1000);
+	const d = dateParts(unixTimestamp * 1000);
 
 	return (
-		String(d.getMonth() + 1).padStart(2, '0') +
+		d.month +
 		'/' +
-		String(d.getDate()).padStart(2, '0') +
+		d.day +
 		' - ' +
-		String(d.getHours()).padStart(2, '0') +
+		d.hour +
 		':' +
-		String(d.getMinutes()).padStart(2, '0') +
+		d.minute +
 		':' +
-		String(d.getSeconds()).padStart(2, '0')
+		d.second
 	);
 }
 

@@ -1,3 +1,4 @@
+import { dateParts } from 'Utils/DateTime';
 /**
  * UI/Components/Achievement/Achievement.js
  *
@@ -383,8 +384,8 @@ class AchievementComponent extends GUIComponent {
 					info.reward &&
 					(Array.isArray(info.reward) ? info.reward.length > 0 : Object.keys(info.reward).length > 0);
 				const isClaimed = s && s.reward;
-				const d = new Date(s.completed_at * 1000);
-				dtStr = `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
+				const d = dateParts(s.completed_at * 1000);
+				dtStr = `${d.year}.${Number(d.month)}.${Number(d.day)}`;
 
 				if (hasReward) {
 					if (!isClaimed) {
@@ -500,8 +501,8 @@ class AchievementComponent extends GUIComponent {
 			}
 
 			if (isCompleted) {
-				const d = new Date(s.completed_at * 1000);
-				dtStr = `${d.getFullYear()}.${d.getMonth() + 1}.${d.getDate()}`;
+				const d = dateParts(s.completed_at * 1000);
+				dtStr = `${d.year}.${Number(d.month)}.${Number(d.day)}`;
 			}
 
 			item.innerHTML = `

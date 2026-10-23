@@ -1,3 +1,4 @@
+import { formatDateTime } from 'Utils/DateTime';
 /**
  * UI/Components/Quest/QuestHelperCommon.js
  *
@@ -261,11 +262,10 @@ export function createQuestHelper(config) {
 				}
 
 				if (quest.end_time) {
-					const d = new Date(0);
-					d.setUTCSeconds(quest.end_time);
+
 					const deadlineEl = root.querySelector('.quest-info-bottom-deadline-info-text');
 					if (deadlineEl) {
-						deadlineEl.textContent = `截止时间 [${d.toLocaleString()}]`;
+						deadlineEl.textContent = `截止时间 [${formatDateTime(quest.end_time * 1000)}]`;
 					}
 				}
 				ensureReadableText(root);

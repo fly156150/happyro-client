@@ -1,3 +1,4 @@
+import { formatDateTime } from 'Utils/DateTime';
 import { createCompanionSwitch, updateCompanionSwitch } from './CompanionSwitch.js';
 import { createAutoFeedSwitch, updateAutoFeedSwitch, createAutoFeedStatus } from './CompanionAutoFeed.js';
 import { createCompanionLayout } from './CompanionLayout.js';
@@ -142,7 +143,7 @@ export function createCompanionsPanel(body, service) {
 								['召唤次数', info.toal_call_num],
 								[
 									'契约到期',
-									info.ExpireDate ? new Date(info.ExpireDate * 1000).toLocaleString('zh-CN') : '—'
+									info.ExpireDate ? formatDateTime(info.ExpireDate * 1000) : '—'
 								]
 							])
 				]

@@ -1,3 +1,4 @@
+import { formatDateTime, displayTimeZone } from 'Utils/DateTime';
 /**
  * Controls/ScreenShot.js
  *
@@ -39,11 +40,7 @@ class ScreenShot {
 		let x, y;
 
 		// Create a date to add to canvas
-		const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-		let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
-		localISOTime = localISOTime.replace('T', ' ');
-		const timezone = new Date().getTimezoneOffset() / 60;
-		const date = `${localISOTime} (GMT ${timezone > 0 ? '-' : '+'}${Math.abs(timezone).toString()})`; //GMT
+		const date = `${formatDateTime(Date.now())} (${displayTimeZone()})`;
 
 		const context = canvas.getContext('2d');
 

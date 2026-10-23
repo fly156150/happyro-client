@@ -1,3 +1,4 @@
+import { dateParts } from 'Utils/DateTime';
 /**
  * UI/Components/CharSelect/CharSelectCommon.js
  *
@@ -990,14 +991,13 @@ export function createCharSelect(config) {
 	 * Format delay date time (V2 / V3)
 	 */
 	function formatDatetime(epoch) {
-		const datetime = new Date(0);
-		datetime.setSeconds(epoch);
+		const datetime = dateParts(epoch * 1000);
 
-		const month = datetime.getMonth() + 1;
-		const day = datetime.getDate();
-		const hours = datetime.getHours();
-		const minutes = datetime.getMinutes();
-		const seconds = datetime.getSeconds();
+		const month = Number(datetime.month);
+		const day = Number(datetime.day);
+		const hours = Number(datetime.hour);
+		const minutes = Number(datetime.minute);
+		const seconds = Number(datetime.second);
 
 		const formattedDatetime = DB.getMessage(2097)
 			.replace('%d', `${month}`)
