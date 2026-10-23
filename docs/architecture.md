@@ -17,7 +17,8 @@ HappyRO Client 在浏览器中渲染世界、处理输入，并把登录与地�
 
 - Gateway：PWA 静态文件、`/data` 资源、`/ws/`、Web API 代理。
 - Server：封包、地图传送 `0xd00`/`0xd01`、NPC 传送和召唤的权威结果。
-- Admin：冒险工具经 Gateway 同源代理访问的资料与 Game Control。
+- API：happyro-api 提供冒险工具资料与 Game Control 接口，经 Gateway 同源代理访问。
+- Admin：独立管理前端，调用 happyro-api 的管理员接口。
 - 根仓库：`Config.happyro.js`、导航覆盖、技能 / 导航生成器。
 
 静态数据与服务器权威的边界见根仓库 `docs/architecture/localization-runtime.md`。
