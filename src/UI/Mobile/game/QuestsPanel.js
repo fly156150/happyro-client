@@ -75,6 +75,7 @@ export function createQuestsPanel(body, actions) {
 			return;
 		}
 		const title = document.createElement('h3');
+		title.className = 'menu-detail-heading';
 		title.textContent = q.title;
 		content.append(title, paragraph(q.summary), paragraph(q.description));
 		for (const hunt of q.objectives) content.append(paragraph(`${hunt.name}：${hunt.count} / ${hunt.total}`));

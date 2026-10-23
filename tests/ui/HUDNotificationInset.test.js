@@ -17,11 +17,12 @@ it('tracks portrait HUD bounds and clears the offset on rotation and removal', a
 	});
 	const host = document.createElement('div');
 	const root = host.attachShadow({mode: 'open'});
-	root.innerHTML = '<div class="top-left"></div><div class="top-right"></div>';
+	root.innerHTML = '<div class="top-left"></div><div class="top-right"><button class="map"></button><div class="status-effects"></div></div>';
 	document.body.append(host);
 	let bottom = 150;
 	root.querySelector('.top-left').getBoundingClientRect = () => ({bottom: 120});
-	root.querySelector('.top-right').getBoundingClientRect = () => ({bottom});
+	root.querySelector('.top-right').getBoundingClientRect = () => ({bottom: 600});
+	root.querySelector('.map').getBoundingClientRect = () => ({bottom});
 	host.dataset.orientation = 'portrait';
 	const release = bindHUDNotificationInset(root);
 	const top = () => document.body.style.getPropertyValue('--mobile-notification-top');

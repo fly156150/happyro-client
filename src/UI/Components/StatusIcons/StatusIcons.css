@@ -18,9 +18,9 @@
 	position: absolute;
 	right: 33px;
 	top: 0px;
-	padding: 0px 5px 0px 5px;
+	padding: 6px 10px;
 	background-color: rgba(0, 0, 0, 0.5);
-	border: 1px solid #c6c6c6;
+	border: 0;
 	border-radius: 3px;
 	color: white;
 	text-shadow: 1px 1px black;

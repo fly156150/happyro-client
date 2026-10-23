@@ -1,7 +1,7 @@
 /** Keep viewport-level notifications below the actual portrait HUD, including safe-area padding. */
 export function bindHUDNotificationInset(root) {
 	const host = root.host;
-	const panels = [...root.querySelectorAll('.top-left, .top-right')];
+	const panels = [...root.querySelectorAll('.top-left, .map')];
 	const property = '--mobile-notification-top';
 	const itemProperty = '--mobile-item-notification-top';
 	const update = () => {

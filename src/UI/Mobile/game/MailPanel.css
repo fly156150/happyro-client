@@ -589,22 +589,7 @@
 }
 
 /* Reading headers match adventure character sections, with metadata on the right. */
-:host([data-menu-density]) .panel[data-view='mail'] .mail-detail-heading {
- display: flex;
- align-items: baseline;
- justify-content: space-between;
- flex-wrap: wrap;
- gap: 4px 12px;
- margin: 0 0 8px;
- padding: 6px 8px;
- border-left: 3px solid #ceaa70;
- border-radius: 3px;
- background: #2b3540;
- color: #ffe1ae;
- font-size: var(--panel-heading);
- font-weight: 600;
- overflow-wrap: anywhere;
-}
+
 :host([data-menu-density]) .panel[data-view='mail'] .mail-heading-meta {
  min-width: 0;
  margin-left: auto;

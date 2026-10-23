@@ -294,6 +294,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		const ctx = canvas.getContext('2d');
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		const fit = fittedMapRect(canvas.width, canvas.height, mapImage.width, mapImage.height);
+		fit.x = canvas.width - fit.width;
 		if (mapImage.image) {
 			const image = mapImage.image;
 			const source = mapImageSourceRect(

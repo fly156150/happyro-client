@@ -1,14 +1,27 @@
 /** Keep selection and scroll positions while remaining durations update. */
 export function createStatusPanel(body) {
 	body.innerHTML =
-		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="状态列表"></div><section class="inventory-detail" aria-label="状态说明"><p class="item-description"></p></section></div>';
+		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="状态列表"></div><section class="inventory-detail" aria-label="状态说明"><h3 class="menu-detail-heading" hidden></h3><p class="status-detail-duration" hidden></p><p class="item-description"></p></section></div>';
 	const list = body.querySelector('.inventory-list');
 	const description = body.querySelector('.item-description');
+	const heading = body.querySelector('.menu-detail-heading');
+	const remaining = body.querySelector('.status-detail-duration');
 	const nodes = new Map();
 	let selected,
 		statuses = [];
 	function showSelection() {
 		const status = statuses.find(entry => entry.id === selected);
+		heading.hidden = !status;
+		remaining.hidden = !status;
+		const seconds = status?.seconds;
+		const time = !status
+			? ''
+			: seconds == null
+				? '持续时间：永久'
+				: `剩余时间：${Math.floor(seconds / 60) ? `${Math.floor(seconds / 60)}分` : ''}${seconds % 60}秒`;
+		if (remaining.textContent !== time) remaining.textContent = time;
+		const title = status?.title || '';
+		if (heading.textContent !== title) heading.textContent = title;
 		const text = status ? status.description || '暂无状态说明' : '当前没有状态效果';
 		if (description.textContent !== text) description.textContent = text;
 		for (const [id, node] of nodes) node.setAttribute('aria-pressed', String(id === selected));
@@ -19,7 +32,7 @@ export function createStatusPanel(body) {
 			showSelection();
 		},
 		update(next) {
-			statuses = next;
+			statuses = [...next].sort((a, b) => (a.seconds ?? Infinity) - (b.seconds ?? Infinity));
 			const ids = new Set(statuses.map(status => status.id));
 			for (const [id, node] of nodes)
 				if (!ids.has(id)) {

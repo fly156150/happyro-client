@@ -80,3 +80,7 @@
 :host([data-phone-screen][data-menu-arrangement='stacked']) .profile-actions button {
  flex: 0 0 auto; min-height: 30px; padding: 4px 9px;
 }
+
+:host([data-phone-screen][data-orientation='portrait']) .status-effects {
+	grid-template-rows: repeat(var(--status-portrait-rows, 1), 32px);
+}

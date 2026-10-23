@@ -1471,3 +1471,26 @@
 	:host([data-phone-screen][data-orientation='portrait']) .chat-contact-list { flex: 0 1 auto; max-height: calc(var(--chat-contact-row) * 4 + 12px); }
 :host([data-phone-screen][data-orientation='portrait']) .chat-conversation.is-private { grid-template-columns: 72px minmax(0, 1fr); }
 }
+
+/* Shared section titles for mail, quest and status details. */
+:host([data-menu-density]) .panel[data-view='mail'] .mail-detail-heading,
+:host([data-menu-density]) .panel .menu-detail-heading:not([hidden]) {
+ display: flex;
+ align-items: baseline;
+ justify-content: space-between;
+ flex-wrap: wrap;
+ gap: 4px 12px;
+ margin: 0 0 8px;
+ padding: 6px 8px;
+ border-left: 3px solid #ceaa70;
+ border-radius: 3px;
+ background: #2b3540;
+ color: #ffe1ae;
+ font-size: var(--panel-heading);
+ font-weight: 600;
+ overflow-wrap: anywhere;
+}
+
+.panel .status-detail-duration {
+	color: #ffe1ae;
+}

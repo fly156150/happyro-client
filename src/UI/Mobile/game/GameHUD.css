@@ -130,7 +130,7 @@ button.surface,
 .map {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-end;
 	padding: 0;
 	width: 96px;
 	border: 0;
@@ -172,7 +172,7 @@ button.surface,
 	pointer-events: none;
 	touch-action: manipulation;
 	position: absolute;
-	right: max(16px, env(safe-area-inset-right));
+	right: max(12px, env(safe-area-inset-right));
 	bottom: max(12px, env(safe-area-inset-bottom));
 	width: 270px;
 	display: grid;
@@ -404,6 +404,7 @@ dd {
 	display: none;
 }
 .status-effect {
+	position: relative;
 	direction: ltr;
 	width: 32px;
 	height: 32px;
@@ -1034,9 +1035,9 @@ dd {
 .status-description {
  position: fixed;
  z-index: 51;
- padding: 0 5px;
+ padding: 6px 10px;
  background: rgba(0, 0, 0, .5);
- border: 1px solid #c6c6c6;
+ border: 0;
  border-radius: 3px;
  color: white;
  text-shadow: 1px 1px black;
@@ -1047,4 +1048,12 @@ dd {
  max-height: calc(100dvh - 16px);
  overflow-y: auto;
  pointer-events: auto;
+}
+
+.status-effect::after {
+ content: '';
+ position: absolute;
+ inset: 0;
+ background: conic-gradient(var(--status-countdown-color) var(--status-countdown-angle), transparent 0);
+ pointer-events: none;
 }

@@ -311,3 +311,28 @@
 :host(:not([data-phone-screen])[data-menu-density='spacious']) .combat .skill[data-shortcut-kind='item'] small {
  bottom: 4px;
 }
+
+/* Phone landscape fills the space after the profile, then wraps left to right. */
+:host([data-phone-screen][data-orientation='landscape']) {
+ --status-profile-width: 188px;
+}
+:host([data-phone-screen][data-orientation='landscape'][data-menu-density='spacious']) {
+ --status-profile-width: 320px;
+}
+:host([data-phone-screen][data-orientation='landscape']) .status-effects:not(:empty) {
+ position: fixed;
+ top: calc(max(16px, env(safe-area-inset-top)) + 2px);
+ left: calc(max(12px, env(safe-area-inset-left)) + var(--status-profile-width) + 12px);
+ right: calc(max(12px, env(safe-area-inset-right)) + var(--landscape-map-width) + 12px);
+ display: flex;
+ flex-wrap: wrap;
+ align-content: flex-start;
+ direction: ltr;
+ max-width: none;
+ max-height: 140px;
+ overflow-x: hidden;
+ overflow-y: auto;
+}
+:host([data-phone-screen][data-orientation='landscape']) .status-effect {
+ flex: 0 0 32px;
+}

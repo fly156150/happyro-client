@@ -3,7 +3,7 @@ import { createGameHUDView } from '../../src/UI/Mobile/game/GameHUDView.js';
 import { clearChatFeed, publishChatMessage, subscribeChatFeed } from '../../src/UI/Game/ChatFeed.js';
 
 let host, root, view, actions;
-const state = { name: '测试角色', job: '初心者', level: 10, jobLevel: 5, money: 123, hp: 80, maxHp: 100, sp: 20, maxSp: 40, position: [12, 34], mapName: '普隆德拉', statuses: [{ id: 1, title: '加速术', description: '10秒', icon: 'data:image/png;base64,AA==' }] };
+const state = { name: '测试角色', job: '初心者', level: 10, jobLevel: 5, money: 123, hp: 80, maxHp: 100, sp: 20, maxSp: 40, position: [12, 34], mapName: '普隆德拉', statuses: [{ id: 1, title: '加速术', description: '10秒', descriptionLines: [{text:'加速术',color:'#00ff00'},{text:'10秒',color:'#ffff00'}], icon: 'data:image/png;base64,AA==' }] };
 beforeEach(() => {
  vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
 	host = document.createElement('div'); document.body.append(host); root = host.attachShadow({ mode: 'open' });
@@ -163,9 +163,11 @@ it('shows status titles beside live descriptions and preserves selection until e
  view.update({...state,statuses:[{id:1,title:'加速术',description:'提升移动速度',seconds:9},{id:2,title:'天使之赐福',description:'提升属性',seconds:19}]});
  expect(root.querySelector('[data-status="2"]')).toBe(node);
  expect(node.getAttribute('aria-pressed')).toBe('true');
- expect(root.querySelector('.inventory-detail').textContent).toBe('提升属性');
+ expect(root.querySelector('.inventory-detail .menu-detail-heading').textContent).toBe('天使之赐福');
+ expect(root.querySelector('.inventory-detail .item-description').textContent).toBe('提升属性');
  view.update({...state,statuses:[{id:1,title:'加速术',description:'提升移动速度',seconds:8}]});
- expect(root.querySelector('.inventory-detail').textContent).toBe('提升移动速度');
+ expect(root.querySelector('.inventory-detail .menu-detail-heading').textContent).toBe('加速术');
+ expect(root.querySelector('.inventory-detail .item-description').textContent).toBe('提升移动速度');
  view.update({...state,statuses:[]});expect(root.querySelector('.inventory-detail').textContent).toBe('当前没有状态效果');
 });
 
@@ -402,15 +404,19 @@ it('dismisses the chat modal after sending an emotion command', () => {
 });
 
 it('renders every status and opens the tapped effect while retaining nodes across ticks', () => {
- const statuses = Array.from({length: 13}, (_, i) => ({id: i + 1, title: `状态${i + 1}`, description: `说明${i + 1}`, seconds: 30, icon: state.statuses[0].icon}));
+ const statuses = Array.from({length: 13}, (_, i) => ({id: i + 1, title: `状态${i + 1}`, description: `说明${i + 1}`, descriptionLines: [{text:`状态${i+1}`,color:"#00ff00"},{text:`说明${i+1}`,color:""},{text:"30秒",color:"#ffff00"}], seconds: 30, countdown: { fraction: .5, color: "rgba(255,150,50,0.65)" }, icon: state.statuses[0].icon}));
  view.update({...state, statuses});
  expect(root.querySelectorAll('.status-effect')).toHaveLength(13);
  const button = root.querySelector('[data-effect="11"]');
+ expect(button.style.getPropertyValue('--status-countdown-angle')).toBe('180deg');
+ expect(button.style.getPropertyValue('--status-countdown-color')).toBe('rgba(255,150,50,0.65)');
  button.click();
  expect(root.querySelector('.status-description').textContent).toContain('说明11');
  expect(root.querySelector('.status-description').hidden).toBe(false);
+ expect(root.querySelector('.status-description').firstElementChild.style.color).toBe('rgb(0, 255, 0)');
+ expect(root.querySelector('.status-description').lastElementChild.style.color).toBe('rgb(255, 255, 0)');
  expect(root.querySelector('.backdrop').hidden).toBe(true);
- view.update({...state, statuses: statuses.map(s => ({...s, seconds: 29}))});
+ view.update({...state, statuses: statuses.map(s => ({...s, seconds: 29, descriptionLines: [...s.descriptionLines.slice(0,2), {text:"29秒",color:"#ffff00"}]}))});
  expect(root.querySelector('[data-effect="11"]')).toBe(button);
  expect(button.getAttribute('aria-label')).toBe('状态11 · 29秒');
  expect(root.querySelector('.status-description').textContent).toContain('29秒');
@@ -423,4 +429,15 @@ it('renders every status and opens the tapped effect while retaining nodes acros
  view.update({...state, statuses: []});
  expect(root.querySelectorAll('.status-effect')).toHaveLength(0);
  expect(root.querySelector('.status-description').hidden).toBe(true);
+});
+
+it('right-aligns narrow minimaps without stretching wide maps', () => {
+ const drawImage = vi.fn();
+ const context = {clearRect: vi.fn(), drawImage, save: vi.fn(), restore: vi.fn(), translate: vi.fn(), rotate: vi.fn(), scale: vi.fn(), beginPath: vi.fn(), moveTo: vi.fn(), lineTo: vi.fn(), closePath: vi.fn(), fill: vi.fn(), stroke: vi.fn()};
+ vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(context);
+ view.update({...state, position: null});
+ view.setMap({width: 100, height: 200, image: {width: 200, height: 200}});
+ expect(drawImage.mock.lastCall.slice(-4)).toEqual([64, 0, 64, 128]);
+ view.setMap({width: 200, height: 100, image: {width: 200, height: 200}});
+ expect(drawImage.mock.lastCall.slice(-4)).toEqual([0, 32, 128, 64]);
 });

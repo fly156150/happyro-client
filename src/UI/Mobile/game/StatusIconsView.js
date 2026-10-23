@@ -9,6 +9,24 @@ export function createStatusIconsView(root) {
  root.append(tooltip);
  const abort = new AbortController();
  let statuses = [], selected = null;
+ const map = root.querySelector('.map');
+ const dock = root.querySelector('.battle-dock');
+ function fitPortraitRows() {
+  if (!root.host.matches('[data-phone-screen][data-orientation="portrait"]') || !map || !dock) {
+   icons.style.removeProperty('--status-portrait-rows');
+   return;
+  }
+  const top = map.getBoundingClientRect().bottom + parseFloat(getComputedStyle(map.parentElement).rowGap);
+  const bottom = Math.min(window.innerHeight, dock.getBoundingClientRect().top) - 12;
+  const rows = Math.max(1, Math.floor((bottom - top + 4) / 36));
+  icons.style.setProperty('--status-portrait-rows', String(rows));
+ }
+ const layoutObserver = new ResizeObserver(fitPortraitRows);
+ for (const node of [root.host, map, dock]) if (node) layoutObserver.observe(node);
+ const modeObserver = new MutationObserver(fitPortraitRows);
+ modeObserver.observe(root.host, { attributes: true, attributeFilter: ['data-phone-screen', 'data-orientation', 'data-menu-density', 'data-menu-arrangement'] });
+ window.addEventListener('resize', fitPortraitRows, { signal: abort.signal });
+ fitPortraitRows();
  function hide() {
   selected = null;
   tooltip.hidden = true;
@@ -20,12 +38,20 @@ export function createStatusIconsView(root) {
   if (!status || !button) return hide();
   for (const node of icons.children) node.removeAttribute('aria-describedby');
   button.setAttribute('aria-describedby', tooltip.id);
-  tooltip.textContent = [status.title, status.description, status.seconds == null ? '' : `${status.seconds}秒`].filter(Boolean).join('\n');
+  tooltip.replaceChildren(...status.descriptionLines.map(({ text, color }) => {
+   const line = document.createElement('div');
+   line.textContent = text;
+   if (color) line.style.color = color;
+   return line;
+  }));
   tooltip.hidden = false;
   const rect = button.getBoundingClientRect();
   const width = tooltip.offsetWidth, height = tooltip.offsetHeight;
-  tooltip.style.left = `${Math.max(8, Math.min(rect.left - width - 5, window.innerWidth - width - 8))}px`;
-  tooltip.style.top = `${Math.max(8, Math.min(rect.top, window.innerHeight - height - 8))}px`;
+  const below = root.host.matches('[data-phone-screen][data-orientation="landscape"]');
+  const left = below ? rect.left : rect.left - width - 5;
+  const top = below ? rect.bottom + 5 : rect.top;
+  tooltip.style.left = `${Math.max(8, Math.min(left, window.innerWidth - width - 8))}px`;
+  tooltip.style.top = `${Math.max(8, Math.min(top, window.innerHeight - height - 8))}px`;
  }
  document.addEventListener('pointerdown', event => {
   const path = event.composedPath();
@@ -60,11 +86,15 @@ export function createStatusIconsView(root) {
       button.append(img);
      }
     }
+    const countdown = status.icon && status.countdown;
+    button.style.setProperty('--status-countdown-color', countdown ? countdown.color : 'transparent');
+    button.style.setProperty('--status-countdown-angle', `${countdown ? countdown.fraction * 360 : 0}deg`);
     if (icons.children[index] !== button) icons.insertBefore(button, icons.children[index] || null);
    }
+   fitPortraitRows();
    if (selected !== null) show();
   },
   hide,
-  destroy() { abort.abort(); tooltip.remove(); }
+  destroy() { layoutObserver.disconnect(); modeObserver.disconnect(); abort.abort(); tooltip.remove(); }
  };
 }

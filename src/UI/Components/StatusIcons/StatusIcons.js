@@ -21,6 +21,7 @@ import ScreenEffectManager from 'Renderer/ScreenEffectManager.js';
 import Session from 'Engine/SessionStorage.js';
 import htmlText from './StatusIcons.html?raw';
 import cssText from './StatusIcons.css?raw';
+import { statusIconProgress } from './StatusIconProgress.js';
 
 /**
  * Create component
@@ -98,6 +99,14 @@ StatusIcons.clean = function clean() {
  * @param {number} enable/disable
  * @param {number} life time
  */
+function statusTimeText(end, now) {
+ if (now >= end || end === Infinity) return '';
+ const tick = ((end - now) / 1000) | 0;
+ const seconds = tick % 60;
+ const minutes = (tick / 60) | 0;
+ return (minutes ? `${minutes} ${DB.getMessage(1807, 'minute')} ` : '') + `${seconds} ${DB.getMessage(1808, 'second')}`;
+}
+
 StatusIcons.getSnapshot = function () {
 	return Object.entries(_status)
 		.filter(([, status]) => status.end > Renderer.tick)
@@ -113,6 +122,11 @@ StatusIcons.getSnapshot = function () {
 				title: lines[0] || '未知状态',
 				description: lines.slice(1).join('\n'),
 				seconds,
+				countdown: statusIconProgress(status.start, status.end, Renderer.tick),
+				descriptionLines: (StatusTable[id].descript || []).map(([text, color]) => ({
+					text: toPlainRagnarokText(text).replace('%s', statusTimeText(status.end, Renderer.tick)),
+					color: color || ''
+				})),
 				icon: status.icon
 			};
 		});
@@ -355,43 +369,22 @@ function renderStatus(status, now) {
 	}
 
 	const ctx = status.ctx;
-	const start = status.start;
-	let end = status.end;
-	let color, perc;
-
-	if (now > end) {
-		end = now;
-	}
-
-	if (end < now + 60000) {
-		color = 'rgba(255,150,50,0.65)';
-		perc = 1 - (end - now) / 60000;
-	} else {
-		color = 'rgba(255,255,255,0.65)';
-		perc = (now - start) / (end - 60000 - start);
-	}
-
+	const end = status.end;
+	const countdown = statusIconProgress(status.start, end, now);
 	ctx.clearRect(0, 0, 32, 32);
 	ctx.drawImage(status.img, 0, 0);
-	ctx.fillStyle = color;
-
-	ctx.beginPath();
-	ctx.arc(16, 16, 24, 1.5 * Math.PI, ((1.5 + perc * 2) % 2) * Math.PI);
-	ctx.lineTo(16, 16);
-	ctx.fill();
+	if (countdown && countdown.fraction > 0) {
+		ctx.fillStyle = countdown.color;
+		ctx.beginPath();
+		ctx.arc(16, 16, 24, 1.5 * Math.PI, (1.5 + countdown.fraction * 2) * Math.PI);
+		ctx.lineTo(16, 16);
+		ctx.fill();
+	}
 
 	if (status.time && status.timeTick + 1000 < now) {
 		status.timeTick = now;
 
-		const tick = ((end - now) / 1000) | 0;
-		const seconds = tick % 60;
-		const minutes = (tick / 60) | 0;
-
-		status.time.textContent =
-			now >= end || end === Infinity
-				? ''
-				: (minutes ? `${minutes} ${DB.getMessage(1807, 'minute')} ` : '') +
-					`${seconds} ${DB.getMessage(1808, 'second')}`;
+		status.time.textContent = statusTimeText(end, now);
 	}
 }
 
