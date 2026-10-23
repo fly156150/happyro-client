@@ -118,16 +118,13 @@ button.surface,
 	min-height: 30px;
 	padding: 4px 9px;
 }
-.statuses {
-	min-width: 0;
-	overflow-wrap: anywhere;
-}
 .top-right {
+	flex-direction: column;
 	position: absolute;
 	right: max(12px, env(safe-area-inset-right));
 	top: max(16px, env(safe-area-inset-top));
 	display: flex;
-	align-items: flex-start;
+	align-items: flex-end;
 	gap: 8px;
 }
 .map {
@@ -392,14 +389,40 @@ dd {
 	}
 }
 
-[data-status-icons] {
-	display: inline-flex;
-	vertical-align: middle;
-	gap: 3px;
+.status-effects {
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-rows: repeat(4, 32px);
+	grid-auto-columns: 32px;
+	direction: rtl;
+	gap: 4px;
+	max-width: min(45vw, 248px);
+	overflow-x: auto;
+	pointer-events: auto;
+}
+.status-effects:empty {
+	display: none;
+}
+.status-effect {
+	direction: ltr;
+	width: 32px;
+	height: 32px;
+	padding: 3px;
+	border: 1px solid #a8b9c8;
+	border-radius: 6px;
+	background: #f6faf0e6;
+	color: #263b4b;
+	display: grid;
+	place-items: center;
 }
 [data-status-icons] img {
-	width: 22px;
-	height: 22px;
+	width: 24px;
+	height: 24px;
+}
+@media (max-height: 500px) {
+	.status-effects {
+		grid-template-rows: repeat(2, 32px);
+	}
 }
 .panel header {
 	flex-shrink: 0;

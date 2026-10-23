@@ -296,7 +296,7 @@ it('preserves server dialogs and local menus across browser suspension', () => {
 
 it('opens standalone camera controls next to status and clears transparent styling on other panels', () => {
  actions.camera=vi.fn();
- expect([...root.querySelectorAll('.profile-actions [data-panel]')].map(node => node.dataset.panel)).toEqual(['menu', 'status', 'chat', 'camera']);
+ expect([...root.querySelectorAll('.profile-actions [data-panel]')].map(node => node.dataset.panel)).toEqual(['menu', 'quests', 'chat', 'camera']);
  click('[data-panel=camera]');
  expect(root.querySelector('h2').textContent).toBe('镜头');
  expect(root.querySelector('.backdrop').classList.contains('camera-backdrop')).toBe(true);
@@ -398,4 +398,18 @@ it('dismisses the chat modal after sending an emotion command', () => {
  expect(actions.sendChat).toHaveBeenCalledWith('/lv', 'public', '');
  expect(root.querySelector('.backdrop').hidden).toBe(true);
  expect(actions.setModal).toHaveBeenLastCalledWith(false);
+});
+
+it('renders every status and opens the tapped effect while retaining nodes across ticks', () => {
+ const statuses = Array.from({length: 13}, (_, i) => ({id: i + 1, title: `状态${i + 1}`, description: `说明${i + 1}`, seconds: 30, icon: state.statuses[0].icon}));
+ view.update({...state, statuses});
+ expect(root.querySelectorAll('.status-effect')).toHaveLength(13);
+ const button = root.querySelector('[data-effect="11"]');
+ button.click();
+ expect(root.querySelector('.inventory-detail').textContent).toBe('说明11');
+ view.update({...state, statuses: statuses.map(s => ({...s, seconds: 29}))});
+ expect(root.querySelector('[data-effect="11"]')).toBe(button);
+ expect(button.getAttribute('aria-label')).toBe('状态11 · 29秒');
+ view.update({...state, statuses: []});
+ expect(root.querySelectorAll('.status-effect')).toHaveLength(0);
 });

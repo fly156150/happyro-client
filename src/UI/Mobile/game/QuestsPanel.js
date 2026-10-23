@@ -27,7 +27,7 @@ export function createQuestsPanel(body, actions) {
 				node.remove();
 				nodes.delete(id);
 			}
-		if (selected !== null && !ids.has(selected)) selected = null;
+		if (!ids.has(selected)) selected = quests[0]?.questID ?? null;
 		for (const q of quests) {
 			let node = nodes.get(q.questID);
 			if (!node) {

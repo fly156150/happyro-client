@@ -44,9 +44,6 @@
 	padding: 4px 2px;
 	white-space: nowrap;
 }
-:host([data-menu-arrangement='stacked']) .profile-actions [data-status-icons] {
-	display: none;
-}
 
 :host([data-menu-arrangement='stacked']) {
 	--portrait-map-width: 115.2px;
@@ -78,7 +75,7 @@
 }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .portrait-chat-button { display: none; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .profile-actions {
- display: flex; align-items: flex-start; gap: 8px;
+ display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px;
 }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .profile-actions button {
  flex: 0 0 auto; min-height: 30px; padding: 4px 9px;

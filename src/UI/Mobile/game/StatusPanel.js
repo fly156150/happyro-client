@@ -14,6 +14,10 @@ export function createStatusPanel(body) {
 		for (const [id, node] of nodes) node.setAttribute('aria-pressed', String(id === selected));
 	}
 	return {
+		select(id) {
+			selected = id;
+			showSelection();
+		},
 		update(next) {
 			statuses = next;
 			const ids = new Set(statuses.map(status => status.id));

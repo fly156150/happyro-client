@@ -113,7 +113,7 @@ StatusIcons.getSnapshot = function () {
 				title: lines[0] || '未知状态',
 				description: lines.slice(1).join('\n'),
 				seconds,
-				icon: status.img?.src
+				icon: status.icon
 			};
 		});
 };
@@ -192,6 +192,7 @@ function loadStatusIcon(index) {
 function addResizedStatusIcon(img, index) {
 	if (img.width < 33 && img.height < 33) {
 		_status[index].img = img;
+		_status[index].icon = img.toDataURL();
 		addElement(_status[index].element);
 		return;
 	}
@@ -219,6 +220,7 @@ function addResizedStatusIcon(img, index) {
 	resizedImg.src = canvas.toDataURL();
 	resizedImg.onload = () => {
 		_status[index].img = resizedImg;
+		_status[index].icon = resizedImg.src;
 		addElement(_status[index].element);
 	};
 }

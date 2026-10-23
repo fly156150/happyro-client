@@ -15,7 +15,7 @@ it('waits for server state and rejects stale, completed or disconnected requests
 });
 it('updates progress without replacing list nodes and opens navigation targets without HTML execution',()=>{
  const body=document.createElement('div');const service=createGameQuests(()=>true);const showMap=vi.fn();const panel=createQuestsPanel(body,{...service,showMap});
- const button=body.querySelector('[data-quest]');button.click();expect(body.textContent).toContain('波利：2 / 5');expect(body.querySelector('navi')).toBeNull();
+ const button=body.querySelector('[data-quest]');expect(button.getAttribute('aria-pressed')).toBe('true');expect(body.textContent).toContain('波利：2 / 5');button.click();expect(body.textContent).toContain('波利：2 / 5');expect(body.querySelector('navi')).toBeNull();
  s.quests[0].hunt_list[0].huntCount=3;panel.update();expect(body.querySelector('[data-quest]')).toBe(button);expect(body.textContent).toContain('波利：3 / 5');
  [...body.querySelectorAll('button')].find(b=>b.textContent==='查看地图：城门').click();expect(showMap).toHaveBeenCalledWith(expect.objectContaining({id:'prontera'}));
  s.quests=[];panel.update();expect(body.textContent).toContain('当前分类没有任务');expect(body.textContent).not.toContain('波利');

@@ -73,3 +73,11 @@
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-slot-title] {
  display: block; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+
+/* Keep filters at the bottom even when the candidate list has only one row. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='shortcuts'] .shortcut-choices {
+	flex: 1 1 0;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='shortcuts'] .shortcut-filters {
+	margin-top: auto;
+}
