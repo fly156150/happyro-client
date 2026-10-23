@@ -793,7 +793,7 @@ function onMapChange(pkt, forceReload = false) {
 	MapRenderer.onLoad = () => {
 		if (!isCurrentLoad()) return;
 		Session.Entity.set({
-			PosDir: [pkt.xPos, pkt.yPos, 0],
+			PosDir: [pkt.xPos, pkt.yPos, 4],
 			// Use Session.AID rather than Session.Entity.GID here:
 			// EntityManager removes Session.Entity during map transition, which
 			// triggers Entity.clean() and sets this.GID = -1. Reading the GID
