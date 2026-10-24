@@ -406,10 +406,10 @@ const MapInfo = {
 	'pvp_y_4-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 伊斯鲁得房间'
+			mainTitle: 'PvP 依斯鲁得房间'
 		},
 		notifyEnter: true,
-		displayName: 'PvP：伊斯鲁得房间'
+		displayName: 'PvP：依斯鲁得房间'
 	},
 	'1@vrhha.rsw': {
 		backgroundBmp: 'noname',
@@ -567,10 +567,10 @@ const MapInfo = {
 	'pvp_y_6-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（伊兹鲁德）'
+			mainTitle: 'PvP 房间（依斯鲁得）'
 		},
 		notifyEnter: true,
-		displayName: 'PvP：伊兹鲁德房间'
+		displayName: 'PvP：依斯鲁得房间'
 	},
 	'1@swat.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -600,10 +600,10 @@ const MapInfo = {
 	'pvp_y_5-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（伊兹鲁德）'
+			mainTitle: 'PvP 房间（依斯鲁得）'
 		},
 		notifyEnter: true,
-		displayName: 'PvP：伊兹鲁德房间'
+		displayName: 'PvP：依斯鲁得房间'
 	},
 	'pvp_c_room.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -747,7 +747,7 @@ const MapInfo = {
 		backgroundBmp: 'field',
 		signName: {
 			mainTitle: '可可莫海滩',
-			subTitle: '科摩多'
+			subTitle: '科莫多'
 		},
 		notifyEnter: true,
 		displayName: '可可莫海滩'
@@ -1430,11 +1430,11 @@ const MapInfo = {
 	'lasa_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '馄饨平原边境哨所',
-			subTitle: '拉萨格'
+			mainTitle: '拉比奥尔平原哨所',
+			subTitle: '拉萨格纳'
 		},
 		notifyEnter: true,
-		displayName: '馄饨平原边境哨所'
+		displayName: '拉比奥尔平原哨所'
 	},
 	'air_if.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -1619,7 +1619,7 @@ const MapInfo = {
 		backgroundBmp: 'field',
 		signName: {
 			mainTitle: '真海沼泽',
-			subTitle: '科摩多'
+			subTitle: '科莫多'
 		},
 		notifyEnter: true,
 		displayName: '真海沼泽'
@@ -1710,10 +1710,10 @@ const MapInfo = {
 	'pvp_y_2-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 伊兹鲁德房间'
+			mainTitle: 'PvP 依斯鲁得房间'
 		},
 		notifyEnter: true,
-		displayName: 'PvP：伊兹鲁德房间'
+		displayName: 'PvP：依斯鲁得房间'
 	},
 	'wizard_2-1.rsw': {
 		displayName: '巫师学院'
@@ -2041,7 +2041,7 @@ const MapInfo = {
 		displayName: '公会竞技场'
 	},
 	'izlude_in.rsw': {
-		displayName: '伊斯鲁得内部'
+		displayName: '依斯鲁得内部'
 	},
 	'new_5-1.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2226,10 +2226,10 @@ const MapInfo = {
 	'treasure_n1.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '伊斯鲁得沉船 B1'
+			mainTitle: '依斯鲁得沉船 B1'
 		},
 		notifyEnter: true,
-		displayName: '伊斯鲁得沉船 B1'
+		displayName: '依斯鲁得沉船 B1'
 	},
 	'1@lost.rsw': {
 		backgroundBmp: 'dungeon',
@@ -2670,11 +2670,11 @@ const MapInfo = {
 	'izlude_b.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '伊兹鲁德',
+			mainTitle: '依斯鲁得',
 			subTitle: '卢恩·米德加尔兹王国'
 		},
 		notifyEnter: true,
-		displayName: '伊兹鲁德'
+		displayName: '依斯鲁得'
 	},
 	'herosria.rsw': {
 		backgroundBmp: 'siege',
@@ -3527,10 +3527,10 @@ const MapInfo = {
 	'lasa_fild02.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'Ravioli Forest'
+			mainTitle: '拉比奥尔森林'
 		},
 		notifyEnter: true,
-		displayName: 'Ravioli Forest'
+		displayName: '拉比奥尔森林'
 	},
 	'1@spa.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -4021,10 +4021,10 @@ const MapInfo = {
 	'ein_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '艾因布洛克原野'
+			mainTitle: '艾音布罗克原野'
 		},
 		notifyEnter: true,
-		displayName: '艾因布洛克原野'
+		displayName: '艾音布罗克原野'
 	},
 	'jor_safty1.rsw': {
 		backgroundBmp: 'field2_s1',
@@ -4471,11 +4471,11 @@ const MapInfo = {
 	'izlude_c.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '伊斯鲁得',
+			mainTitle: '依斯鲁得',
 			subTitle: '卢恩-米德加尔特王国'
 		},
 		notifyEnter: true,
-		displayName: '伊斯鲁得'
+		displayName: '依斯鲁得'
 	},
 	's_atelier.rsw': {
 		displayName: '暗影工坊'
@@ -4491,10 +4491,10 @@ const MapInfo = {
 	'pvp_y_1-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 伊斯鲁得房间'
+			mainTitle: 'PvP 依斯鲁得房间'
 		},
 		notifyEnter: true,
-		displayName: 'PvP：伊斯鲁得房间'
+		displayName: 'PvP：依斯鲁得房间'
 	},
 	'spl_in02.rsw': {
 		displayName: '斯普兰迪德内部'
@@ -4619,11 +4619,11 @@ const MapInfo = {
 	'izlude_a.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '伊兹鲁德',
+			mainTitle: '依斯鲁得',
 			subTitle: '卢恩·米德加尔兹王国'
 		},
 		notifyEnter: true,
-		displayName: '伊兹鲁德'
+		displayName: '依斯鲁得'
 	},
 	'jupe_core2.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -6027,11 +6027,11 @@ const MapInfo = {
 	'comodo.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '海底洞窟',
+			mainTitle: '科莫多',
 			subTitle: '卢恩-米德加尔特王国的海滨城镇'
 		},
 		notifyEnter: true,
-		displayName: '海底洞窟'
+		displayName: '科莫多'
 	},
 	'knight_2-1.rsw': {
 		displayName: '骑士团'
@@ -6074,10 +6074,10 @@ const MapInfo = {
 	'ein_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '艾因布洛克原野'
+			mainTitle: '艾音布罗克原野'
 		},
 		notifyEnter: true,
-		displayName: '艾因布洛克原野'
+		displayName: '艾音布罗克原野'
 	},
 	'gl_step.rsw': {
 		backgroundBmp: 'dungeon',
@@ -6122,10 +6122,10 @@ const MapInfo = {
 	'ein_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '艾因布洛克原野'
+			mainTitle: '艾音布罗克原野'
 		},
 		notifyEnter: true,
-		displayName: '艾因布洛克原野'
+		displayName: '艾音布罗克原野'
 	},
 	'moc_fild22.rsw': {
 		backgroundBmp: 'field',
@@ -6206,7 +6206,7 @@ const MapInfo = {
 		backgroundBmp: 'field',
 		signName: {
 			mainTitle: '贝尔兰岛',
-			subTitle: '伊斯鲁得'
+			subTitle: '依斯鲁得'
 		},
 		notifyEnter: true,
 		displayName: '贝尔兰岛'
@@ -6214,11 +6214,11 @@ const MapInfo = {
 	'izlude.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '伊斯鲁得',
+			mainTitle: '依斯鲁得',
 			subTitle: '卢恩-米德加尔特王国'
 		},
 		notifyEnter: true,
-		displayName: '伊斯鲁得'
+		displayName: '依斯鲁得'
 	},
 	'payon_in02.rsw': {
 		displayName: '斐扬内部'
@@ -6304,7 +6304,7 @@ const MapInfo = {
 		displayName: '战斗试炼模式'
 	},
 	'hu_in01.rsw': {
-		displayName: '胡戈尔内部'
+		displayName: '胡格尔内部'
 	},
 	'ordeal_3-3.rsw': {
 		displayName: '战斗试炼模式'
@@ -6356,10 +6356,10 @@ const MapInfo = {
 	'pvp_y_8-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 伊斯鲁得房间'
+			mainTitle: 'PvP 依斯鲁得房间'
 		},
 		notifyEnter: true,
-		displayName: 'PvP：伊斯鲁得房间'
+		displayName: 'PvP：依斯鲁得房间'
 	},
 	'lhz_dun04.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -6553,7 +6553,7 @@ const MapInfo = {
 		displayName: '金字塔内部 2层'
 	},
 	'job_duncer.rsw': {
-		displayName: '科摩多剧院'
+		displayName: '科莫多剧院'
 	},
 	'sp_cor.rsw': {
 		backgroundBmp: 'field',
@@ -6707,7 +6707,7 @@ const MapInfo = {
 		backgroundBmp: 'field',
 		signName: {
 			mainTitle: '可可莫海滩',
-			subTitle: '科摩多'
+			subTitle: '科莫多'
 		},
 		notifyEnter: true,
 		displayName: '可可莫海滩'
@@ -7021,7 +7021,7 @@ const MapInfo = {
 		backgroundBmp: 'field',
 		signName: {
 			mainTitle: '帕普奇查森林',
-			subTitle: '科摩多'
+			subTitle: '科莫多'
 		},
 		notifyEnter: true,
 		displayName: '帕普奇查森林'
@@ -8158,7 +8158,7 @@ const MapInfo = {
 		backgroundBmp: 'dungeon',
 		signName: {
 			mainTitle: '海底隧道 B6',
-			subTitle: '伊斯鲁得'
+			subTitle: '依斯鲁得'
 		},
 		notifyEnter: true,
 		displayName: '海底隧道 B6'
@@ -8421,7 +8421,7 @@ const MapInfo = {
 		displayName: '梦罗克伊甸园集团内部'
 	},
 	'que_dan01.rsw': {
-		displayName: '胡戈尔原野'
+		displayName: '胡格尔原野'
 	}
 };
 

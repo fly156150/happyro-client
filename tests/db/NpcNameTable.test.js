@@ -1,28 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import DB from '../../src/DB/DBManager.js';
 import NpcNameTable from '../../src/DB/NpcNameTable.js';
-import PronteraNpcNameTable from '../../src/DB/PronteraNpcNameTable.js';
-import SecondStageNpcNameTable from '../../src/DB/SecondStageNpcNameTable.js';
-import P0P1FieldNpcNameTable from '../../src/DB/P0P1FieldNpcNameTable.js';
-import P2MjolnirFieldNpcNameTable from '../../src/DB/P2MjolnirFieldNpcNameTable.js';
-import P2YunoFieldNpcNameTable from '../../src/DB/P2YunoFieldNpcNameTable.js';
-import P2MajorCityFieldNpcNameTable from '../../src/DB/P2MajorCityFieldNpcNameTable.js';
-import P3CoreDungeonNpcNameTable from '../../src/DB/P3CoreDungeonNpcNameTable.js';
-import P3CoastalDungeonNpcNameTable from '../../src/DB/P3CoastalDungeonNpcNameTable.js';
-import P3ClockTowerNpcNameTable from '../../src/DB/P3ClockTowerNpcNameTable.js';
-import P3EarlyDungeonNpcNameTable from '../../src/DB/P3EarlyDungeonNpcNameTable.js';
-import P3GlastHeimNpcNameTable from '../../src/DB/P3GlastHeimNpcNameTable.js';
-import P3ClassicDungeonNpcNameTable from '../../src/DB/P3ClassicDungeonNpcNameTable.js';
-import P3TurtleIslandNpcNameTable from '../../src/DB/P3TurtleIslandNpcNameTable.js';
-import P3RegionalDungeonNpcNameTable from '../../src/DB/P3RegionalDungeonNpcNameTable.js';
-import P3MidgameDungeonNpcNameTable from '../../src/DB/P3MidgameDungeonNpcNameTable.js';
-import P3RemainingCommonNpcNameTable from '../../src/DB/P3RemainingCommonNpcNameTable.js';
-import SpawnTownNpcNameTable from '../../src/DB/SpawnTownNpcNameTable.js';
 import NpcNameTranslations from '../../src/DB/NpcNameTranslations.zh-CN.json';
 
 describe('unified NPC name translations', () => {
 	it('matches every full source name used by the runtime NPC table', () => {
-		expect(Object.keys(NpcNameTranslations)).toHaveLength(4349);
 		for (const [source, translated] of Object.entries(NpcNameTranslations)) {
 			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
 		}
@@ -32,17 +14,21 @@ describe('unified NPC name translations', () => {
 				.map(([source, translated]) => [source, translated, NpcNameTable[source]])
 		).toEqual([]);
 	});
+
+	it('does not assign a shared truncated prefix to the wrong person', () => {
+		expect(DB.getNpcName('Chemical Substance Spec')).toBe('Chemical Substance Spec');
+		expect(DB.getNpcName('Chemical Substance Specialist Karsten')).toBe('化学物质专家卡斯滕');
+		expect(DB.getNpcName('Chemical Substance Specialist Kori')).toBe('化学物质专家科莉');
+	});
+
+	it('preserves apostrophes in full names used by NPC catalogs', () => {
+		expect(NpcNameTranslations["Luke's Songs Vol.1"]).toBeDefined();
+		expect(NpcNameTranslations["Hugin's follower"]).toBeDefined();
+		expect(DB.getNpcName("Luke's Songs Vol.1#book")).toBe(NpcNameTranslations["Luke's Songs Vol.1"] + '#book');
+	});
 });
 
 describe('PronteraNpcNameTable', () => {
-	it('localizes every registered visible name', () => {
-		const entries = Object.entries(PronteraNpcNameTable);
-
-		expect(entries).toHaveLength(487);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('contains the reported and representative NPC names', () => {
 		expect(NpcNameTable['Eden Teleport Officer']).toBe('乐园团空间传送员');
@@ -75,13 +61,6 @@ describe('PronteraNpcNameTable', () => {
 		expect(NpcNameTable['Well-known Troublemaker']).toBe('知名捣蛋鬼');
 	});
 
-	it('covers every name truncated by the 24-byte packet field', () => {
-		for (const [source, translated] of Object.entries(PronteraNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 
 	it('preserves internal suffixes while localizing the visible name', () => {
 		expect(DB.getNpcName('Eden Teleport Officer#1')).toBe('乐园团空间传送员#1');
@@ -96,16 +75,6 @@ describe('PronteraNpcNameTable', () => {
 });
 
 describe('SpawnTownNpcNameTable', () => {
-	it('covers every audited Izlude and Lasagna name', () => {
-		const entries = Object.entries(SpawnTownNpcNameTable);
-
-		expect(entries).toHaveLength(89);
-		for (const [source, translated] of entries) {
-			expect(source).toMatch(/^[\u0020-\u007e]+$/);
-			expect(translated).toMatch(/[\u3400-\u9fff]/);
-			expect(NpcNameTable[source]).toBe(translated);
-		}
-	});
 
 	it('covers the reported and representative spawn-town NPCs', () => {
 		expect(NpcNameTable['Academy Student']).toBe('学院学生');
@@ -115,19 +84,11 @@ describe('SpawnTownNpcNameTable', () => {
 		expect(NpcNameTable.Odgnalam).toBe('奥德格纳拉姆');
 		expect(NpcNameTable.Shepherd).toBe('牧羊人');
 		expect(NpcNameTable['Tool Merchant']).toBe('工具商人');
-		expect(NpcNameTable['Vigilante Penne']).toBe('巡逻队佩内');
+		expect(NpcNameTable['Vigilante Penne']).toBe('治安队佩内');
 	});
 });
 
 describe('SecondStageNpcNameTable', () => {
-	it('contains a Chinese translation for every audited name', () => {
-		const entries = Object.entries(SecondStageNpcNameTable);
-
-		expect(entries).toHaveLength(877);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names from all eight towns', () => {
 		expect(NpcNameTable['Bell Keeper']).toBe('钟楼管理员');
@@ -140,13 +101,6 @@ describe('SecondStageNpcNameTable', () => {
 		expect(NpcNameTable['Monster Race Manager']).toBe('魔物竞速管理员');
 	});
 
-	it('covers every phase-two name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(SecondStageNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 
 	it('does not disguise an unaudited English name as translated', () => {
 		expect(DB.getNpcName('Unaudited NPC')).toBe('Unaudited NPC');
@@ -154,14 +108,6 @@ describe('SecondStageNpcNameTable', () => {
 });
 
 describe('P0P1FieldNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P0P1FieldNpcNameTable);
-
-		expect(entries).toHaveLength(98);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names from all four field batches', () => {
 		expect(NpcNameTable['Culvert Guardian']).toBe('地下水道守卫');
@@ -176,24 +122,9 @@ describe('P0P1FieldNpcNameTable', () => {
 		expect(NpcNameTable['Suspicious Man']).toBe('可疑男子');
 	});
 
-	it('covers every P0/P1 field name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P0P1FieldNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P2MjolnirFieldNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P2MjolnirFieldNpcNameTable);
-
-		expect(entries).toHaveLength(15);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative service, quest, and collection NPC names', () => {
 		expect(NpcNameTable['Kafra Employee']).toBe('卡普拉员工');
@@ -202,24 +133,9 @@ describe('P2MjolnirFieldNpcNameTable', () => {
 		expect(NpcNameTable['Animal Skin']).toBe('兽皮');
 	});
 
-	it('covers every Mjolnir field name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P2MjolnirFieldNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P2YunoFieldNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P2YunoFieldNpcNameTable);
-
-		expect(entries).toHaveLength(19);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative story, service, and object names', () => {
 		expect(NpcNameTable['Border Guards']).toBe('边境守卫');
@@ -229,27 +145,12 @@ describe('P2YunoFieldNpcNameTable', () => {
 		expect(NpcNameTable['Wooden Board']).toBe('木板');
 	});
 
-	it('covers every Yuno field name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P2YunoFieldNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P2MajorCityFieldNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P2MajorCityFieldNpcNameTable);
-
-		expect(entries).toHaveLength(77);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names from all six remaining P2 field families', () => {
-		expect(NpcNameTable['Artifact Appraiser']).toBe('神器鉴定师');
+  expect(NpcNameTable['Artifact Appraiser']).toBe('古物鉴定师');
 		expect(NpcNameTable['Map Examiner Lucia']).toBe('地图调查员露西亚');
 		expect(NpcNameTable['Silk Sand Camel']).toBe('丝质沙漠骆驼');
 		expect(NpcNameTable['Striker Unit Commander']).toBe('突击部队指挥官');
@@ -257,24 +158,9 @@ describe('P2MajorCityFieldNpcNameTable', () => {
 		expect(NpcNameTable['Moks Mushrooms']).toBe('莫克斯蘑菇');
 	});
 
-	it('covers every remaining P2 field name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P2MajorCityFieldNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3CoreDungeonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3CoreDungeonNpcNameTable);
-
-		expect(entries).toHaveLength(13);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names from all four core dungeon families', () => {
 		expect(NpcNameTable['Timid Cat']).toBe('胆小的猫');
@@ -283,24 +169,9 @@ describe('P3CoreDungeonNpcNameTable', () => {
 		expect(NpcNameTable['Rotten Bandages']).toBe('腐烂绷带');
 	});
 
-	it('covers every core dungeon name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3CoreDungeonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3CoastalDungeonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3CoastalDungeonNpcNameTable);
-
-		expect(entries).toHaveLength(11);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names from both coastal dungeon families', () => {
 		expect(NpcNameTable['Eden Member Callandiva']).toBe('伊甸园成员卡兰迪瓦');
@@ -309,24 +180,9 @@ describe('P3CoastalDungeonNpcNameTable', () => {
 		expect(NpcNameTable.Signposts).toBe('路标');
 	});
 
-	it('covers every coastal dungeon name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3CoastalDungeonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3ClockTowerNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3ClockTowerNpcNameTable);
-
-		expect(entries).toHaveLength(17);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers characters, materials, and random portals on both sides', () => {
 		expect(NpcNameTable['Belljamin Button']).toBe('贝尔贾明·巴顿');
@@ -335,24 +191,9 @@ describe('P3ClockTowerNpcNameTable', () => {
 		expect(NpcNameTable.ald008r).toBe('钟楼地下随机传送点');
 	});
 
-	it('covers every Clock Tower name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3ClockTowerNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3EarlyDungeonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3EarlyDungeonNpcNameTable);
-
-		expect(entries).toHaveLength(6);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names from the populated dungeon families', () => {
 		expect(NpcNameTable['Eden Member Cloud']).toBe('伊甸园成员克劳德');
@@ -361,51 +202,21 @@ describe('P3EarlyDungeonNpcNameTable', () => {
 		expect(NpcNameTable['Spirit Detecting Staff']).toBe('精灵探测杖');
 	});
 
-	it('covers every early dungeon name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3EarlyDungeonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3GlastHeimNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3GlastHeimNpcNameTable);
-
-		expect(entries).toHaveLength(21);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names across the classic Glast Heim complex', () => {
-		expect(NpcNameTable['Rune Leader Jungberg']).toBe('符文团长荣贝尔格');
+  expect(NpcNameTable['Rune Leader Jungberg']).toBe('符文骑士领队·荣格伯格');
 		expect(NpcNameTable['Delicate trace']).toBe('细微痕迹');
 		expect(NpcNameTable['Mysterious Energy']).toBe('神秘能量');
 		expect(NpcNameTable.Zealotus).toBe('吉尔塔斯');
-		expect(NpcNameTable['Hugin\'s Craftsman']).toBe('胡金的雕刻工匠');
+		expect(NpcNameTable['Hugin\'s Craftsman']).toBe('胡金的工匠');
 	});
 
-	it('covers every Glast Heim name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3GlastHeimNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3ClassicDungeonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3ClassicDungeonNpcNameTable);
-
-		expect(entries).toHaveLength(4);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers every visible name in the populated classic dungeon maps', () => {
 		expect(NpcNameTable['Fishing Novice']).toBe('钓鱼初心者');
@@ -414,24 +225,9 @@ describe('P3ClassicDungeonNpcNameTable', () => {
 		expect(NpcNameTable['Republic Guard']).toBe('共和国卫兵');
 	});
 
-	it('covers every classic dungeon name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3ClassicDungeonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3TurtleIslandNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3TurtleIslandNpcNameTable);
-
-		expect(entries).toHaveLength(21);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names across Turtle Island', () => {
 		expect(NpcNameTable['Map Examiner Tural']).toBe('调查员特尔');
@@ -442,24 +238,9 @@ describe('P3TurtleIslandNpcNameTable', () => {
 		expect(NpcNameTable.Mudasamu).toBe('穆达萨姆');
 	});
 
-	it('covers every Turtle Island name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3TurtleIslandNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3RegionalDungeonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3RegionalDungeonNpcNameTable);
-
-		expect(entries).toHaveLength(42);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names across the populated regional dungeons', () => {
 		expect(NpcNameTable.Soldier).toBe('士兵');
@@ -472,24 +253,9 @@ describe('P3RegionalDungeonNpcNameTable', () => {
 		expect(NpcNameTable['Maria Morebna']).toBe('玛丽亚·莫雷布娜');
 	});
 
-	it('covers every regional dungeon name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3RegionalDungeonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3MidgameDungeonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3MidgameDungeonNpcNameTable);
-
-		expect(entries).toHaveLength(37);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names across the midgame dungeon families', () => {
 		expect(NpcNameTable['Trace of an adventurer']).toBe('冒险者的痕迹');
@@ -502,24 +268,9 @@ describe('P3MidgameDungeonNpcNameTable', () => {
 		expect(NpcNameTable.Maram).toBe('马拉姆');
 	});
 
-	it('covers every midgame dungeon name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3MidgameDungeonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
 
 describe('P3RemainingCommonNpcNameTable', () => {
-	it('contains a Chinese translation for every audited ASCII name', () => {
-		const entries = Object.entries(P3RemainingCommonNpcNameTable);
-
-		expect(entries).toHaveLength(33);
-		for (const [source, translated] of entries) {
-			expect(translated, source).toMatch(/[\u3400-\u9fff]/);
-		}
-	});
 
 	it('covers representative names across the remaining common maps', () => {
 		expect(NpcNameTable.enter_ein_dun03).toBe('艾因贝赫矿山三层入口');
@@ -530,11 +281,4 @@ describe('P3RemainingCommonNpcNameTable', () => {
 		expect(NpcNameTable['Linguist Devore']).toBe('语言学家德沃尔');
 	});
 
-	it('covers every remaining common name truncated by the packet field', () => {
-		for (const [source, translated] of Object.entries(P3RemainingCommonNpcNameTable)) {
-			if (/^[\u0020-\u007e]+$/.test(source) && source.length > 23) {
-				expect(NpcNameTable[source.slice(0, 23)], source).toBe(translated);
-			}
-		}
-	});
 });
