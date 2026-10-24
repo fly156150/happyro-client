@@ -56,13 +56,17 @@ beforeEach(() => {
 });
 afterEach(() => { HUD.onRemove(); vi.useRealTimers(); vi.restoreAllMocks(); });
 it('replaces subscriptions and timers on repeat mounting and releases all on map removal', () => {
+	// Application-wide cache cleanup subscriptions outlive the map-scoped HUD.
+	const connections = new Set(state.connection);
 	HUD.onAppend(); HUD.onAppend();
 	expect(vi.getTimerCount()).toBe(1);
-	for (const listeners of [state.feed, state.orientation, state.connection]) expect(listeners.size).toBe(1);
+	for (const listeners of [state.feed, state.orientation]) expect(listeners.size).toBe(1);
+	expect(state.connection.size).toBe(connections.size + 1);
 	state.actions.setModal(true); expect(state.Session.FreezeUI).toBe(true);
 	HUD.onRemove();
 	expect(state.Session.FreezeUI).toBe(false); expect(vi.getTimerCount()).toBe(0);
-	for (const listeners of [state.feed, state.orientation, state.connection]) expect(listeners.size).toBe(0);
+	for (const listeners of [state.feed, state.orientation]) expect(listeners.size).toBe(0);
+	expect(state.connection).toEqual(connections);
 	const calls = state.view.update.mock.calls.length; vi.advanceTimersByTime(1000);
 	expect(state.view.update).toHaveBeenCalledTimes(calls);
 });

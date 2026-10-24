@@ -73,11 +73,11 @@ describe('world map navigation', () => {
 		expect(showHandler).toContain('this.ui.show()');
 	});
 
-	it('opens navigation when the minimap canvas is clicked', () => {
-		expect(miniMapSource).toContain("import('UI/Components/Navigation/Navigation.js')");
+	it('opens adventure maps when the minimap canvas is clicked', () => {
+		expect(miniMapSource).toContain("import('UI/Components/GameTools/GameTools.js')");
 		expect(miniMapSource).toContain('root.addEventListener(');
 		expect(miniMapSource).toContain('mapCanvas.getBoundingClientRect()');
-		expect(miniMapSource).toContain('Navigation.showCurrentMap()');
+		expect(miniMapSource).toContain('GameTools.showMap()');
 		expect(navigationSource).toContain("this.setActionStatus('点击地图寻路/传送')");
 		expect(navigationSource).toContain('if (_autoWalkActive || _autoWalkRequested)');
 	});
