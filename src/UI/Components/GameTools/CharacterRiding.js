@@ -44,7 +44,7 @@ export function ridingConfirmation(row) {
 		return '确认下骑？';
 	}
 	if (row.kind === 'warg') return '确认召唤战狼？需携带狼笛，并按技能规则消耗 SP。';
-	if (row.kind === 'hawk') return '确认召唤鹰？需携带猎鹰笛，并按技能规则消耗 SP。';
+	if (row.kind === 'hawk') return '确认召唤鹰？需携带猎鹰魔笛，并按技能规则消耗 SP。';
 	if (row.kind === 'warg_rider') return '确认骑乘战狼？将按技能规则消耗 SP。';
 	const operation = ['peco', 'dragon', 'gryphon'].includes(row.kind) ? '骑乘' : `${actions[row.kind].enable}${names[row.kind]}`;
 	return `确认${operation}？${row.ticket ? '将消耗手推车免费使用券 ×1。' : row.fee ? `需支付 ${row.fee.toLocaleString()} Zeny。` : ''}`;

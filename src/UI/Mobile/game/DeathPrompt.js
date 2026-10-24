@@ -47,9 +47,9 @@ export function createDeathPrompt(parent, actions, reopenParent) {
 		const hasToken = state.tokenCount > 0;
 		heading.textContent = confirming ? '使用复活道具' : '角色已倒下';
 		$('#death-description').textContent = confirming
-			? '消耗 1 个齐格弗里德的证明？' : '';
+			? '消耗 1 个原地复活之证？' : '';
 		$('#death-description').hidden = !confirming;
-		$('[data-revive]').textContent = `使用齐格弗里德的证明 ×${state.tokenCount}`;
+		$('[data-revive]').textContent = `使用原地复活之证 ×${state.tokenCount}`;
 		$('[data-revive]').hidden = confirming || !hasToken;
 		$('[data-return]').hidden = confirming;
 		$('[data-wait]').hidden = confirming;
