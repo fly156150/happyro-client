@@ -107,6 +107,15 @@ function onMouseDown(event) {
 				combatHandledClick = true;
 				return;
 			}
+			if (entityOver === Session.Entity && !KEYS.ALT && !KEYS.SHIFT && !KEYS.CTRL && Mouse.state !== Mouse.MOUSE_STATE.USESKILL) {
+				clearAttackIntent();
+				notifyGameInput('action');
+				if (entityFocus && entityFocus !== entityOver) entityFocus.onFocusEnd();
+				EntityManager.setFocusEntity(entityOver);
+				Session.moveAction = null;
+				Session.autoFollow = false;
+				return;
+			}
 			clearAttackIntent();
 			if (entityOver || Mouse.state === Mouse.MOUSE_STATE.USESKILL) notifyGameInput('action');
 			if (!KEYS.SHIFT && KEYS.ALT && !KEYS.CTRL) {
@@ -127,7 +136,7 @@ function onMouseDown(event) {
 				let stop = false;
 				if (entityOver != Session.Entity) {
 					if (entityFocus && entityFocus != entityOver) {
-						if (!(Session.TouchTargeting && !entityOver)) {
+						if (!(Session.TouchTargeting && !entityOver && entityFocus !== Session.Entity)) {
 							entityFocus.onFocusEnd();
 							EntityManager.setFocusEntity(null);
 						}
@@ -238,7 +247,7 @@ function onMouseUp(event) {
 
 				// Touch Targeting retains any selected entity independently of /nc.
 				if (
-					!Session.TouchTargeting &&
+					!Session.TouchTargeting && entity !== Session.Entity &&
 					(Preferences.noctrl === false ||
 						![ET.TYPE_MOB, ET.TYPE_NPC_ABR, ET.TYPE_NPC_BIONIC].includes(entity.objecttype))
 				) {

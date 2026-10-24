@@ -96,8 +96,9 @@ button:focus-visible,
 .combat-dialog .auto-species-list:empty + .auto-range-settings { margin-top: 0; }
 
 /* Persistent desktop controls: state and action remain visible outside settings. */
-.combat-toolbar { display: flex; gap: 8px; pointer-events: auto; }
-.combat-toolbar .combat-launcher { width: 42px; height: 42px; }
+:host { --combat-action-size: 42px; --combat-action-gap: 8px; }
+.combat-toolbar { display: flex; gap: var(--combat-action-gap); pointer-events: auto; }
+.combat-toolbar .combat-launcher { width: var(--combat-action-size); height: var(--combat-action-size); }
 .combat-toolbar .combat-launcher[aria-checked='false'] { background-color: #e3e6e9; border-color: #aeb6bd; color: #68737d; opacity: .7; }
 .combat-toolbar .combat-launcher:is(:hover, :focus-visible, [aria-checked='true']) { background-color: #fff4d7; border-color: #af8841; color: #70511e; opacity: 1; }
 .combat-toolbar .combat-launcher[aria-checked='true'] { box-shadow: inset 0 0 0 1px #af8841, 0 2px 6px #0002; }

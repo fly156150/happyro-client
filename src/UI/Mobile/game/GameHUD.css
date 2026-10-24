@@ -189,6 +189,8 @@ button.surface,
 	pointer-events: auto;
 }
 .battle-status {
+	--target-action-height: 30px;
+	--target-action-padding: 4px 2px;
 	display: flex;
 	align-items: center;
 	gap: 6px;
@@ -1057,3 +1059,5 @@ dd {
  background: conic-gradient(var(--status-countdown-color) var(--status-countdown-angle), transparent 0);
  pointer-events: none;
 }
+
+.battle-status .death-reopen[hidden] { display: none; }

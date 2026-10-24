@@ -1,3 +1,4 @@
+vi.mock('UI/Components/GameTools/MonsterCatalogAssets.js', () => ({ loadMonsterCatalog: async () => ({ monsters: [{ id: 1001, element: 'Undead' }, { id: 1002, element: 'Water' }] }) }));
 vi.mock('UI/Components/Equipment/Equipment.js',()=>({default:{getUI:()=>({getItems:()=>[]})}}));
 vi.mock('Controls/MapControl.js',()=>({default:{}}));
 vi.mock('UI/Components/Guild/Guild.js', () => ({default:{getSocialSnapshot:()=>({skills:[]})}}));
@@ -6,7 +7,7 @@ const s = vi.hoisted(() => ({
 	session: { Playing: true, FreezeUI: false, Entity: { action: 0, ACTION: { DIE: 99 }, life: { sp: 10 } } },
 	skill: { SKID: 1, level: 3, type: 4, spcost: 15 },
 	bindings: [{ isSkill: true, ID: 1, count: 3 }],
-	items: [], companions: new Map(), homSkills: [], mercSkills: [],
+	pick: null, items: [], companions: new Map(), homSkills: [], mercSkills: [],
 	selection: { onUseSkillToId: vi.fn(), onUseSkillToPos: vi.fn(), checkMapState: () => false },
 	useItem: vi.fn(), configure: vi.fn(() => true)
 }));
@@ -34,10 +35,10 @@ vi.mock('Core/Client.js', () => ({
 }));
 vi.mock('Engine/SessionStorage.js', () => ({ default: s.session }));
 vi.mock('UI/Components/SkillListMH/SkillListMH.js',()=>({default:{homunculus:{getSkills:()=>s.homSkills},mercenary:{getSkills:()=>s.mercSkills}}}));
-vi.mock('Renderer/EntityManager.js', () => ({ default: { get:id=>s.companions.get(id), getFocusEntity: () => null, setSupportPicking: vi.fn() } }));
+vi.mock('Renderer/EntityManager.js', () => ({ default: { get:id=>s.companions.get(id), intersect:()=>s.pick, getFocusEntity: () => null, setSupportPicking: vi.fn() } }));
 vi.mock('Renderer/Camera.js', () => ({ default: {} }));
-vi.mock('Renderer/Map/Altitude.js', () => ({ default: {} }));
-vi.mock('Controls/MouseEventHandler.js', () => ({ default: {} }));
+vi.mock('Renderer/Map/Altitude.js', () => ({ default: { intersect: () => false } }));
+vi.mock('Controls/MouseEventHandler.js', () => ({ default: { screen: {} } }));
 import { createGameShortcuts } from '../../src/UI/Game/GameShortcuts.js';
 beforeEach(() => {
 	vi.clearAllMocks();
@@ -123,4 +124,30 @@ it('includes plain skill descriptions for the shortcut detail pane', () => {
  s.skill = { SKID: 1, level: 3, type: 4, spcost: 15 };
  const service=createGameShortcuts();
  expect(service.candidates().find(entry=>entry.isSkill && entry.ID===1).description).toBe('技能说明');
+});
+
+it('allows mobile Heal on live undead-element monsters, keeps player healing and rejects other support spells on monsters', async () => {
+ const old = s.skill;
+ const types = { TYPE_MOB: 1, TYPE_PC: 2 };
+ const mob = { GID: 50, job: 1001, objecttype: 1, constructor: types, ACTION: { DIE: 99 }, action: 0, remove_tick: 0 };
+ const player = { ...mob, GID: 51, objecttype: 2 };
+ s.companions.set(50, mob); s.companions.set(51, player);
+ s.skill = { SKID: 28, type: 16, level: 1, spcost: 1 };
+ s.bindings = [{ isSkill: true, ID: 28, count: 1 }];
+ const service = createGameShortcuts(); await new Promise(resolve => setTimeout(resolve, 0));
+ try {
+  s.pick = mob; service.use(0); service.pick(0, 0);
+  expect(s.selection.onUseSkillToId).toHaveBeenLastCalledWith(28, 1, 50, { allowMove: true });
+  s.selection.onUseSkillToId.mockClear();
+  mob.job = 1002; service.use(0); service.pick(0, 0);
+  expect(s.selection.onUseSkillToId).not.toHaveBeenCalled();
+  expect(service.snapshot().pending.message).toContain('不死属性');
+  s.pick = player; service.pick(0, 0);
+  expect(s.selection.onUseSkillToId).toHaveBeenLastCalledWith(28, 1, 51, { allowMove: true });
+  s.selection.onUseSkillToId.mockClear();
+  mob.job = 1001; mob.action = 99; s.pick = mob; service.use(0); service.pick(0, 0);
+  expect(s.selection.onUseSkillToId).not.toHaveBeenCalled(); service.cancel();
+  mob.action = 0; s.skill = { SKID: 29, type: 16, level: 1, spcost: 1 }; s.bindings[0].ID = 29;
+  service.use(0); service.pick(0, 0); expect(s.selection.onUseSkillToId).not.toHaveBeenCalled();
+ } finally { service.cancel(); s.skill = old; }
 });

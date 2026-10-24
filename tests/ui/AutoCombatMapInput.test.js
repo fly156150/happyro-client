@@ -59,3 +59,17 @@ it('never intercepts a pending manual skill as automatic retargeting', () => {
 	state.mouse.state = 1; state.over = monster(); mouse('mousedown');
 	expect(input).not.toHaveBeenCalledWith('attack-target', 42); expect(input).toHaveBeenCalledWith('action', undefined);
 });
+
+it('retains a self click without walking and clears it on a ground click', () => {
+ const self = { ...monster(), objecttype: 0 };
+ state.session.Entity = state.over = self;
+ mouse('mousedown'); mouse('mouseup');
+ expect(state.focus).toBe(self); expect(MapControl.onRequestWalk).not.toHaveBeenCalled();
+ state.over = null; mouse('mousedown');
+ expect(state.focus).toBeNull(); expect(MapControl.onRequestWalk).toHaveBeenCalledOnce();
+});
+it('also clears self selection on touch ground clicks', () => {
+ state.session.TouchTargeting = true;
+ state.session.Entity = state.focus = monster();
+ mouse('mousedown'); expect(state.focus).toBeNull();
+});

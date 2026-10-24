@@ -99,16 +99,25 @@ export function isEmotionFailure(pkt) {
 	return Boolean(pkt && !pkt.result && pkt.SKID === 1 && pkt.NUM === 1);
 }
 
+/** Server subtypes 1/2 identify emotion/sitting basic-skill level failures. */
+export function isBasicActionLevelFailure(pkt) {
+	return Boolean(pkt && !pkt.result && pkt.SKID === 1 && pkt.cause === 0 && [1, 2].includes(pkt.NUM));
+}
+
 const emotionFailureReasons = {
-	0: '发送表情需要「基础技能」Lv.2，或「新基础技能」Lv.1，请先在技能界面学习。',
 	4: '表情发送太快了，请稍后再试。',
 	11: '这个表情不能主动发送，请选择其它表情。',
 	23: '当前状态不能发送表情，请稍后再试。'
 };
 
 /** Keep server-provided quantities and item IDs; never infer an unreported cause. */
-export function skillFailMessage(pkt, { skillName, itemName } = {}) {
+export function skillFailMessage(pkt, { skillName, itemName, isDoram = false } = {}) {
 	if (!pkt || pkt.result) return '';
+	if (isBasicActionLevelFailure(pkt)) {
+		const name = isDoram ? '新基础技能' : '基础技能';
+		const level = isDoram ? 1 : pkt.NUM === 1 ? 2 : 3;
+		return `需要学习「${name}」Lv.${level}`;
+	}
 	if (isEmotionFailure(pkt) && emotionFailureReasons[pkt.cause]) return emotionFailureReasons[pkt.cause];
 	let reason = skillFailReasons[pkt.cause];
 	if (pkt.cause === 71 || pkt.cause === 72) {

@@ -1,3 +1,5 @@
+import { createSelfActions } from 'UI/Game/SelfActions.js';
+import { gameDeathSnapshot } from 'UI/Game/GameDeath.js';
 import { createScreenWakeLock } from './ScreenWakeLock.js';
 import { hasVisiblePixels, createAltitudeFallback } from 'UI/Components/MiniMap/MiniMapImage.js';
 import { createMobileInputEditor } from './MobileInputEditor.js';
@@ -49,6 +51,7 @@ HUD.mouseMode = GUIComponent.MouseMode.CROSS;
 HUD.needFocus = false;
 HUD.nativeScrolling = true;
 let view;
+let selfActions;
 let controls;
 let shortcuts;
 let autoCombat;
@@ -94,6 +97,7 @@ function snapshot() {
 	const diagnosticStart = CombatDiagnostics.begin();
 	view.updateShortcuts(shortcuts.snapshot());
 	view.update({
+		death: gameDeathSnapshot(),
 		autoCombat: autoCombat.snapshot(),
 		unreadMail: gameMailUnread(),
 		name: entity.display.name,
@@ -113,6 +117,7 @@ function snapshot() {
 		statuses: StatusIcons.getSnapshot(),
 		target: Commands.targetSnapshot()
 	});
+	selfActions?.update();
 	CombatDiagnostics.end('mobile.hud', diagnosticStart);
 }
 let updateViewport;
@@ -156,6 +161,18 @@ HUD.onAppend = function () {
 	equipment = createEquipmentController(inventory, () => characterStats(Session.Entity), () => modal && !previousFreeze);
 	view = createGameHUDView(HUD.getRoot(), {
 		cancelSceneInput,
+		deathSnapshot: gameDeathSnapshot,
+		returnToSavePoint: () => {
+			if (!gameDeathSnapshot().dead) return false;
+			HUD.actions.returnToSavePoint();
+			return true;
+		},
+		revive: () => {
+			const state = gameDeathSnapshot();
+			if (!state.dead || !state.tokenCount) return false;
+			HUD.actions.revive();
+			return true;
+		},
 		openAdventureTools: back => AdventureTools.openFromMenu(back),
 		openAdventureMap: (target, back) => AdventureTools.openMap(target, back),
 		setModal,
@@ -256,12 +273,12 @@ HUD.onAppend = function () {
 		chatEmotionImages: () => import('UI/Game/ChatEmotionImages.js').then(module => module.loadChatEmotionImages()),
 		returnToCharacters: () => HUD.actions.returnToCharacters()
 	});
+	selfActions = createSelfActions(HUD.getRoot().querySelector('.battle-status'), cancelSceneInput);
 	unsubscribeInteraction = subscribeInteraction(state => view.showInteraction(state));
 	controls = bindPointerControls(HUD.getRoot(), Renderer.canvas, {
 		enabled,
 		startMove: () => {
 			autoCombat.pauseForMovement();
-			shortcuts.cancel();
 		},
 		move: (x, y) => {
 			autoCombat.pauseForMovement();
@@ -372,6 +389,8 @@ HUD.onAppend = function () {
 	updateViewport();
 };
 HUD.onRemove = function (resetInteraction = true) {
+	selfActions?.destroy();
+	selfActions = null;
 	releaseScreenWakeLock?.();
 	releaseScreenWakeLock = null;
 	disposeInputEditor?.();

@@ -132,3 +132,35 @@ it('selects self for the actual skill caster and cancels when that caster is rep
  expect(controller.self()).toBe(false);expect(data.castId).not.toHaveBeenCalled();
  expect(controller.snapshot().pending).toBeNull();
 });
+
+it.each([2, 3, 4])('keeps skill %i selected across shortcut pages and casts the original binding', id => {
+ controller.configure(0, { isSkill: true, ID: id }, 1);
+ controller.use(0);
+ controller.turn(1);
+ expect(controller.snapshot().page).toBe(1);
+ expect(controller.snapshot().pending.index).toBe(0);
+ if (id === 3) {
+  hit = { ground: [12, 34] };
+  controller.pick(1, 2);
+  expect(data.castGround).toHaveBeenCalledWith(3, 1, 12, 34);
+ } else if (id === 4) {
+  expect(data.supportPicking).toHaveBeenLastCalledWith(true);
+  controller.self();
+  expect(data.castId).toHaveBeenCalledWith(4, 1, 9);
+ } else {
+  hit = { target: { GID: 35, kind: 1 } };
+  controller.pick(1, 2);
+  expect(data.castId).toHaveBeenCalledWith(2, 1, 35);
+ }
+ expect(controller.snapshot().pending).toBeNull();
+});
+
+it('revalidates an off-page selection when the original binding changes', () => {
+ controller.configure(0, { isSkill: true, ID: 4 }, 1);
+ controller.use(0);
+ controller.turn(-1);
+ bindings[0] = { isSkill: false, ID: 501, count: 0 };
+ expect(controller.snapshot().pending).toBeNull();
+ expect(data.supportPicking).toHaveBeenLastCalledWith(false);
+ expect(data.castId).not.toHaveBeenCalled();
+});

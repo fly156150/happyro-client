@@ -240,6 +240,8 @@
 	font-size: 12px;
 }
 :host([data-menu-density='spacious']) .battle-status {
+	--target-action-height: 44px;
+	--target-action-padding: 6px var(--battle-button-padding);
 	min-height: 40px;
 	font-size: 14px;
 	padding: 7px 10px;

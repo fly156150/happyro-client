@@ -924,6 +924,8 @@ function onMapChange(pkt, forceReload = false) {
 				packet.type = type;
 				Network.sendPacket(packet);
 			},
+			returnToSavePoint: onReturnSavePointRequest,
+			revive: onResurectionRequest,
 			returnToCharacters: onRestartRequest
 		});
 

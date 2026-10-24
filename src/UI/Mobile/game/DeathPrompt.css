@@ -1,0 +1,10 @@
+:host { position: absolute; inset: 0; pointer-events: none; }
+.death-prompt { pointer-events: auto; }
+h2 { margin: 0 0 12px; font-size: 16px; text-align: center; outline: none; }
+.death-prompt .ui-confirm-body > p { text-align: center; }
+.death-prompt .death-message { color: #b6bec6; font-size: 12px; }
+.death-prompt .ui-confirm-actions { flex-direction: column; gap: 8px; }
+.death-prompt .ui-confirm-actions button { height: auto; min-height: 40px; padding: 8px 12px; white-space: normal; touch-action: manipulation; }
+.death-prompt .ui-confirm-actions .primary { color: #ffd27f; border-color: #aa8750; }
+.death-prompt button:disabled { opacity: .5; }
+[hidden] { display: none !important; }

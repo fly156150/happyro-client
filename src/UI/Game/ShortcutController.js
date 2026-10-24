@@ -42,7 +42,12 @@ export function createShortcutController(data) {
 			cancel();
 			return false;
 		}
-		if (!data.canTarget(target, pending.inf, pending.binding.ID)) return false;
+		const valid = data.canTarget(target, pending.inf, pending.binding.ID);
+		if (valid !== true) {
+			message = typeof valid === 'string' ? valid : '';
+			return false;
+		}
+		message = '';
 		const { index, binding } = pending;
 		const current = describe(index);
 		if (!current.available || current.binding?.ID !== binding.ID || current.binding?.count !== binding.count) {
@@ -95,6 +100,7 @@ export function createShortcutController(data) {
 				pending: pending
 					? {
 							index: pending.index,
+							message,
 							name: pending.name,
 							ground: Boolean(pending.inf & SKILL_INF.PLACE),
 							self: Boolean(pending.inf & SKILL_INF.FRIEND)
@@ -103,7 +109,6 @@ export function createShortcutController(data) {
 			};
 		},
 		turn(delta) {
-			cancel();
 			page = (page + delta + pages()) % pages();
 		},
 		candidates() {

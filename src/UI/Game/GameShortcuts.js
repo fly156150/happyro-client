@@ -1,3 +1,4 @@
+import { createHealMonsterTargets } from './HealMonsterTargets.js';
 import { createGameInventory } from './GameInventory.js';
 import { toPlainRagnarokText } from 'Utils/RagnarokText.js';
 import { skillTiers } from './SkillTiers.js';
@@ -30,6 +31,7 @@ function caster(id) {
 
 export function createGameShortcuts(moving = () => false) {
 	const icons = new Map();
+	const healMonsterTarget = createHealMonsterTargets();
 	const inventory = createGameInventory(() => true);
 	function icon(file) {
 		if (!file) return '';
@@ -92,14 +94,13 @@ export function createGameShortcuts(moving = () => false) {
 			),
 		self: id => caster(id),
 		supportPicking: value => EntityManager.setSupportPicking(value),
-		canTarget: (target, flag, id) =>
-			Boolean(
-				target &&
-				EntityManager.get(target.GID) === target &&
-				(!(flag & SKILL_INF.ENEMY) || target.action !== target.ACTION.DIE) &&
-				target.remove_tick <= 0 &&
-				canTargetSkill(target, flag, { self: caster(id), canAttack: SkillTargetSelection.checkMapState })
-			),
+		canTarget: (target, flag, id) => {
+			if (!target || EntityManager.get(target.GID) !== target || target.remove_tick > 0 ||
+				(flag & SKILL_INF.ENEMY && target.action === target.ACTION.DIE)) return false;
+			if (id === SkillId.AL_HEAL && target.objecttype === target.constructor.TYPE_MOB)
+				return healMonsterTarget(target);
+			return canTargetSkill(target, flag, { self: caster(id), canAttack: SkillTargetSelection.checkMapState });
+		},
 		castId: (id, level, target) => SkillTargetSelection.onUseSkillToId(id, level, target, { allowMove: !moving() }),
 		castGround: (...args) => SkillTargetSelection.onUseSkillToPos(...args),
 		useItem: id => {

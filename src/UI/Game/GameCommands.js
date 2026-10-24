@@ -101,6 +101,12 @@ export function tapScene(x, y, pressedTarget) {
 	const previous = EntityManager.getFocusEntity();
 	Session.moveAction = null;
 	Session.autoFollow = false;
+	if (target === Session.Entity) {
+		if (previous && previous !== target) previous.onFocusEnd();
+		EntityManager.setFocusEntity(target);
+		return;
+	}
+	if (previous === Session.Entity) EntityManager.setFocusEntity(null);
 	if (target && target !== Session.Entity) {
 		if (previous && previous !== target) previous.onFocusEnd();
 		EntityManager.setFocusEntity(target);
@@ -227,6 +233,7 @@ export function targetSnapshot() {
 	if (!target) return { name: '点击目标进行选择', attack: false, interaction: '' };
 	const T = target.constructor;
 	return {
+		self: target === Session.Entity,
 		name: target.display.name || '已选目标',
 		player: target.objecttype === T.TYPE_PC && target !== Session.Entity ? { id: target.GID, name: target.display.name, friend: Friends.isFriend(target.display.name) } : null,
 		pet: target.objecttype === T.TYPE_PET && target.GID === Session.petId && !target.remove_tick

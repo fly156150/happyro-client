@@ -1,3 +1,4 @@
+import { createDeathPrompt } from './DeathPrompt.js';
 import { createStatusIconsView } from './StatusIconsView.js';
 import menuListFlushCSS from './MenuListFlush.css?raw';
 import { bindChatPreviewLayout } from './ChatPreviewLayout.js';
@@ -313,6 +314,13 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		drawPlayerArrow(ctx, point, snapshot.direction ?? 0, 0.65);
 	}
 	const menuSelects = createMenuSelects(body);
+	const deathPrompt = createDeathPrompt(root, {
+		snapshot: () => actions.deathSnapshot(),
+		returnToSavePoint: () => actions.returnToSavePoint(),
+		revive: () => actions.revive(),
+		open: () => { actions.cancelSceneInput(); actions.setModal(true); },
+		close: () => actions.setModal(Boolean(currentPanel))
+	}, $('.battle-status'));
 	function close(notify = true) {
 		menuSelects.close();
 		if (!currentPanel || (notify && serverState?.canClose === false)) return;
@@ -859,13 +867,15 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		},
 		update(next) {
 			snapshot = next;
+			deathPrompt.update(next.death);
 			text('[data-panel=menu]', next.unreadMail ? '菜单 · 新邮件' : '菜单');
-			if (performance.now() >= noticeUntil) text('[data-target]', next.autoCombat?.status || '自动战斗已停止');
+			if (next.death?.dead || performance.now() >= noticeUntil) text('[data-target]', next.death?.dead ? '已倒下' : next.autoCombat?.status || '自动战斗已停止');
 			const species = next.autoCombat?.species || [];
 			const targetLabel = species.length > 1 ? `${species.length} 种魔物` : species[0]?.name || '全部魔物';
 			text('[data-auto-target]', `${targetLabel} ▾`);
 			$('[data-auto-target]').title = species.map(entry => entry.name).join('、') || '全部魔物';
-			const player = next.target?.player, pet = next.target?.pet, mercenary = next.target?.mercenary, homunculus = next.target?.homunculus;
+			const target = next.death?.dead ? null : next.target;
+			const player = target?.player, pet = target?.pet, mercenary = target?.mercenary, homunculus = target?.homunculus;
 			const hasActions = Boolean(player || pet || mercenary || homunculus);
 			text('[data-auto-toggle]', hasActions ? '取消选择' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
 			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!hasActions && Boolean(next.autoCombat?.active)));
@@ -874,7 +884,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			$('[data-pet-actions]').hidden = !pet;
 			$('[data-mercenary-actions]').hidden = !mercenary;
 			$('[data-homunculus-actions]').hidden = !homunculus;
-			$('[data-target]').hidden = hasActions;
+			$('[data-target]').hidden = hasActions || Boolean(target?.self);
 			$('.battle-status').classList.toggle('has-player-actions', hasActions);
 			for (const button of root.querySelectorAll('[data-mercenary-action]')) button.disabled = !mercenary?.canOperate;
 			text('[data-mercenary-action=aggressive]', mercenary?.aggressive ? '主动' : '被动');
@@ -1029,7 +1039,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			$('.shortcut-tools').hidden = Boolean(state.pending);
 			text(
 				'[data-skill-prompt]',
-				state.pending ? `${state.pending.name}：${state.pending.ground ? '点击地面施放' : '点击有效目标'}` : ''
+				state.pending ? state.pending.message || `${state.pending.name}：${state.pending.ground ? '点击地面施放' : '点击有效目标'}` : ''
 			);
 			$('[data-skill-self]').hidden = !state.pending?.self;
 		},
@@ -1039,6 +1049,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		},
 		close,
 		destroy() {
+			deathPrompt.destroy();
 			releaseChatPreviewLayout();
 			chatPreview.destroy();
 			statusIcons.destroy();

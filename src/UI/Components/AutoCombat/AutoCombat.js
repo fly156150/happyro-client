@@ -1,3 +1,4 @@
+import { createSelfActions } from 'UI/Game/SelfActions.js';
 import headerCSS from '../DesktopWindowHeader.css?raw';
 import GUIComponent from 'UI/GUIComponent.js';
 import UIManager from 'UI/UIManager.js';
@@ -16,12 +17,12 @@ const AutoCombat = new GUIComponent('AutoCombat', panelCSS + pickupCSS + css + s
 AutoCombat.render = () => '';
 AutoCombat.needFocus = false;
 AutoCombat.nativeScrolling = true;
-let runtime, view;
+let runtime, view, selfActions;
 
 AutoCombat.onAppend = function () {
 	this.onRemove();
 	runtime = createGameAutoCombatRuntime({
-		update: state => view?.update(state),
+		update: state => { view?.update(state); selfActions?.update(); },
 		onDisconnect: () => this.remove()
 	});
 	view = createAutoCombatView(this._container, runtime, { load: loadPickupSettings, save: savePickupSettings }, {
@@ -36,10 +37,14 @@ AutoCombat.onAppend = function () {
 			description.setSkill(id, { above: this._host });
 		}
 	});
+	selfActions = createSelfActions(this._container, () => runtime.stop(), { desktop: true });
+	this._container.prepend(this._container.querySelector('.self-actions-host'));
 	view.update(runtime.snapshot());
 };
 AutoCombat.openSettings = () => view?.open();
 AutoCombat.onRemove = function () {
+	selfActions?.destroy();
+	selfActions = null;
 	runtime?.destroy();
 	runtime = null;
 	view?.destroy();

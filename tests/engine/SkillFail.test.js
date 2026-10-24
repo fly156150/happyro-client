@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { skillFailMessage, skillFailReasons, requiredStateReasons } from '../../src/Engine/MapEngine/SkillFail.js';
+import { skillFailMessage, skillFailReasons, requiredStateReasons, isBasicActionLevelFailure } from '../../src/Engine/MapEngine/SkillFail.js';
 
 const names = { 152: '投掷石头', 10: '火狩' };
 const lookups = { skillName: id => names[id], itemName: id => ({ 7049: '石头' })[id] };
@@ -65,11 +65,24 @@ describe('skill failure explanations', () => {
 
 it('explains emotion prerequisites without mislabeling cooldown or blocked state', () => {
  const emotion = cause => skillFailMessage({ result: 0, SKID: 1, NUM: 1, cause });
- expect(emotion(0)).toContain('「基础技能」Lv.2');
- expect(emotion(0)).toContain('「新基础技能」Lv.1');
+ expect(emotion(0)).toBe('需要学习「基础技能」Lv.2');
  expect(emotion(4)).toBe('表情发送太快了，请稍后再试。');
  expect(emotion(11)).toContain('不能主动发送');
  expect(emotion(23)).toContain('当前状态不能发送表情');
  expect(skillFailMessage({ result: 0, SKID: 1, NUM: 2, cause: 0 })).not.toContain('发送表情');
  expect(skillFailMessage({ result: 1, SKID: 1, NUM: 1, cause: 0 })).toBe('');
+});
+
+it.each([
+ [1, false, '需要学习「基础技能」Lv.2'],
+ [2, false, '需要学习「基础技能」Lv.3'],
+ [1, true, '需要学习「新基础技能」Lv.1'],
+ [2, true, '需要学习「新基础技能」Lv.1']
+])('distinguishes basic action %i for doram=%s', (NUM, isDoram, expected) => {
+ const packet = { result: 0, SKID: 1, NUM, cause: 0 };
+ expect(skillFailMessage(packet, { isDoram })).toBe(expected);
+ expect(isBasicActionLevelFailure(packet)).toBe(true);
+ expect(isBasicActionLevelFailure({ ...packet, cause: 4 })).toBe(false);
+ expect(isBasicActionLevelFailure({ ...packet, result: 1 })).toBe(false);
+ expect(isBasicActionLevelFailure({ ...packet, NUM: 3 })).toBe(false);
 });

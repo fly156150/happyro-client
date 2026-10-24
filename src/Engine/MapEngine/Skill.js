@@ -1,3 +1,4 @@
+import JobPropertyTable from 'DB/Jobs/JobPropertyTable.js';
 import { showOwnedVending } from 'UI/Game/GameVending.js';
 import { requestTalkieMessage, showTalkieMessage } from './TalkieBox.js';
 import { openMonsterInformation } from 'UI/Game/GameMonsterInformation.js';
@@ -44,7 +45,7 @@ import Renderer from 'Renderer/Renderer.js';
 import SkillWindow from 'UI/Components/SkillList/SkillList.js';
 import CartDecoration from 'UI/Components/CartDecoration/CartDecoration.js';
 import { showToast } from 'UI/Components/Toast.js';
-import { isEmotionFailure, skillFailMessage } from './SkillFail.js';
+import { isEmotionFailure, isBasicActionLevelFailure, skillFailMessage } from './SkillFail.js';
 import { cancelCompanionSkill, queueCompanionSkill } from './CompanionSkillAction.js';
 
 import SnowWeatherEffect from 'Renderer/Effects/SnowWeather.js';
@@ -163,11 +164,12 @@ function onSkillResult(pkt) {
 	}
 
 	const text = skillFailMessage(pkt, {
+		isDoram: Boolean(JobPropertyTable[Session.Entity?._job]?.isDoram),
 		skillName: id => SkillInfo[id]?.SkillName,
 		itemName: id => DB.getItemInfo(id)?.identifiedDisplayName
 	});
 	ChatBox.addText(text, ChatBox.TYPE.ERROR, ChatBox.FILTER.SKILL_FAIL);
-	if (isEmotionFailure(pkt)) showToast(document.body, text, 'error');
+	if (isEmotionFailure(pkt) || isBasicActionLevelFailure(pkt)) showToast(document.body, text, 'error');
 }
 
 /**
