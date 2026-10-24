@@ -47,7 +47,7 @@ it('shows eligible mounts with unmet conditions and does not offer followers as 
  await select(); const button = root.querySelector('[data-mount]');
  expect(button.hidden).toBe(false); expect(button.disabled).toBe(false);
  button.click(); await flush();
- expect(root.querySelector('p').textContent).toBe('需要学习「骑乘大嘴鸟」技能 Lv.1');
+ expect(root.querySelector('p').textContent).toBe('需要学习「骑乘术」技能 Lv.1');
  expect(s.mutate).not.toHaveBeenCalled();
  s.load.mockResolvedValue({ riding: [mount(false)] });
  button.click(); await flush(); expect(s.mutate).toHaveBeenCalledOnce();

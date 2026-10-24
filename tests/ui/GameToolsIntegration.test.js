@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import MapInfo from '../../src/DB/Map/MapTable.js';
 
 const projectRoot = resolve(import.meta.dirname, '../..');
 const read = path => readFileSync(resolve(projectRoot, path), 'utf8');
@@ -107,14 +108,20 @@ describe('game tools integration', () => {
 		const byPosition = new Map();
 		for (const npc of translatedEntries) {
 			const key = `${npc.map}:${npc.x}:${npc.y}`;
-			if (!byPosition.has(key)) byPosition.set(key, npc);
+			if (!byPosition.has(key)) byPosition.set(key, []);
+			byPosition.get(key).push(npc);
 		}
 		const expectedPositions = new Set(byPosition.keys());
 		expect(new Set(Object.keys(instances.instances))).toEqual(expectedPositions);
 		for (const position of expectedPositions) {
-			const npc = byPosition.get(position);
+			const candidates = byPosition.get(position);
+			const npc =
+				candidates.find(entry => entry.game_visible) ||
+				candidates.find(entry => entry.display_sprite_id != null) ||
+				candidates[0];
 			expect(instances.instances[position]).toEqual({ name: npc.display_name, sourceName: npc.source_name });
 		}
+		expect(instances.instances['1@cor:172:223']).toEqual({ name: '埃琳娜', sourceName: '埃琳娜' });
 		expect(catalog.entries.every((npc, index) => npc.catalog_order === index)).toBe(true);
 		expect(visible.every(npc => assets.sprites[npc.display_sprite_id])).toBe(true);
 		expect(Object.values(instances.instances).every(npc => /[\u3400-\u9fff]/.test(npc.name))).toBe(true);
@@ -125,8 +132,8 @@ describe('game tools integration', () => {
 			visible.filter(npc => npc.map === 'int_land').map(npc => npc.display_name)
 		).toEqual(expect.arrayContaining(['卡洛克船长', '卢敏', '水手']));
 		expect(instances.instances['aldeba_in:155:240']).toMatchObject({
-			name: '卡普拉职员',
-			sourceName: '卡普拉职员'
+			name: '卡普拉',
+			sourceName: '卡普拉'
 		});
 		expect(read('src/DB/Navigation/NavigationData.js')).toContain(
 			'getNpcInstanceName(instanceNames, npc[0], npc[6], npc[7])'
@@ -242,8 +249,11 @@ describe('game tools integration', () => {
 		expect(source).toContain('npcAtlasStyle(manifest, npc.spriteId');
 	});
 
-	it('uses the complete contextual name for the vampire illusion map', () => {
-		expect(read('src/DB/Map/MapTable.js')).toContain("displayName: '第250页（吸血鬼幻影）'");
+	it('uses the audited name and retains the illusion map subtitle', () => {
+		expect(MapInfo['gef_d01_i.rsw']).toMatchObject({
+			displayName: '第250页',
+			signName: { mainTitle: '第250页', subTitle: '幻境' }
+		});
 	});
 
 	it('wires both active toolbar versions and the private packet pair', () => {

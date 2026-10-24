@@ -1,3 +1,4 @@
+import { buildNpcInstanceNames } from './npc-instance-names.mjs';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -79,12 +80,7 @@ const npcCatalog = JSON.parse(await fs.readFile(npcCatalogSource, 'utf8'));
 if (npcCatalog.schema !== 'happyro-npc-catalog/v1' || !Array.isArray(npcCatalog.entries)) {
 	throw new Error('Shared NPC catalog has an unsupported schema');
 }
-const npcInstances = {};
-for (const entry of npcCatalog.entries) {
-	if (!/[\u3400-\u9fff]/.test(entry.display_name)) continue;
-	const position = `${entry.map}:${entry.x}:${entry.y}`;
-	if (!npcInstances[position]) npcInstances[position] = { name: entry.display_name, sourceName: entry.source_name };
-}
+const npcInstances = buildNpcInstanceNames(npcCatalog.entries);
 
 const sortedNpcInstances = Object.fromEntries(
 	Object.entries(npcInstances).sort(([left], [right]) => left.localeCompare(right))
