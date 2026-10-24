@@ -42,9 +42,15 @@ it('uses adventure riding directly, prevents duplicate writes and updates to dis
  expect(s.mutate).toHaveBeenLastCalledWith('character.riding.update', expect.objectContaining({ enabled: false }));
  expect(button.textContent).toBe('骑乘');
 });
-it('hides unavailable mounts and does not offer followers as mounts', async () => {
+it('shows eligible mounts with unmet conditions and does not offer followers as mounts', async () => {
  s.load.mockResolvedValue({ riding: [{ kind: 'falcon', active: true }, { ...mount(false), reason: 'riding_skill_required' }] });
- await select(); expect(root.querySelector('[data-mount]').hidden).toBe(true);
+ await select(); const button = root.querySelector('[data-mount]');
+ expect(button.hidden).toBe(false); expect(button.disabled).toBe(false);
+ button.click(); await flush();
+ expect(root.querySelector('p').textContent).toBe('需要学习「骑乘大嘴鸟」技能 Lv.1');
+ expect(s.mutate).not.toHaveBeenCalled();
+ s.load.mockResolvedValue({ riding: [mount(false)] });
+ button.click(); await flush(); expect(s.mutate).toHaveBeenCalledOnce();
 });
 it('rejects stale selection and changed mount state before sending', async () => {
  await select(); s.load.mockResolvedValue({ riding: [mount(true)] });
@@ -108,4 +114,36 @@ it('still offers local actions when initial mount lookup fails', async () => {
  await select(); expect(parent.firstChild.hidden).toBe(false);
  expect(root.querySelector('[data-mount]').hidden).toBe(true);
  expect(root.querySelector('p').textContent).toBe('读取失败');
+});
+
+it('keeps desktop controls visible without selecting self and preserves actions when another entity is focused', async () => {
+ view.destroy(); view = createSelfActions(parent, stop, { desktop: true }); root = parent.firstChild.shadowRoot;
+ view.update(); await flush();
+ expect(parent.firstChild.hidden).toBe(false);
+ expect(root.querySelector('.actions').firstElementChild.hasAttribute('data-emotions')).toBe(true);
+ expect(root.querySelector('[data-sit] svg')).not.toBeNull();
+ s.focus = { GID: 123 }; view.update();
+ expect(parent.firstChild.hidden).toBe(false);
+ root.querySelector('[data-sit]').click();
+ expect(s.send).toHaveBeenLastCalledWith(expect.objectContaining({ action: 2 }));
+ s.session.Entity.action = 2; view.update();
+ expect(root.querySelector('[data-sit]').getAttribute('aria-label')).toBe('站起');
+ expect(root.querySelector('[data-sit]').getAttribute('aria-pressed')).toBe('true');
+ s.session.Playing = false; view.update();
+ expect(parent.firstChild.hidden).toBe(true);
+});
+
+it.each([false, true])('refreshes eligibility on click after Zeny changes (desktop=%s)', async desktop => {
+ view.destroy(); view = createSelfActions(parent, stop, { desktop }); root = parent.firstChild.shadowRoot;
+ s.load.mockResolvedValue({ riding: [{ ...mount(false), reason: 'riding_insufficient_zeny' }] });
+ await select(); const button = root.querySelector('[data-mount]');
+ expect(button.hidden).toBe(false); button.click(); await flush();
+ expect(root.querySelector('p').textContent).toBe('Zeny 不足'); expect(s.mutate).not.toHaveBeenCalled();
+ s.load.mockResolvedValue({ riding: [mount(false)] }); button.click(); await flush();
+ expect(s.mutate).toHaveBeenCalledOnce();
+});
+it('hides riding when the new job has no mount', async () => {
+ await select(); s.load.mockResolvedValue({ riding: [{kind: 'falcon', active: true}] });
+ s.session.Entity._job = 3; view.update(); await flush();
+ expect(root.querySelector('[data-mount]').hidden).toBe(true);
 });

@@ -23,12 +23,15 @@ const reasons = {
 	riding_falcon_conflict: '请先召回战狼',
 	riding_warg_conflict: '请先解除猎鹰'
 };
+export function ridingReason(row) {
+	return row.reason === 'riding_skill_required' ? `需要学习「${skills[row.kind]}」技能 Lv.1` : reasons[row.reason] || row.reason || '';
+}
 export function renderCharacterRiding(rows, pending) {
 	if (!rows.length) return '';
 	return `<section class="character-riding"><h4>骑乘与随行</h4><div class="character-riding-list">${rows.map(row => {
 		const action = actions[row.kind];
 		const title = ['peco', 'dragon', 'gryphon'].includes(row.kind) ? '骑乘' : names[row.kind];
-		const reason = row.reason === 'riding_skill_required' ? `需学习「${skills[row.kind]}」` : reasons[row.reason] || row.reason;
+		const reason = ridingReason(row);
 		return `<div class="character-riding-row"><div><strong>${title}</strong>${reason ? `<p>${escapeHtml(reason)}</p>` : ''}</div><div class="management-form-actions"><button type="button" data-riding-kind="${row.kind}" ${pending || row.reason ? 'disabled' : ''}>${row.active ? action.disable : action.enable}</button></div></div>`;
 	}).join('')}</div></section>`;
 }

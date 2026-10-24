@@ -21,7 +21,23 @@ p { margin: 6px 0 0; overflow-wrap: anywhere; }
 :host([data-desktop]) * { cursor: inherit !important; }
 
 :host([data-desktop]) .actions button:is(:hover, :focus-visible):not(:disabled) {
- background: #fff4d7;
+ background-color: #fff4d7;
  border-color: #af8841;
  color: #70511e;
 }
+
+/* Match the combat row spacing and align available actions to the right. */
+:host([data-desktop]) .actions { display: flex; justify-content: flex-end; height: var(--combat-action-size, 42px); }
+:host([data-desktop]) .actions button {
+ position: relative; display: grid; place-items: center;
+ width: var(--combat-action-size, 42px); height: var(--combat-action-size, 42px); padding: 0;
+ border-radius: 6px; background: linear-gradient(#ffffff99, #ffffff00) #e8ecef; border-color: #b7bfc6; color: #58636d; opacity: 1;
+ box-shadow: inset 0 1px var(--desktop-card), 0 2px 6px #0002;
+}
+:host([data-desktop]) .actions button:is(:hover, :focus-visible, [aria-pressed='true']):not(:disabled) {
+ background-color: #fff4d7; border-color: #af8841; color: #70511e; opacity: 1;
+}
+:host([data-desktop]) .actions button[aria-pressed='true'] { box-shadow: inset 0 0 0 1px #af8841, 0 2px 6px #0002; }
+:host([data-desktop]) p { position: absolute; right: 0; bottom: calc(100% + 8px); width: max-content; max-width: 280px; margin: 0; padding: 8px 12px; border: 1px solid #c6a76b; border-radius: 6px; background: #fff6e5; color: #704b21; }
+
+:host([data-desktop]) .action-label { display: none; }

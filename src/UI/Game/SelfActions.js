@@ -7,8 +7,16 @@ import StatusState from 'DB/Status/StatusState.js';
 import { loadCurrentCharacter, maintainCurrentCharacter } from 'UI/Components/GameTools/AdventureControlService.js';
 import { chatEmotions } from './ChatEmotions.js';
 import css from './SelfActions.css?raw';
+import { ridingReason } from 'UI/Components/GameTools/CharacterRiding.js';
 
 const mountMask = ['RIDING', 'DRAGON1', 'DRAGON2', 'DRAGON3', 'DRAGON4', 'DRAGON5', 'WUGRIDER', 'MADOGEAR'].reduce((mask, name) => mask | StatusState.EffectState[name], 0);
+const actionIcons = {
+ sit: '<circle cx="8" cy="4" r="2"/><path d="m8 8-1 8a3 3 0 0 0 3 3h4l3-6 4 6h2M8 9l4 4h4M6 11l-3 8H1"/>',
+ stand: '<circle cx="12" cy="4" r="2"/><path d="M12 8v6m-5-3 5-3 5 3m-5 3-4 7m4-7 4 7"/>',
+ emotions: '<circle cx="12" cy="12" r="9"/><path d="M8 14c2 4 6 4 8 0M8 9h.01M16 9h.01"/>',
+ mount: '<path d="m6 21 2-7-3-3 5-7 3 2 3-3 1 6 3 4-2 3-5-1-1 6M9 8h.01"/>',
+ dismount: '<path d="m6 21 2-7-3-3 5-7 3 2 3-3 1 6 3 4-2 3-5-1-1 6M9 8h.01M15 20h7m-3-3 3 3-3 3"/>'
+};
 const mounts = ['peco', 'dragon', 'gryphon', 'mado', 'warg_rider'];
 
 /** Map-scoped self controls shared by desktop and mobile. */
@@ -24,23 +32,36 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
  const abort = new AbortController();
  let owner, selected = false, disposed = false, pending = false, loading = false, ready = false, version = 0, row = null, paletteLoaded = false, ridingSignature;
  const alive = () => Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE;
- const current = () => !disposed && alive() && Session.Entity === owner && EntityManager.getFocusEntity() === owner;
+ const current = () => !disposed && alive() && Session.Entity === owner && (desktop || EntityManager.getFocusEntity() === owner);
  const allowed = () => current() && !Session.FreezeUI;
  function message(text = '') { $('p').textContent = text; $('p').hidden = !text; }
  function closePalette() { $('.emotions').hidden = true; $('[data-emotions]').setAttribute('aria-expanded', 'false'); }
  function accept(snapshot) {
   const rows = (snapshot.riding || []).filter(entry => mounts.includes(entry.kind));
-  row = rows.find(entry => entry.active) || rows.find(entry => !entry.reason) || null;
+  row = rows.find(entry => entry.active) || rows.find(entry => !entry.reason) || rows[0] || null;
+ }
+ function labelButton(selector, label, icon, active = false) {
+  const button = $(selector);
+  button.title = label;
+  button.setAttribute('aria-label', label);
+  button.setAttribute('aria-pressed', String(active));
+  if (!desktop) { button.textContent = label; return; }
+  if (button.dataset.icon !== icon) {
+   button.dataset.icon = icon;
+   button.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${actionIcons[icon]}</svg><span class="action-label" aria-hidden="true">${label}</span>`;
+  }
  }
  function render() {
   if (!current()) return;
   host.hidden = !ready;
-  $('[data-sit]').textContent = owner.action === owner.ACTION.SIT ? '站起' : '坐下';
+  const sitting = owner.action === owner.ACTION.SIT;
+  labelButton('[data-sit]', sitting ? '站起' : '坐下', sitting ? 'stand' : 'sit', sitting);
+  labelButton('[data-emotions]', '表情', 'emotions', !$('.emotions').hidden);
   $('[data-mount]').hidden = !row;
   const mountButton = $('[data-mount]');
   const label = row?.active ? '下骑' : '骑乘';
-  if (mountButton.textContent !== label) mountButton.textContent = label;
-  const unavailable = Boolean(row?.reason) || !allowed();
+  labelButton('[data-mount]', label, row?.active ? 'dismount' : 'mount', Boolean(row?.active));
+  const unavailable = !allowed();
   // Busy requests retain their appearance and focus; the click handler rejects duplicates.
   mountButton.disabled = unavailable;
   mountButton.setAttribute('aria-disabled', String(unavailable || pending || loading));
@@ -62,7 +83,7 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
   if (token === version) { loading = false; ready = true; render(); }
  }
  function update() {
-  const visible = Boolean(!disposed && alive() && EntityManager.getFocusEntity() === Session.Entity);
+  const visible = Boolean(!disposed && alive() && (desktop || EntityManager.getFocusEntity() === Session.Entity));
   if (!visible || owner !== Session.Entity) {
    if (selected) { version++; closePalette(); message(); row = null; }
    selected = false;
@@ -89,7 +110,7 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
   Network.sendPacket(packet);
  }, { signal: abort.signal });
  $('[data-mount]').addEventListener('click', async () => {
-  if (!allowed() || pending || loading || !row || row.reason) return;
+  if (!allowed() || pending || loading || !row) return;
   const chosen = { ...row }, token = version;
   pending = true;
   stop();
@@ -100,10 +121,11 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
    const snapshot = await loadCurrentCharacter();
    if (token !== version || !allowed()) return;
    accept(snapshot);
-   if (!row || row.kind !== chosen.kind || row.active !== chosen.active || row.reason) {
+   if (!row || row.kind !== chosen.kind || row.active !== chosen.active) {
     message('坐骑状态已变化，请重新选择');
     return;
    }
+   if (row.reason) { message(ridingReason(row)); return; }
    const result = await maintainCurrentCharacter('character.riding.update', {
     kind: row.kind, enabled: !row.active, fee: row.fee, ticket: row.ticket
    });
