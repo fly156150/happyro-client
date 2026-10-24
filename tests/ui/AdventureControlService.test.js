@@ -197,3 +197,19 @@ for (const [name, json] of [
 		} finally { vi.unstubAllGlobals(); }
 	});
 }
+
+it('allows settings to be submitted again after automatic restoration', async () => {
+ Session.WebToken = 'automatically-restored';
+ let nonce = 1;
+ vi.stubGlobal('crypto', { getRandomValues: bytes => bytes.fill(nonce++) });
+ const fetchMock = vi.fn()
+  .mockResolvedValueOnce({ ok: false, json: async () => ({ error: { code: 'settings_auto_restored' } }) })
+  .mockResolvedValue({ ok: true, json: async () => ({ data: { status: 'applied' } }) });
+ vi.stubGlobal('fetch', fetchMock);
+ try {
+  await expect(applyAdventureGameSettings({ base_exp_rate: 200 })).rejects.toThrow();
+  await expect(applyAdventureGameSettings({ base_exp_rate: 200 })).resolves.toEqual({ status: 'applied' });
+  const keys = fetchMock.mock.calls.map(([, options]) => JSON.parse(options.body).idempotency_key);
+  expect(keys[0]).not.toBe(keys[1]);
+ } finally { vi.unstubAllGlobals(); }
+});

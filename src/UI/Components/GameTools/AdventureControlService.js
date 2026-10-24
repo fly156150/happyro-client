@@ -172,6 +172,9 @@ export function applyAdventureGameSettings(changes) {
 	}).then(result => {
 		requests.delete(fingerprint);
 		return result;
+	}).catch(error => {
+		if (error.code === 'settings_auto_restored') requests.delete(fingerprint);
+		throw error;
 	}).finally(() => {
 		operation.pending = null;
 	});
