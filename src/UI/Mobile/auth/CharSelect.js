@@ -1,3 +1,4 @@
+import { preserveCharacterListPosition } from './CharacterListPosition.js';
 /**
  * UI/Mobile/auth/CharSelect.js
  *
@@ -64,4 +65,4 @@ const CharSelect = withMobileShell(
 	})
 );
 
-export default CharSelect;
+export default preserveCharacterListPosition(CharSelect);

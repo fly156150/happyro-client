@@ -354,3 +354,25 @@ it('accepts every catalog appearance in selection slots and rejects unknown iden
  Select.updateCharacterAppearance(selected.GID, 0);
  expect(selected.characterAppearance).toBe(0);
 });
+
+it('keeps the scrolled creation slot visible after success or cancel and resets on login', () => {
+ const root = mount(Select);
+ Select.setInfo({ TotalSlotNum: 15, PremiumStartSlot: 0, sex: 1, charInfo: [character()] });
+ const list = root.querySelector('.char_list');
+ root.querySelector('#slot12').click();
+ list.scrollTop = 900;
+ unmount(Select);
+ // Browsers reset scroll when the selection screen is detached.
+ list.scrollTop = 0;
+ Select.addCharacter({ ...character(), CharNum: 12, GID: 456, name: '新角色' });
+ mount(Select);
+ expect(list.scrollTop).toBe(900);
+ expect(root.querySelector('#slot12').getAttribute('aria-pressed')).toBe('true');
+ expect(root.querySelector('.selection-label').textContent).toBe('新角色');
+ root.querySelector('#slot13').click(); list.scrollTop = 1000;
+ unmount(Select); list.scrollTop = 0; mount(Select);
+ expect(list.scrollTop).toBe(1000);
+ expect(root.querySelector('#slot13').getAttribute('aria-pressed')).toBe('true');
+ Select.setInfo({ TotalSlotNum: 3, PremiumStartSlot: 0, sex: 1, charInfo: [character()] });
+ expect(list.scrollTop).toBe(0);
+});
