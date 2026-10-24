@@ -989,10 +989,10 @@ const MapInfo = {
 	'new_1-1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'mjolnir_06.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2046,10 +2046,10 @@ const MapInfo = {
 	'new_5-1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'nif_dun01.rsw': {
 		backgroundBmp: 'dungeon',
@@ -2207,10 +2207,10 @@ const MapInfo = {
 	'new_4-2.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'ecl_fild01.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -2450,10 +2450,10 @@ const MapInfo = {
 	'new_1-3.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'prt_prison.rsw': {
 		backgroundBmp: 'dungeon',
@@ -2511,10 +2511,10 @@ const MapInfo = {
 	'new_5-3.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'iz_ac01_b.rsw': {
 		backgroundBmp: 'noname_s1',
@@ -2821,10 +2821,10 @@ const MapInfo = {
 	'new_2-4.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'1@slw.rsw': {
 		backgroundBmp: 'dungeon',
@@ -3069,10 +3069,10 @@ const MapInfo = {
 	'new_3-3.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'tha_t03.rsw': {
 		backgroundBmp: 'dungeon',
@@ -3174,10 +3174,10 @@ const MapInfo = {
 	'new_2-3.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'pay_dun03.rsw': {
 		backgroundBmp: 'dungeon',
@@ -3297,10 +3297,10 @@ const MapInfo = {
 	'new_1-2.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'vis_h04.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -3388,10 +3388,10 @@ const MapInfo = {
 	'new_5-2.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'turbo_e_4.rsw': {
 		displayName: '极速赛道体育场'
@@ -3571,10 +3571,10 @@ const MapInfo = {
 	'new_4-3.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Training Ground'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: 'Training Ground'
+		displayName: '初心者修炼场'
 	},
 	'pvp_y_5-1.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -4087,10 +4087,10 @@ const MapInfo = {
 	'new_2-1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'prt_castle.rsw': {
 		backgroundBmp: 'village_s2',
@@ -5541,10 +5541,10 @@ const MapInfo = {
 	'new_2-2.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Training Ground'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: 'Training Ground'
+		displayName: '初心者修炼场'
 	},
 	'pvp_y_3-5.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -5747,17 +5747,17 @@ const MapInfo = {
 	},
 	'new_5-4.rsw': {
 		backgroundBmp: 'field_s2',
-		signName: { mainTitle: '训练场' },
+		signName: { mainTitle: '初心者修炼场' },
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'new_1-4.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Training Ground'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: 'Training Ground'
+		displayName: '初心者修炼场'
 	},
 	'pvp_y_3-2.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -6066,10 +6066,10 @@ const MapInfo = {
 	'new_3-1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'ein_fild03.rsw': {
 		backgroundBmp: 'field_s2',
@@ -6633,10 +6633,10 @@ const MapInfo = {
 	'new_4-4.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'1@pop2.rsw': {
 		backgroundBmp: 'dungeon',
@@ -6659,10 +6659,10 @@ const MapInfo = {
 	'new_3-4.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'force_3-3.rsw': {
 		displayName: '限时战斗'
@@ -6679,10 +6679,10 @@ const MapInfo = {
 	'new_3-2.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'lou_in02.rsw': {
 		displayName: '洛阳内部'
@@ -7449,10 +7449,10 @@ const MapInfo = {
 	'new_4-1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '训练场'
+			mainTitle: '初心者修炼场'
 		},
 		notifyEnter: true,
-		displayName: '训练场'
+		displayName: '初心者修炼场'
 	},
 	'jawaii_in.rsw': {
 		displayName: '爪哇伊内部'

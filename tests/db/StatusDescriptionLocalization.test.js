@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import skillNames from '../../src/DB/Skills/SkillLocalizationTable.generated.js';
+import statusSkillNames from '../../src/DB/Status/StatusSkillNames.json';
 import SC from '../../src/DB/Status/StatusConst.js';
 import StatusInfo from '../../src/DB/Status/StatusInfo.js';
 import officialStateIconTranslations from '../../src/DB/Status/stateiconinfo.zh-CN.json';
@@ -33,7 +35,10 @@ describe('status description localization', () => {
 		for (const id of Object.keys(officialStateIconTranslations)) {
 			statusInfo[id].descript = [['풀 스로틀'], ['이동속도 증가']];
 			expect(restoreLocalizedStatusDescription(statusInfo, descriptions, Number(id))).toBe(true);
-			expect(statusInfo[id].descript).toEqual(officialStateIconTranslations[id].descript);
+			const expected = officialStateIconTranslations[id].descript.map(line => [...line]);
+            const binding = statusSkillNames[id];
+            if (binding) expected[0][0] = `${binding.prefix || ''}${skillNames[binding.skillId].name}${binding.suffix || ''}`;
+            expect(statusInfo[id].descript).toEqual(expected);
 			for (const line of statusInfo[id].descript) {
 				expect(hangul.test(String(line[0] ?? '')), `SC ${id} still has Hangul`).toBe(false);
 			}
@@ -69,4 +74,20 @@ describe('status description localization', () => {
 		expect(restoreLocalizedStatusDescription(statusInfo, descriptions, 99)).toBe(false);
 		expect(statusInfo[99].descript).toEqual([]);
 	});
+});
+
+it('keeps reviewed skill titles consistent without renaming independent ailments', () => {
+ expect(skillNames[34].name).toBe('天使之赐福');
+ expect(StatusInfo[SC.BLESSING].descript[0][0]).toBe(skillNames[34].name);
+ expect(StatusInfo[SC.ANGELUS].descript[0][0]).toBe(skillNames[33].name);
+ expect(StatusInfo[SC.KYRIE].descript[0][0]).toBe(skillNames[73].name);
+ expect(skillNames[8].name).toBe('钢铁之心');
+ expect(StatusInfo[SC.ENDURE].descript[0][0]).toBe('霸体');
+ for (const id of [50, 737, 1142, 1210, 1211, 1212]) {
+  expect(StatusInfo[id].descript).toEqual(officialStateIconTranslations[id].descript);
+ }
+ for (const [id, entry] of Object.entries(statusSkillNames)) {
+  expect(skillNames[entry.skillId], `unknown source skill for ${id}`).toBeDefined();
+  expect(officialStateIconTranslations[id]?.descript[0][0]).not.toBe('%s');
+ }
 });

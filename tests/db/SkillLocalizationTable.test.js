@@ -35,7 +35,7 @@ describe('SkillLocalizationTable', () => {
 		});
 		expect(SkillLocalizationTable[487].description).toContain('合奏期间可以自由移动');
 		expect(SkillLocalizationTable[12].description).toContain(
-			'习得条件：圣灵召唤 Lv.7、灵魂打击 Lv.5；或光耀之堂 Lv.3、圣水洗礼 Lv.4'
+			'习得条件：心灵爆破 Lv.7、圣灵召唤 Lv.5；或光耀之堂 Lv.3、圣水洗礼 Lv.4'
 		);
 		expect(SkillLocalizationTable[143].description).toContain('习得条件：完成任务，且仅限初心者');
 		expect(SkillLocalizationTable[317].description).toContain('类型：演奏技能');
@@ -99,7 +99,7 @@ describe('SkillLocalizationTable', () => {
 			57: '长矛挥击',
 			66: '神威祈福',
 			69: '圣体降福',
-			81: '火狩芽',
+			81: '火之猎杀',
 			88: '霜冻之术',
 			91: '崩裂术',
 			111: '速度激发',
@@ -115,7 +115,7 @@ describe('SkillLocalizationTable', () => {
 			318: '冷笑话',
 			326: '惊声尖叫',
 			369: '福音',
-			373: '生命力转换',
+			373: 'HP转换',
 			379: '气功炮',
 			400: '念力连击',
 			459: '高级速度激发',
@@ -133,8 +133,8 @@ describe('SkillLocalizationTable', () => {
 			5024: '灵魂珠',
 			5045: '群体之力',
 			5254: '最终章·驱魔之火',
-			5277: '神罚',
-			5284: '弗拉门',
+			5277: '魂飞魄散',
+			5284: '圣灵镇魂',
 			5360: '矿工狂想曲',
 			5362: '晚霞小夜曲',
 			5434: '与铁虎共鸣',

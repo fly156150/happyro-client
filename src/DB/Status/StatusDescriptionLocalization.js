@@ -1,4 +1,6 @@
 import officialStateIconTranslations from './stateiconinfo.zh-CN.json';
+import statusSkillNames from './StatusSkillNames.json';
+import skillNames from '../Skills/SkillLocalizationTable.generated.js';
 
 export function applyOfficialStateIconTranslations(statusInfo, overlay = officialStateIconTranslations) {
 	for (const [id, entry] of Object.entries(overlay)) {
@@ -7,6 +9,14 @@ export function applyOfficialStateIconTranslations(statusInfo, overlay = officia
 		if (Object.hasOwn(entry, 'haveTimeLimit')) statusInfo[statusId].haveTimeLimit = entry.haveTimeLimit;
 		if (Object.hasOwn(entry, 'posTimeLimitStr')) statusInfo[statusId].posTimeLimitStr = entry.posTimeLimitStr;
 		statusInfo[statusId].descript = entry.descript.map(line => [...line]);
+	}
+	// Only reviewed skill effects share names. Generic ailments and shared icons retain their own titles.
+	if (overlay === officialStateIconTranslations) {
+		for (const [id, entry] of Object.entries(statusSkillNames)) {
+			const title = statusInfo[id]?.descript?.[0];
+			const skill = skillNames[entry.skillId];
+			if (title && skill) title[0] = `${entry.prefix || ''}${skill.name}${entry.suffix || ''}`;
+		}
 	}
 	return statusInfo;
 }

@@ -91,7 +91,7 @@ export default {
 	},
 	9: {
 		Name: 'MG_SRECOVERY',
-		SkillName: '增加SP恢复',
+		SkillName: '禅心',
 		MaxLv: 10,
 		SpAmount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -113,7 +113,7 @@ export default {
 	},
 	11: {
 		Name: 'MG_NAPALMBEAT',
-		SkillName: '圣灵召唤',
+		SkillName: '心灵爆破',
 		MaxLv: 10,
 		SpAmount: [9, 9, 9, 12, 12, 12, 15, 15, 15, 18],
 		bSeperateLv: false,
@@ -143,7 +143,7 @@ export default {
 	},
 	13: {
 		Name: 'MG_SOULSTRIKE',
-		SkillName: '灵魂打击',
+		SkillName: '圣灵召唤',
 		MaxLv: 10,
 		SpAmount: [18, 14, 24, 20, 30, 26, 36, 32, 42, 38],
 		bSeperateLv: true,
@@ -256,7 +256,7 @@ export default {
 	},
 	23: {
 		Name: 'AL_DEMONBANE',
-		SkillName: '恶魔克星',
+		SkillName: '天使之击',
 		MaxLv: 10,
 		SpAmount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -349,7 +349,7 @@ export default {
 	},
 	31: {
 		Name: 'AL_HOLYWATER',
-		SkillName: '水之祝福',
+		SkillName: '天使之泪',
 		MaxLv: 1,
 		SpAmount: [10],
 		bSeperateLv: false,
@@ -360,7 +360,7 @@ export default {
 	},
 	32: {
 		Name: 'AL_CRUCIS',
-		SkillName: '十字驱魔',
+		SkillName: '天使之光',
 		MaxLv: 10,
 		SpAmount: [35, 35, 35, 35, 35, 35, 35, 35, 35, 35],
 		bSeperateLv: false,
@@ -382,7 +382,7 @@ export default {
 	},
 	34: {
 		Name: 'AL_BLESSING',
-		SkillName: '祝福',
+		SkillName: '天使之赐福',
 		MaxLv: 10,
 		SpAmount: [28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
 		bSeperateLv: true,
@@ -393,7 +393,7 @@ export default {
 	},
 	35: {
 		Name: 'AL_CURE',
-		SkillName: '治愈',
+		SkillName: '治疗术',
 		MaxLv: 1,
 		SpAmount: [15],
 		bSeperateLv: false,
@@ -415,7 +415,7 @@ export default {
 	},
 	37: {
 		Name: 'MC_DISCOUNT',
-		SkillName: '折扣',
+		SkillName: '低价买进',
 		MaxLv: 10,
 		SpAmount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -481,7 +481,7 @@ export default {
 	},
 	43: {
 		Name: 'AC_OWL',
-		SkillName: '猫头鹰之眼',
+		SkillName: '鹗枭之眼',
 		MaxLv: 10,
 		SpAmount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -492,7 +492,7 @@ export default {
 	},
 	44: {
 		Name: 'AC_VULTURE',
-		SkillName: '兀鹰之眼',
+		SkillName: '苍鹰之眼',
 		MaxLv: 10,
 		SpAmount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -829,7 +829,7 @@ export default {
 	},
 	73: {
 		Name: 'PR_KYRIE',
-		SkillName: '凯里艾勒松',
+		SkillName: '霸邪之阵',
 		MaxLv: 10,
 		SpAmount: [20, 20, 20, 25, 25, 25, 30, 30, 30, 35],
 		bSeperateLv: true,
@@ -840,7 +840,7 @@ export default {
 	},
 	74: {
 		Name: 'PR_MAGNIFICAT',
-		SkillName: '赞美诗',
+		SkillName: '圣母之颂歌',
 		MaxLv: 5,
 		SpAmount: [40, 40, 40, 40, 40],
 		bSeperateLv: false,
@@ -851,7 +851,7 @@ export default {
 	},
 	75: {
 		Name: 'PR_GLORIA',
-		SkillName: '荣耀',
+		SkillName: '幸运之颂歌',
 		MaxLv: 5,
 		SpAmount: [20, 20, 20, 20, 20],
 		bSeperateLv: false,
@@ -865,7 +865,7 @@ export default {
 	},
 	76: {
 		Name: 'PR_LEXDIVINA',
-		SkillName: '神圣法典',
+		SkillName: '沉默之术',
 		MaxLv: 10,
 		SpAmount: [20, 20, 20, 20, 20, 18, 16, 14, 12, 10],
 		bSeperateLv: false,
@@ -890,7 +890,7 @@ export default {
 	},
 	78: {
 		Name: 'PR_LEXAETERNA',
-		SkillName: '永恒法典',
+		SkillName: '天使之怒',
 		MaxLv: 1,
 		SpAmount: [10],
 		bSeperateLv: false,
@@ -927,7 +927,7 @@ export default {
 	},
 	81: {
 		Name: 'WZ_SIGHTRASHER',
-		SkillName: '火狩芽',
+		SkillName: '火之猎杀',
 		MaxLv: 10,
 		SpAmount: [35, 37, 39, 41, 43, 45, 47, 49, 51, 53],
 		bSeperateLv: true,
@@ -1124,7 +1124,7 @@ export default {
 	},
 	97: {
 		Name: 'BS_ORIDEOCON',
-		SkillName: '奥里德原研究',
+		SkillName: '神之金属研究',
 		MaxLv: 5,
 		SpAmount: [0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -1506,7 +1506,7 @@ export default {
 	},
 	130: {
 		Name: 'HT_DETECTING',
-		SkillName: '探测',
+		SkillName: '猎鹰寻敌',
 		MaxLv: 4,
 		SpAmount: [8, 8, 8, 8],
 		bSeperateLv: false,
@@ -1520,7 +1520,7 @@ export default {
 	},
 	131: {
 		Name: 'HT_SPRINGTRAP',
-		SkillName: '弹簧陷阱',
+		SkillName: '爆破陷阱',
 		MaxLv: 5,
 		SpAmount: [10, 10, 10, 10, 10],
 		bSeperateLv: false,
@@ -2049,7 +2049,7 @@ export default {
 	},
 	229: {
 		Name: 'AM_DEMONSTRATION',
-		SkillName: '炸弹',
+		SkillName: '火烟瓶投掷',
 		MaxLv: 5,
 		SpAmount: [10, 10, 10, 10, 10],
 		bSeperateLv: false,
@@ -2060,7 +2060,7 @@ export default {
 	},
 	230: {
 		Name: 'AM_ACIDTERROR',
-		SkillName: '酸性恐惧',
+		SkillName: '强酸攻击',
 		MaxLv: 5,
 		SpAmount: [15, 15, 15, 15, 15],
 		bSeperateLv: false,
@@ -2071,7 +2071,7 @@ export default {
 	},
 	231: {
 		Name: 'AM_POTIONPITCHER',
-		SkillName: '辅助药水',
+		SkillName: '药水投掷',
 		MaxLv: 5,
 		SpAmount: [1, 1, 1, 1, 1],
 		bSeperateLv: true,
@@ -2446,7 +2446,7 @@ export default {
 	},
 	264: {
 		Name: 'MO_BODYRELOCATION',
-		SkillName: '残影',
+		SkillName: '弓身弹影',
 		MaxLv: 1,
 		SpAmount: [14],
 		bSeperateLv: false,
@@ -2566,7 +2566,7 @@ export default {
 	},
 	274: {
 		Name: 'SA_ADVANCEDBOOK',
-		SkillName: '进阶书籍',
+		SkillName: '进化之书',
 		MaxLv: 10,
 		SpAmount: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -2588,7 +2588,7 @@ export default {
 	},
 	276: {
 		Name: 'SA_MAGICROD',
-		SkillName: '魔法抵抗',
+		SkillName: '魔法惩罚',
 		MaxLv: 5,
 		SpAmount: [2, 2, 2, 2, 2],
 		bSeperateLv: false,
@@ -2599,7 +2599,7 @@ export default {
 	},
 	277: {
 		Name: 'SA_SPELLBREAKER',
-		SkillName: '魔法破坏',
+		SkillName: '念咒拆除',
 		MaxLv: 5,
 		SpAmount: [10, 10, 10, 10, 10],
 		bSeperateLv: false,
@@ -3277,7 +3277,7 @@ export default {
 	},
 	356: {
 		Name: 'LK_PARRYING',
-		SkillName: '招架',
+		SkillName: '双剑格挡',
 		MaxLv: 10,
 		SpAmount: [50, 50, 50, 50, 50, 50, 50, 50, 50, 50],
 		bSeperateLv: true,
@@ -3502,7 +3502,7 @@ export default {
 	},
 	373: {
 		Name: 'PF_HPCONVERSION',
-		SkillName: '生命力转换',
+		SkillName: 'HP转换',
 		MaxLv: 5,
 		SpAmount: [1, 2, 3, 4, 5],
 		bSeperateLv: false,
@@ -3530,7 +3530,7 @@ export default {
 	},
 	375: {
 		Name: 'PF_SOULBURN',
-		SkillName: '精神冲击',
+		SkillName: '精神耗弱术',
 		MaxLv: 5,
 		SpAmount: [80, 90, 100, 110, 120],
 		bSeperateLv: true,
@@ -3717,7 +3717,7 @@ export default {
 	},
 	390: {
 		Name: 'ST_REJECTSWORD',
-		SkillName: '卸除剑',
+		SkillName: '霸王魂',
 		MaxLv: 5,
 		SpAmount: [10, 15, 20, 25, 30],
 		bSeperateLv: true,
@@ -3878,7 +3878,7 @@ export default {
 	},
 	401: {
 		Name: 'CH_SOULCOLLECT',
-		SkillName: '禅',
+		SkillName: '狂蓄气',
 		MaxLv: 1,
 		SpAmount: [20],
 		bSeperateLv: false,
@@ -3889,7 +3889,7 @@ export default {
 	},
 	402: {
 		Name: 'PF_MINDBREAKER',
-		SkillName: '心灵破坏者',
+		SkillName: '精神撼动',
 		MaxLv: 5,
 		SpAmount: [12, 15, 18, 21, 24],
 		bSeperateLv: true,
@@ -4607,7 +4607,7 @@ export default {
 	},
 	464: {
 		Name: 'SL_KAUPE',
-		SkillName: '卡乌普',
+		SkillName: '凯诬仆',
 		MaxLv: 3,
 		SpAmount: [20, 30, 40],
 		bSeperateLv: false,
@@ -4693,7 +4693,7 @@ export default {
 	},
 	471: {
 		Name: 'SL_SKE',
-		SkillName: '埃斯克',
+		SkillName: '艾斯克',
 		MaxLv: 3,
 		SpAmount: [45, 30, 15],
 		bSeperateLv: false,
@@ -8254,7 +8254,7 @@ export default {
 	},
 	2004: {
 		Name: 'RK_HUNDREDSPEAR',
-		SkillName: '百矛',
+		SkillName: '百矛穿刺',
 		MaxLv: 10,
 		SpAmount: [60, 60, 60, 60, 60, 60, 60, 60, 60, 60],
 		bSeperateLv: true,
@@ -8276,7 +8276,7 @@ export default {
 	},
 	2006: {
 		Name: 'RK_IGNITIONBREAK',
-		SkillName: '点火破坏',
+		SkillName: '致命爆裂',
 		MaxLv: 5,
 		SpAmount: [35, 40, 45, 50, 55],
 		bSeperateLv: true,
@@ -8434,7 +8434,7 @@ export default {
 	},
 	2020: {
 		Name: 'RK_PHANTOMTHRUST',
-		SkillName: '幻影突刺',
+		SkillName: '幻象突刺',
 		MaxLv: 5,
 		SpAmount: [15, 18, 21, 24, 27],
 		bSeperateLv: true,
@@ -8641,7 +8641,7 @@ export default {
 	},
 	2038: {
 		Name: 'AB_JUDEX',
-		SkillName: '朱迪克斯',
+		SkillName: '审判',
 		MaxLv: 10,
 		SpAmount: [20, 23, 26, 29, 32, 34, 36, 38, 40, 42],
 		bSeperateLv: true,
@@ -8652,7 +8652,7 @@ export default {
 	},
 	2039: {
 		Name: 'AB_ANCILLA',
-		SkillName: '安琪拉',
+		SkillName: '安希拉',
 		MaxLv: 1,
 		SpAmount: [10],
 		bSeperateLv: false,
@@ -8663,7 +8663,7 @@ export default {
 	},
 	2040: {
 		Name: 'AB_ADORAMUS',
-		SkillName: '阿多拉穆斯',
+		SkillName: '讴歌',
 		MaxLv: 10,
 		SpAmount: [32, 40, 48, 56, 64, 72, 80, 88, 96, 104],
 		bSeperateLv: true,
@@ -8678,7 +8678,7 @@ export default {
 	},
 	2041: {
 		Name: 'AB_CLEMENTIA',
-		SkillName: '克莱门提亚',
+		SkillName: '慈悲术',
 		MaxLv: 3,
 		SpAmount: [280, 320, 360],
 		bSeperateLv: true,
@@ -8689,7 +8689,7 @@ export default {
 	},
 	2042: {
 		Name: 'AB_CANTO',
-		SkillName: '坎托·坎迪杜斯',
+		SkillName: '纯白百合花',
 		MaxLv: 3,
 		SpAmount: [200, 220, 240],
 		bSeperateLv: true,
@@ -8725,7 +8725,7 @@ export default {
 	},
 	2045: {
 		Name: 'AB_PRAEFATIO',
-		SkillName: '祷告',
+		SkillName: '感恩歌',
 		MaxLv: 10,
 		SpAmount: [90, 100, 110, 120, 130, 140, 150, 160, 170, 180],
 		bSeperateLv: false,
@@ -8736,7 +8736,7 @@ export default {
 	},
 	2046: {
 		Name: 'AB_ORATIO',
-		SkillName: '祈祷',
+		SkillName: '祈祷文',
 		MaxLv: 10,
 		SpAmount: [35, 38, 41, 44, 47, 50, 53, 56, 59, 62],
 		bSeperateLv: false,
@@ -8747,7 +8747,7 @@ export default {
 	},
 	2047: {
 		Name: 'AB_LAUDAAGNUS',
-		SkillName: '羔羊赞歌',
+		SkillName: '羔羊歌颂',
 		MaxLv: 4,
 		SpAmount: [50, 60, 70, 80],
 		bSeperateLv: true,
@@ -8758,7 +8758,7 @@ export default {
 	},
 	2048: {
 		Name: 'AB_LAUDARAMUS',
-		SkillName: '枝条赞歌',
+		SkillName: '折枝赞颂',
 		MaxLv: 4,
 		SpAmount: [50, 60, 70, 80],
 		bSeperateLv: true,
@@ -8794,7 +8794,7 @@ export default {
 	},
 	2051: {
 		Name: 'AB_HIGHNESSHEAL',
-		SkillName: '高级治愈',
+		SkillName: '高阶治愈术',
 		MaxLv: 5,
 		SpAmount: [70, 100, 130, 160, 190],
 		bSeperateLv: true,
@@ -8830,7 +8830,7 @@ export default {
 	},
 	2054: {
 		Name: 'AB_DUPLELIGHT',
-		SkillName: '双重光',
+		SkillName: '二道圣光',
 		MaxLv: 10,
 		SpAmount: [55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
 		bSeperateLv: true,
@@ -8907,7 +8907,7 @@ export default {
 	},
 	2204: {
 		Name: 'WL_JACKFROST',
-		SkillName: '杰克霜冻',
+		SkillName: '冻僵术',
 		MaxLv: 5,
 		SpAmount: [50, 60, 70, 80, 90],
 		bSeperateLv: true,
@@ -8944,7 +8944,7 @@ export default {
 	},
 	2207: {
 		Name: 'WL_SIENNAEXECRATE',
-		SkillName: '锡耶纳诅咒',
+		SkillName: '石化诅咒',
 		MaxLv: 5,
 		SpAmount: [32, 34, 36, 38, 40],
 		bSeperateLv: true,
@@ -8955,7 +8955,7 @@ export default {
 	},
 	2208: {
 		Name: 'WL_RADIUS',
-		SkillName: '半径',
+		SkillName: '半径扩大',
 		MaxLv: 3,
 		SpAmount: [0, 0, 0],
 		bSeperateLv: false,
@@ -9406,7 +9406,7 @@ export default {
 	},
 	2257: {
 		Name: 'NC_PILEBUNKER',
-		SkillName: '桩锚',
+		SkillName: '冲击椎',
 		MaxLv: 3,
 		SpAmount: [50, 50, 50],
 		bSeperateLv: true,
@@ -9439,7 +9439,7 @@ export default {
 	},
 	2260: {
 		Name: 'NC_COLDSLOWER',
-		SkillName: '寒冷减速器',
+		SkillName: '液体冷却弹',
 		MaxLv: 3,
 		SpAmount: [20, 20, 20],
 		bSeperateLv: true,
@@ -9508,7 +9508,7 @@ export default {
 	},
 	2266: {
 		Name: 'NC_MAINFRAME',
-		SkillName: '主框架改造',
+		SkillName: '主体改造',
 		MaxLv: 4,
 		SpAmount: [0, 0, 0, 0],
 		bSeperateLv: false,
@@ -9892,7 +9892,7 @@ export default {
 	},
 	2299: {
 		Name: 'SC_MANHOLE',
-		SkillName: '下水道井盖',
+		SkillName: '人孔',
 		MaxLv: 3,
 		SpAmount: [20, 25, 30],
 		bSeperateLv: true,
@@ -9972,7 +9972,7 @@ export default {
 	},
 	2308: {
 		Name: 'LG_BANISHINGPOINT',
-		SkillName: '驱逐点',
+		SkillName: '放逐攻击',
 		MaxLv: 10,
 		SpAmount: [20, 22, 24, 26, 28, 30, 32, 34, 36, 38],
 		bSeperateLv: true,
@@ -10219,7 +10219,7 @@ export default {
 	},
 	2329: {
 		Name: 'SR_FALLENEMPIRE',
-		SkillName: '堕落帝国',
+		SkillName: '大缠崩坠',
 		MaxLv: 10,
 		SpAmount: [18, 21, 24, 27, 30, 33, 36, 39, 42, 45],
 		bSeperateLv: false,
@@ -10241,7 +10241,7 @@ export default {
 	},
 	2332: {
 		Name: 'SR_RAMPAGEBLASTER',
-		SkillName: '狂暴爆破',
+		SkillName: '爆气散弹',
 		MaxLv: 5,
 		SpAmount: [100, 100, 100, 100, 100],
 		bSeperateLv: false,
@@ -10252,7 +10252,7 @@ export default {
 	},
 	2333: {
 		Name: 'SR_CRESCENTELBOW',
-		SkillName: '新月肘击',
+		SkillName: '破碎柱',
 		MaxLv: 5,
 		SpAmount: [80, 80, 80, 80, 80],
 		bSeperateLv: false,
@@ -10285,7 +10285,7 @@ export default {
 	},
 	2336: {
 		Name: 'SR_KNUCKLEARROW',
-		SkillName: '拳套箭',
+		SkillName: '修罗身弹',
 		MaxLv: 10,
 		SpAmount: [12, 14, 16, 18, 20, 22, 24, 26, 28, 30],
 		bSeperateLv: false,
@@ -10335,7 +10335,7 @@ export default {
 	},
 	2341: {
 		Name: 'SR_POWERVELOCITY',
-		SkillName: '力量速度',
+		SkillName: '全气注入',
 		MaxLv: 1,
 		SpAmount: [50],
 		bSeperateLv: false,
@@ -10346,7 +10346,7 @@ export default {
 	},
 	2343: {
 		Name: 'SR_GATEOFHELL',
-		SkillName: '地狱之门',
+		SkillName: '罗刹破凰击',
 		MaxLv: 10,
 		SpAmount: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
 		bSeperateLv: true,
@@ -10360,7 +10360,7 @@ export default {
 	},
 	2344: {
 		Name: 'SR_GENTLETOUCH_QUIET',
-		SkillName: '温柔触碰 - 寂静',
+		SkillName: '点穴-默',
 		MaxLv: 5,
 		SpAmount: [20, 25, 30, 35, 40],
 		bSeperateLv: true,
@@ -10371,7 +10371,7 @@ export default {
 	},
 	2345: {
 		Name: 'SR_GENTLETOUCH_CURE',
-		SkillName: '温柔触碰 - 治愈',
+		SkillName: '点穴-快',
 		MaxLv: 5,
 		SpAmount: [40, 50, 60, 70, 80],
 		bSeperateLv: false,
@@ -10393,7 +10393,7 @@ export default {
 	},
 	2347: {
 		Name: 'SR_GENTLETOUCH_CHANGE',
-		SkillName: '温柔触碰-转换',
+		SkillName: '点穴-反',
 		MaxLv: 5,
 		SpAmount: [40, 50, 60, 70, 80],
 		bSeperateLv: true,
@@ -10408,7 +10408,7 @@ export default {
 	},
 	2348: {
 		Name: 'SR_GENTLETOUCH_REVITALIZE',
-		SkillName: '温柔之触-活力',
+		SkillName: '点穴-活',
 		MaxLv: 5,
 		SpAmount: [40, 50, 60, 70, 80],
 		bSeperateLv: true,
@@ -10610,7 +10610,7 @@ export default {
 	},
 	2425: {
 		Name: 'WM_GLOOMYDAY',
-		SkillName: '阴郁之日',
+		SkillName: '羞怯一天的忧郁',
 		MaxLv: 5,
 		SpAmount: [42, 46, 50, 54, 58],
 		bSeperateLv: true,
@@ -10814,7 +10814,7 @@ export default {
 	},
 	2448: {
 		Name: 'SO_POISON_BUSTER',
-		SkillName: '毒爆',
+		SkillName: '剧毒猛击',
 		MaxLv: 5,
 		SpAmount: [70, 90, 110, 130, 150],
 		bSeperateLv: true,
@@ -10888,7 +10888,7 @@ export default {
 	},
 	2454: {
 		Name: 'SO_VARETYR_SPEAR',
-		SkillName: '雷霆之枪',
+		SkillName: '圣枪刺击',
 		MaxLv: 10,
 		SpAmount: [65, 70, 75, 80, 85, 90, 95, 100, 105, 110],
 		bSeperateLv: false,
@@ -11073,7 +11073,7 @@ export default {
 	},
 	2474: {
 		Name: 'GN_TRAINING_SWORD',
-		SkillName: '剑术训练',
+		SkillName: '单手剑使用熟练度',
 		MaxLv: 5,
 		SpAmount: [0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -11216,7 +11216,7 @@ export default {
 	},
 	2492: {
 		Name: 'GN_MANDRAGORA',
-		SkillName: '曼陀罗嚎叫',
+		SkillName: '曼陀罗魔花的尖叫',
 		MaxLv: 5,
 		SpAmount: [40, 45, 50, 55, 60],
 		bSeperateLv: true,
@@ -11282,7 +11282,7 @@ export default {
 	},
 	2515: {
 		Name: 'AB_SECRAMENT',
-		SkillName: '圣礼',
+		SkillName: '圣典',
 		MaxLv: 5,
 		SpAmount: [100, 120, 140, 160, 180],
 		bSeperateLv: true,
@@ -11296,7 +11296,7 @@ export default {
 	},
 	2517: {
 		Name: 'SR_HOWLINGOFLION',
-		SkillName: '狮子咆哮',
+		SkillName: '狮子吼',
 		MaxLv: 5,
 		SpAmount: [70, 70, 70, 70, 70],
 		bSeperateLv: true,
@@ -11310,7 +11310,7 @@ export default {
 	},
 	2518: {
 		Name: 'SR_RIDEINLIGHTNING',
-		SkillName: '雷电骑乘',
+		SkillName: '雷光弹',
 		MaxLv: 5,
 		SpAmount: [25, 30, 35, 40, 45],
 		bSeperateLv: true,
@@ -11520,7 +11520,7 @@ export default {
 	},
 	2553: {
 		Name: 'RL_MASS_SPIRAL',
-		SkillName: '螺旋击刺',
+		SkillName: '绝对贯穿',
 		MaxLv: 5,
 		SpAmount: [40, 44, 48, 52, 56],
 		bSeperateLv: true,
@@ -11796,7 +11796,7 @@ export default {
 	},
 	2579: {
 		Name: 'SJ_NEWMOONKICK',
-		SkillName: '新月踢',
+		SkillName: '朔月脚',
 		MaxLv: 7,
 		SpAmount: [20, 25, 30, 35, 40, 45, 50],
 		bSeperateLv: true,
@@ -12065,7 +12065,7 @@ export default {
 	},
 	2602: {
 		Name: 'SP_SPA',
-		SkillName: '埃斯帕',
+		SkillName: '艾斯帕',
 		MaxLv: 10,
 		SpAmount: [52, 56, 60, 64, 68, 72, 76, 80, 84, 88],
 		bSeperateLv: true,
@@ -12076,7 +12076,7 @@ export default {
 	},
 	2603: {
 		Name: 'SP_SHA',
-		SkillName: '艾莎',
+		SkillName: '艾斯哈',
 		MaxLv: 5,
 		SpAmount: [18, 20, 22, 24, 26],
 		bSeperateLv: true,
@@ -12087,7 +12087,7 @@ export default {
 	},
 	2604: {
 		Name: 'SP_SWHOO',
-		SkillName: '艾斯伍',
+		SkillName: '艾斯核',
 		MaxLv: 10,
 		SpAmount: [66, 70, 74, 78, 82, 86, 90, 94, 98, 102],
 		bSeperateLv: true,
@@ -12231,7 +12231,7 @@ export default {
 	},
 	3004: {
 		Name: 'KO_JYUMONJIKIRI',
-		SkillName: '十字斩',
+		SkillName: '幽冥十字斩',
 		MaxLv: 10,
 		SpAmount: [10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
 		bSeperateLv: true,
@@ -12904,7 +12904,7 @@ export default {
 	},
 	5026: {
 		Name: 'SU_SV_STEMSPEAR',
-		SkillName: '银藤茎之矛',
+		SkillName: '猕猴桃梗枪',
 		MaxLv: 5,
 		SpAmount: [40, 40, 40, 40, 40],
 		bSeperateLv: true,
@@ -12937,7 +12937,7 @@ export default {
 	},
 	5029: {
 		Name: 'SU_SV_ROOTTWIST',
-		SkillName: '银藤根缠绕',
+		SkillName: '猕猴桃根茎缠绕',
 		MaxLv: 5,
 		SpAmount: [10, 12, 14, 16, 18],
 		bSeperateLv: false,
@@ -12970,7 +12970,7 @@ export default {
 	},
 	5033: {
 		Name: 'SU_PICKYPECK',
-		SkillName: '挑剔啄击',
+		SkillName: '小鸡啄击',
 		MaxLv: 5,
 		SpAmount: [10, 12, 14, 16, 18],
 		bSeperateLv: true,
@@ -12981,7 +12981,7 @@ export default {
 	},
 	5035: {
 		Name: 'SU_ARCLOUSEDASH',
-		SkillName: '阿克鲁兹冲刺',
+		SkillName: '卷甲虫暴冲',
 		MaxLv: 5,
 		SpAmount: [12, 14, 16, 18, 20],
 		bSeperateLv: true,
@@ -13413,7 +13413,7 @@ export default {
 	},
 	5208: {
 		Name: 'DK_HACKANDSLASHER',
-		SkillName: '砍杀者',
+		SkillName: '横挥斩',
 		MaxLv: 10,
 		SpAmount: [36, 40, 44, 48, 52, 56, 60, 64, 68, 72],
 		bSeperateLv: true,
@@ -13513,7 +13513,7 @@ export default {
 	},
 	5214: {
 		Name: 'AG_DEADLY_PROJECTION',
-		SkillName: '致命投影',
+		SkillName: '死亡投射',
 		MaxLv: 5,
 		SpAmount: [70, 75, 80, 85, 90],
 		bSeperateLv: true,
@@ -13587,7 +13587,7 @@ export default {
 	},
 	5220: {
 		Name: 'AG_SOUL_VC_STRIKE',
-		SkillName: '灵魂火神击',
+		SkillName: '灵魂连击',
 		MaxLv: 5,
 		SpAmount: [90, 95, 100, 105, 110],
 		bSeperateLv: true,
@@ -13737,7 +13737,7 @@ export default {
 	},
 	5232: {
 		Name: 'AG_CLIMAX',
-		SkillName: '高潮',
+		SkillName: '魔力巅峰',
 		MaxLv: 5,
 		SpAmount: [60, 60, 60, 60, 60],
 		bSeperateLv: true,
@@ -13844,7 +13844,7 @@ export default {
 	},
 	5241: {
 		Name: 'IQ_OLEUM_SANCTUM',
-		SkillName: '神圣圣油',
+		SkillName: '圣油洗礼',
 		MaxLv: 5,
 		SpAmount: [45, 55, 65, 75, 85],
 		bSeperateLv: true,
@@ -13895,7 +13895,7 @@ export default {
 	},
 	5244: {
 		Name: 'IQ_EXPOSION_BLASTER',
-		SkillName: '爆炸爆破',
+		SkillName: '爆破散弹',
 		MaxLv: 5,
 		SpAmount: [105, 110, 115, 120, 125],
 		bSeperateLv: true,
@@ -13906,7 +13906,7 @@ export default {
 	},
 	5245: {
 		Name: 'IQ_FIRST_BRAND',
-		SkillName: '第一烙印',
+		SkillName: '第一击：烙印',
 		MaxLv: 5,
 		SpAmount: [46, 50, 54, 58, 62],
 		bSeperateLv: true,
@@ -13917,7 +13917,7 @@ export default {
 	},
 	5246: {
 		Name: 'IQ_FIRST_FAITH_POWER',
-		SkillName: '第一信仰之力',
+		SkillName: '第一章：信念之力',
 		MaxLv: 5,
 		SpAmount: [60, 60, 60, 60, 60],
 		bSeperateLv: true,
@@ -13936,7 +13936,7 @@ export default {
 	},
 	5247: {
 		Name: 'IQ_JUDGE',
-		SkillName: '审判',
+		SkillName: '第二章：审判者',
 		MaxLv: 5,
 		SpAmount: [60, 60, 60, 60, 60],
 		bSeperateLv: true,
@@ -13947,7 +13947,7 @@ export default {
 	},
 	5248: {
 		Name: 'IQ_SECOND_FLAME',
-		SkillName: '第二火焰',
+		SkillName: '第二击：火焰灭绝',
 		MaxLv: 5,
 		SpAmount: [51, 57, 63, 69, 75],
 		bSeperateLv: true,
@@ -13958,7 +13958,7 @@ export default {
 	},
 	5249: {
 		Name: 'IQ_SECOND_FAITH',
-		SkillName: '第二信仰',
+		SkillName: '第二击：信念',
 		MaxLv: 5,
 		SpAmount: [41, 47, 53, 59, 65],
 		bSeperateLv: true,
@@ -13969,7 +13969,7 @@ export default {
 	},
 	5250: {
 		Name: 'IQ_SECOND_JUDGEMENT',
-		SkillName: '第二审判',
+		SkillName: '第二击：审判',
 		MaxLv: 5,
 		SpAmount: [50, 55, 60, 65, 70],
 		bSeperateLv: true,
@@ -13980,7 +13980,7 @@ export default {
 	},
 	5251: {
 		Name: 'IQ_THIRD_PUNISH',
-		SkillName: '第三惩罚',
+		SkillName: '第三击：惩戒',
 		MaxLv: 5,
 		SpAmount: [56, 62, 68, 74, 80],
 		bSeperateLv: true,
@@ -13991,7 +13991,7 @@ export default {
 	},
 	5252: {
 		Name: 'IQ_THIRD_FLAME_BOMB',
-		SkillName: '第三火焰炸弹',
+		SkillName: '第三击：火焰轰击',
 		MaxLv: 5,
 		SpAmount: [74, 78, 82, 86, 90],
 		bSeperateLv: true,
@@ -14002,7 +14002,7 @@ export default {
 	},
 	5253: {
 		Name: 'IQ_THIRD_CONSECRATION',
-		SkillName: '第三奉献',
+		SkillName: '第三击：净化',
 		MaxLv: 5,
 		SpAmount: [65, 70, 75, 80, 85],
 		bSeperateLv: true,
@@ -14207,7 +14207,7 @@ export default {
 	},
 	5268: {
 		Name: 'CD_REPARATIO',
-		SkillName: '修复',
+		SkillName: '痊愈如初',
 		MaxLv: 5,
 		SpAmount: [120, 120, 120, 120, 120],
 		bSeperateLv: true,
@@ -14218,7 +14218,7 @@ export default {
 	},
 	5269: {
 		Name: 'CD_MEDIALE_VOTUM',
-		SkillName: '中级祷言',
+		SkillName: '治愈誓约',
 		MaxLv: 5,
 		SpAmount: [30, 40, 50, 60, 70],
 		bSeperateLv: true,
@@ -14240,7 +14240,7 @@ export default {
 	},
 	5271: {
 		Name: 'CD_ARGUTUS_VITA',
-		SkillName: '锐利生命',
+		SkillName: '破魔圣光',
 		MaxLv: 5,
 		SpAmount: [30, 45, 60, 75, 90],
 		bSeperateLv: true,
@@ -14259,7 +14259,7 @@ export default {
 	},
 	5272: {
 		Name: 'CD_ARGUTUS_TELUM',
-		SkillName: '锐利武器',
+		SkillName: '锐利圣光',
 		MaxLv: 5,
 		SpAmount: [30, 45, 60, 75, 90],
 		bSeperateLv: true,
@@ -14278,7 +14278,7 @@ export default {
 	},
 	5273: {
 		Name: 'CD_ARBITRIUM',
-		SkillName: '裁决',
+		SkillName: '圣裁天谴',
 		MaxLv: 10,
 		SpAmount: [107, 109, 111, 113, 115, 117, 119, 121, 123, 125],
 		bSeperateLv: true,
@@ -14308,7 +14308,7 @@ export default {
 	},
 	5275: {
 		Name: 'CD_PRESENS_ACIES',
-		SkillName: '临在之锋',
+		SkillName: '爆裂圣光',
 		MaxLv: 5,
 		SpAmount: [30, 45, 60, 75, 90],
 		bSeperateLv: true,
@@ -14338,7 +14338,7 @@ export default {
 	},
 	5277: {
 		Name: 'CD_EFFLIGO',
-		SkillName: '神罚',
+		SkillName: '魂飞魄散',
 		MaxLv: 10,
 		SpAmount: [75, 75, 75, 75, 75, 75, 75, 75, 75, 75],
 		bSeperateLv: true,
@@ -14357,7 +14357,7 @@ export default {
 	},
 	5278: {
 		Name: 'CD_COMPETENTIA',
-		SkillName: '能力',
+		SkillName: '权能',
 		MaxLv: 5,
 		SpAmount: [60, 60, 60, 60, 60],
 		bSeperateLv: true,
@@ -14378,7 +14378,7 @@ export default {
 	},
 	5279: {
 		Name: 'CD_PNEUMATICUS_PROCELLA',
-		SkillName: '气流风暴',
+		SkillName: '圣灵风暴',
 		MaxLv: 10,
 		SpAmount: [150, 150, 150, 150, 150, 150, 150, 150, 150, 150],
 		bSeperateLv: true,
@@ -14397,7 +14397,7 @@ export default {
 	},
 	5280: {
 		Name: 'CD_DILECTIO_HEAL',
-		SkillName: '恩爱治愈',
+		SkillName: '博爱治愈',
 		MaxLv: 5,
 		SpAmount: [50, 55, 60, 65, 70],
 		bSeperateLv: true,
@@ -14416,7 +14416,7 @@ export default {
 	},
 	5281: {
 		Name: 'CD_RELIGIO',
-		SkillName: '信仰',
+		SkillName: '全心奉献',
 		MaxLv: 5,
 		SpAmount: [70, 75, 80, 85, 90],
 		bSeperateLv: true,
@@ -14435,7 +14435,7 @@ export default {
 	},
 	5282: {
 		Name: 'CD_BENEDICTUM',
-		SkillName: '祝福',
+		SkillName: '祝福赞歌',
 		MaxLv: 5,
 		SpAmount: [70, 75, 80, 85, 90],
 		bSeperateLv: true,
@@ -14454,7 +14454,7 @@ export default {
 	},
 	5283: {
 		Name: 'CD_PETITIO',
-		SkillName: '请求',
+		SkillName: '圣光之击',
 		MaxLv: 10,
 		SpAmount: [38, 41, 44, 47, 50, 53, 56, 59, 62, 65],
 		bSeperateLv: true,
@@ -14473,7 +14473,7 @@ export default {
 	},
 	5284: {
 		Name: 'CD_FRAMEN',
-		SkillName: '弗拉门',
+		SkillName: '圣灵镇魂',
 		MaxLv: 5,
 		SpAmount: [80, 83, 86, 89, 92],
 		bSeperateLv: true,
@@ -14659,7 +14659,7 @@ export default {
 	},
 	5294: {
 		Name: 'SHC_FATAL_SHADOW_CROW',
-		SkillName: '致命暗影爪',
+		SkillName: '致命影啸',
 		MaxLv: 10,
 		SpAmount: [150, 150, 150, 150, 150, 150, 150, 150, 150, 150],
 		bSeperateLv: true,
@@ -15104,7 +15104,7 @@ export default {
 	},
 	5323: {
 		Name: 'WH_ADVANCED_TRAP',
-		SkillName: '高级陷阱',
+		SkillName: '高阶陷阱精通',
 		MaxLv: 5,
 		SpAmount: [0, 0, 0, 0, 0],
 		bSeperateLv: false,
@@ -15288,7 +15288,7 @@ export default {
 	},
 	5339: {
 		Name: 'BO_ADVANCE_PROTECTION',
-		SkillName: '高级保护',
+		SkillName: '影子化学保护',
 		MaxLv: 4,
 		SpAmount: [120, 130, 140, 150],
 		bSeperateLv: true,
@@ -15542,7 +15542,7 @@ export default {
 	},
 	5357: {
 		Name: 'TR_SOUNDBLEND',
-		SkillName: '声音融合',
+		SkillName: '混声烙印',
 		MaxLv: 5,
 		SpAmount: [40, 50, 60, 70, 80],
 		bSeperateLv: true,
@@ -15664,7 +15664,7 @@ export default {
 	},
 	5367: {
 		Name: 'EM_ACTIVITY_BURN',
-		SkillName: '活力燃烧',
+		SkillName: '能量枯竭',
 		MaxLv: 5,
 		SpAmount: [30, 40, 50, 60, 70],
 		bSeperateLv: true,
@@ -15675,7 +15675,7 @@ export default {
 	},
 	5368: {
 		Name: 'EM_INCREASING_ACTIVITY',
-		SkillName: '活力提升',
+		SkillName: '能量充沛',
 		MaxLv: 5,
 		SpAmount: [30, 40, 50, 60, 70],
 		bSeperateLv: true,
@@ -16795,7 +16795,7 @@ export default {
 	},
 	5451: {
 		Name: 'HN_DOUBLEBOWLINGBASH',
-		SkillName: '双重保龄球猛击',
+		SkillName: '双重怪物互击',
 		MaxLv: 10,
 		SpAmount: [38, 41, 44, 47, 50, 53, 56, 59, 62, 65],
 		bSeperateLv: true,
@@ -16839,7 +16839,7 @@ export default {
 	},
 	5455: {
 		Name: 'HN_METEOR_STORM_BUSTER',
-		SkillName: '流星风暴破坏',
+		SkillName: '陨石术猛击',
 		MaxLv: 10,
 		SpAmount: [74, 78, 82, 86, 90, 94, 98, 102, 106, 110],
 		bSeperateLv: true,
@@ -16850,7 +16850,7 @@ export default {
 	},
 	5456: {
 		Name: 'HN_JUPITEL_THUNDER_STORM',
-		SkillName: '尤佩特雷暴',
+		SkillName: '雷鸣术风暴',
 		MaxLv: 10,
 		SpAmount: [75, 80, 85, 90, 95, 100, 105, 110, 115, 120],
 		bSeperateLv: true,
@@ -16861,7 +16861,7 @@ export default {
 	},
 	5457: {
 		Name: 'HN_JACK_FROST_NOVA',
-		SkillName: '杰克霜冻新星',
+		SkillName: '新霜冻术',
 		MaxLv: 10,
 		SpAmount: [68, 71, 74, 77, 80, 83, 86, 89, 92, 95],
 		bSeperateLv: true,
@@ -18055,7 +18055,7 @@ export default {
 	},
 	8004: {
 		Name: 'HLIF_CHANGE',
-		SkillName: '变更',
+		SkillName: '智力变换',
 		MaxLv: 3,
 		SpAmount: [100, 100, 100],
 		bSeperateLv: false,
@@ -18176,7 +18176,7 @@ export default {
 	},
 	8015: {
 		Name: 'HVAN_INSTRUCT',
-		SkillName: '指导',
+		SkillName: '变更指示',
 		MaxLv: 5,
 		SpAmount: [0, 0, 0, 0, 0],
 		bSeperateLv: false,
