@@ -91,3 +91,14 @@ it('keeps reviewed skill titles consistent without renaming independent ailments
   expect(officialStateIconTranslations[id]?.descript[0][0]).not.toBe('%s');
  }
 });
+
+it('keeps skill-derived titles and countdown rows distinct', () => {
+ expect(StatusInfo[SC.SOULCOLLECT].descript[0][0]).toBe('灵魂收集');
+ const benedictio = StatusInfo[SC.BENEDICTIO];
+ expect(benedictio.descript[0][0]).toBe('圣体降福');
+ expect(benedictio.descript[benedictio.posTimeLimitStr - 1][0]).toBe('%s');
+ expect(StatusInfo[SC.RG_CCONFINE_M].descript[0][0]).toBe('近身禁锢（施法者）');
+ expect(StatusInfo[SC.RG_CCONFINE_S].descript[0][0]).toBe('近身禁锢（目标）');
+ expect(skillNames[2279].name).toBe('强力挥击');
+ expect(skillNames[6507].name).toBe('爆发横扫');
+});
