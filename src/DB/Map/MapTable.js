@@ -13,67 +13,67 @@ const MapInfo = {
 	'1@gol1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '生物实验中心',
+			mainTitle: "生物实验楼",
 			subTitle: '远征'
 		},
 		notifyEnter: true,
-		displayName: '生物实验中心'
+		displayName: "生物实验楼"
 	},
 	'1@tnm1.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '恶魔之塔 - 上层'
+			mainTitle: "魔神之塔上层"
 		},
 		notifyEnter: true,
-		displayName: '恶魔之塔 - 上层'
+		displayName: "魔神之塔上层"
 	},
 	'gld_dun01_2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会地下城 F2',
+			mainTitle: "青林湖泊公会地下密穴 2层",
 			subTitle: '绿林湖'
 		},
 		notifyEnter: true,
-		displayName: '绿林湖地下城 2F'
+		displayName: "青林湖泊公会地下密穴 2层"
 	},
 	'ra_temin.rsw': {
-		displayName: '拉赫圣域内部'
+		displayName: "神殿内部"
 	},
 	'1@lhz.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '沃尔夫切夫的实验室'
+			mainTitle: "保罗协夫研究室"
 		},
 		notifyEnter: true,
-		displayName: '沃尔夫切夫的实验室'
+		displayName: "保罗协夫研究室"
 	},
 	'pvp_n_4-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间 Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Copass 房间'
+		displayName: "PvP : 罗盘室"
 	},
 	'verus01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'OPTATIO 实验室',
-			subTitle: '维鲁斯城'
+			mainTitle: "实验楼-OPTATIO",
+			subTitle: "贝鲁兹城"
 		},
 		notifyEnter: true,
-		displayName: 'OPTATIO 实验室'
+		displayName: "实验楼-OPTATIO"
 	},
 	'payon_in03.rsw': {
 		displayName: '斐扬内部'
 	},
 	'job3_rune02.rsw': {
-		displayName: '符文骑士转职测试房间'
+		displayName: "符文骑士转职考场"
 	},
 	'hero_lb.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '起源庭院',
+			mainTitle: "英雄之地起源庭院",
 			subTitle: '英雄之地'
 		},
 		notifyEnter: true,
@@ -91,7 +91,7 @@ const MapInfo = {
 	'1@gl_he2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '未完成的次元',
+			mainTitle: "活动模式：未完成的次元",
 			subTitle: '活动模式'
 		},
 		notifyEnter: true,
@@ -100,33 +100,33 @@ const MapInfo = {
 	'lhz_fild02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '死神之谷',
+			mainTitle: "里希塔乐镇野外(死神峡谷)",
 			subTitle: '莱特森原野'
 		},
 		notifyEnter: true,
-		displayName: '莱特森原野（死神之谷）'
+		displayName: "里希塔乐镇野外(死神峡谷)"
 	},
 	've_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维因斯原野'
+			mainTitle: "伯仁斯野外"
 		},
 		notifyEnter: true,
-		displayName: '维因斯原野'
+		displayName: "伯仁斯野外"
 	},
 	'ra_san02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '圣域西区 1F',
+			mainTitle: "拉赫神殿 圣域 1层 西区",
 			subTitle: '拉赫神殿'
 		},
 		notifyEnter: true,
-		displayName: '拉赫神殿圣域西区 1F'
+		displayName: "拉赫神殿 圣域 1层 西区"
 	},
 	'hero_tra.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '训练场',
+			mainTitle: "英雄之地圣域训练场",
 			subTitle: '英雄之地圣域'
 		},
 		notifyEnter: true,
@@ -143,38 +143,38 @@ const MapInfo = {
 	'te_prtcas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '维格纳城堡',
+			mainTitle: "维格纳",
 			subTitle: '卢恩-米德加尔特'
 		},
 		notifyEnter: true,
-		displayName: '维格纳城堡'
+		displayName: "维格纳"
 	},
 	'lou_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '岁龙宫'
+			mainTitle: "龙之城 审良宫"
 		},
 		notifyEnter: true,
-		displayName: '岁龙宫'
+		displayName: "龙之城 审良宫"
 	},
 	'pvp_n_2-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间 Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Copass 房间'
+		displayName: "PvP : 罗盘室"
 	},
 	'dew_in01.rsw': {
-		displayName: '达纳托斯岛内部'
+		displayName: "贾提族部落内部"
 	},
 	'ayo_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '古代神殿内部'
+			mainTitle: "哎哟泰雅 古代神殿内部"
 		},
 		notifyEnter: true,
-		displayName: '古代神殿内部'
+		displayName: "哎哟泰雅 古代神殿内部"
 	},
 	'star_frst.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -187,19 +187,19 @@ const MapInfo = {
 	'1@bamq.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '不公码头'
+			mainTitle: "飞空艇机场"
 		},
 		notifyEnter: true,
-		displayName: '不公码头'
+		displayName: "飞空艇机场"
 	},
 	'1@def03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '熔岩',
+			mainTitle: "波浪地下城 - 熔岩",
 			subTitle: '波利地下城'
 		},
 		notifyEnter: true,
-		displayName: '波利地下城 - 熔岩'
+		displayName: "波浪地下城 - 熔岩"
 	},
 	'wolfvill.rsw': {
 		backgroundBmp: 'village',
@@ -213,410 +213,410 @@ const MapInfo = {
 	'tur_d03_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '荒芜村庄',
+			mainTitle: "死寂良龟村",
 			subTitle: '幻影'
 		},
 		notifyEnter: true,
-		displayName: '荒芜村庄'
+		displayName: "死寂良龟村"
 	},
 	'mosk_ship.rsw': {
-		displayName: '查拉贝尔'
+		displayName: "船"
 	},
 	'1@vrev.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '艾米基提亚的秘密实验室',
+			mainTitle: "幻想丛书 - 阿米希提娅 秘密实验室",
 			subTitle: '幻想系列-003'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列-艾米基提亚的秘密实验室'
+		displayName: "幻想丛书 - 阿米希提娅 秘密实验室"
 	},
 	'te_prtcas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '尼利乌斯城堡',
+			mainTitle: "内里乌斯",
 			subTitle: '卢恩-米德加尔特'
 		},
 		notifyEnter: true,
-		displayName: '尼利乌斯城堡'
+		displayName: "内里乌斯"
 	},
 	'mjolnir_04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼尔山北部'
+			mainTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼尔山北部'
+		displayName: "妙勒尼山脉北区"
 	},
 	'gon_test.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '昆仑斗技场'
+			mainTitle: "昆仑战斗场"
 		},
 		notifyEnter: true,
-		displayName: '昆仑斗技场'
+		displayName: "昆仑战斗场"
 	},
 	'bra_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '瀑布彼端',
-			subTitle: '巴西利斯'
+			mainTitle: "巴西瀑布内的洞穴内部",
+			subTitle: "巴西"
 		},
 		notifyEnter: true,
-		displayName: '瀑布彼端'
+		displayName: "巴西瀑布内的洞穴内部"
 	},
 	'xmas.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '鲁蒂耶',
+			mainTitle: "白雪村落 姜饼城",
 			subTitle: '雪之村'
 		},
 		notifyEnter: true,
-		displayName: '鲁蒂耶'
+		displayName: "白雪村落 姜饼城"
 	},
 	'iz_ac02_a.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里图拉学院 F2'
+			subTitle: "魔法学院 F2"
 		},
 		notifyEnter: true,
-		displayName: '克里图拉学院 F2'
+		displayName: "魔法学院2层"
 	},
 	'jor_back4.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '冰鳞海滩'
+			mainTitle: "冰封的鳞片 海滩"
 		},
 		notifyEnter: true,
-		displayName: '冰鳞海滩'
+		displayName: "冰封的鳞片 海滩"
 	},
 	'vis_h02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '调查走廊 F2'
+			mainTitle: "迎接回廊 2层"
 		},
 		notifyEnter: true,
-		displayName: '调查走廊 F2'
+		displayName: "迎接回廊 2层"
 	},
 	'ma_zif09.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'rockmi1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '岩脊矿山 F1'
+			mainTitle: "洛克里奇 矿山"
 		},
 		notifyEnter: true,
-		displayName: '岩脊矿山'
+		displayName: "洛克里奇 矿山"
 	},
 	'jor_back6.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '远古冰峡谷西部'
+			mainTitle: "古冰峡谷 西部"
 		},
 		notifyEnter: true,
-		displayName: '远古冰峡谷西部'
+		displayName: "古冰峡谷 西部"
 	},
 	'aru_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '瓦尔弗雷亚',
+			mainTitle: "发菲依雅",
 			subTitle: '拉赫'
 		},
 		notifyEnter: true,
-		displayName: '瓦尔弗雷亚'
+		displayName: "发菲依雅"
 	},
 	'ordeal_2-2.rsw': {
-		displayName: '战斗试炼模式'
+		displayName: "团体战斗模式"
 	},
 	'arug_cas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '马德尔城堡',
-			subTitle: '瓦尔弗雷亚'
+			mainTitle: "马勒杜",
+			subTitle: "发菲依雅"
 		},
 		notifyEnter: true,
-		displayName: '马德尔城堡'
+		displayName: "马勒杜"
 	},
 	'tha_t11.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '绝望之室',
-			subTitle: '塔纳托斯塔上层'
+			mainTitle: "达纳托斯之塔 上层部 绝望之房",
+			subTitle: "达纳托斯之塔 上层部"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔上层 - 绝望之室'
+		displayName: "达纳托斯之塔 上层部 绝望之房"
 	},
 	'1@4sac.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '暗影宅邸'
+			mainTitle: "影宅"
 		},
 		notifyEnter: true,
-		displayName: '暗影宅邸'
+		displayName: "影宅"
 	},
 	'lou_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '王家陵墓内部'
+			mainTitle: "龙之城 王陵内部"
 		},
 		notifyEnter: true,
-		displayName: '王家陵墓内部'
+		displayName: "龙之城 王陵内部"
 	},
 	'priest_1-1.rsw': {
-		displayName: '圣所'
+		displayName: "牧师转职所"
 	},
 	'1@md_pay.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '周末纪念馆'
+			mainTitle: "周末副本"
 		},
 		notifyEnter: true,
-		displayName: '周末纪念馆'
+		displayName: "周末副本"
 	},
 	'ra_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥德峡谷'
+			mainTitle: "拉赫欧兹峡谷"
 		},
 		notifyEnter: true,
-		displayName: '奥德峡谷'
+		displayName: "拉赫欧兹峡谷"
 	},
 	'iz_d05_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '深海洞窟'
+			mainTitle: "深渊海底洞穴下层"
 		},
 		notifyEnter: true,
-		displayName: '深海洞窟'
+		displayName: "深渊海底洞穴下层"
 	},
 	'1@4inq.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '修道院地下室'
+			mainTitle: "修道院地下"
 		},
 		notifyEnter: true,
-		displayName: '修道院地下室'
+		displayName: "修道院地下"
 	},
 	'pvp_y_4-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 依斯鲁得房间'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：依斯鲁得房间'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'1@vrhha.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '心灵猎人训练中心',
+			mainTitle: "幻想丛书 - 邪心猎人训练班",
 			subTitle: '幻想系列-008'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列 - 心灵猎人训练中心'
+		displayName: "幻想丛书 - 邪心猎人训练班"
 	},
 	'1@tnm3.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '梦罗克城堡 - 地下室'
+			mainTitle: "梦罗克城地下"
 		},
 		notifyEnter: true,
-		displayName: '梦罗克城堡 - 地下室'
+		displayName: "梦罗克城地下"
 	},
 	'aldebaran.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '艾尔帕兰',
+			mainTitle: "运河之都 艾尔帕兰",
 			subTitle: '卢恩-米德加尔特王国边境城市'
 		},
 		notifyEnter: true,
-		displayName: '边境城市艾尔帕兰'
+		displayName: "运河之都 艾尔帕兰"
 	},
 	'3@ch_t.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '星座塔'
+			mainTitle: "星座之塔"
 		},
 		notifyEnter: true,
-		displayName: '星座塔'
+		displayName: "星座之塔"
 	},
 	'2@ch_t.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '星座塔'
+			mainTitle: "星座之塔"
 		},
 		notifyEnter: true,
-		displayName: '星座塔'
+		displayName: "星座之塔"
 	},
 	'1@ch_t.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '星座塔'
+			mainTitle: "星座之塔"
 		},
 		notifyEnter: true,
-		displayName: '星座塔'
+		displayName: "星座之塔"
 	},
 	'pvp_y_2-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 斐扬房间'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：斐扬房间'
+		displayName: "PvP : 斐扬"
 	},
 	'yuno_in05.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '伊米尔之心发电厂'
+			mainTitle: "伊美乐的心脏动力室"
 		},
 		notifyEnter: true,
-		displayName: '伊米尔之心发电厂'
+		displayName: "伊美乐的心脏动力室"
 	},
 	'1@bamn.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '黄昏花园'
+			mainTitle: "暮光庭院"
 		},
 		notifyEnter: true,
-		displayName: '黄昏花园'
+		displayName: "暮光庭院"
 	},
 	'pvp_n_8-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间 Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Copass 房间'
+		displayName: "PvP : 罗盘室"
 	},
 	'pvp_n_1-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Rock On 房间'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Rock On 房间'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'jor_root3.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '深根洞窟'
+			mainTitle: "深根洞穴"
 		},
 		notifyEnter: true,
-		displayName: '深根洞窟'
+		displayName: "深根洞穴"
 	},
 	'mag_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '诺格道路 3层'
+			mainTitle: "朱诺 诺可罗德 3层"
 		},
 		notifyEnter: true,
-		displayName: '诺格道路 3层'
+		displayName: "朱诺 诺可罗德 3层"
 	},
 	'ayo_in02.rsw': {
-		displayName: '阿育他亚内部'
+		displayName: "哎哟泰雅内部"
 	},
 	'pvp_n_6-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（三明治）'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：三明治房间'
+		displayName: "PvP : 三明治室"
 	},
 	'yuno_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '施瓦茨瓦尔德卫兵营地'
+			mainTitle: "秀发兹发德警备队营地"
 		},
 		notifyEnter: true,
-		displayName: '施瓦茨瓦尔德卫兵营地'
+		displayName: "秀发兹发德警备队营地"
 	},
 	'prt_fild08a.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉南门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉南门'
+		displayName: "普隆德拉野外"
 	},
 	'bat_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '战场等候室'
+			mainTitle: "战场待机室"
 		},
 		notifyEnter: true,
-		displayName: '战场等候室'
+		displayName: "战场待机室"
 	},
 	'jor_twig.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '树枝巢穴',
+			mainTitle: "伊斯加尔特圣域 特维的巢",
 			subTitle: '伊斯加尔德圣域'
 		},
 		notifyEnter: true,
-		displayName: '伊斯加尔德圣域树枝巢穴'
+		displayName: "伊斯加尔特圣域 特维的巢"
 	},
 	'job_soul.rsw': {
-		displayName: '你的心'
+		displayName: "灵魂之地"
 	},
 	'pvp_y_6-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（依斯鲁得）'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：依斯鲁得房间'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'1@swat.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '心脏猎人军事基地'
+			mainTitle: "邪心猎人军事基地"
 		},
 		notifyEnter: true,
-		displayName: '心脏猎人军事基地'
+		displayName: "邪心猎人军事基地"
 	},
 	'lasa_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '龙巢 1层'
+			mainTitle: "龙巢穴"
 		},
 		notifyEnter: true,
-		displayName: '龙巢'
+		displayName: "龙巢穴"
 	},
 	'dic_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '斯卡拉巴洞穴',
+			mainTitle: "斯卡勒伯熔岩",
 			subTitle: '卡米达尔隧道'
 		},
 		notifyEnter: true,
-		displayName: '斯卡拉巴洞穴－梦魇模式'
+		displayName: "斯卡勒伯熔岩"
 	},
 	'pvp_y_5-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（依斯鲁得）'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：依斯鲁得房间'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'pvp_c_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 等候室'
+			mainTitle: "PvP :待机室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：等候室'
+		displayName: "PvP :待机室"
 	},
 	'hero_in3.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '秋日花园',
+			mainTitle: "赫罗斯利亚秋日花园",
 			subTitle: '赫罗斯利亚'
 		},
 		notifyEnter: true,
@@ -625,20 +625,20 @@ const MapInfo = {
 	'1@def01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '森林',
+			mainTitle: "波浪地下城 - 森林",
 			subTitle: '波浪迷宫'
 		},
 		notifyEnter: true,
-		displayName: '波浪迷宫－森林'
+		displayName: "波浪地下城 - 森林"
 	},
 	'1@mjo1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '飞机坠毁地点',
+			mainTitle: "妙勒尼山脉飞空艇失事地",
 			subTitle: '妙勒尼山'
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山脉－飞机坠毁地点'
+		displayName: "妙勒尼山脉飞空艇失事地"
 	},
 	'1@cata.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -651,85 +651,85 @@ const MapInfo = {
 	'2@cata.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '封印神殿'
+			mainTitle: "封印的神殿"
 		},
 		notifyEnter: true,
-		displayName: '封印神殿'
+		displayName: "封印的神殿"
 	},
 	'ba_2whs02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '塔尔塔罗斯仓库下层'
+			mainTitle: "塔尔塔罗斯储藏室下层"
 		},
 		notifyEnter: true,
-		displayName: '塔尔塔罗斯仓库下层'
+		displayName: "塔尔塔罗斯储藏室下层"
 	},
 	'pvp_n_6-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（Rock On）'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Rock On 房间'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'bra_in01.rsw': {
-		displayName: '巴西利斯内部'
+		displayName: "巴西内部"
 	},
 	'gef_fild00.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'prtg_cas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '斯科格尔城堡',
-			subTitle: '女武神领域'
+			mainTitle: "诗魁谷",
+			subTitle: "瓦尔基里雷恩"
 		},
 		notifyEnter: true,
-		displayName: '斯科格尔城堡'
+		displayName: "诗魁谷"
 	},
 	'1@ghg.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '奥索斯水域',
+			mainTitle: "水精灵奥尔图斯",
 			subTitle: '浮空花园'
 		},
 		notifyEnter: true,
-		displayName: '奥索斯水域'
+		displayName: "水精灵奥尔图斯"
 	},
 	'gld_dun04_2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会迷宫地下 2层',
+			mainTitle: "怖立特离亚公会地下密穴 2层",
 			subTitle: '布里特尼亚'
 		},
 		notifyEnter: true,
-		displayName: '布里特尼亚迷宫 2层'
+		displayName: "怖立特离亚公会地下密穴 2层"
 	},
 	'payg_cas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '光辉树堡',
+			mainTitle: "明净",
 			subTitle: '绿林湖'
 		},
 		notifyEnter: true,
-		displayName: '光辉树堡'
+		displayName: "明净"
 	},
 	'prtg_cas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '贡杜尔城堡',
-			subTitle: '女武神领域'
+			mainTitle: "权德",
+			subTitle: "瓦尔基里雷恩"
 		},
 		notifyEnter: true,
-		displayName: '贡杜尔城堡'
+		displayName: "权德"
 	},
 	'sec_in01.rsw': {
-		displayName: '英灵殿内部'
+		displayName: "巴哈拉宫内部"
 	},
 	'mosk_in.rsw': {
 		displayName: '莫斯科比亚内部'
@@ -737,7 +737,7 @@ const MapInfo = {
 	'bl_venom.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '样本环境－毒液',
+			mainTitle: "生物圈样本环境－毒液",
 			subTitle: "Varmundt's Biosphere"
 		},
 		notifyEnter: true,
@@ -746,27 +746,27 @@ const MapInfo = {
 	'cmd_fild02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '可可莫海滩',
-			subTitle: '科莫多'
+			mainTitle: "克魔岛克克魔海边",
+			subTitle: "克魔岛"
 		},
 		notifyEnter: true,
-		displayName: '可可莫海滩'
+		displayName: "克魔岛克克魔海边"
 	},
 	'1@cor.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '科尔'
+			mainTitle: "柯尔记忆迷宫"
 		},
 		notifyEnter: true,
-		displayName: '科尔纪念馆'
+		displayName: "柯尔记忆迷宫"
 	},
 	'pay_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'1@exnw.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -779,38 +779,38 @@ const MapInfo = {
 	'moc_fild18.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'job_sage.rsw': {
-		displayName: '贤者领域'
+		displayName: "贤者转职考场"
 	},
 	'job_gun.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '反叛者避难所'
+			mainTitle: "解放的休息区"
 		},
 		notifyEnter: true,
-		displayName: '反叛者避难所'
+		displayName: "解放的休息区"
 	},
 	'1@ffp.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '残存者藏身处'
+			mainTitle: "余孽大本营"
 		},
 		notifyEnter: true,
-		displayName: '残存者藏身处'
+		displayName: "余孽大本营"
 	},
 	'te_prtcas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '理查德城堡',
+			mainTitle: "雷哈特",
 			subTitle: '卢恩·米德加尔兹'
 		},
 		notifyEnter: true,
-		displayName: '理查德城堡'
+		displayName: "雷哈特"
 	},
 	'gef_d01_i.rsw': {
 		backgroundBmp: 'dungeon',
@@ -819,46 +819,46 @@ const MapInfo = {
 			subTitle: '幻境'
 		},
 		notifyEnter: true,
-		displayName: '第250页（吸血鬼幻影）'
+		displayName: "第250页"
 	},
 	've_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维恩斯原野'
+			mainTitle: "伯仁斯野外"
 		},
 		notifyEnter: true,
-		displayName: '维恩斯原野'
+		displayName: "伯仁斯野外"
 	},
 	'c_tower4.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 4层',
+			mainTitle: "艾尔帕兰 钟塔 地上 4层",
 			subTitle: '艾尔贝兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 4层'
+		displayName: "艾尔帕兰 钟塔 地上 4层"
 	},
 	'ra_fild05.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥杜姆拉草原'
+			mainTitle: "拉赫 奥顿拉草原"
 		},
 		notifyEnter: true,
-		displayName: '奥杜姆拉草原'
+		displayName: "拉赫 奥顿拉草原"
 	},
 	'ra_san05.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '圣域中央区域 2层',
+			mainTitle: "拉赫神殿 圣域 1层 中央区",
 			subTitle: '拉赫神殿'
 		},
 		notifyEnter: true,
-		displayName: '拉赫神殿圣域中央区域 2层'
+		displayName: "拉赫神殿 圣域 1层 中央区"
 	},
 	'hero_ent3.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '第三英雄之门',
+			mainTitle: "赫罗斯利亚第三英雄之门",
 			subTitle: '赫罗斯利亚'
 		},
 		notifyEnter: true,
@@ -884,66 +884,66 @@ const MapInfo = {
 	'iz_ac01.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里图拉学院 1层'
+			subTitle: "魔法学院 1层"
 		},
 		notifyEnter: true,
-		displayName: '克里图拉学院 1层'
+		displayName: "魔法学院 1层"
 	},
 	'gef_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'1@eom.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '魔神之殿'
+			mainTitle: "魔神殿"
 		},
 		notifyEnter: true,
-		displayName: '魔神之殿'
+		displayName: "魔神殿"
 	},
 	'1@exsh.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '深邃森林'
+			mainTitle: "深邃的森林"
 		},
 		notifyEnter: true,
-		displayName: '深邃森林'
+		displayName: "深邃的森林"
 	},
 	'z_agit.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Z帮藏身处'
+			mainTitle: "Z集团的秘密基地"
 		},
 		notifyEnter: true,
-		displayName: 'Z帮藏身处'
+		displayName: "Z集团的秘密基地"
 	},
 	'kh_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '机器人制造厂 2层'
+			mainTitle: "机械娃娃工厂 2层"
 		},
 		notifyEnter: true,
-		displayName: '机器人制造厂 2层'
+		displayName: "机械娃娃工厂 2层"
 	},
 	'ma_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '梦魇医院 1层'
+			mainTitle: "噩梦医院 1层"
 		},
 		notifyEnter: true,
-		displayName: '梦魇医院 1层'
+		displayName: "噩梦医院 1层"
 	},
 	'thor_camp.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '托尔火山营地'
+			mainTitle: "托尔火山后勤基地"
 		},
 		notifyEnter: true,
-		displayName: '托尔火山营地'
+		displayName: "托尔火山后勤基地"
 	},
 	'1@exds.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -962,10 +962,10 @@ const MapInfo = {
 		displayName: '无名山脚下'
 	},
 	'lhz_in03.rsw': {
-		displayName: '拉赫内部'
+		displayName: "里希塔乐镇内部"
 	},
 	'turbo_e_16.rsw': {
-		displayName: '极速赛道竞技场'
+		displayName: "竞速竞赛场"
 	},
 	'job3_arch01.rsw': {
 		displayName: '大主教转职等候室'
@@ -973,18 +973,18 @@ const MapInfo = {
 	'prt_monk.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '圣卡皮托利纳修道院'
+			mainTitle: "圣·卡毕利那修道院"
 		},
 		notifyEnter: true,
-		displayName: '圣卡皮托利纳修道院'
+		displayName: "圣·卡毕利那修道院"
 	},
 	'odin_tem02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥丁神殿南部区域'
+			mainTitle: "毁葛奥丁神殿南区"
 		},
 		notifyEnter: true,
-		displayName: '奥丁神殿南部区域'
+		displayName: "毁葛奥丁神殿南区"
 	},
 	'new_1-1.rsw': {
 		backgroundBmp: 'field_s2',
@@ -997,160 +997,160 @@ const MapInfo = {
 	'mjolnir_06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山南部区域'
+			mainTitle: "妙勒尼山脉南区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山南部地区'
+		displayName: "妙勒尼山脉南区"
 	},
 	'schg_cas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '赫略德城堡',
+			mainTitle: "何料德",
 			subTitle: '尼德霍格'
 		},
 		notifyEnter: true,
-		displayName: '赫略德城堡'
+		displayName: "何料德"
 	},
 	'prt_sewb4.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '下水道 F4',
+			mainTitle: "普隆德拉 地下水道 4层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉下水道 F4'
+		displayName: "普隆德拉 地下水道 4层"
 	},
 	'jor_back5.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '古代冰峡谷东部'
+			mainTitle: "古冰峡谷 东部"
 		},
 		notifyEnter: true,
-		displayName: '古代冰峡谷东部'
+		displayName: "古冰峡谷 东部"
 	},
 	'ra_fild12.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '伊达平原'
+			mainTitle: "拉赫伊达平原"
 		},
 		notifyEnter: true,
-		displayName: '伊达平原'
+		displayName: "拉赫伊达平原"
 	},
 	'tha_t08.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '天使之间',
-			subTitle: '塔纳托斯塔上层'
+			mainTitle: "达纳托斯之塔 上层部 天使之房",
+			subTitle: "达纳托斯之塔 上层部"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔上层 - 天使之间'
+		displayName: "达纳托斯之塔 上层部 天使之房"
 	},
 	'gefg_cas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '贝格尔城堡',
-			subTitle: '布里托尼亚'
+			mainTitle: "培勒格",
+			subTitle: "怖立特离亚"
 		},
 		notifyEnter: true,
-		displayName: '贝格尔城堡'
+		displayName: "培勒格"
 	},
 	'ra_fild10.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥德峡谷'
+			mainTitle: "拉赫欧兹峡谷"
 		},
 		notifyEnter: true,
-		displayName: '奥德峡谷'
+		displayName: "拉赫欧兹峡谷"
 	},
 	'que_temsky.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '天空花园',
+			mainTitle: "教皇执勤室(天空庭院)",
 			subTitle: '教皇之间'
 		},
 		notifyEnter: true,
-		displayName: '教皇之间（天空花园'
+		displayName: "教皇执勤室(天空庭院)"
 	},
 	'pvp_y_2-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 艾尔贝塔房间'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：艾尔贝塔房间'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'1@dth1.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '生物岛'
+			mainTitle: "拜欧斯岛"
 		},
 		notifyEnter: true,
-		displayName: '生物岛'
+		displayName: "拜欧斯岛"
 	},
 	'gefg_cas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '雷斐里昂城堡',
-			subTitle: '布里托尼亚'
+			mainTitle: "霍普立温",
+			subTitle: "怖立特离亚"
 		},
 		notifyEnter: true,
-		displayName: '雷斐里昂城堡'
+		displayName: "霍普立温"
 	},
 	'1@halo.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '万圣节庆典'
+			mainTitle: "万圣节庆典会场"
 		},
 		notifyEnter: true,
-		displayName: '万圣节庆典'
+		displayName: "万圣节庆典会场"
 	},
 	'com_d02_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '卢安达北洞窟',
+			mainTitle: "北边洞穴 卢安达",
 			subTitle: '幻影'
 		},
 		notifyEnter: true,
-		displayName: '卢安达北洞窟'
+		displayName: "北边洞穴 卢安达"
 	},
 	'job_monk.rsw': {
-		displayName: '圣卡皮托利纳修道院'
+		displayName: "圣·卡毕利那修道院"
 	},
 	'lasagna.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '拉萨格',
+			mainTitle: "港口都市 罗札纳",
 			subTitle: '远星大陆港口城镇'
 		},
 		notifyEnter: true,
-		displayName: '拉萨格港口城镇'
+		displayName: "港口都市 罗札纳"
 	},
 	'iz_dun04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '海底隧道 B5',
+			mainTitle: "依斯鲁得海底洞穴 5层",
 			subTitle: '拜安岛'
 		},
 		notifyEnter: true,
-		displayName: '海底隧道 B5'
+		displayName: "依斯鲁得海底洞穴 5层"
 	},
 	'2@gl_k2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团 F1',
+			mainTitle: "过去的古城骑士团 2层",
 			subTitle: '旧克雷斯特汉姆'
 		},
 		notifyEnter: true,
-		displayName: '旧克雷斯特汉姆骑士团 F1'
+		displayName: "过去的古城骑士团 2层"
 	},
 	'prtg_cas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '斯旺希尔德城堡',
-			subTitle: '女武神领域'
+			mainTitle: "诗潘喜德",
+			subTitle: "瓦尔基里雷恩"
 		},
 		notifyEnter: true,
-		displayName: '斯旺希尔德城堡'
+		displayName: "诗潘喜德"
 	},
 	'1@soul.rsw': {
 		displayName: '灵魂通道'
@@ -1158,23 +1158,23 @@ const MapInfo = {
 	'1@sthd.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '空中要塞 - 顶层'
+			mainTitle: "空中要塞顶层"
 		},
 		notifyEnter: true,
-		displayName: '空中要塞 - 顶层'
+		displayName: "空中要塞顶层"
 	},
 	'pvp_n_5-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Rock On 房间'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Rock On 房间'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'bl_death.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '标本环境 - 死亡',
+			mainTitle: "生物圈标本环境 - 死亡",
 			subTitle: '瓦尔蒙特生物圈'
 		},
 		notifyEnter: true,
@@ -1183,36 +1183,36 @@ const MapInfo = {
 	'nameless_i.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '无名岛入口'
+			mainTitle: "无名岛"
 		},
 		notifyEnter: true,
-		displayName: '无名岛入口'
+		displayName: "无名岛"
 	},
 	'pay_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '绿林湖',
+			mainTitle: "青林湖泊",
 			subTitle: '斐扬'
 		},
 		notifyEnter: true,
-		displayName: '绿林湖'
+		displayName: "青林湖泊"
 	},
 	'kh_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '机器人工厂 F1'
+			mainTitle: "机械娃娃工厂 1层"
 		},
 		notifyEnter: true,
-		displayName: '机器人工厂 F1'
+		displayName: "机械娃娃工厂 1层"
 	},
 	'xmas_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '玩具工厂仓库',
+			mainTitle: "姜饼城 玩具工厂仓库",
 			subTitle: '玩具工厂'
 		},
 		notifyEnter: true,
-		displayName: '玩具工厂仓库'
+		displayName: "姜饼城 玩具工厂仓库"
 	},
 	'alberta_in.rsw': {
 		displayName: '艾尔贝塔内部'
@@ -1220,95 +1220,95 @@ const MapInfo = {
 	'prt_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉东北遗迹'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉东北遗迹'
+		displayName: "普隆德拉野外"
 	},
 	'pvp_n_1-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Undercross 房间'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Undercross 房间'
+		displayName: "PvP : 反十字室"
 	},
 	'dic_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '卡米达尔山底部',
+			mainTitle: "卡米达山麓",
 			subTitle: '尤通海姆'
 		},
 		notifyEnter: true,
-		displayName: '卡米达尔山底部'
+		displayName: "卡米达山麓"
 	},
 	'ra_fild11.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '伊达平原'
+			mainTitle: "拉赫 伊达平原"
 		},
 		notifyEnter: true,
-		displayName: '伊达平原'
+		displayName: "拉赫 伊达平原"
 	},
 	'1@mist.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '朦胧迷宫森林'
+			mainTitle: "迷雾森林"
 		},
 		notifyEnter: true,
-		displayName: '朦胧迷宫森林'
+		displayName: "迷雾森林"
 	},
 	'moc_pryd04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '金字塔内部 F4',
+			mainTitle: "梦罗克金字塔 4层",
 			subTitle: '梦罗克'
 		},
 		notifyEnter: true,
-		displayName: '金字塔内部 F4'
+		displayName: "梦罗克金字塔 4层"
 	},
 	'gld_dun04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会地下城',
-			subTitle: '布里托尼亚'
+			mainTitle: "怖立特离亚 公会地下密穴 1层",
+			subTitle: "怖立特离亚"
 		},
 		notifyEnter: true,
-		displayName: '布里托尼亚公会地下城'
+		displayName: "怖立特离亚 公会地下密穴 1层"
 	},
 	'verus03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '中央广场',
-			subTitle: '维鲁斯城'
+			mainTitle: "贝鲁兹 中央广场",
+			subTitle: "贝鲁兹城"
 		},
 		notifyEnter: true,
-		displayName: '维鲁斯 - 中央广场'
+		displayName: "贝鲁兹 中央广场"
 	},
 	'niflheim.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '尼芙菲姆',
+			mainTitle: "亡者国度 尼芙菲姆",
 			subTitle: '亡者国度'
 		},
 		notifyEnter: true,
-		displayName: '尼芙菲姆'
+		displayName: "亡者国度 尼芙菲姆"
 	},
 	'guild_vs3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '公会竞技场'
+			mainTitle: "公会对抗竞技场"
 		},
 		notifyEnter: true,
-		displayName: '公会竞技场'
+		displayName: "公会对抗竞技场"
 	},
 	'pvp_y_8-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 艾尔贝塔房间'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：艾尔贝塔房间'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'6@thts.rsw': {
 		backgroundBmp: 'dungeon',
@@ -1322,20 +1322,20 @@ const MapInfo = {
 	'5@thts.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '悲伤的记忆',
+			mainTitle: "悲哀的记忆",
 			subTitle: '塔纳托斯的记忆'
 		},
 		notifyEnter: true,
-		displayName: '悲伤的记忆'
+		displayName: "悲哀的记忆"
 	},
 	'8@thts.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '魔术师塔纳托斯的记忆',
+			mainTitle: "达纳托斯塔",
 			subTitle: '塔纳托斯的记忆'
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔'
+		displayName: "达纳托斯塔"
 	},
 	'7@thts.rsw': {
 		backgroundBmp: 'dungeon',
@@ -1358,20 +1358,20 @@ const MapInfo = {
 	'1@thts.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '塔纳托斯塔',
+			mainTitle: "达纳托斯塔",
 			subTitle: '塔纳托斯的记忆'
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔'
+		displayName: "达纳托斯塔"
 	},
 	'4@thts.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '痛苦的记忆',
+			mainTitle: "苦恼的记忆",
 			subTitle: '塔纳托斯的记忆'
 		},
 		notifyEnter: true,
-		displayName: '痛苦的记忆'
+		displayName: "苦恼的记忆"
 	},
 	'3@thts.rsw': {
 		backgroundBmp: 'dungeon',
@@ -1385,56 +1385,56 @@ const MapInfo = {
 	'jor_maze.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '蛇之迷宫'
+			mainTitle: "蛇的迷宫"
 		},
 		notifyEnter: true,
-		displayName: '蛇之迷宫'
+		displayName: "蛇的迷宫"
 	},
 	'schg_que01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '莫尔斯通草原'
+			mainTitle: "莫尔斯敦草地"
 		},
 		notifyEnter: true,
-		displayName: '莫尔斯通草原'
+		displayName: "莫尔斯敦草地"
 	},
 	'job_thief1.rsw': {
-		displayName: '蘑菇农场'
+		displayName: "盗贼转职所"
 	},
 	'rockrdg1.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '基瓦瓦沙漠',
+			mainTitle: "契瓦瓦沙漠",
 			subTitle: '洛克里奇'
 		},
 		notifyEnter: true,
-		displayName: '基瓦瓦沙漠'
+		displayName: "契瓦瓦沙漠"
 	},
 	'gl_cas01_.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '城堡 F1',
+			mainTitle: "克雷斯特汉姆 深渊地 1层",
 			subTitle: '深渊克雷斯特汉姆'
 		},
 		notifyEnter: true,
-		displayName: '深渊克雷斯特汉姆城堡 F1'
+		displayName: "克雷斯特汉姆 深渊地 1层"
 	},
 	'moc_fild19.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'lasa_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '拉比奥尔平原哨所',
-			subTitle: '拉萨格纳'
+			mainTitle: "罗比奥平原岗哨",
+			subTitle: "罗札纳"
 		},
 		notifyEnter: true,
-		displayName: '拉比奥尔平原哨所'
+		displayName: "罗比奥平原岗哨"
 	},
 	'air_if.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -1447,27 +1447,27 @@ const MapInfo = {
 	'1@tre.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '可疑沉船'
+			mainTitle: "可疑的失事船"
 		},
 		notifyEnter: true,
-		displayName: '可疑沉船'
+		displayName: "可疑的失事船"
 	},
 	'abyss_02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下洞窟 2F',
+			mainTitle: "毁葛深渊湖水 地下洞穴 2层",
 			subTitle: '深渊湖'
 		},
 		notifyEnter: true,
-		displayName: '深渊湖地下洞窟 2F'
+		displayName: "毁葛深渊湖水 地下洞穴 2层"
 	},
 	'ma_zif02.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'jor_twice.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -1480,19 +1480,19 @@ const MapInfo = {
 	'1@vrcas.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '百合宫殿',
+			mainTitle: "幻想丛书 - 利利姆宫",
 			subTitle: '幻想系列-001'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列-百合宫殿'
+		displayName: "幻想丛书 - 利利姆宫"
 	},
 	'auction_02.rsw': {
-		displayName: '拍卖大厅'
+		displayName: "拍卖场"
 	},
 	'hero_in2.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '夏日花园',
+			mainTitle: "赫罗斯利亚夏日花园",
 			subTitle: '赫罗斯利亚'
 		},
 		notifyEnter: true,
@@ -1501,10 +1501,10 @@ const MapInfo = {
 	'pvp_n_3-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 三明治房间'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：三明治房间'
+		displayName: "PvP : 三明治室"
 	},
 	'1@lvcb.rsw': {
 		backgroundBmp: 'noname',
@@ -1516,71 +1516,71 @@ const MapInfo = {
 		displayName: '潮湿下水道'
 	},
 	'ordeal_1-2.rsw': {
-		displayName: '战斗试炼模式'
+		displayName: "团体战斗模式"
 	},
 	'poring_w02.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '波利战争市场'
+			mainTitle: "波利对战场"
 		},
 		notifyEnter: true,
-		displayName: '波利战争市场'
+		displayName: "波利对战场"
 	},
 	'ma_zif06.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'ein_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '艾音布罗克矿山 F2'
+			mainTitle: "艾音贝赫矿山 2层"
 		},
 		notifyEnter: true,
-		displayName: '艾音布罗克矿山 F2'
+		displayName: "艾音贝赫矿山 2层"
 	},
 	'ama_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '地下森林战场'
+			mainTitle: "樱花城 地下森林战场"
 		},
 		notifyEnter: true,
-		displayName: '地下森林战场'
+		displayName: "樱花城 地下森林战场"
 	},
 	'job_knt.rsw': {
-		displayName: '骑士领域'
+		displayName: "骑士转职考场"
 	},
 	'pvp_n_4-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 四号房间'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：四号房间'
+		displayName: "PvP : 四通道室"
 	},
 	'mjolnir_01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山北部区域'
+			mainTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山北部区域'
+		displayName: "妙勒尼山脉北区"
 	},
 	'gonryun.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '昆仑',
+			mainTitle: "神仙岛 昆仑",
 			subTitle: '隐士之地'
 		},
 		notifyEnter: true,
-		displayName: '昆仑'
+		displayName: "神仙岛 昆仑"
 	},
 	'bat_c02.rsw': {
 		notifyEnter: true,
-		displayName: '米德加尔特战士'
+		displayName: "克里格·冯·米德加尔特"
 	},
 	'1@twsd.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -1593,70 +1593,70 @@ const MapInfo = {
 	'icas_in2.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '冰城堡内部'
+			mainTitle: "冰堡内部"
 		},
 		notifyEnter: true,
-		displayName: '冰城堡内部'
+		displayName: "冰堡内部"
 	},
 	'dic_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '甲虫大厅',
+			mainTitle: "斯卡勒伯熔岩",
 			subTitle: '卡米达尔隧道'
 		},
 		notifyEnter: true,
-		displayName: '甲虫大厅'
+		displayName: "斯卡勒伯熔岩"
 	},
 	'pay_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'cmd_fild03.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '真海沼泽',
-			subTitle: '科莫多'
+			mainTitle: "克魔岛 基乃依沼泽地",
+			subTitle: "克魔岛"
 		},
 		notifyEnter: true,
-		displayName: '真海沼泽'
+		displayName: "克魔岛 基乃依沼泽地"
 	},
 	'mjolnir_10.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山南部区域'
+			mainTitle: "妙勒尼山脉南区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山南部区域'
+		displayName: "妙勒尼山脉南区"
 	},
 	'job4_mag.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '魔法喷泉'
+			mainTitle: "魔力之泉"
 		},
 		notifyEnter: true,
-		displayName: '魔法喷泉'
+		displayName: "魔力之泉"
 	},
 	'moc_fild20.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '次元裂缝',
-			subTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠次元裂缝",
+			subTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠－次元裂缝'
+		displayName: "苏克拉特沙漠次元裂缝"
 	},
 	'teg_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会地下城',
+			mainTitle: "公会地下密穴",
 			subTitle: '卢恩-米德加尔兹'
 		},
 		notifyEnter: true,
-		displayName: '公会地下城'
+		displayName: "公会地下密穴"
 	},
 	'dali02.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -1669,85 +1669,85 @@ const MapInfo = {
 	'hu_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '胡格尔原野'
+			mainTitle: "毁葛野外"
 		},
 		notifyEnter: true,
-		displayName: '胡格尔原野'
+		displayName: "毁葛野外"
 	},
 	'ma_in01.rsw': {
-		displayName: '马来岛内部'
+		displayName: "马来内部"
 	},
 	'gef_fild10.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '兽人村落',
-			subTitle: '吉芬原野'
+			mainTitle: "兽人村",
+			subTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '兽人村落'
+		displayName: "兽人村"
 	},
 	'prt_maze03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '迷宫森林 F3',
+			mainTitle: "普隆德拉迷藏森林 3层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '迷宫森林 F3'
+		displayName: "普隆德拉迷藏森林 3层"
 	},
 	'dew_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '伊斯塔纳洞窟',
+			mainTitle: "伊斯坦纳洞穴",
 			subTitle: '爪哇岛'
 		},
 		notifyEnter: true,
-		displayName: '伊斯塔纳洞窟'
+		displayName: "伊斯坦纳洞穴"
 	},
 	'ba_in01.rsw': {
-		displayName: '瓦尔蒙特宅邸内部'
+		displayName: "霸肋门德大宅内部"
 	},
 	'pvp_y_2-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 依斯鲁得房间'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：依斯鲁得房间'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'wizard_2-1.rsw': {
-		displayName: '巫师学院'
+		displayName: "巫师转职所"
 	},
 	'amicitia2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '二楼－强化培养室',
+			mainTitle: "废弃研究所阿米希提娅",
 			subTitle: '废弃实验室阿米希提亚'
 		},
 		notifyEnter: true,
-		displayName: '废弃实验室阿米希提亚'
+		displayName: "废弃研究所阿米希提娅"
 	},
 	'1@vrgen.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '基因实验室',
+			mainTitle: "幻想丛书 - 基因学者研究所",
 			subTitle: '幻想系列-004'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列-基因实验室'
+		displayName: "幻想丛书 - 基因学者研究所"
 	},
 	'guild_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '公会竞技场等候室'
+			mainTitle: "公会对抗竞技场待机室"
 		},
 		notifyEnter: true,
-		displayName: '公会竞技场等候室'
+		displayName: "公会对抗竞技场待机室"
 	},
 	'bl_lava.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '样本环境－火焰',
+			mainTitle: "生物圈样本环境－火焰",
 			subTitle: '瓦尔蒙特生物圈'
 		},
 		notifyEnter: true,
@@ -1756,10 +1756,10 @@ const MapInfo = {
 	'kh_school.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '基尔·海勒学院'
+			mainTitle: "启·海伊洛学院"
 		},
 		notifyEnter: true,
-		displayName: '基尔·海勒学院'
+		displayName: "启·海伊洛学院"
 	},
 	'malaya.rsw': {
 		backgroundBmp: 'village_s2',
@@ -1772,104 +1772,104 @@ const MapInfo = {
 	'alberta.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '艾尔贝塔',
+			mainTitle: "港口之都 艾尔贝塔",
 			subTitle: '卢恩-米德加尔兹王国港口城市'
 		},
 		notifyEnter: true,
-		displayName: '港口城市艾尔贝塔'
+		displayName: "港口之都 艾尔贝塔"
 	},
 	'ra_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '月港'
+			mainTitle: "珀尔特鲁纳"
 		},
 		notifyEnter: true,
-		displayName: '月港'
+		displayName: "珀尔特鲁纳"
 	},
 	'tur_dun04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '海龟宫殿'
+			mainTitle: "旧良宫"
 		},
 		notifyEnter: true,
-		displayName: '海龟宫殿'
+		displayName: "旧良宫"
 	},
 	'jupe_gate.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '朱佩洛斯，限制区域'
+			mainTitle: "优配擂斯保安区域"
 		},
 		notifyEnter: true,
-		displayName: '朱佩洛斯'
+		displayName: "优配擂斯保安区域"
 	},
 	'mal_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '星光珊瑚区域'
+			mainTitle: "星光珊瑚地区"
 		},
 		notifyEnter: true,
-		displayName: '星光珊瑚区域'
+		displayName: "星光珊瑚地区"
 	},
 	'pvp_y_7-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 艾尔贝塔房间'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：艾尔贝塔房间'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'gl_knt01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团内部 F1',
+			mainTitle: "克雷斯特汉姆 骑士团 1层",
 			subTitle: '古城'
 		},
 		notifyEnter: true,
-		displayName: '古城骑士团内部 F1'
+		displayName: "克雷斯特汉姆 骑士团 1层"
 	},
 	'gl_sew02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下水道 B2',
+			mainTitle: "克雷斯特汉姆 地下水道 2层",
 			subTitle: '古城'
 		},
 		notifyEnter: true,
-		displayName: '古城地下水道 B2'
+		displayName: "克雷斯特汉姆 地下水道 2层"
 	},
 	'prt_maze02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '迷宫森林 F2',
+			mainTitle: "普隆德拉迷藏森林 2层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '迷宫森林 F2'
+		displayName: "普隆德拉迷藏森林 2层"
 	},
 	'moc_fild13.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'thana_boss.rsw': {
-		displayName: '塔纳托斯之塔－未知区域'
+		displayName: "达纳托斯之塔(未知地区)"
 	},
 	'ra_temsky.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '天空花园',
+			mainTitle: "教皇执勤室(空中庭园)",
 			subTitle: '教皇房间'
 		},
 		notifyEnter: true,
-		displayName: '教皇房间（天空花园）'
+		displayName: "教皇执勤室(空中庭园)"
 	},
 	'knight_3-1.rsw': {
-		displayName: '骑士团'
+		displayName: "骑士转职所"
 	},
 	'job_cru.rsw': {
-		displayName: '十字军领域'
+		displayName: "十字军转职考场"
 	},
 	'gw_fild02.rsw': {
 		backgroundBmp: 'field_s2',
@@ -1882,54 +1882,54 @@ const MapInfo = {
 	'eclage.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '艾可拉珠',
+			mainTitle: "守护精灵首都 埃克拉珠",
 			subTitle: '阿尔夫海姆－拉比内首都'
 		},
 		notifyEnter: true,
-		displayName: '拉比内首都艾可拉珠'
+		displayName: "守护精灵首都 埃克拉珠"
 	},
 	'einbech.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '艾音贝赫',
+			mainTitle: "采矿村落 艾音贝赫",
 			subTitle: '施瓦茨瓦尔德共和国矿业村'
 		},
 		notifyEnter: true,
-		displayName: '矿业村艾音贝赫'
+		displayName: "采矿村落 艾音贝赫"
 	},
 	'verus02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'WISH 研究大楼',
-			subTitle: '维鲁斯城'
+			mainTitle: "研究楼-WISH",
+			subTitle: "贝鲁兹城"
 		},
 		notifyEnter: true,
-		displayName: 'WISH 研究大楼'
+		displayName: "研究楼-WISH"
 	},
 	'tur_dun05.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '地下沼泽区域'
+			mainTitle: "地下沼泽区"
 		},
 		notifyEnter: true,
-		displayName: '地下沼泽区域'
+		displayName: "地下沼泽区"
 	},
 	'1@ma_b.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '巴库纳瓦藏身处'
+			mainTitle: "食月暴龙藏身处"
 		},
 		notifyEnter: true,
-		displayName: '巴库纳瓦藏身处'
+		displayName: "食月暴龙藏身处"
 	},
 	'c_tower3_.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 F3',
+			mainTitle: "梦魇密穴钟塔 3层",
 			subTitle: '扭曲的时间'
 		},
 		notifyEnter: true,
-		displayName: '扭曲钟楼 F3'
+		displayName: "梦魇密穴钟塔 3层"
 	},
 	'1@infi.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -1950,11 +1950,11 @@ const MapInfo = {
 	'tha_t09.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '苦痛房间',
+			mainTitle: "达纳托斯之塔 上层部 苦恼之房",
 			subTitle: '塔纳托斯之塔上层'
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯之塔上层－苦痛房间'
+		displayName: "达纳托斯之塔 上层部 苦恼之房"
 	},
 	'1@exhn.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -1967,81 +1967,81 @@ const MapInfo = {
 	'moc_fild21.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '次元裂缝',
-			subTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠次元裂缝",
+			subTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠－次元裂缝'
+		displayName: "苏克拉特沙漠次元裂缝"
 	},
 	'amicitia1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '一楼－综合实验室',
+			mainTitle: "废弃研究所阿米希提娅",
 			subTitle: '废弃实验室阿米希提亚'
 		},
 		notifyEnter: true,
-		displayName: '废弃实验室阿米希提亚'
+		displayName: "废弃研究所阿米希提娅"
 	},
 	'man_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '马努克原野'
+			mainTitle: "马努克野外"
 		},
 		notifyEnter: true,
-		displayName: '马努克原野'
+		displayName: "马努克野外"
 	},
 	'clock_01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '未知地下室',
+			mainTitle: "钟塔: 未知的地下层",
 			subTitle: '钟楼'
 		},
 		notifyEnter: true,
-		displayName: '钟楼未知地下室'
+		displayName: "钟塔: 未知的地下层"
 	},
 	'jor_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '蛇神之暖 1 楼'
+			mainTitle: "蛇神的吐息 1层"
 		},
 		notifyEnter: true,
-		displayName: '蛇神之暖 1 楼'
+		displayName: "蛇神的吐息 1层"
 	},
 	'bossnia_04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '博斯尼亚'
+			mainTitle: "波士尼亚"
 		},
 		notifyEnter: true,
-		displayName: '博斯尼亚'
+		displayName: "波士尼亚"
 	},
 	'icecastle.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '冰之城堡',
+			mainTitle: "冰封之城 伊斯加尔特",
 			subTitle: '伊斯加德'
 		},
 		notifyEnter: true,
-		displayName: '伊斯加德冰之城堡'
+		displayName: "冰封之城 伊斯加尔特"
 	},
 	'1@os_a.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '占领战'
+			mainTitle: "欧斯占领战"
 		},
 		notifyEnter: true,
-		displayName: '占领战'
+		displayName: "欧斯占领战"
 	},
 	'guild_vs2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '公会竞技场'
+			mainTitle: "公会对抗竞技场"
 		},
 		notifyEnter: true,
-		displayName: '公会竞技场'
+		displayName: "公会对抗竞技场"
 	},
 	'izlude_in.rsw': {
-		displayName: '依斯鲁得内部'
+		displayName: "依斯鲁得岛内部"
 	},
 	'new_5-1.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2054,28 +2054,28 @@ const MapInfo = {
 	'nif_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '死者宴会厅',
+			mainTitle: "尼芙菲姆密穴一层 亡者宴会厅",
 			subTitle: '尼福尔海姆地下城 - 1 楼'
 		},
 		notifyEnter: true,
-		displayName: '尼福尔海姆地下城 - 死者宴会厅'
+		displayName: "尼芙菲姆密穴一层 亡者宴会厅"
 	},
 	'moc_pryd03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '金字塔内部 F3',
+			mainTitle: "梦罗克金字塔 3层",
 			subTitle: '梦罗克'
 		},
 		notifyEnter: true,
-		displayName: '金字塔内部 F3'
+		displayName: "梦罗克金字塔 3层"
 	},
 	'jor_tail.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '冰冻尾巴'
+			mainTitle: "冰鳞尽头"
 		},
 		notifyEnter: true,
-		displayName: '冰冻尾巴'
+		displayName: "冰鳞尽头"
 	},
 	'yuno_in03.rsw': {
 		displayName: '朱诺内部'
@@ -2083,126 +2083,126 @@ const MapInfo = {
 	'pvp_y_1-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 普隆德拉房间'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：普隆德拉房间'
+		displayName: "PvP : 普隆德拉"
 	},
 	'geffen.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '吉芬',
+			mainTitle: "魔法之都 吉芬",
 			subTitle: '卢恩-米德加尔特王国的魔法之都'
 		},
 		notifyEnter: true,
-		displayName: '吉芬'
+		displayName: "魔法之都 吉芬"
 	},
 	'bat_a01.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '提拉峡谷',
+			mainTitle: "提耶拉峡谷",
 			subTitle: '战场'
 		},
 		notifyEnter: true,
-		displayName: '提拉峡谷'
+		displayName: "提耶拉峡谷"
 	},
 	've_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维因斯原野'
+			mainTitle: "伯仁斯野外"
 		},
 		notifyEnter: true,
-		displayName: '维因斯原野'
+		displayName: "伯仁斯野外"
 	},
 	've_fild05.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维因斯原野'
+			mainTitle: "伯仁斯 旷野"
 		},
 		notifyEnter: true,
-		displayName: '维因斯原野'
+		displayName: "伯仁斯 旷野"
 	},
 	'aldeg_cas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '罗滕堡城堡',
+			mainTitle: "罗探布勒克",
 			subTitle: '卢因'
 		},
 		notifyEnter: true,
-		displayName: '罗滕堡城堡'
+		displayName: "罗探布勒克"
 	},
 	'cmd_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '圣达尔迈因要塞（南部'
+			mainTitle: "要塞都市 山特乐曼 南部"
 		},
 		notifyEnter: true,
-		displayName: '圣达尔迈因要塞（南部'
+		displayName: "要塞都市 山特乐曼 南部"
 	},
 	'ra_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '伊达平原'
+			mainTitle: "拉赫伊达平原"
 		},
 		notifyEnter: true,
-		displayName: '伊达平原'
+		displayName: "拉赫伊达平原"
 	},
 	'man_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '马努克原野'
+			mainTitle: "马努克野外"
 		},
 		notifyEnter: true,
-		displayName: '马努克原野'
+		displayName: "马努克野外"
 	},
 	'dew_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '部落村庄',
+			mainTitle: "德瓦他野外 贾提族部落",
 			subTitle: '达纳托斯岛'
 		},
 		notifyEnter: true,
-		displayName: '达纳托斯岛原野（部落村庄）'
+		displayName: "德瓦他野外 贾提族部落"
 	},
 	'1@os_b.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '封印的 OS'
+			mainTitle: "封锁的欧斯"
 		},
 		notifyEnter: true,
-		displayName: '封印的 OS'
+		displayName: "封锁的欧斯"
 	},
 	'priest_2-1.rsw': {
-		displayName: '圣所'
+		displayName: "牧师转职所"
 	},
 	'ant_d02_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '觉醒花园',
+			mainTitle: "认知的庭院",
 			subTitle: '幻影'
 		},
 		notifyEnter: true,
-		displayName: '觉醒花园'
+		displayName: "认知的庭院"
 	},
 	'alde_dun04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 B4',
+			mainTitle: "艾尔帕兰 钟塔 地下4层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 B4'
+		displayName: "艾尔帕兰 钟塔 地下4层"
 	},
 	'job3_arch02.rsw': {
-		displayName: '奥丁神殿'
+		displayName: "毁葛奥丁神殿"
 	},
 	'man_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '马努克矿区'
+			mainTitle: "马努克野外"
 		},
 		notifyEnter: true,
-		displayName: '马努克矿区'
+		displayName: "马努克野外"
 	},
 	'new_4-2.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2215,38 +2215,38 @@ const MapInfo = {
 	'ecl_fild01.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '繁花之地'
+			mainTitle: "花开伊始的大地"
 		},
 		notifyEnter: true,
-		displayName: '繁花之地'
+		displayName: "花开伊始的大地"
 	},
 	'job3_rune03.rsw': {
-		displayName: '符文骑士转职测试房间'
+		displayName: "符文骑士转职考场"
 	},
 	'treasure_n1.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '依斯鲁得沉船 B1'
+			mainTitle: "依斯鲁得岛 遇难船 1层"
 		},
 		notifyEnter: true,
-		displayName: '依斯鲁得沉船 B1'
+		displayName: "依斯鲁得岛 遇难船 1层"
 	},
 	'1@lost.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '遗忘时光农场',
+			mainTitle: "被时间遗忘的饲养场",
 			subTitle: '失落山谷'
 		},
 		notifyEnter: true,
-		displayName: '遗忘时光农场'
+		displayName: "被时间遗忘的饲养场"
 	},
 	'pvp_n_3-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 地下十字房间'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：地下十字房间'
+		displayName: "PvP : 反十字室"
 	},
 	'1@exsr.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -2259,107 +2259,107 @@ const MapInfo = {
 	'iz_ac02_d.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里图拉学院 F2'
+			subTitle: "魔法学院 F2"
 		},
 		notifyEnter: true,
-		displayName: '克里图拉学院 F2'
+		displayName: "魔法学院2层"
 	},
 	'1@vrac1.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '克里图拉学院 1 楼',
+			mainTitle: "幻想丛书 - 学院1楼",
 			subTitle: '幻想系列'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列 - 学院 1 楼'
+		displayName: "幻想丛书 - 学院1楼"
 	},
 	'treasure01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '沉船 B1',
+			mainTitle: "艾尔贝塔沉船 1层",
 			subTitle: '艾尔贝塔'
 		},
 		notifyEnter: true,
-		displayName: '沉船 B1'
+		displayName: "艾尔贝塔沉船 1层"
 	},
 	'que_qaru04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥克尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥克尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'gl_prison.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下监狱 B1',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 地下监狱 1层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆地下监狱 B1'
+		displayName: "克雷斯特汉姆 地下监狱 1层"
 	},
 	'1@rev.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '摩尔斯洞窟'
+			mainTitle: "摩洛斯洞穴"
 		},
 		notifyEnter: true,
-		displayName: '摩尔斯洞窟'
+		displayName: "摩洛斯洞穴"
 	},
 	'anthell01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '蚂蚁地狱地下城 F1',
+			mainTitle: "梦罗克蚂蚁地狱密穴 1层",
 			subTitle: '苏克拉特沙漠'
 		},
 		notifyEnter: true,
-		displayName: '蚂蚁地狱地下城 F1'
+		displayName: "梦罗克蚂蚁地狱密穴 1层"
 	},
 	'ayo_in01.rsw': {
-		displayName: '阿尤塔亚内部'
+		displayName: "哎哟泰雅内部"
 	},
 	'gl_sew01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下水道 B1',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 地下水道 1层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆地下水道 B1'
+		displayName: "克雷斯特汉姆 地下水道 1层"
 	},
 	'1@sthc.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '空中要塞 - 秘密房间'
+			mainTitle: "空中要塞密室"
 		},
 		notifyEnter: true,
-		displayName: '空中要塞 - 秘密房间'
+		displayName: "空中要塞密室"
 	},
 	'ecl_tdun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '彩虹桥塔 3F'
+			mainTitle: "彩虹桥高塔 3层"
 		},
 		notifyEnter: true,
-		displayName: '彩虹桥塔 3F'
+		displayName: "彩虹桥高塔 3层"
 	},
 	'gef_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬地下城 B2'
+			mainTitle: "吉芬 地下密穴 2层"
 		},
 		notifyEnter: true,
-		displayName: '吉芬地下城 B2'
+		displayName: "吉芬 地下密穴 2层"
 	},
 	'1@gol2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '尸体储藏室',
+			mainTitle: "停尸房",
 			subTitle: '远征'
 		},
 		notifyEnter: true,
-		displayName: '尸体储藏室'
+		displayName: "停尸房"
 	},
 	'que_thr.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -2372,35 +2372,35 @@ const MapInfo = {
 	'prt_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉南门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉南门'
+		displayName: "普隆德拉野外"
 	},
 	'pay_dun00.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '斐扬洞窟 F1',
+			mainTitle: "斐扬洞穴 1层",
 			subTitle: '斐扬弓箭手村'
 		},
 		notifyEnter: true,
-		displayName: '斐扬洞窟 F1'
+		displayName: "斐扬洞穴 1层"
 	},
 	'que_qaru02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥克尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥克尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'lhz_in02.rsw': {
-		displayName: '莱特森内部'
+		displayName: "里希塔乐镇内部"
 	},
 	'hero_in1.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '春之花园',
+			mainTitle: "英雄之地春之花园",
 			subTitle: '英雄之地'
 		},
 		notifyEnter: true,
@@ -2409,43 +2409,43 @@ const MapInfo = {
 	'slabw01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '沃纳研究所'
+			mainTitle: "维尔纳研究所"
 		},
 		notifyEnter: true,
-		displayName: '沃纳研究所'
+		displayName: "维尔纳研究所"
 	},
 	'harboro1.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '岩脊'
+			mainTitle: "洛克里奇"
 		},
 		notifyEnter: true,
-		displayName: '岩脊'
+		displayName: "洛克里奇"
 	},
 	'orcsdun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '兽人地下城 F2',
+			mainTitle: "吉芬 兽人地下洞穴 2层",
 			subTitle: '兽人村'
 		},
 		notifyEnter: true,
-		displayName: '兽人地下城 F2'
+		displayName: "吉芬 兽人地下洞穴 2层"
 	},
 	'himinn.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '女武神大厅'
+			mainTitle: "瓦尔基里神殿(喜民)"
 		},
 		notifyEnter: true,
-		displayName: '女武神大厅（Himinn）'
+		displayName: "瓦尔基里神殿(喜民)"
 	},
 	'pvp_2vs2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 活动竞技场'
+			mainTitle: "PvP : 活动竞技场"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：活动竞技场'
+		displayName: "PvP : 活动竞技场"
 	},
 	'new_1-3.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2458,20 +2458,20 @@ const MapInfo = {
 	'prt_prison.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下城',
+			mainTitle: "普隆德拉地下监狱",
 			subTitle: '普隆德拉城堡'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉监狱牢房'
+		displayName: "普隆德拉地下监狱"
 	},
 	'1@rgsr.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '雷根希尔',
+			mainTitle: "雷根修芦",
 			subTitle: '研究所'
 		},
 		notifyEnter: true,
-		displayName: '雷根希尔'
+		displayName: "雷根修芦"
 	},
 	'moscovia.rsw': {
 		backgroundBmp: 'village_s2',
@@ -2484,29 +2484,29 @@ const MapInfo = {
 	'nyd_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '世界树树根 F2'
+			mainTitle: "辉煌领域粗暴者的伤口 2层"
 		},
 		notifyEnter: true,
-		displayName: '世界树树根 F2'
+		displayName: "辉煌领域粗暴者的伤口 2层"
 	},
 	'1@orcs.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '兽人地下洞窟'
+			mainTitle: "兽人地下洞穴"
 		},
 		notifyEnter: true,
-		displayName: '兽人地下洞窟'
+		displayName: "兽人地下洞穴"
 	},
 	'2@orcs.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '兽人地下洞窟'
+			mainTitle: "兽人地下洞穴"
 		},
 		notifyEnter: true,
-		displayName: '兽人地下洞窟'
+		displayName: "兽人地下洞穴"
 	},
 	'que_rachel.rsw': {
-		displayName: '芙蕾雅神殿内部'
+		displayName: "神殿内部"
 	},
 	'new_5-3.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2519,46 +2519,46 @@ const MapInfo = {
 	'iz_ac01_b.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里图拉学院 1层'
+			subTitle: "魔法学院 1层"
 		},
 		notifyEnter: true,
-		displayName: '克里图拉学院 1层'
+		displayName: "魔法学院 1层"
 	},
 	'iz_int03.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '沉船'
+			mainTitle: "新手地图"
 		},
 		notifyEnter: true,
-		displayName: '沉船'
+		displayName: "新手地图"
 	},
 	'1@jorchs.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '混乱蛇巢穴'
+			mainTitle: "混乱的蛇巢"
 		},
 		notifyEnter: true,
-		displayName: '混乱蛇巢穴'
+		displayName: "混乱的蛇巢"
 	},
 	'ama_in01.rsw': {
-		displayName: '天津町内部'
+		displayName: "樱花城内部"
 	},
 	'lasa_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '龙巢 3层'
+			mainTitle: "龙巢穴"
 		},
 		notifyEnter: true,
-		displayName: '龙巢'
+		displayName: "龙巢穴"
 	},
 	'prontera.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '普隆德拉',
+			mainTitle: "卢恩·米德加兹王国 首都普隆德拉",
 			subTitle: '卢恩·米德加尔兹王国首都'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉'
+		displayName: "卢恩·米德加兹王国 首都普隆德拉"
 	},
 	'ra_pol01.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -2571,7 +2571,7 @@ const MapInfo = {
 	'bl_ice.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '样本环境－严寒',
+			mainTitle: "生物圈样本环境－严寒",
 			subTitle: '瓦尔蒙德生物圈'
 		},
 		notifyEnter: true,
@@ -2580,7 +2580,7 @@ const MapInfo = {
 	'hero_dun1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'PvP 迷宫',
+			mainTitle: "赫罗斯利亚圣域 PvP 迷宫",
 			subTitle: '赫罗斯利亚圣域'
 		},
 		notifyEnter: true,
@@ -2589,60 +2589,60 @@ const MapInfo = {
 	'jor_nest.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '蛇巢穴',
+			mainTitle: "蛇巢",
 			subTitle: 'Rgan 藏身处'
 		},
 		notifyEnter: true,
-		displayName: '蛇巢穴'
+		displayName: "蛇巢"
 	},
 	'in_moc_16.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '苏格拉特沙漠',
+			mainTitle: "刺客公会",
 			subTitle: '刺客公会'
 		},
 		notifyEnter: true,
 		displayName: '刺客公会'
 	},
 	've_in02.rsw': {
-		displayName: '维恩斯内部'
+		displayName: "伯仁斯内部"
 	},
 	'gef_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '吉芬尼亚',
+			mainTitle: "葛帔尼亚密穴",
 			subTitle: '吉芬'
 		},
 		notifyEnter: true,
-		displayName: '吉芬尼亚迷宫'
+		displayName: "葛帔尼亚密穴"
 	},
 	'job3_rang02.rsw': {
-		displayName: '游侠转职测试房间'
+		displayName: "游侠转职考场"
 	},
 	'1@jorlab.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '巴戈特实验室'
+			mainTitle: "巴格的研究室"
 		},
 		notifyEnter: true,
-		displayName: '巴戈特实验室'
+		displayName: "巴格的研究室"
 	},
 	'bossnia_02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Bossnia'
+			mainTitle: "波士尼亚"
 		},
 		notifyEnter: true,
-		displayName: '博斯尼亚'
+		displayName: "波士尼亚"
 	},
 	'verus04.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '希望住宅楼',
-			subTitle: '维鲁斯－挖掘现场'
+			mainTitle: "贝鲁兹 考古地",
+			subTitle: "贝鲁兹－挖掘现场"
 		},
 		notifyEnter: true,
-		displayName: '维鲁斯－挖掘现场'
+		displayName: "贝鲁兹 考古地"
 	},
 	'job3_arch03.rsw': {
 		displayName: '大主教转职等候室'
@@ -2650,36 +2650,36 @@ const MapInfo = {
 	'ra_fild13.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '泪之海岸'
+			mainTitle: "拉赫 眼泪海岸"
 		},
 		notifyEnter: true,
-		displayName: '泪之海岸'
+		displayName: "拉赫 眼泪海岸"
 	},
 	'gefg_cas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '埃约尔布里加城堡',
+			mainTitle: "耀布力格",
 			subTitle: '布里特尼亚'
 		},
 		notifyEnter: true,
-		displayName: '埃约尔布里加城堡'
+		displayName: "耀布力格"
 	},
 	'job3_gen01.rsw': {
-		displayName: '基因学者实验室'
+		displayName: "基因学者研究室"
 	},
 	'izlude_b.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '依斯鲁得',
+			mainTitle: "卫星都市 依斯鲁得岛",
 			subTitle: '卢恩·米德加尔兹王国'
 		},
 		notifyEnter: true,
-		displayName: '依斯鲁得'
+		displayName: "卫星都市 依斯鲁得岛"
 	},
 	'herosria.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '宝石房间',
+			mainTitle: "赫罗斯利亚圣域宝石房间",
 			subTitle: '赫罗斯利亚圣域'
 		},
 		notifyEnter: true,
@@ -2691,132 +2691,132 @@ const MapInfo = {
 	'mosk_dun02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '特姆尼森林',
+			mainTitle: "莫斯科比亚森林深处",
 			subTitle: '莫斯科比亚'
 		},
 		notifyEnter: true,
-		displayName: '特姆尼森林'
+		displayName: "莫斯科比亚森林深处"
 	},
 	'xmas_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '玩具监控室',
+			mainTitle: "姜饼城 玩具分类场",
 			subTitle: '鲁蒂'
 		},
 		notifyEnter: true,
-		displayName: '玩具监控室'
+		displayName: "姜饼城 玩具分类场"
 	},
 	'vis_h01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '调查走廊 1层'
+			mainTitle: "迎接回廊 1层"
 		},
 		notifyEnter: true,
-		displayName: '调查走廊 1层'
+		displayName: "迎接回廊 1层"
 	},
 	'prt_fild08c.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉南门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉南门'
+		displayName: "普隆德拉野外"
 	},
 	'te_prtcas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '乔伯格城堡',
+			mainTitle: "吉尔伯格",
 			subTitle: '卢恩·米德加尔兹'
 		},
 		notifyEnter: true,
-		displayName: '乔伯格城堡'
+		displayName: "吉尔伯格"
 	},
 	'1@cash.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '章鱼洞窟'
+			mainTitle: "章鱼密穴"
 		},
 		notifyEnter: true,
-		displayName: '章鱼洞窟'
+		displayName: "章鱼密穴"
 	},
 	'cave.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '洞窟村落'
+			mainTitle: "洞穴村"
 		},
 		notifyEnter: true,
-		displayName: '洞窟村落'
+		displayName: "洞穴村"
 	},
 	'1@vrac2.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '克里图拉学院 2层',
+			mainTitle: "幻想丛书 - 学院2楼",
 			subTitle: '幻想系列'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列－学院 2层'
+		displayName: "幻想丛书 - 学院2楼"
 	},
 	'gef_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'silk_lair.rsw': {
 		notifyEnter: true,
-		displayName: '巨蟒巢穴'
+		displayName: "蟒蛇巢穴"
 	},
 	'xmas_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '鲁蒂原野'
+			mainTitle: "姜饼城野外"
 		},
 		notifyEnter: true,
-		displayName: '鲁蒂原野'
+		displayName: "姜饼城野外"
 	},
 	'1@ma_h.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '梦魇医院 2层'
+			mainTitle: "噩梦医院 2层"
 		},
 		notifyEnter: true,
-		displayName: '梦魇医院 2层'
+		displayName: "噩梦医院 2层"
 	},
 	'c_tower2_.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 2层',
+			mainTitle: "梦魇密穴钟塔 2层",
 			subTitle: '扭曲的时间'
 		},
 		notifyEnter: true,
-		displayName: '扭曲钟楼 2层'
+		displayName: "梦魇密穴钟塔 2层"
 	},
 	'que_qaru01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥科尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥科尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'1@drdo.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '多拉多传说'
+			mainTitle: "传说中的多拉岛"
 		},
 		notifyEnter: true,
-		displayName: '多拉多传说'
+		displayName: "传说中的多拉岛"
 	},
 	'alde_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 B1层',
+			mainTitle: "艾尔帕兰 钟塔 地下1层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 B1层'
+		displayName: "艾尔帕兰 钟塔 地下1层"
 	},
 	'new_2-4.rsw': {
 		backgroundBmp: 'field_s2',
@@ -2829,103 +2829,103 @@ const MapInfo = {
 	'1@slw.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '中央房间',
+			mainTitle: "维尔纳研究所中枢室",
 			subTitle: '维尔纳研究所'
 		},
 		notifyEnter: true,
-		displayName: '维尔纳研究所'
+		displayName: "维尔纳研究所中枢室"
 	},
 	'hero_out3.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '巴斯蒂塔里乌姆',
+			mainTitle: "赫罗斯利亚巴斯蒂塔里乌姆",
 			subTitle: '赫罗斯利亚'
 		},
 		notifyEnter: true,
 		displayName: '赫罗斯利亚巴斯蒂塔里乌姆'
 	},
 	'dic_in01.rsw': {
-		displayName: '迪卡斯特斯内部'
+		displayName: "埃·迪斯特斯内部"
 	},
 	'gl_knt02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团内部 1层',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 骑士团 2层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆骑士团内部 2层'
+		displayName: "克雷斯特汉姆 骑士团 2层"
 	},
 	'alb_ship.rsw': {
-		displayName: '艾尔贝塔船'
+		displayName: "艾尔贝塔 船舶内部"
 	},
 	'gefg_cas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '梅尔塞德茨城堡',
+			mainTitle: "眉撒丝达刺",
 			subTitle: '布里特尼亚'
 		},
 		notifyEnter: true,
-		displayName: '梅尔塞德茨城堡'
+		displayName: "眉撒丝达刺"
 	},
 	'mag_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '诺格道路 2层'
+			mainTitle: "朱诺 诺可罗德 2层"
 		},
 		notifyEnter: true,
-		displayName: '诺格道路 2层'
+		displayName: "朱诺 诺可罗德 2层"
 	},
 	'arug_que01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '莫尔斯通草原'
+			mainTitle: "莫尔斯敦草地"
 		},
 		notifyEnter: true,
-		displayName: '莫尔斯通草原'
+		displayName: "莫尔斯敦草地"
 	},
 	'turbo_n_1.rsw': {
-		displayName: '极速赛道竞技场'
+		displayName: "竞速竞赛场"
 	},
 	'schg_cas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '安德朗格城堡',
+			mainTitle: "安德朗克",
 			subTitle: '尼德霍格尔 '
 		},
 		notifyEnter: true,
-		displayName: '安德朗格城堡'
+		displayName: "安德朗克"
 	},
 	'pvp_y_5-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（梦罗克）'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：梦罗克房间'
+		displayName: "PvP : 梦罗克"
 	},
 	'schg_cas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '斯基德布拉德尼尔城堡',
+			mainTitle: "思凯提乐尼",
 			subTitle: '尼德霍格尔'
 		},
 		notifyEnter: true,
-		displayName: '斯基德布拉德尼尔城堡'
+		displayName: "思凯提乐尼"
 	},
 	'treasure02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '沉船 B2层',
+			mainTitle: "艾尔贝塔沉船 2层",
 			subTitle: '艾尔贝塔'
 		},
 		notifyEnter: true,
-		displayName: '沉船 B2层'
+		displayName: "艾尔贝塔沉船 2层"
 	},
 	'bl_depth1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '深处 1层',
+			mainTitle: "生物圈深处 1层",
 			subTitle: '瓦尔蒙德生物圈'
 		},
 		notifyEnter: true,
@@ -2942,36 +2942,36 @@ const MapInfo = {
 	'airport.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '机场'
+			mainTitle: "艾音布罗克机场"
 		},
 		notifyEnter: true,
-		displayName: '机场'
+		displayName: "艾音布罗克机场"
 	},
 	'lasa_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '龙巢 2层'
+			mainTitle: "龙巢穴"
 		},
 		notifyEnter: true,
-		displayName: '龙巢'
+		displayName: "龙巢穴"
 	},
 	'gld_dun03_2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会迷宫地下 2层',
-			subTitle: '女武神领域'
+			mainTitle: "瓦尔基里雷恩公会地下密穴 2层",
+			subTitle: "瓦尔基里雷恩"
 		},
 		notifyEnter: true,
-		displayName: '女武神领域迷宫 2层'
+		displayName: "瓦尔基里雷恩公会地下密穴 2层"
 	},
 	'schg_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会迷宫',
+			mainTitle: "公会地下密穴",
 			subTitle: '施瓦茨瓦尔德'
 		},
 		notifyEnter: true,
-		displayName: '施瓦茨瓦尔德公会迷宫'
+		displayName: "公会地下密穴"
 	},
 	'ordeal_1-3.rsw': {
 		displayName: '战斗试炼模式'
@@ -2979,51 +2979,51 @@ const MapInfo = {
 	'hu_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '胡格尔原野'
+			mainTitle: "毁葛野外"
 		},
 		notifyEnter: true,
-		displayName: '胡格尔原野'
+		displayName: "毁葛野外"
 	},
 	'thor_v03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '托尔火山迷宫 3层'
+			mainTitle: "托尔火山密穴 3层"
 		},
 		notifyEnter: true,
-		displayName: '托尔火山迷宫 3层'
+		displayName: "托尔火山密穴 3层"
 	},
 	'1@4win.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '鲁鲁卡深林'
+			mainTitle: "噜噜卡森林"
 		},
 		notifyEnter: true,
-		displayName: '鲁鲁卡深林'
+		displayName: "噜噜卡森林"
 	},
 	'mjo_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '死坑 F3',
-			subTitle: '妙勒尼山北部'
+			mainTitle: "妙勒尼废弃矿场 3层",
+			subTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山死坑 F3'
+		displayName: "妙勒尼废弃矿场 3层"
 	},
 	'pvp_n_2-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 四人房间'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：四人房间'
+		displayName: "PvP : 四通道室"
 	},
 	'pvp_y_2-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 普隆德拉房间'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：普隆德拉房间'
+		displayName: "PvP : 普隆德拉"
 	},
 	'1@ge_st.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -3036,35 +3036,35 @@ const MapInfo = {
 	'1@nyd.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '尼德霍格的巢穴'
+			mainTitle: "尼德霍格巢穴"
 		},
 		notifyEnter: true,
-		displayName: '尼德霍格的巢穴'
+		displayName: "尼德霍格巢穴"
 	},
 	'2@nyd.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '尼德霍格的巢穴'
+			mainTitle: "尼德霍格巢穴"
 		},
 		notifyEnter: true,
-		displayName: '尼德霍格的巢穴'
+		displayName: "尼德霍格巢穴"
 	},
 	'pay_arche.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '弓箭手村',
+			mainTitle: "斐扬 弓箭手村",
 			subTitle: '斐扬'
 		},
 		notifyEnter: true,
-		displayName: '斐扬弓箭手村'
+		displayName: "斐扬 弓箭手村"
 	},
 	'ra_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥杜姆拉草原'
+			mainTitle: "拉赫 奥顿拉草原"
 		},
 		notifyEnter: true,
-		displayName: '奥杜姆拉草原'
+		displayName: "拉赫 奥顿拉草原"
 	},
 	'new_3-3.rsw': {
 		backgroundBmp: 'field_s2',
@@ -3077,48 +3077,48 @@ const MapInfo = {
 	'tha_t03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '废弃之地',
-			subTitle: '塔纳托斯塔'
+			mainTitle: "达纳托斯之塔 下层部 废弃空间",
+			subTitle: "达纳托斯塔"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔废弃之地'
+		displayName: "达纳托斯之塔 下层部 废弃空间"
 	},
 	'1@mcd.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '查尔斯顿工厂'
+			mainTitle: "国王鞋跟"
 		},
 		notifyEnter: true,
-		displayName: '查尔斯顿工厂'
+		displayName: "国王鞋跟"
 	},
 	'star_in.rsw': {
-		displayName: '刘成林内部'
+		displayName: "流星林室内"
 	},
 	'pvp_y_4-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 艾尔贝塔房间'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：艾尔贝塔房间'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'arug_cas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '霍恩城堡',
-			subTitle: '瓦尔弗雷亚'
+			mainTitle: "霍伦",
+			subTitle: "发菲依雅"
 		},
 		notifyEnter: true,
-		displayName: '霍恩城堡'
+		displayName: "霍伦"
 	},
 	'manuk.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '马努克',
+			mainTitle: "矿村马努克",
 			subTitle: '尤通海姆萨法矿业村'
 		},
 		notifyEnter: true,
-		displayName: '马努克矿业营地'
+		displayName: "矿村马努克"
 	},
 	'que_hugel.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -3131,45 +3131,45 @@ const MapInfo = {
 	'treasure_n2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '依斯鲁得沉船 B2'
+			mainTitle: "依斯鲁得岛 遇难船 2层"
 		},
 		notifyEnter: true,
-		displayName: '依斯鲁得沉船 B2'
+		displayName: "依斯鲁得岛 遇难船 2层"
 	},
 	'ma_zif05.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'jor_root2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '蛇神之根 2F'
+			mainTitle: "蛇神的根 二楼"
 		},
 		notifyEnter: true,
-		displayName: '蛇神之根 2F'
+		displayName: "蛇神的根 二楼"
 	},
 	'ice_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '拉赫冰洞 2F'
+			mainTitle: "拉赫冰洞穴2层"
 		},
 		notifyEnter: true,
-		displayName: '拉赫冰洞 2F'
+		displayName: "拉赫冰洞穴2层"
 	},
 	'mosk_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '莫斯科比亚原野'
+			mainTitle: "莫斯科比亚野外"
 		},
 		notifyEnter: true,
-		displayName: '莫斯科比亚原野'
+		displayName: "莫斯科比亚野外"
 	},
 	'itemmall.rsw': {
-		displayName: '卡普拉商店'
+		displayName: "商城"
 	},
 	'new_2-3.rsw': {
 		backgroundBmp: 'field_s2',
@@ -3182,46 +3182,46 @@ const MapInfo = {
 	'pay_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '斐扬洞窟 F4',
+			mainTitle: "斐扬洞穴 4层(废弃村落)",
 			subTitle: '斐扬弓箭手村'
 		},
 		notifyEnter: true,
-		displayName: '斐扬洞窟 F4'
+		displayName: "斐扬洞穴 4层(废弃村落)"
 	},
 	'lhz_cube.rsw': {
-		displayName: '立方体房间'
+		displayName: "立方体室"
 	},
 	'prt_q.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '被入侵的普隆德拉'
+			mainTitle: "被侵略的普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: '被入侵的普隆德拉'
+		displayName: "被侵略的普隆德拉"
 	},
 	've_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维因斯原野'
+			mainTitle: "伯仁斯野外"
 		},
 		notifyEnter: true,
-		displayName: '维因斯原野'
+		displayName: "伯仁斯野外"
 	},
 	'un_bk_q.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '地下掩体'
+			mainTitle: "地下碉堡"
 		},
 		notifyEnter: true,
-		displayName: '地下掩体'
+		displayName: "地下碉堡"
 	},
 	'1@jtb.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '梦与影'
+			mainTitle: "梦与影子"
 		},
 		notifyEnter: true,
-		displayName: '梦与影'
+		displayName: "梦与影子"
 	},
 	'prt_arena01.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -3234,65 +3234,65 @@ const MapInfo = {
 	'gefg_cas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '耶斯内尔夫城堡',
-			subTitle: '布里托尼亚'
+			mainTitle: "易司那普",
+			subTitle: "怖立特离亚"
 		},
 		notifyEnter: true,
-		displayName: '耶斯内尔夫城堡'
+		displayName: "易司那普"
 	},
 	'gef_fild13.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '布里托尼亚',
-			subTitle: '吉芬原野'
+			mainTitle: "怖立特离亚",
+			subTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '布里托尼亚'
+		displayName: "怖立特离亚"
 	},
 	'iz_ac01_d.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里阿图拉学院 F1'
+			subTitle: "魔法学院 F1"
 		},
 		notifyEnter: true,
-		displayName: '克里阿图拉学院 F1'
+		displayName: "魔法学院 1层"
 	},
 	'oz_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '奥兹迷宫 2F'
+			mainTitle: "欧兹迷宫2层"
 		},
 		notifyEnter: true,
-		displayName: '奥兹迷宫 2F'
+		displayName: "欧兹迷宫2层"
 	},
 	'iz_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '海底隧道 B3',
+			mainTitle: "依斯鲁得海底洞穴 3层",
 			subTitle: '拜安岛'
 		},
 		notifyEnter: true,
-		displayName: '海底隧道 B3'
+		displayName: "依斯鲁得海底洞穴 3层"
 	},
 	'ecl_in01.rsw': {
-		displayName: '艾可拉珠内部'
+		displayName: "埃克拉珠内部"
 	},
 	'que_qaru05.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥克尔尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥克尔尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'sp_rudus2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '鲁杜斯 F2',
+			mainTitle: "实验体废弃场 鲁杜斯 2层",
 			subTitle: '实验废弃物处理场'
 		},
 		notifyEnter: true,
-		displayName: '鲁杜斯 F2'
+		displayName: "实验体废弃场 鲁杜斯 2层"
 	},
 	'new_1-2.rsw': {
 		backgroundBmp: 'field_s2',
@@ -3305,85 +3305,85 @@ const MapInfo = {
 	'vis_h04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '调查走廊 F4'
+			mainTitle: "迎接回廊 4层"
 		},
 		notifyEnter: true,
-		displayName: '调查走廊 F4'
+		displayName: "迎接回廊 4层"
 	},
 	'pay_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'hu_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '皇家狩猎场'
+			mainTitle: "狩猎场"
 		},
 		notifyEnter: true,
-		displayName: '皇家狩猎场'
+		displayName: "狩猎场"
 	},
 	'pvp_n_7-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Rock On 房间'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Rock On 房间'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'nameless_n.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '无名岛入口'
+			mainTitle: "无名岛"
 		},
 		notifyEnter: true,
-		displayName: '无名岛入口'
+		displayName: "无名岛"
 	},
 	'1@4mst.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '欧佩罗斯中央 VT'
+			mainTitle: "优配擂斯中心部VT"
 		},
 		notifyEnter: true,
-		displayName: '欧佩罗斯中央 VT'
+		displayName: "优配擂斯中心部VT"
 	},
 	'prt_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '蝗虫区'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '蝗虫区'
+		displayName: "普隆德拉野外"
 	},
 	'mid_camp.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '米德加尔特远征队营地',
+			mainTitle: "米德加尔特联合驻地",
 			subTitle: '尤通海姆'
 		},
 		notifyEnter: true,
-		displayName: '米德加尔特远征队营地'
+		displayName: "米德加尔特联合驻地"
 	},
 	'te_alde_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '卡普拉的巢穴',
+			mainTitle: "卡普拉贾登",
 			subTitle: '卢恩-米德加尔特'
 		},
 		notifyEnter: true,
-		displayName: '卡普拉的巢穴'
+		displayName: "卡普拉贾登"
 	},
 	'conch_in.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '海螺内部',
-			subTitle: '拉萨格港口城镇'
+			mainTitle: "康·奇丽娜号内部",
+			subTitle: "罗札纳港口城镇"
 		},
 		notifyEnter: true,
-		displayName: '海螺内部'
+		displayName: "康·奇丽娜号内部"
 	},
 	'new_5-2.rsw': {
 		backgroundBmp: 'field_s2',
@@ -3394,10 +3394,10 @@ const MapInfo = {
 		displayName: '初心者修炼场'
 	},
 	'turbo_e_4.rsw': {
-		displayName: '极速赛道体育场'
+		displayName: "竞速竞赛场"
 	},
 	'job3_guil01.rsw': {
-		displayName: '秘密酒馆'
+		displayName: "秘密酒店"
 	},
 	'paramk.rsw': {
 		displayName: '帕拉市场'
@@ -3405,80 +3405,80 @@ const MapInfo = {
 	'gef_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'moc_pryd05.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '金字塔内部 B1',
+			mainTitle: "梦罗克金字塔 地下1层",
 			subTitle: '梦罗克'
 		},
 		notifyEnter: true,
-		displayName: '金字塔内部 B1'
+		displayName: "梦罗克金字塔 地下1层"
 	},
 	'un_bunker.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '地下掩体'
+			mainTitle: "地下碉堡"
 		},
 		notifyEnter: true,
-		displayName: '地下掩体'
+		displayName: "地下碉堡"
 	},
 	'1@air1.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '飞艇'
+			mainTitle: "飞空艇"
 		},
 		notifyEnter: true,
-		displayName: '飞艇'
+		displayName: "飞空艇"
 	},
 	'sp_rudus3.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '鲁杜斯 F3',
+			mainTitle: "实验体废弃场 鲁杜斯 3层",
 			subTitle: '实验废弃物处理场'
 		},
 		notifyEnter: true,
-		displayName: '鲁杜斯 F3'
+		displayName: "实验体废弃场 鲁杜斯 3层"
 	},
 	'mal_in01.rsw': {
-		displayName: '马兰岛内部'
+		displayName: "绵绵岛内部"
 	},
 	'2@mir.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '仪式之间'
+			mainTitle: "仪式的房间"
 		},
 		notifyEnter: true,
-		displayName: '仪式之间'
+		displayName: "仪式的房间"
 	},
 	'1@mir.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '仪式之间'
+			mainTitle: "仪式的房间"
 		},
 		notifyEnter: true,
-		displayName: '仪式之间'
+		displayName: "仪式的房间"
 	},
 	'ma_zif03.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'dicastes02.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '布鲁姆维尔德森林',
-			subTitle: '迪卡斯特斯'
+			mainTitle: "布伦贝德·约尔希森林",
+			subTitle: "埃·迪斯特斯"
 		},
 		notifyEnter: true,
-		displayName: '布鲁姆维尔德森林'
+		displayName: "布伦贝德·约尔希森林"
 	},
 	'rag_fes.rsw': {
 		backgroundBmp: 'village',
@@ -3492,73 +3492,73 @@ const MapInfo = {
 	'prtg_cas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '法德格里德城堡',
-			subTitle: '女武神领域'
+			mainTitle: "拉兹立克斯",
+			subTitle: "瓦尔基里雷恩"
 		},
 		notifyEnter: true,
-		displayName: '法德格里德城堡'
+		displayName: "拉兹立克斯"
 	},
 	'izlude_d.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Izlude',
+			mainTitle: "卫星都市 依斯鲁得岛",
 			subTitle: 'Rune-Midgarts Kingdom'
 		},
 		notifyEnter: true,
-		displayName: 'Izlude, the Satellite City'
+		displayName: "卫星都市 依斯鲁得岛"
 	},
 	'in_sphinx1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '梦罗克史芬克斯地下1层',
+			mainTitle: "梦罗克史芬克斯 地下1层",
 			subTitle: '苏克拉特沙漠'
 		},
 		notifyEnter: true,
-		displayName: '梦罗克史芬克斯地下1层'
+		displayName: "梦罗克史芬克斯 地下1层"
 	},
 	'lhz_in01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Rekenber Corporation Headquarters'
+			mainTitle: "雷根贝勒总部"
 		},
 		notifyEnter: true,
-		displayName: 'Rekenber Corporation Headquarters'
+		displayName: "雷根贝勒总部"
 	},
 	'lasa_fild02.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '拉比奥尔森林'
+			mainTitle: "罗比奥森林"
 		},
 		notifyEnter: true,
-		displayName: '拉比奥尔森林'
+		displayName: "罗比奥森林"
 	},
 	'1@spa.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Ghost Palace'
+			mainTitle: "幽灵皇宫"
 		},
 		notifyEnter: true,
-		displayName: 'Ghost Palace'
+		displayName: "幽灵皇宫"
 	},
 	'yuno_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'El Mes Plateau'
+			mainTitle: "尔迈斯·瀑雷德"
 		},
 		notifyEnter: true,
-		displayName: 'El Mes Plateau'
+		displayName: "尔迈斯·瀑雷德"
 	},
 	'ordeal_2-3.rsw': {
-		displayName: 'Battle Ordeal Mode'
+		displayName: "战斗试炼模式"
 	},
 	'jawaii.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Jawaii',
+			mainTitle: "蜜月岛爪哇",
 			subTitle: 'Honeymoon Island'
 		},
 		notifyEnter: true,
-		displayName: 'Jawaii, the Honeymoon Island'
+		displayName: "蜜月岛爪哇"
 	},
 	'iz_ac01_a.rsw': {
 		backgroundBmp: 'noname_s1',
@@ -3566,7 +3566,7 @@ const MapInfo = {
 			subTitle: 'Criatura Academy F1'
 		},
 		notifyEnter: true,
-		displayName: 'Criatura Academy F1'
+		displayName: "魔法学院 1层"
 	},
 	'new_4-3.rsw': {
 		backgroundBmp: 'field_s2',
@@ -3579,251 +3579,251 @@ const MapInfo = {
 	'pvp_y_5-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Prontera'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Prontera'
+		displayName: "PvP : 普隆德拉"
 	},
 	'gl_cas02_.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Castle F2',
+			mainTitle: "2层 回廊",
 			subTitle: 'Glastheim Castle'
 		},
 		notifyEnter: true,
-		displayName: 'Glastheim Castle F2'
+		displayName: "2层 回廊"
 	},
 	'dewata.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: 'Dewata'
+			mainTitle: "德瓦他"
 		},
 		notifyEnter: true,
-		displayName: 'Dewata'
+		displayName: "德瓦他"
 	},
 	'1@4igd.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'The Battlefield of Justice'
+			mainTitle: "正义擂台"
 		},
 		notifyEnter: true,
-		displayName: 'The Battlefield of Justice'
+		displayName: "正义擂台"
 	},
 	'iz_int01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '沉船'
+			mainTitle: "新手地图"
 		},
 		notifyEnter: true,
-		displayName: '沉船'
+		displayName: "新手地图"
 	},
 	'force_2-3.rsw': {
-		displayName: 'Time Limit Fight'
+		displayName: "限时激斗模式"
 	},
 	'ein_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Einbech Mine 3F'
+			mainTitle: "艾音贝赫矿山 3层"
 		},
 		notifyEnter: true,
-		displayName: 'Einbech Mine 3F'
+		displayName: "艾音贝赫矿山 3层"
 	},
 	'prt_evt_in.rsw': {
-		displayName: 'Hunting Lodge'
+		displayName: "狩猎场小木屋"
 	},
 	'tha_t06.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Thanatos Tower Upper Level'
+			mainTitle: "达纳托斯之塔 上层部"
 		},
 		notifyEnter: true,
-		displayName: 'Thanatos Tower Upper Level'
+		displayName: "达纳托斯之塔 上层部"
 	},
 	'1@dth3.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Bios Island'
+			mainTitle: "拜欧斯岛"
 		},
 		notifyEnter: true,
-		displayName: 'Bios Island'
+		displayName: "拜欧斯岛"
 	},
 	'monk_in.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Inside St. Abbey'
+			mainTitle: "圣·卡毕利那修道院内部"
 		},
 		notifyEnter: true,
-		displayName: 'Inside St. Abbey'
+		displayName: "圣·卡毕利那修道院内部"
 	},
 	'turbo_e_8.rsw': {
-		displayName: 'Turbo Track Stadium'
+		displayName: "竞速竞赛场"
 	},
 	'cmd_in01.rsw': {
-		displayName: 'Inside Comodo'
+		displayName: "克魔岛内部"
 	},
 	'ein_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Einbroch Field'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: 'Einbroch Field'
+		displayName: "艾音布罗克野外"
 	},
 	'arug_cas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Banadis Castle',
+			mainTitle: "巴拿迪斯",
 			subTitle: 'Valfreyja'
 		},
 		notifyEnter: true,
-		displayName: 'Banadis Castle'
+		displayName: "巴拿迪斯"
 	},
 	'gl_chyard.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Underground Churchyard',
+			mainTitle: "克雷斯特汉姆 地下公墓",
 			subTitle: 'Glastheim'
 		},
 		notifyEnter: true,
-		displayName: 'Glastheim Underground Churchyard'
+		displayName: "克雷斯特汉姆 地下公墓"
 	},
 	'pvp_y_7-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Izlude'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Izlude'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'pvp_n_7-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Copass'
+		displayName: "PvP : 罗盘室"
 	},
 	'ba_pw01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '1st Power Plant'
+			mainTitle: "第一魔力发电厂"
 		},
 		notifyEnter: true,
-		displayName: '1st Power Plant'
+		displayName: "第一魔力发电厂"
 	},
 	'lhz_airport.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Lighthalzen Airport'
+			mainTitle: "里希塔乐镇机场"
 		},
 		notifyEnter: true,
-		displayName: 'Lighthalzen Airport'
+		displayName: "里希塔乐镇机场"
 	},
 	'ein_d02_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Nasarin Empire',
+			mainTitle: "罗斯里安帝国",
 			subTitle: 'Illusion'
 		},
 		notifyEnter: true,
-		displayName: 'Nasarin Empire'
+		displayName: "罗斯里安帝国"
 	},
 	'arena_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Waiting room'
+			mainTitle: "竞技场待机室"
 		},
 		notifyEnter: true,
-		displayName: 'Waiting room'
+		displayName: "竞技场待机室"
 	},
 	'job4_bio.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'Secret Garden'
+			mainTitle: "秘密花园"
 		},
 		notifyEnter: true,
-		displayName: 'Secret Garden'
+		displayName: "秘密花园"
 	},
 	'pvp_y_3-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Payon'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Payon'
+		displayName: "PvP : 斐扬"
 	},
 	'yggdrasil01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "Hvergelmir's Fountain"
+			mainTitle: "禾贝勒开米勒之泉(天地树树干)"
 		},
 		notifyEnter: true,
-		displayName: "Hvergelmir's Fountain (Trunk of Yggdrasil)"
+		displayName: "禾贝勒开米勒之泉(天地树树干)"
 	},
 	'ama_in02.rsw': {
-		displayName: 'Inside Himezi Castle'
+		displayName: "天水阁内部"
 	},
 	'jor_ab01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Abandoned Pit 1st Floor'
+			mainTitle: "废弃坑洞 1层"
 		},
 		notifyEnter: true,
-		displayName: 'Abandoned Pit 1st Floor'
+		displayName: "废弃坑洞 1层"
 	},
 	'mjolnir_05.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Mt.Mjolnir North Area'
+			mainTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: 'Mt.Mjolnir North Area'
+		displayName: "妙勒尼山脉北区"
 	},
 	'que_bingo.rsw': {
-		displayName: 'Bingo Game Room'
+		displayName: "宾果竞技场"
 	},
 	'1@4drk.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: "Dragon's Trail"
+			mainTitle: "龙之考验"
 		},
 		notifyEnter: true,
-		displayName: "Dragon's Trail"
+		displayName: "龙之考验"
 	},
 	'gld_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Guild Dungeon',
+			mainTitle: "露依纳 公会地下密穴",
 			subTitle: 'Luina'
 		},
 		notifyEnter: true,
-		displayName: 'Luina Guild Dungeon'
+		displayName: "露依纳 公会地下密穴"
 	},
 	'vr_bob.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: "Today's Table",
+			mainTitle: "幻想丛书 - 今天的餐桌",
 			subTitle: 'Fantasy Series-006'
 		},
 		notifyEnter: true,
-		displayName: "Fantasy Series - Today's Table"
+		displayName: "幻想丛书 - 今天的餐桌"
 	},
 	'jor_back3.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'Frozen Scale Glacier'
+			mainTitle: "冰鳞冰川"
 		},
 		notifyEnter: true,
-		displayName: 'Frozen Scale Glacier'
+		displayName: "冰鳞冰川"
 	},
 	'louyang.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Louyang',
+			mainTitle: "古都 龙之城",
 			subTitle: 'Highland'
 		},
 		notifyEnter: true,
-		displayName: 'Louyang, the Highland'
+		displayName: "古都 龙之城"
 	},
 	'iz_ac02_c.rsw': {
 		backgroundBmp: 'noname_s1',
@@ -3831,200 +3831,200 @@ const MapInfo = {
 			subTitle: 'Criatura Academy F2'
 		},
 		notifyEnter: true,
-		displayName: 'Criatura Academy F2'
+		displayName: "魔法学院2层"
 	},
 	'ra_san04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Sanctuary South Area 1F',
+			mainTitle: "拉赫神殿 圣域 1层 南区",
 			subTitle: 'Rachel Temple'
 		},
 		notifyEnter: true,
-		displayName: 'Rachel Temple Sanctuary South Area 1F'
+		displayName: "拉赫神殿 圣域 1层 南区"
 	},
 	'beach_dun3.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '毛东部洞穴',
+			mainTitle: "克魔岛 东边洞穴马吾",
 			subTitle: '克魔岛'
 		},
 		notifyEnter: true,
-		displayName: '毛东部洞穴'
+		displayName: "克魔岛 东边洞穴马吾"
 	},
 	'pub_cat.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Cat on a Bullet',
+			mainTitle: "喵星人子弹酒吧",
 			subTitle: 'Einbroch Rebellion Pub'
 		},
 		notifyEnter: true,
-		displayName: 'Cat on a Bullet'
+		displayName: "喵星人子弹酒吧"
 	},
 	'1@herbs.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Hidden Flower Garden'
+			mainTitle: "秘密花园"
 		},
 		notifyEnter: true,
-		displayName: 'Hidden Flower Garden'
+		displayName: "秘密花园"
 	},
 	'prt_lib_q.rsw': {
-		displayName: 'Memorial of Past Royal Family'
+		displayName: "过去王室的记忆"
 	},
 	'ma_fild02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'Forest',
+			mainTitle: "普勒斯特",
 			subTitle: 'Port Malaya'
 		},
 		notifyEnter: true,
-		displayName: 'Forest'
+		displayName: "普勒斯特"
 	},
 	'pvp_y_3-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Prontera'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Prontera'
+		displayName: "PvP : 普隆德拉"
 	},
 	'1@exse.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'Galactic Celestial Branch'
+			mainTitle: "银河天体支脉"
 		},
 		notifyEnter: true,
-		displayName: 'Galactic Celestial Branch'
+		displayName: "银河天体支脉"
 	},
 	'bat_b01.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: 'Flavian',
+			mainTitle: "瀑拉毕乌斯",
 			subTitle: 'Battleground'
 		},
 		notifyEnter: true,
-		displayName: 'Flavian'
+		displayName: "瀑拉毕乌斯"
 	},
 	'ein_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Einbroch Field'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: 'Einbroch Field'
+		displayName: "艾音布罗克野外"
 	},
 	'sp_os.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'OS',
+			mainTitle: "特殊警戒区 欧斯",
 			subTitle: 'Special Border Area'
 		},
 		notifyEnter: true,
-		displayName: 'Special Border Area OS'
+		displayName: "特殊警戒区 欧斯"
 	},
 	'prt_in.rsw': {
-		displayName: 'Inside Prontera'
+		displayName: "普隆德拉内部"
 	},
 	'moc_ruins.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: 'Morocc Ruins'
+			mainTitle: "梦罗克遗迹"
 		},
 		notifyEnter: true,
-		displayName: 'Morocc Ruins'
+		displayName: "梦罗克遗迹"
 	},
 	'arug_cas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Gefn Castle',
+			mainTitle: "吉本",
 			subTitle: 'Valfreyja'
 		},
 		notifyEnter: true,
-		displayName: 'Gefn Castle'
+		displayName: "吉本"
 	},
 	'ama_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Amatsu Underground Shrine'
+			mainTitle: "樱花城 地下神社"
 		},
 		notifyEnter: true,
-		displayName: 'Amatsu Underground Shrine'
+		displayName: "樱花城 地下神社"
 	},
 	'yuno_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'El Mes Plateau'
+			mainTitle: "尔迈斯·瀑雷德"
 		},
 		notifyEnter: true,
-		displayName: 'El Mes Plateau'
+		displayName: "尔迈斯·瀑雷德"
 	},
 	'moc_fild22b.rsw': {
 		backgroundBmp: 'field2',
 		signName: {
-			mainTitle: 'Dimension Crack',
+			mainTitle: "苏克拉特沙漠次元裂缝",
 			subTitle: 'Sograt Desert'
 		},
 		notifyEnter: true,
-		displayName: 'Dimension Crack in Sograt Desert'
+		displayName: "苏克拉特沙漠次元裂缝"
 	},
 	'hu_fild05.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Hugel Abyss Lake'
+			mainTitle: "毁葛深渊湖水"
 		},
 		notifyEnter: true,
-		displayName: 'Hugel Abyss Lake'
+		displayName: "毁葛深渊湖水"
 	},
 	'gl_sew03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Underground Waterway B3',
+			mainTitle: "克雷斯特汉姆 地下水道 3层",
 			subTitle: 'Glastheim'
 		},
 		notifyEnter: true,
-		displayName: 'Glastheim Underground Waterway B3'
+		displayName: "克雷斯特汉姆 地下水道 3层"
 	},
 	'hero_ent1.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: "1st Hero's Gateway",
+			mainTitle: "英雄之地第一英雄之门",
 			subTitle: 'Herosria'
 		},
 		notifyEnter: true,
-		displayName: "Herosria 1st Hero's Gateway"
+		displayName: "英雄之地第一英雄之门"
 	},
 	'payg_cas05.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Bamboo Grove Hill',
+			mainTitle: "竹林岘",
 			subTitle: 'Greenwood Lake'
 		},
 		notifyEnter: true,
-		displayName: '竹林山城堡'
+		displayName: "竹林岘"
 	},
 	'prt_fild11.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '哥布灵森林'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '哥布灵森林'
+		displayName: "普隆德拉野外"
 	},
 	'1@adv.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '大主教别墅'
+			mainTitle: "大神官的别墅"
 		},
 		notifyEnter: true,
-		displayName: '大主教别墅'
+		displayName: "大神官的别墅"
 	},
 	'ein_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '艾音布罗克原野'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: '艾音布罗克原野'
+		displayName: "艾音布罗克野外"
 	},
 	'jor_safty1.rsw': {
 		backgroundBmp: 'field2_s1',
@@ -4037,52 +4037,52 @@ const MapInfo = {
 	'prt_sewb3.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '下水道 F3',
+			mainTitle: "普隆德拉 地下水道 3层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉下水道 F3'
+		displayName: "普隆德拉 地下水道 3层"
 	},
 	'tha_t07.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '天使之室',
-			subTitle: '塔纳托斯塔上层'
+			mainTitle: "达纳托斯之塔 上层部 天使之房",
+			subTitle: "达纳托斯之塔 上层部"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔上层 - 天使之室'
+		displayName: "达纳托斯之塔 上层部 天使之房"
 	},
 	'tha_t05.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '塔纳托斯塔上层'
+			mainTitle: "达纳托斯之塔 上层部"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔上层'
+		displayName: "达纳托斯之塔 上层部"
 	},
 	'turbo_n_16.rsw': {
-		displayName: '极速赛道竞技场'
+		displayName: "竞速竞赛场"
 	},
 	'alde_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 B2',
+			mainTitle: "艾尔帕兰 钟塔 地下2层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 B2'
+		displayName: "艾尔帕兰 钟塔 地下2层"
 	},
 	'1@pop3.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '天空花园',
+			mainTitle: "空中庭园",
 			subTitle: '白昼半月'
 		},
 		notifyEnter: true,
-		displayName: '天空花园'
+		displayName: "空中庭园"
 	},
 	'har_in01.rsw': {
-		displayName: '岩脊'
+		displayName: "洛克里奇"
 	},
 	'new_2-1.rsw': {
 		backgroundBmp: 'field_s2',
@@ -4095,35 +4095,35 @@ const MapInfo = {
 	'prt_castle.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '普隆德拉城堡'
+			mainTitle: "普隆德拉王宫内部"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉城堡'
+		displayName: "普隆德拉王宫内部"
 	},
 	'gl_cas02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '格拉斯特海姆城堡 F2',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆王宫 2层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆城堡 F2'
+		displayName: "克雷斯特汉姆王宫 2层"
 	},
 	'que_swat.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '心灵猎人军事基地'
+			mainTitle: "邪心猎人军事基地"
 		},
 		notifyEnter: true,
-		displayName: '心灵猎人军事基地'
+		displayName: "邪心猎人军事基地"
 	},
 	'1@4cdn.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '最后试炼幻境洞窟'
+			mainTitle: "最后试炼之幻影洞穴"
 		},
 		notifyEnter: true,
-		displayName: '最后试炼幻境洞窟'
+		displayName: "最后试炼之幻影洞穴"
 	},
 	'tra_fild01.rsw': {
 		backgroundBmp: 'field_s2',
@@ -4146,104 +4146,104 @@ const MapInfo = {
 	'tra_fild.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉外围训练场'
+			mainTitle: "普隆德拉郊外训练场"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉外围训练场'
+		displayName: "普隆德拉郊外训练场"
 	},
 	'tha_t04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '废弃之地',
-			subTitle: '塔纳托斯塔'
+			mainTitle: "达纳托斯之塔 下层部 废弃空间",
+			subTitle: "达纳托斯塔"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔废弃之地'
+		displayName: "达纳托斯之塔 下层部 废弃空间"
 	},
 	'iz_ac02_b.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里图拉学院 F2'
+			subTitle: "魔法学院 F2"
 		},
 		notifyEnter: true,
-		displayName: '克里图拉学院 F2'
+		displayName: "魔法学院2层"
 	},
 	'abbey02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '诅咒修道院地下城 B2',
+			mainTitle: "无名岛 修道院 地下1层",
 			subTitle: '无名岛'
 		},
 		notifyEnter: true,
-		displayName: '诅咒修道院地下城 B2'
+		displayName: "无名岛 修道院 地下1层"
 	},
 	'turbo_n_8.rsw': {
-		displayName: '极速赛道竞技场'
+		displayName: "竞速竞赛场"
 	},
 	'vis_h03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '调查走廊 F3'
+			mainTitle: "迎接回廊 3层"
 		},
 		notifyEnter: true,
-		displayName: '调查走廊 F3'
+		displayName: "迎接回廊 3层"
 	},
 	'1@md_gef.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '星期五纪念馆'
+			mainTitle: "周五副本"
 		},
 		notifyEnter: true,
-		displayName: '星期五纪念馆'
+		displayName: "周五副本"
 	},
 	'lasa_sea.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '拉萨格纳洞窟'
+			mainTitle: "海底洞穴"
 		},
 		notifyEnter: true,
-		displayName: '拉萨格纳洞窟'
+		displayName: "海底洞穴"
 	},
 	'odin_tem03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥丁神殿北区'
+			mainTitle: "毁葛奥丁神殿北区"
 		},
 		notifyEnter: true,
-		displayName: '奥丁神殿北区'
+		displayName: "毁葛奥丁神殿北区"
 	},
 	'quiz_test.rsw': {
-		displayName: '问答大厅'
+		displayName: "考场"
 	},
 	'c_tower2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 F2',
+			mainTitle: "艾尔帕兰 钟塔 地上 2层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 F2'
+		displayName: "艾尔帕兰 钟塔 地上 2层"
 	},
 	'2@gl_k.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团 F2',
-			subTitle: '旧格拉斯特海姆'
+			mainTitle: "过去的古城骑士团 2层",
+			subTitle: "旧克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '旧格拉斯特海姆骑士团 F2'
+		displayName: "过去的古城骑士团 2层"
 	},
 	'ecl_hub01.rsw': {
-		displayName: '艾可拉斯外围'
+		displayName: "埃克拉珠小径"
 	},
 	'1@gl_k.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团 F1',
-			subTitle: '旧格拉斯特海姆'
+			mainTitle: "过去的古城骑士团 1层",
+			subTitle: "旧克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '旧格拉斯特海姆骑士团 F1'
+		displayName: "过去的古城骑士团 1层"
 	},
 	'1@gef_in.rsw': {
 		displayName: '吉芬魔法大赛'
@@ -4251,24 +4251,24 @@ const MapInfo = {
 	'lasa_dun_q.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '龙巢'
+			mainTitle: "龙巢穴"
 		},
 		notifyEnter: true,
-		displayName: '龙巢'
+		displayName: "龙巢穴"
 	},
 	'schg_cas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '维德布莱恩城堡',
+			mainTitle: "毕得布莱因",
 			subTitle: '尼德霍格'
 		},
 		notifyEnter: true,
-		displayName: '维德布莱恩城堡'
+		displayName: "毕得布莱因"
 	},
 	'hero_out4.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '拉比纳里乌姆',
+			mainTitle: "英雄之地拉比纳里乌姆",
 			subTitle: '英雄之地'
 		},
 		notifyEnter: true,
@@ -4277,101 +4277,101 @@ const MapInfo = {
 	'alde_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '卢因',
+			mainTitle: "艾尔帕兰卫星都市 露依纳",
 			subTitle: '艾尔帕兰卫星城'
 		},
 		notifyEnter: true,
-		displayName: '卢因'
+		displayName: "艾尔帕兰卫星都市 露依纳"
 	},
 	'prt_fild08b.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉南门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉南门'
+		displayName: "普隆德拉野外"
 	},
 	'yuno_fild12.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '边境检查站'
+			mainTitle: "秀发兹发德国界检查站"
 		},
 		notifyEnter: true,
-		displayName: '边境检查站'
+		displayName: "秀发兹发德国界检查站"
 	},
 	'lhz_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '莱特森原野'
+			mainTitle: "里希塔乐镇野外"
 		},
 		notifyEnter: true,
-		displayName: '莱特森原野'
+		displayName: "里希塔乐镇野外"
 	},
 	'pvp_n_7-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 三明治房间'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：三明治房间'
+		displayName: "PvP : 三明治室"
 	},
 	'yuno_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '埃尔梅斯高原'
+			mainTitle: "尔迈斯·瀑雷德"
 		},
 		notifyEnter: true,
-		displayName: '埃尔梅斯高原'
+		displayName: "尔迈斯·瀑雷德"
 	},
 	'pvp_n_5-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 地下十字房间'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：地下十字房间'
+		displayName: "PvP : 反十字室"
 	},
 	'job_wiz.rsw': {
-		displayName: '巫师领域'
+		displayName: "巫师转职考场"
 	},
 	'gon_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '隐士棋盘',
+			mainTitle: "昆仑神仙的围棋台",
 			subTitle: '昆仑'
 		},
 		notifyEnter: true,
-		displayName: '隐士棋盘'
+		displayName: "昆仑神仙的围棋台"
 	},
 	'int_land.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '孤岛'
+			mainTitle: "偏僻岛"
 		},
 		notifyEnter: true,
-		displayName: '孤岛'
+		displayName: "偏僻岛"
 	},
 	'aldeba_in.rsw': {
 		displayName: '艾尔帕兰内部'
 	},
 	've_in.rsw': {
-		displayName: '维因斯内部'
+		displayName: "伯仁斯内部"
 	},
 	'que_qsch05.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥克尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥克尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'ma_zif07.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'1@tcamp.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -4384,54 +4384,54 @@ const MapInfo = {
 	'prt_fild08d.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉南门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉南门'
+		displayName: "普隆德拉野外"
 	},
 	'job_prist.rsw': {
-		displayName: '牧师领域'
+		displayName: "牧师转职考场"
 	},
 	'nyd_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '世界树树根 F1'
+			mainTitle: "辉煌领域粗暴者的伤口 1层"
 		},
 		notifyEnter: true,
-		displayName: '世界树树根 F1'
+		displayName: "辉煌领域粗暴者的伤口 1层"
 	},
 	'kh_kiehl02.rsw': {
-		displayName: '基尔的房间'
+		displayName: "基尔的最后的房间"
 	},
 	'in_sphinx2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '梦罗克斯芬克斯 B2',
+			mainTitle: "梦罗克史芬克斯 地下2层",
 			subTitle: '苏克拉特沙漠'
 		},
 		notifyEnter: true,
-		displayName: '梦罗克斯芬克斯 B2'
+		displayName: "梦罗克史芬克斯 地下2层"
 	},
 	'icas_in.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '冰之城堡内部'
+			mainTitle: "冰封之城 内部"
 		},
 		notifyEnter: true,
-		displayName: '冰之城堡内部'
+		displayName: "冰封之城 内部"
 	},
 	'iz_ac02.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里图拉学院 F2'
+			subTitle: "魔法学院 F2"
 		},
 		notifyEnter: true,
-		displayName: '克里图拉学院 F2'
+		displayName: "魔法学院2层"
 	},
 	'bl_soul.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '样本环境 - 灵魂',
+			mainTitle: "生物圈样本环境 - 灵魂",
 			subTitle: '瓦尔蒙特的生物圈'
 		},
 		notifyEnter: true,
@@ -4440,45 +4440,45 @@ const MapInfo = {
 	'mjolnir_12.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼尔山北麓'
+			mainTitle: "妙勒尼山脉北区山麓"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼尔山北麓'
+		displayName: "妙勒尼山脉北区山麓"
 	},
 	'alde_alche.rsw': {
-		displayName: '炼金术士领域'
+		displayName: "炼金术师转职所"
 	},
 	'payg_cas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '绯红宫殿城堡',
+			mainTitle: "天坛",
 			subTitle: '绿林湖'
 		},
 		notifyEnter: true,
-		displayName: '绯红宫殿城堡'
+		displayName: "天坛"
 	},
 	'gefenia02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬尼亚'
+			mainTitle: "葛帔尼亚"
 		},
 		notifyEnter: true,
-		displayName: '吉芬尼亚'
+		displayName: "葛帔尼亚"
 	},
 	'force_3-2.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'izlude_c.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '依斯鲁得',
+			mainTitle: "卫星都市 依斯鲁得岛",
 			subTitle: '卢恩-米德加尔特王国'
 		},
 		notifyEnter: true,
-		displayName: '依斯鲁得'
+		displayName: "卫星都市 依斯鲁得岛"
 	},
 	's_atelier.rsw': {
-		displayName: '暗影工坊'
+		displayName: "影子工坊"
 	},
 	'1@20cn2.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -4491,153 +4491,153 @@ const MapInfo = {
 	'pvp_y_1-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 依斯鲁得房间'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：依斯鲁得房间'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'spl_in02.rsw': {
-		displayName: '斯普兰迪德内部'
+		displayName: "辉煌领域内部"
 	},
 	'1@4mag.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '魔法喷泉'
+			mainTitle: "魔力之泉"
 		},
 		notifyEnter: true,
-		displayName: '魔法喷泉'
+		displayName: "魔力之泉"
 	},
 	'quiz_00.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '问答革命'
+			mainTitle: "益智游戏竞技场"
 		},
 		notifyEnter: true,
-		displayName: '问答革命'
+		displayName: "益智游戏竞技场"
 	},
 	'1@vrclo.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '镜之修道院',
+			mainTitle: "幻想丛书 - 明镜修道院",
 			subTitle: '幻想系列-005'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列－镜之修道院'
+		displayName: "幻想丛书 - 明镜修道院"
 	},
 	'rockrdg2.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '基瓦瓦沙漠',
+			mainTitle: "契瓦瓦沙漠",
 			subTitle: '洛克里奇'
 		},
 		notifyEnter: true,
-		displayName: '基瓦瓦沙漠'
+		displayName: "契瓦瓦沙漠"
 	},
 	'2@vrclo.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '那些时光',
+			mainTitle: "幻想丛书 - 每一个瞬间",
 			subTitle: '幻想系列-005'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列－那些时光'
+		displayName: "幻想丛书 - 每一个瞬间"
 	},
 	'iz_int02.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '沉船'
+			mainTitle: "新手地图"
 		},
 		notifyEnter: true,
-		displayName: '沉船'
+		displayName: "新手地图"
 	},
 	'yuno_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '边境哨站'
+			mainTitle: "秀发兹发德国界检查站"
 		},
 		notifyEnter: true,
-		displayName: '边境哨站'
+		displayName: "秀发兹发德国界检查站"
 	},
 	'1@spa2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '悔恨之墓'
+			mainTitle: "忏悔之墓"
 		},
 		notifyEnter: true,
-		displayName: '悔恨之墓'
+		displayName: "忏悔之墓"
 	},
 	'ma_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '神奇村庄',
+			mainTitle: "巴尔尤·马西瓦加",
 			subTitle: '马来港'
 		},
 		notifyEnter: true,
-		displayName: '神奇村庄'
+		displayName: "巴尔尤·马西瓦加"
 	},
 	'poring_w01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '波利战争等候室'
+			mainTitle: "波利对决等候室"
 		},
 		notifyEnter: true,
-		displayName: '波利战争等候室'
+		displayName: "波利对决等候室"
 	},
 	'ecl_tdun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '彩虹桥塔 1层'
+			mainTitle: "彩虹桥高塔 1层"
 		},
 		notifyEnter: true,
-		displayName: '彩虹桥塔 1层'
+		displayName: "彩虹桥高塔 1层"
 	},
 	'jupe_area2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '朱佩洛斯禁区'
+			mainTitle: "优配擂斯保安区域"
 		},
 		notifyEnter: true,
-		displayName: '朱佩洛斯禁区'
+		displayName: "优配擂斯保安区域"
 	},
 	'gef_fild05.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '吉普赛村落',
-			subTitle: '吉芬原野'
+			mainTitle: "吉普赛村",
+			subTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉普赛村落'
+		displayName: "吉普赛村"
 	},
 	'ra_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '奥杜姆拉草原'
+			mainTitle: "拉赫 奥顿拉草原"
 		},
 		notifyEnter: true,
-		displayName: '奥杜姆拉草原'
+		displayName: "拉赫 奥顿拉草原"
 	},
 	'izlude_a.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '依斯鲁得',
+			mainTitle: "卫星都市 依斯鲁得岛",
 			subTitle: '卢恩·米德加尔兹王国'
 		},
 		notifyEnter: true,
-		displayName: '依斯鲁得'
+		displayName: "卫星都市 依斯鲁得岛"
 	},
 	'jupe_core2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '朱佩洛斯中心'
+			mainTitle: "优配擂斯中心部"
 		},
 		notifyEnter: true,
-		displayName: '朱佩洛斯中心'
+		displayName: "优配擂斯中心部"
 	},
 	'force_1-2.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'lasa_in01.rsw': {
-		displayName: '拉萨格内部'
+		displayName: "罗札纳内部"
 	},
 	'jor_que.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -4653,258 +4653,258 @@ const MapInfo = {
 	'sch_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '尼德霍格尔',
+			mainTitle: "尼它堆",
 			subTitle: '朱诺'
 		},
 		notifyEnter: true,
-		displayName: '尼德霍格尔'
+		displayName: "尼它堆"
 	},
 	'oz_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '奥兹迷宫 1层'
+			mainTitle: "欧兹迷宫1层"
 		},
 		notifyEnter: true,
-		displayName: '奥兹迷宫 1层'
+		displayName: "欧兹迷宫1层"
 	},
 	'iz_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '海底隧道 B2层',
+			mainTitle: "依斯鲁得海底洞穴 2层",
 			subTitle: '拜蓝岛'
 		},
 		notifyEnter: true,
-		displayName: '海底隧道 B2层'
+		displayName: "依斯鲁得海底洞穴 2层"
 	},
 	'prt_cas.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '中央宫殿',
+			mainTitle: "普隆德拉中央宫",
 			subTitle: '普隆德拉城堡'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉中央宫殿'
+		displayName: "普隆德拉中央宫"
 	},
 	'jupe_core.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '朱佩洛斯中心'
+			mainTitle: "优配擂斯中心部"
 		},
 		notifyEnter: true,
-		displayName: '朱佩洛斯中心'
+		displayName: "优配擂斯中心部"
 	},
 	'rockmi2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '洛克里奇矿山 2层'
+			mainTitle: "洛克里奇 矿山"
 		},
 		notifyEnter: true,
-		displayName: '洛克里奇矿山'
+		displayName: "洛克里奇 矿山"
 	},
 	'prt_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '女武神领域',
+			mainTitle: "瓦尔基里雷恩",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '女武神领域'
+		displayName: "瓦尔基里雷恩"
 	},
 	'iz_d04_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '深海洞窟'
+			mainTitle: "深渊海底洞穴上层"
 		},
 		notifyEnter: true,
-		displayName: '深海洞窟'
+		displayName: "深渊海底洞穴上层"
 	},
 	'amatsu.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '天津町',
+			mainTitle: "天水之国 樱花城",
 			subTitle: '命运之地'
 		},
 		notifyEnter: true,
-		displayName: '天津町'
+		displayName: "天水之国 樱花城"
 	},
 	'pay_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '斐扬洞窟 2层',
+			mainTitle: "斐扬洞穴 2层",
 			subTitle: '斐扬弓箭手村'
 		},
 		notifyEnter: true,
-		displayName: '斐扬洞窟 2层'
+		displayName: "斐扬洞穴 2层"
 	},
 	'gl_cas01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '格拉斯特海姆城堡 1层',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆王宫 1层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆城堡 1层'
+		displayName: "克雷斯特汉姆王宫 1层"
 	},
 	'te_prtcas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '海涅城堡',
+			mainTitle: "海尔内",
 			subTitle: '卢恩·米德加尔兹'
 		},
 		notifyEnter: true,
-		displayName: '海涅城堡'
+		displayName: "海尔内"
 	},
 	'1@vrpo.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '波利大地',
+			mainTitle: "幻想丛书 - 波利德拉",
 			subTitle: '幻想系列-007'
 		},
 		notifyEnter: true,
-		displayName: '幻想系列－波利大地'
+		displayName: "幻想丛书 - 波利德拉"
 	},
 	'ra_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '伊达平原'
+			mainTitle: "拉赫伊达平原"
 		},
 		notifyEnter: true,
-		displayName: '伊达平原'
+		displayName: "拉赫伊达平原"
 	},
 	'2@tower.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '无限塔'
+			mainTitle: "无尽塔底层"
 		},
 		notifyEnter: true,
-		displayName: '无限塔'
+		displayName: "无尽塔底层"
 	},
 	'3@tower.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '无限塔'
+			mainTitle: "无尽塔中层"
 		},
 		notifyEnter: true,
-		displayName: '无限塔'
+		displayName: "无尽塔中层"
 	},
 	'4@tower.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '无限塔'
+			mainTitle: "无尽塔上层"
 		},
 		notifyEnter: true,
-		displayName: '无限塔'
+		displayName: "无尽塔上层"
 	},
 	'prt_cas_q.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '星之宫殿',
+			mainTitle: "普隆德拉别宫",
 			subTitle: '普隆德拉城堡'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉星之宫殿'
+		displayName: "普隆德拉别宫"
 	},
 	'6@tower.rsw': {
-		displayName: '无限塔（未知区域）'
+		displayName: "无尽塔(未知地区)"
 	},
 	'yuno_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '基尔·哈伊尔的小屋'
+			mainTitle: "启·海伊洛别墅"
 		},
 		notifyEnter: true,
-		displayName: '基尔·哈伊尔的小屋'
+		displayName: "启·海伊洛别墅"
 	},
 	'juperos_02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '朱佩洛斯遗迹内部'
+			mainTitle: "优配擂斯废墟内部"
 		},
 		notifyEnter: true,
-		displayName: '朱佩洛斯遗迹内部'
+		displayName: "优配擂斯废墟内部"
 	},
 	'prt_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉北门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉北门'
+		displayName: "普隆德拉野外"
 	},
 	'1@tower.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '无限塔'
+			mainTitle: "无尽塔最底层"
 		},
 		notifyEnter: true,
-		displayName: '无限塔'
+		displayName: "无尽塔最底层"
 	},
 	'lhz_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '生命体研究所 1层'
+			mainTitle: "生体研究所 地下1层"
 		},
 		notifyEnter: true,
-		displayName: '生命体研究所 1层'
+		displayName: "生体研究所 地下1层"
 	},
 	'ma_zif01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'bif_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '北部彩虹桥'
+			mainTitle: "彩虹桥北部"
 		},
 		notifyEnter: true,
-		displayName: '北部彩虹桥'
+		displayName: "彩虹桥北部"
 	},
 	'jor_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '蛇神温暖之地 2层'
+			mainTitle: "蛇神的吐息 2层"
 		},
 		notifyEnter: true,
-		displayName: '蛇神温暖之地 2层'
+		displayName: "蛇神的吐息 2层"
 	},
 	'gl_chyard_.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '修道院墓地',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "古城地下公墓",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '修道院墓地'
+		displayName: "古城地下公墓"
 	},
 	'ecl_in04.rsw': {
-		displayName: '艾可拉珠内部'
+		displayName: "埃克拉珠内部"
 	},
 	've_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维恩斯原野'
+			mainTitle: "伯仁斯野外"
 		},
 		notifyEnter: true,
-		displayName: '维恩斯原野'
+		displayName: "伯仁斯野外"
 	},
 	'sec_in02.rsw': {
-		displayName: '英灵殿内部'
+		displayName: "巴哈拉宫内部"
 	},
 	'hunter_1-1.rsw': {
-		displayName: '猎人公会'
+		displayName: "猎人转职所"
 	},
 	'nif_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '斯凯灵顿，孤独村落',
+			mainTitle: "尼芙菲姆 偏远村落 斯凯领顿",
 			subTitle: '尼弗尔海姆'
 		},
 		notifyEnter: true,
-		displayName: '尼弗尔海姆的斯凯灵顿孤独村落'
+		displayName: "尼芙菲姆 偏远村落 斯凯领顿"
 	},
 	'que_god02.rsw': {
 		displayName: '任务地图'
@@ -4912,82 +4912,82 @@ const MapInfo = {
 	'ecl_tdun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '彩虹桥塔 2层'
+			mainTitle: "彩虹桥高塔 2层"
 		},
 		notifyEnter: true,
-		displayName: '彩虹桥塔 2层'
+		displayName: "彩虹桥高塔 2层"
 	},
 	'thor_v02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '托尔火山迷宫 2层'
+			mainTitle: "托尔火山密穴 2层"
 		},
 		notifyEnter: true,
-		displayName: '托尔火山迷宫 2层'
+		displayName: "托尔火山密穴 2层"
 	},
 	'bif_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '南部彩虹桥'
+			mainTitle: "彩虹桥南部"
 		},
 		notifyEnter: true,
-		displayName: '南部彩虹桥'
+		displayName: "彩虹桥南部"
 	},
 	'1@advs.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '欺诈别墅'
+			mainTitle: "欺瞒别墅"
 		},
 		notifyEnter: true,
-		displayName: '欺诈别墅'
+		displayName: "欺瞒别墅"
 	},
 	'dicastes01.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '迪卡斯特斯',
+			mainTitle: "沙帕首都 埃·迪斯特斯",
 			subTitle: '约顿海姆萨帕首都'
 		},
 		notifyEnter: true,
-		displayName: '迪卡斯特斯'
+		displayName: "沙帕首都 埃·迪斯特斯"
 	},
 	'brasilis.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '巴西利斯'
+			mainTitle: "巴西"
 		},
 		notifyEnter: true,
-		displayName: '巴西利斯'
+		displayName: "巴西"
 	},
 	'1@oz.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '奥兹迷宫'
+			mainTitle: "欧兹迷宫"
 		},
 		notifyEnter: true,
-		displayName: '奥兹迷宫'
+		displayName: "欧兹迷宫"
 	},
 	'abyss_04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下洞窟 4层',
+			mainTitle: "毁葛深渊湖水 地下洞穴 4层",
 			subTitle: '深渊湖'
 		},
 		notifyEnter: true,
-		displayName: '深渊湖地下洞窟 4层'
+		displayName: "毁葛深渊湖水 地下洞穴 4层"
 	},
 	'c_tower3.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 3层',
+			mainTitle: "艾尔帕兰 钟塔 地上 3层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 3层'
+		displayName: "艾尔帕兰 钟塔 地上 3层"
 	},
 	'bl_temple.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '样本环境－神殿',
+			mainTitle: "生物圈样本环境－神殿",
 			subTitle: '瓦尔蒙德生物圈'
 		},
 		notifyEnter: true,
@@ -4996,26 +4996,26 @@ const MapInfo = {
 	'pay_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'hu_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '塔纳托斯塔前'
+			mainTitle: "达纳托斯之塔前"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔前'
+		displayName: "达纳托斯之塔前"
 	},
 	'int_land03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '孤岛'
+			mainTitle: "偏僻岛"
 		},
 		notifyEnter: true,
-		displayName: '孤岛'
+		displayName: "偏僻岛"
 	},
 	'1@uns.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -5034,69 +5034,69 @@ const MapInfo = {
 		displayName: '峡谷探索'
 	},
 	'quiz_02.rsw': {
-		displayName: '问答竞技场'
+		displayName: "益智游戏竞技场"
 	},
 	'int_land04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '孤岛'
+			mainTitle: "偏僻岛"
 		},
 		notifyEnter: true,
-		displayName: '孤岛'
+		displayName: "偏僻岛"
 	},
 	'ice_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '拉赫冰洞 1F'
+			mainTitle: "拉赫冰洞穴1层"
 		},
 		notifyEnter: true,
-		displayName: '拉赫冰洞 1F'
+		displayName: "拉赫冰洞穴1层"
 	},
 	'2@nyr.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '心之仓库',
+			mainTitle: "圣域瑟斯隆尼勒 心脏保管所",
 			subTitle: '塞斯鲁姆尼尔圣域'
 		},
 		notifyEnter: true,
-		displayName: '塞斯鲁姆尼尔圣域心之仓库'
+		displayName: "圣域瑟斯隆尼勒 心脏保管所"
 	},
 	'1@nyr.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '塞斯鲁姆尼尔圣域花园'
+			mainTitle: "圣域瑟斯隆尼勒庭院"
 		},
 		notifyEnter: true,
-		displayName: '塞斯鲁姆尼尔圣域花园'
+		displayName: "圣域瑟斯隆尼勒庭院"
 	},
 	'moc_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'pvp_n_1-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 四人房间'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：四人房间'
+		displayName: "PvP : 四通道室"
 	},
 	'prt_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉东门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉东门'
+		displayName: "普隆德拉野外"
 	},
 	'bl_grass.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '标本环境 - 草原',
+			mainTitle: "生物圈标本环境 - 草原",
 			subTitle: '瓦尔蒙特生物圈'
 		},
 		notifyEnter: true,
@@ -5105,52 +5105,52 @@ const MapInfo = {
 	'ba_pw03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '第二发电厂'
+			mainTitle: "第二魔力发电厂"
 		},
 		notifyEnter: true,
-		displayName: '第二发电厂'
+		displayName: "第二魔力发电厂"
 	},
 	'p_track01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '魔物赛跑竞技场'
+			mainTitle: "魔物赛跑竞赛场"
 		},
 		notifyEnter: true,
-		displayName: '魔物赛跑竞技场'
+		displayName: "魔物赛跑竞赛场"
 	},
 	'ice_d03_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '冰封记忆',
+			mainTitle: "极冻幻影",
 			subTitle: '幻影'
 		},
 		notifyEnter: true,
-		displayName: '冰封记忆'
+		displayName: "极冻幻影"
 	},
 	'ice_dun04.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '拉赫冰洞 - 封印空间'
+			mainTitle: "拉赫冰洞穴封印的空间"
 		},
 		notifyEnter: true,
-		displayName: '拉赫冰洞 - 封印空间'
+		displayName: "拉赫冰洞穴封印的空间"
 	},
 	'x_lhz.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '里希塔乐镇',
+			mainTitle: "次元外的里希塔乐镇",
 			subTitle: '次元彼端'
 		},
 		notifyEnter: true,
-		displayName: '里希塔乐镇 - 次元彼端'
+		displayName: "次元外的里希塔乐镇"
 	},
 	'jor_back1.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '冰封鳞片山丘'
+			mainTitle: "冰鳞山丘"
 		},
 		notifyEnter: true,
-		displayName: '冰封鳞片山丘'
+		displayName: "冰鳞山丘"
 	},
 	'mjo_wst01.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -5163,22 +5163,22 @@ const MapInfo = {
 	've_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '维因斯原野'
+			mainTitle: "伯仁斯野外"
 		},
 		notifyEnter: true,
-		displayName: '维因斯原野'
+		displayName: "伯仁斯野外"
 	},
 	'evt_bomb.rsw': {
-		displayName: '迷宫活动'
+		displayName: "活动迷宫"
 	},
 	'mjo_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '死坑 F1',
-			subTitle: '妙勒尼山北部'
+			mainTitle: "妙勒尼废弃矿场 1层",
+			subTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山死坑 F1'
+		displayName: "妙勒尼废弃矿场 1层"
 	},
 	'te_aldecas02.rsw': {
 		backgroundBmp: 'siege',
@@ -5192,10 +5192,10 @@ const MapInfo = {
 	'rgsr_in.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '雷肯贝尔研究所'
+			mainTitle: "雷根修芦附设研究所"
 		},
 		notifyEnter: true,
-		displayName: '雷肯贝尔研究所'
+		displayName: "雷根修芦附设研究所"
 	},
 	'1@twig.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -5217,75 +5217,75 @@ const MapInfo = {
 	'jor_root1.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '蛇神之根 1F'
+			mainTitle: "蛇神的根 一楼"
 		},
 		notifyEnter: true,
-		displayName: '蛇神之根 1F'
+		displayName: "蛇神的根 一楼"
 	},
 	'gld2_pay.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '远古之风',
+			mainTitle: "深渊回廊 : 太古之风",
 			subTitle: '绿林湖深渊走廊'
 		},
 		notifyEnter: true,
-		displayName: '深渊走廊：远古之风'
+		displayName: "深渊回廊 : 太古之风"
 	},
 	'tha_t10.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '悲伤之间',
-			subTitle: '塔纳托斯塔上层'
+			mainTitle: "达纳托斯之塔 上层部 悲哀之房",
+			subTitle: "达纳托斯之塔 上层部"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔上层 - 悲伤之间'
+		displayName: "达纳托斯之塔 上层部 悲哀之房"
 	},
 	'veins.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '维因斯',
+			mainTitle: "峡谷村落 伯仁斯",
 			subTitle: '阿鲁纳佩尔兹峡谷村落'
 		},
 		notifyEnter: true,
-		displayName: '维因斯'
+		displayName: "峡谷村落 伯仁斯"
 	},
 	'alde_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 B3',
+			mainTitle: "艾尔帕兰 钟塔 地下3层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 B3'
+		displayName: "艾尔帕兰 钟塔 地下3层"
 	},
 	'arug_cas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '赛尔城堡',
-			subTitle: '瓦尔弗雷亚'
+			mainTitle: "希乐",
+			subTitle: "发菲依雅"
 		},
 		notifyEnter: true,
-		displayName: '赛尔城堡'
+		displayName: "希乐"
 	},
 	'xmas_in.rsw': {
-		displayName: '玩具工厂内部'
+		displayName: "姜饼城内部"
 	},
 	'1@face.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '脸虫巢穴'
+			mainTitle: "惊骇森灵巢穴"
 		},
 		notifyEnter: true,
-		displayName: '脸虫巢穴'
+		displayName: "惊骇森灵巢穴"
 	},
 	'jor_sanct.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '神圣之根',
+			mainTitle: "神圣的根部",
 			subTitle: 'Rgan 隐匿处'
 		},
 		notifyEnter: true,
-		displayName: '神圣之根'
+		displayName: "神圣的根部"
 	},
 	'odin_past.rsw': {
 		backgroundBmp: 'field2_s2',
@@ -5298,43 +5298,43 @@ const MapInfo = {
 	'malangdo.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '马兰岛'
+			mainTitle: "绵绵岛"
 		},
 		notifyEnter: true,
-		displayName: '马兰岛'
+		displayName: "绵绵岛"
 	},
 	'ma_zif08.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'in_sphinx4.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '梦罗克斯芬克斯 B4',
-			subTitle: '苏格拉特沙漠'
+			mainTitle: "梦罗克史芬克斯 地下4层",
+			subTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '梦罗克斯芬克斯 B4'
+		displayName: "梦罗克史芬克斯 地下4层"
 	},
 	'que_thor.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '托尔火山地下城'
+			mainTitle: "托尔火山密穴"
 		},
 		notifyEnter: true,
-		displayName: '托尔火山地下城'
+		displayName: "托尔火山密穴"
 	},
 	'pvp_y_4-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 普隆德拉房间'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：普隆德拉房间'
+		displayName: "PvP : 普隆德拉"
 	},
 	'te_aldecas05.rsw': {
 		backgroundBmp: 'siege',
@@ -5348,20 +5348,20 @@ const MapInfo = {
 	'bra_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '瀑布彼端',
-			subTitle: '巴西利斯'
+			mainTitle: "巴西瀑布内的洞穴入口",
+			subTitle: "巴西"
 		},
 		notifyEnter: true,
-		displayName: '瀑布彼端'
+		displayName: "巴西瀑布内的洞穴入口"
 	},
 	'gld2_prt.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '战士之路',
-			subTitle: '女武神领域深渊走廊'
+			mainTitle: "深渊回廊 : 战士之路",
+			subTitle: "瓦尔基里雷恩深渊走廊"
 		},
 		notifyEnter: true,
-		displayName: '深渊走廊：战士之路'
+		displayName: "深渊回廊 : 战士之路"
 	},
 	'1@begi.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -5374,108 +5374,108 @@ const MapInfo = {
 	'prt_church.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '圣域'
+			mainTitle: "普隆德拉圣堂内部"
 		},
 		notifyEnter: true,
-		displayName: '圣域'
+		displayName: "普隆德拉圣堂内部"
 	},
 	'1@whl.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '未处理荒野内部（1）',
+			mainTitle: "飞空艇瓦尔(1)号内部",
 			subTitle: '瓦尔蒙特飞机收藏馆 3 号'
 		},
 		notifyEnter: true,
-		displayName: '未处理荒野内部（1）'
+		displayName: "飞空艇瓦尔(1)号内部"
 	},
 	'iz_ac01_c.rsw': {
 		backgroundBmp: 'noname_s1',
 		signName: {
-			subTitle: '克里阿图拉学院 F1'
+			subTitle: "魔法学院 F1"
 		},
 		notifyEnter: true,
-		displayName: '克里阿图拉学院 F1'
+		displayName: "魔法学院 1层"
 	},
 	'ama_test.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '桃太郎体验场'
+			mainTitle: "樱花城 摩摩塔乐体验所"
 		},
 		notifyEnter: true,
-		displayName: '桃太郎体验场'
+		displayName: "樱花城 摩摩塔乐体验所"
 	},
 	'gefenia03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬尼亚'
+			mainTitle: "葛帔尼亚"
 		},
 		notifyEnter: true,
-		displayName: '吉芬尼亚'
+		displayName: "葛帔尼亚"
 	},
 	'1@twas.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '分离圣域'
+			mainTitle: "被分离的圣地"
 		},
 		notifyEnter: true,
-		displayName: '分离圣域'
+		displayName: "被分离的圣地"
 	},
 	'airplane_01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '飞艇'
+			mainTitle: "飞空艇"
 		},
 		notifyEnter: true,
-		displayName: '飞艇'
+		displayName: "飞空艇"
 	},
 	'orcsdun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '兽人地下城 F1',
+			mainTitle: "吉芬 兽人地下洞穴 1层",
 			subTitle: '兽人村落'
 		},
 		notifyEnter: true,
-		displayName: '兽人地下城 F1'
+		displayName: "吉芬 兽人地下洞穴 1层"
 	},
 	'1@4tro.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '克瓦希尔的船'
+			mainTitle: "克瓦希尔之盒"
 		},
 		notifyEnter: true,
-		displayName: '克瓦希尔的船'
+		displayName: "克瓦希尔之盒"
 	},
 	'e_tower.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '迷雾岛'
+			mainTitle: "神秘岛"
 		},
 		notifyEnter: true,
-		displayName: '迷雾岛'
+		displayName: "神秘岛"
 	},
 	'gef_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬地下城 B3'
+			mainTitle: "吉芬 地下密穴 3层"
 		},
 		notifyEnter: true,
-		displayName: '吉芬地下城 B3'
+		displayName: "吉芬 地下密穴 3层"
 	},
 	'spl_in01.rsw': {
-		displayName: '斯普兰迪德原野指挥部内部'
+		displayName: "辉煌领域 野战司令部内部"
 	},
 	'ayothaya.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '阿育王朝'
+			mainTitle: "哎哟泰雅"
 		},
 		notifyEnter: true,
-		displayName: '阿育王朝'
+		displayName: "哎哟泰雅"
 	},
 	'hero_out1.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '希尔瓦里昂',
+			mainTitle: "赫罗斯利亚希尔瓦里昂",
 			subTitle: '赫罗斯利亚'
 		},
 		notifyEnter: true,
@@ -5484,26 +5484,26 @@ const MapInfo = {
 	'pvp_y_8-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 梦罗克房间'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：梦罗克房间'
+		displayName: "PvP : 梦罗克"
 	},
 	'pvp_y_7-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 梦罗克房间'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：梦罗克房间'
+		displayName: "PvP : 梦罗克"
 	},
 	'pvp_y_6-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 梦罗克房间'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：梦罗克房间'
+		displayName: "PvP : 梦罗克"
 	},
 	'un_myst.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -5516,27 +5516,27 @@ const MapInfo = {
 	'que_job01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '私人酒馆'
+			mainTitle: "秘密酒店"
 		},
 		notifyEnter: true,
-		displayName: 'Private Pub'
+		displayName: "秘密酒店"
 	},
 	'pvp_y_4-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Morocc'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Morocc'
+		displayName: "PvP : 梦罗克"
 	},
 	'yuno_fild07.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'El Mes Gorge',
+			mainTitle: "尔迈斯峡谷(深渊峡谷)",
 			subTitle: 'Valley of Abyss'
 		},
 		notifyEnter: true,
-		displayName: 'El Mes Gorge (Valley of Abyss)'
+		displayName: "尔迈斯峡谷(深渊峡谷)"
 	},
 	'new_2-2.rsw': {
 		backgroundBmp: 'field_s2',
@@ -5549,201 +5549,201 @@ const MapInfo = {
 	'pvp_y_3-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Morocc'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Morocc'
+		displayName: "PvP : 梦罗克"
 	},
 	'moc_prydn1.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Pyramid B1'
+			mainTitle: "梦罗克金字塔 地下1层 - 梦魇"
 		},
 		notifyEnter: true,
-		displayName: 'Morocc Pyramid B1 - Nightmare'
+		displayName: "梦罗克金字塔 地下1层 - 梦魇"
 	},
 	'moc_pryd06.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Inside Pyramid B2',
+			mainTitle: "梦罗克金字塔 地下2层",
 			subTitle: 'Morroc'
 		},
 		notifyEnter: true,
-		displayName: 'Inside Pyramid B2'
+		displayName: "梦罗克金字塔 地下2层"
 	},
 	'lou_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'The Royal Tomb'
+			mainTitle: "龙之城 王陵"
 		},
 		notifyEnter: true,
-		displayName: 'The Royal Tomb'
+		displayName: "龙之城 王陵"
 	},
 	'pvp_y_2-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Morocc'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Morocc'
+		displayName: "PvP : 梦罗克"
 	},
 	'mag_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '诺可罗德1层'
+			mainTitle: "朱诺 诺可罗德 1层"
 		},
 		notifyEnter: true,
-		displayName: '诺可罗德1层'
+		displayName: "朱诺 诺可罗德 1层"
 	},
 	'pvp_y_6-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Alberta'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Alberta'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'pvp_y_5-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Alberta'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Alberta'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'iz_int.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '沉船'
+			mainTitle: "新手地图"
 		},
 		notifyEnter: true,
-		displayName: '沉船'
+		displayName: "新手地图"
 	},
 	'aldeg_cas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Wuerzburg Castle',
+			mainTitle: "布勒刺布勒克",
 			subTitle: 'Luina'
 		},
 		notifyEnter: true,
-		displayName: 'Wuerzburg Castle'
+		displayName: "布勒刺布勒克"
 	},
 	'teg_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Guild Underground Dungeon',
+			mainTitle: "公会地下密穴",
 			subTitle: 'Rune-Midgarts'
 		},
 		notifyEnter: true,
-		displayName: 'Guild Underground Dungeon'
+		displayName: "公会地下密穴"
 	},
 	'pvp_y_8-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Payon'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Payon'
+		displayName: "PvP : 斐扬"
 	},
 	'pvp_y_7-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Payon'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Payon'
+		displayName: "PvP : 斐扬"
 	},
 	'hero_in4.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Winter Garden',
+			mainTitle: "英雄之地冬日庭园",
 			subTitle: 'Herosria'
 		},
 		notifyEnter: true,
-		displayName: 'Herosria Winter Garden'
+		displayName: "英雄之地冬日庭园"
 	},
 	'ma_scene01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'Bakonawa Lake',
+			mainTitle: "食月暴龙湖",
 			subTitle: 'Port Malaya'
 		},
 		notifyEnter: true,
-		displayName: 'Bakonawa Lake'
+		displayName: "食月暴龙湖"
 	},
 	'pvp_y_6-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Payon'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Payon'
+		displayName: "PvP : 斐扬"
 	},
 	'nif_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Collapsed Opera House',
+			mainTitle: "尼芙菲姆密穴二层 崩塌的歌剧院",
 			subTitle: 'Niflheim Dungeon - 2nd Floor'
 		},
 		notifyEnter: true,
-		displayName: 'Niflheim Dungeon - Collapsed Opera House'
+		displayName: "尼芙菲姆密穴二层 崩塌的歌剧院"
 	},
 	'pvp_y_5-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Payon'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Payon'
+		displayName: "PvP : 斐扬"
 	},
 	'iz_int04.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '沉船'
+			mainTitle: "新手地图"
 		},
 		notifyEnter: true,
-		displayName: '沉船'
+		displayName: "新手地图"
 	},
 	'yuno_in04.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Republic Library'
+			mainTitle: "共和国图书馆"
 		},
 		notifyEnter: true,
-		displayName: 'Republic Library'
+		displayName: "共和国图书馆"
 	},
 	'ra_san01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '圣域北区1层',
+			mainTitle: "拉赫神殿圣域 1层 北区",
 			subTitle: '拉赫神殿'
 		},
 		notifyEnter: true,
-		displayName: '拉赫神殿圣域北区1层'
+		displayName: "拉赫神殿圣域 1层 北区"
 	},
 	'pvp_n_3-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Four Room'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Four Room'
+		displayName: "PvP : 四通道室"
 	},
 	'dali.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Dimensional Rift'
+			mainTitle: "次元裂缝"
 		},
 		notifyEnter: true,
-		displayName: 'Dimensional Rift'
+		displayName: "次元裂缝"
 	},
 	'pvp_y_1-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Payon'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Payon'
+		displayName: "PvP : 斐扬"
 	},
 	'new_5-4.rsw': {
 		backgroundBmp: 'field_s2',
@@ -5762,306 +5762,306 @@ const MapInfo = {
 	'pvp_y_3-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Izlude'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Izlude'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'pvp_y_8-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Prontera'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Prontera'
+		displayName: "PvP : 普隆德拉"
 	},
 	'pvp_y_7-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Prontera'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Prontera'
+		displayName: "PvP : 普隆德拉"
 	},
 	'ice_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Rachel Ice Cave 3F'
+			mainTitle: "拉赫冰洞穴3层"
 		},
 		notifyEnter: true,
-		displayName: 'Rachel Ice Cave 3F'
+		displayName: "拉赫冰洞穴3层"
 	},
 	'moc_pryd01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '金字塔1层',
+			mainTitle: "梦罗克金字塔 1层",
 			subTitle: '梦罗克'
 		},
 		notifyEnter: true,
-		displayName: '梦罗克金字塔1层'
+		displayName: "梦罗克金字塔 1层"
 	},
 	'beach_dun.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '卡鲁西部洞穴',
+			mainTitle: "克魔岛 西边洞穴加露",
 			subTitle: '克魔岛'
 		},
 		notifyEnter: true,
-		displayName: '卡鲁西部洞穴'
+		displayName: "克魔岛 西边洞穴加露"
 	},
 	'pvp_n_6-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Copass'
+		displayName: "PvP : 罗盘室"
 	},
 	'pvp_n_5-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Copass'
+		displayName: "PvP : 罗盘室"
 	},
 	'ba_go.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Water Map (Palmist battlefield)'
+			mainTitle: "手相战场"
 		},
 		notifyEnter: true,
-		displayName: 'Water Map (Palmist battlefield)'
+		displayName: "手相战场"
 	},
 	'ba_lib.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Memory Corridor',
+			mainTitle: "图书馆记忆回廊",
 			subTitle: 'Library'
 		},
 		notifyEnter: true,
-		displayName: 'Library Memory Corridor'
+		displayName: "图书馆记忆回廊"
 	},
 	'pvp_n_4-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Rock On'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Rock On'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'pvp_n_3-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Copass'
+		displayName: "PvP : 罗盘室"
 	},
 	'alb2trea.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'Alberta Island',
+			mainTitle: "沉船附近的岛屿",
 			subTitle: 'Alberta'
 		},
 		notifyEnter: true,
-		displayName: 'Alberta Island'
+		displayName: "沉船附近的岛屿"
 	},
 	'pvp_n_8-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Undercross'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Undercross'
+		displayName: "PvP : 反十字室"
 	},
 	'pvp_n_7-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Undercross'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Undercross'
+		displayName: "PvP : 反十字室"
 	},
 	'pvp_n_6-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Undercross'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Undercross'
+		displayName: "PvP : 反十字室"
 	},
 	'pvp_n_4-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Undercross'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Undercross'
+		displayName: "PvP : 反十字室"
 	},
 	'pvp_n_2-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Undercross'
+			mainTitle: "PvP : 反十字室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Undercross'
+		displayName: "PvP : 反十字室"
 	},
 	'cmd_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Beacon Island, Pharos'
+			mainTitle: "发乐斯灯塔岛"
 		},
 		notifyEnter: true,
-		displayName: 'Beacon Island, Pharos'
+		displayName: "发乐斯灯塔岛"
 	},
 	'pvp_n_7-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Four Room'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Four Room'
+		displayName: "PvP : 四通道室"
 	},
 	'um_fild04.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'Hoomga Jungle',
+			mainTitle: "汶巴拉沪家丛林",
 			subTitle: 'Umbala'
 		},
 		notifyEnter: true,
-		displayName: 'Hoomga Jungle'
+		displayName: "汶巴拉沪家丛林"
 	},
 	'pvp_n_6-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Four Room'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Four Room'
+		displayName: "PvP : 四通道室"
 	},
 	'pvp_n_5-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Four Room'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Four Room'
+		displayName: "PvP : 四通道室"
 	},
 	'pvp_n_8-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Rock On'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Rock On'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'payon.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Payon',
+			mainTitle: "山岳之都 斐扬",
 			subTitle: 'Mountain City in the Rune-Midgarts Kingdom'
 		},
 		notifyEnter: true,
-		displayName: 'Payon Town'
+		displayName: "山岳之都 斐扬"
 	},
 	'prt_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉西南部'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉西南部'
+		displayName: "普隆德拉野外"
 	},
 	'job3_rune01.rsw': {
-		displayName: 'Inside of Rune Knight Templar'
+		displayName: "符文骑士骑士团内部"
 	},
 	'pvp_n_8-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Sandwich'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Sandwich'
+		displayName: "PvP : 三明治室"
 	},
 	'moc_fild16.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Sograt Desert'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: 'Sograt Desert'
+		displayName: "苏克拉特沙漠"
 	},
 	'pvp_n_4-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Sandwich'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Sandwich'
+		displayName: "PvP : 三明治室"
 	},
 	'pvp_n_2-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Room Sandwich'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Room Sandwich'
+		displayName: "PvP : 三明治室"
 	},
 	'jor_back2.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'Frozen Scale Plains'
+			mainTitle: "冰鳞平原"
 		},
 		notifyEnter: true,
-		displayName: 'Frozen Scale Plains'
+		displayName: "冰鳞平原"
 	},
 	'memohall.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: 'Dimensional Guardian Memorial'
+			mainTitle: "次元守护者纪念馆"
 		},
 		notifyEnter: true,
-		displayName: 'Dimensional Guardian Memorial'
+		displayName: "次元守护者纪念馆"
 	},
 	'comodo.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '科莫多',
+			mainTitle: "海边之都克魔岛",
 			subTitle: '卢恩-米德加尔特王国的海滨城镇'
 		},
 		notifyEnter: true,
-		displayName: '科莫多'
+		displayName: "海边之都克魔岛"
 	},
 	'knight_2-1.rsw': {
-		displayName: '骑士团'
+		displayName: "骑士转职所"
 	},
 	'que_qsch02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥克尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥克尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'pvp_y_4-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 斐扬房间'
+			mainTitle: "PvP : 斐扬"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：斐扬房间'
+		displayName: "PvP : 斐扬"
 	},
 	'lhz_que01.rsw': {
-		displayName: '莱特森内部'
+		displayName: "里希塔乐镇内部"
 	},
 	'mjolnir_07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼尔山南部'
+			mainTitle: "妙勒尼山脉南区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼尔山南部'
+		displayName: "妙勒尼山脉南区"
 	},
 	'new_3-1.rsw': {
 		backgroundBmp: 'field_s2',
@@ -6074,19 +6074,19 @@ const MapInfo = {
 	'ein_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '艾音布罗克原野'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: '艾音布罗克原野'
+		displayName: "艾音布罗克野外"
 	},
 	'gl_step.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '阶梯地下城',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆楼梯密穴",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆阶梯地下城'
+		displayName: "克雷斯特汉姆楼梯密穴"
 	},
 	'jor_safty2.rsw': {
 		backgroundBmp: 'dungeon_s1',
@@ -6099,126 +6099,126 @@ const MapInfo = {
 	'gl_sew04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下水道 B4',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 地下水道 4层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆地下水道 B4'
+		displayName: "克雷斯特汉姆 地下水道 4层"
 	},
 	'ordeal_2-4.rsw': {
 		displayName: '战斗试炼模式'
 	},
 	'um_in.rsw': {
-		displayName: '乌巴拉内部'
+		displayName: "汶巴拉内部"
 	},
 	'kh_rossi.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '罗西米尔宅邸'
+			mainTitle: "路史米埃尔加公馆"
 		},
 		notifyEnter: true,
-		displayName: '罗西米尔宅邸'
+		displayName: "路史米埃尔加公馆"
 	},
 	'ein_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '艾音布罗克原野'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: '艾音布罗克原野'
+		displayName: "艾音布罗克野外"
 	},
 	'moc_fild22.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '次元裂隙',
+			mainTitle: "苏克拉特沙漠次元裂缝",
 			subTitle: '苏克拉特沙漠'
 		},
 		notifyEnter: true,
-		displayName: '苏克拉特沙漠 - 次元裂隙'
+		displayName: "苏克拉特沙漠次元裂缝"
 	},
 	'ordeal_3-1.rsw': {
-		displayName: '战斗试炼模式'
+		displayName: "团体战斗模式"
 	},
 	'force_2-2.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'gl_church.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '修道院',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 修道院",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆修道院'
+		displayName: "克雷斯特汉姆 修道院"
 	},
 	'gef_fild11.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'1@pump.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '下水道'
+			mainTitle: "排水沟"
 		},
 		notifyEnter: true,
-		displayName: '下水道'
+		displayName: "排水沟"
 	},
 	'2@pump.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '下水道'
+			mainTitle: "排水沟"
 		},
 		notifyEnter: true,
-		displayName: '下水道'
+		displayName: "排水沟"
 	},
 	'job3_guil02.rsw': {
-		displayName: '旧仓库内部'
+		displayName: "简陋的仓库内部"
 	},
 	'umbala.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '乌巴拉',
+			mainTitle: "雨檀族村落汶巴拉",
 			subTitle: '伍坦族村庄'
 		},
 		notifyEnter: true,
-		displayName: '伍坦族村庄'
+		displayName: "雨檀族村落汶巴拉"
 	},
 	'prt_are_in.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '等待室'
+			mainTitle: "竞技场待机室"
 		},
 		notifyEnter: true,
-		displayName: '等待室'
+		displayName: "竞技场待机室"
 	},
 	'thana_step.rsw': {
 		signName: {
-			mainTitle: '塔纳托斯塔上层 - 楼梯'
+			mainTitle: "达纳托斯之塔 上层部阶梯"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔上层 - 楼梯'
+		displayName: "达纳托斯之塔 上层部阶梯"
 	},
 	'izlu2dun.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '贝尔兰岛',
+			mainTitle: "柏伊亚岚岛",
 			subTitle: '依斯鲁得'
 		},
 		notifyEnter: true,
-		displayName: '贝尔兰岛'
+		displayName: "柏伊亚岚岛"
 	},
 	'izlude.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '依斯鲁得',
+			mainTitle: "卫星都市 依斯鲁得岛",
 			subTitle: '卢恩-米德加尔特王国'
 		},
 		notifyEnter: true,
-		displayName: '依斯鲁得'
+		displayName: "卫星都市 依斯鲁得岛"
 	},
 	'payon_in02.rsw': {
 		displayName: '斐扬内部'
@@ -6229,36 +6229,36 @@ const MapInfo = {
 	'pvp_n_3-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Rock On 房间'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Rock On 房间'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'1@twbs.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '分离圣域'
+			mainTitle: "被分离的圣地"
 		},
 		notifyEnter: true,
-		displayName: '分离圣域'
+		displayName: "被分离的圣地"
 	},
 	'yuno.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '朱诺',
+			mainTitle: "秀发兹发德共和国 首都朱诺",
 			subTitle: '施瓦茨瓦尔德共和国首都'
 		},
 		notifyEnter: true,
-		displayName: '朱诺'
+		displayName: "秀发兹发德共和国 首都朱诺"
 	},
 	'morocc.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '梦罗克',
+			mainTitle: "沙漠之都 梦罗克",
 			subTitle: '卢恩-米德加尔特王国的沙漠城市'
 		},
 		notifyEnter: true,
-		displayName: '梦罗克城'
+		displayName: "沙漠之都 梦罗克"
 	},
 	'geffen_in.rsw': {
 		displayName: '吉芬内部'
@@ -6266,28 +6266,28 @@ const MapInfo = {
 	'gef_tower.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '吉芬塔',
+			mainTitle: "吉芬 中央塔",
 			subTitle: '吉芬'
 		},
 		notifyEnter: true,
-		displayName: '吉芬塔'
+		displayName: "吉芬 中央塔"
 	},
 	'pvp_n_1-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间 Copass'
+			mainTitle: "PvP : 罗盘室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Copass 房间'
+		displayName: "PvP : 罗盘室"
 	},
 	'gl_prison1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下监狱 B2',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 地下监狱 2层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆地下监狱 B2'
+		displayName: "克雷斯特汉姆 地下监狱 2层"
 	},
 	'1@sara.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -6304,7 +6304,7 @@ const MapInfo = {
 		displayName: '战斗试炼模式'
 	},
 	'hu_in01.rsw': {
-		displayName: '胡格尔内部'
+		displayName: "毁葛内部"
 	},
 	'ordeal_3-3.rsw': {
 		displayName: '战斗试炼模式'
@@ -6312,104 +6312,104 @@ const MapInfo = {
 	'gef_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'abbey03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '诅咒修道院地下城 B3',
+			mainTitle: "无名岛 修道院 地下2层",
 			subTitle: '无名岛'
 		},
 		notifyEnter: true,
-		displayName: '诅咒修道院地下城 B3'
+		displayName: "无名岛 修道院 地下2层"
 	},
 	'abbey01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '诅咒修道院地下城 B1',
+			mainTitle: "无名岛 修道院 1层",
 			subTitle: '无名岛'
 		},
 		notifyEnter: true,
-		displayName: '诅咒修道院地下城 B1'
+		displayName: "无名岛 修道院 1层"
 	},
 	'ordeal_3-2.rsw': {
-		displayName: '战斗试炼模式'
+		displayName: "团体战斗模式"
 	},
 	'gl_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '格拉斯特海姆最低洞窟 B2',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 地下洞穴 2层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆最低洞窟 B2'
+		displayName: "克雷斯特汉姆 地下洞穴 2层"
 	},
 	'ordeal_2-1.rsw': {
-		displayName: '战斗试炼模式'
+		displayName: "团体战斗模式"
 	},
 	'ordeal_1-1.rsw': {
-		displayName: '战斗试炼模式'
+		displayName: "团体战斗模式"
 	},
 	'pvp_y_8-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 依斯鲁得房间'
+			mainTitle: "PvP : 依斯鲁得岛"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：依斯鲁得房间'
+		displayName: "PvP : 依斯鲁得岛"
 	},
 	'lhz_dun04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '生体实验研究所地下 4 楼'
+			mainTitle: "生体研究所 地下4层"
 		},
 		notifyEnter: true,
-		displayName: '生体实验研究所地下 4 楼'
+		displayName: "生体研究所 地下4层"
 	},
 	'force_1-3.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'um_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '鲁鲁卡森林',
+			mainTitle: "汶巴拉噜噜卡森林",
 			subTitle: '乌巴拉'
 		},
 		notifyEnter: true,
-		displayName: '鲁鲁卡森林'
+		displayName: "汶巴拉噜噜卡森林"
 	},
 	'gl_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '格拉斯特海姆最低洞窟 B1',
-			subTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆 地下洞穴 1层",
+			subTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆最低洞窟 B1'
+		displayName: "克雷斯特汉姆 地下洞穴 1层"
 	},
 	'force_3-1.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'force_2-1.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'force_1-1.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'wizard_3-1.rsw': {
-		displayName: '巫师学院'
+		displayName: "巫师转职所"
 	},
 	'prt_mz03_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '扭曲迷宫森林',
+			mainTitle: "扭曲的迷藏森林",
 			subTitle: '幻影'
 		},
 		notifyEnter: true,
-		displayName: '扭曲迷宫森林'
+		displayName: "扭曲的迷藏森林"
 	},
 	'ba_pw02.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -6420,32 +6420,32 @@ const MapInfo = {
 		displayName: '污水处理厂'
 	},
 	'wizard_1-1.rsw': {
-		displayName: '巫师学院'
+		displayName: "巫师转职所"
 	},
 	'kh_mansion.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '基尔·海伊尔宅邸'
+			mainTitle: "启·海伊洛公馆"
 		},
 		notifyEnter: true,
-		displayName: '基尔·海伊尔宅邸'
+		displayName: "启·海伊洛公馆"
 	},
 	'sword_3-1.rsw': {
-		displayName: '剑士测试大厅'
+		displayName: "剑士转职所"
 	},
 	'in_orcs01.rsw': {
-		displayName: '兽人村内部'
+		displayName: "兽人村室内"
 	},
 	'int_land02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '孤岛'
+			mainTitle: "偏僻岛"
 		},
 		notifyEnter: true,
-		displayName: '孤岛'
+		displayName: "偏僻岛"
 	},
 	'knight_1-1.rsw': {
-		displayName: '骑士团'
+		displayName: "骑士转职所"
 	},
 	'in_hunter.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -6456,27 +6456,27 @@ const MapInfo = {
 		displayName: '猎人公会'
 	},
 	'hunter_3-1.rsw': {
-		displayName: '猎人公会'
+		displayName: "猎人转职所"
 	},
 	'1@slug.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '黏稠之海'
+			mainTitle: "黏稠的海"
 		},
 		notifyEnter: true,
-		displayName: '黏稠之海'
+		displayName: "黏稠的海"
 	},
 	'hunter_2-1.rsw': {
-		displayName: '猎人公会'
+		displayName: "猎人转职所"
 	},
 	'um_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '异世界通道',
+			mainTitle: "汶巴拉树木里的异界通路",
 			subTitle: '乌巴拉'
 		},
 		notifyEnter: true,
-		displayName: '异世界通道'
+		displayName: "汶巴拉树木里的异界通路"
 	},
 	'nameless_in.rsw': {
 		displayName: '无名岛内部'
@@ -6484,55 +6484,55 @@ const MapInfo = {
 	'prt_sewb1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '下水道 F1',
+			mainTitle: "普隆德拉 地下水道 1层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉下水道 F1'
+		displayName: "普隆德拉 地下水道 1层"
 	},
 	'prt_maze01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '迷宫森林 F1',
+			mainTitle: "普隆德拉迷藏森林 1层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '迷宫森林 F1'
+		displayName: "普隆德拉迷藏森林 1层"
 	},
 	'lhz_d_n2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '邪念虚空'
+			mainTitle: "邪念的空间"
 		},
 		notifyEnter: true,
-		displayName: '邪念虚空'
+		displayName: "邪念的空间"
 	},
 	'pay_dun04.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '斐扬洞窟 F5',
+			mainTitle: "斐扬洞穴 5层(废弃村落)",
 			subTitle: '斐扬弓箭手村'
 		},
 		notifyEnter: true,
-		displayName: '斐扬洞窟 F5'
+		displayName: "斐扬洞穴 5层(废弃村落)"
 	},
 	'pay_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '斐扬洞窟 F3',
+			mainTitle: "斐扬洞穴 3层",
 			subTitle: '斐扬弓箭手村'
 		},
 		notifyEnter: true,
-		displayName: '斐扬洞窟 F3'
+		displayName: "斐扬洞穴 3层"
 	},
 	'mjo_dun02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '死坑 2层',
-			subTitle: '妙勒尼山北部'
+			mainTitle: "妙勒尼废弃矿场 2层",
+			subTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山死坑 2层'
+		displayName: "妙勒尼废弃矿场 2层"
 	},
 	'moc_prydb1.rsw': {
 		backgroundBmp: 'noname',
@@ -6546,69 +6546,69 @@ const MapInfo = {
 	'moc_pryd02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '金字塔内部 2层',
+			mainTitle: "梦罗克金字塔 2层",
 			subTitle: '梦罗克'
 		},
 		notifyEnter: true,
-		displayName: '金字塔内部 2层'
+		displayName: "梦罗克金字塔 2层"
 	},
 	'job_duncer.rsw': {
-		displayName: '科莫多剧院'
+		displayName: "克魔岛小剧场"
 	},
 	'sp_cor.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '科尔',
+			mainTitle: "特殊警戒区 柯尔",
 			subTitle: '特殊边境区域'
 		},
 		notifyEnter: true,
-		displayName: '特殊边境区域科尔'
+		displayName: "特殊警戒区 柯尔"
 	},
 	'bat_c03.rsw': {
 		notifyEnter: true,
-		displayName: '米德加尔特战场'
+		displayName: "克里格·冯·米德加尔特"
 	},
 	'in_sphinx3.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '梦罗克斯芬克斯 B3层',
-			subTitle: '苏格拉特沙漠'
+			mainTitle: "梦罗克史芬克斯 地下3层",
+			subTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '梦罗克斯芬克斯 B3层'
+		displayName: "梦罗克史芬克斯 地下3层"
 	},
 	'iz_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '海底隧道 B4层',
+			mainTitle: "依斯鲁得海底洞穴 4层",
 			subTitle: '拜蓝岛'
 		},
 		notifyEnter: true,
-		displayName: '海底隧道 B4层'
+		displayName: "依斯鲁得海底洞穴 4层"
 	},
 	'moc_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'p_track02.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '怪物赛跑竞技场'
+			mainTitle: "魔物赛跑竞赛场"
 		},
 		notifyEnter: true,
-		displayName: '怪物赛跑竞技场'
+		displayName: "魔物赛跑竞赛场"
 	},
 	'1@air2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '飞艇'
+			mainTitle: "飞空艇"
 		},
 		notifyEnter: true,
-		displayName: '飞艇'
+		displayName: "飞空艇"
 	},
 	'yuno_in01.rsw': {
 		displayName: '朱诺内部'
@@ -6616,19 +6616,19 @@ const MapInfo = {
 	'gef_dun00.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬迷宫 B1层'
+			mainTitle: "吉芬 地下密穴 1层"
 		},
 		notifyEnter: true,
-		displayName: '吉芬迷宫 B1层'
+		displayName: "吉芬 地下密穴 1层"
 	},
 	'anthell02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '蚂蚁地狱迷宫 2层',
-			subTitle: '苏格拉特沙漠'
+			mainTitle: "梦罗克蚂蚁地狱密穴 2层",
+			subTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '蚂蚁地狱迷宫 2层'
+		displayName: "梦罗克蚂蚁地狱密穴 2层"
 	},
 	'new_4-4.rsw': {
 		backgroundBmp: 'field_s2',
@@ -6665,16 +6665,16 @@ const MapInfo = {
 		displayName: '初心者修炼场'
 	},
 	'force_3-3.rsw': {
-		displayName: '限时战斗'
+		displayName: "限时激斗模式"
 	},
 	'um_fild02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '呼姆加森林',
-			subTitle: '乌姆巴拉'
+			mainTitle: "汶巴拉沪家森林",
+			subTitle: "汶巴拉"
 		},
 		notifyEnter: true,
-		displayName: '呼姆加森林'
+		displayName: "汶巴拉沪家森林"
 	},
 	'new_3-2.rsw': {
 		backgroundBmp: 'field_s2',
@@ -6685,517 +6685,517 @@ const MapInfo = {
 		displayName: '初心者修炼场'
 	},
 	'lou_in02.rsw': {
-		displayName: '洛阳内部'
+		displayName: "龙之城内部"
 	},
 	'pvp_n_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 等候室'
+			mainTitle: "PvP : 待机室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：等候室'
+		displayName: "PvP : 待机室"
 	},
 	'pay_fild10.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'cmd_fild04.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '可可莫海滩',
-			subTitle: '科莫多'
+			mainTitle: "克魔岛克克魔海边",
+			subTitle: "克魔岛"
 		},
 		notifyEnter: true,
-		displayName: '可可莫海滩'
+		displayName: "克魔岛克克魔海边"
 	},
 	'ayo_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '阿育他亚原野'
+			mainTitle: "哎哟泰雅野外"
 		},
 		notifyEnter: true,
-		displayName: '阿育他亚原野'
+		displayName: "哎哟泰雅野外"
 	},
 	'yuno_fild11.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '朱诺原野'
+			mainTitle: "朱诺野外"
 		},
 		notifyEnter: true,
-		displayName: '朱诺原野'
+		displayName: "朱诺野外"
 	},
 	'tur_d04_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '阴郁乌龟宫殿',
+			mainTitle: "凄凉旧良宫",
 			subTitle: '幻境'
 		},
 		notifyEnter: true,
-		displayName: '阴郁乌龟宫殿'
+		displayName: "凄凉旧良宫"
 	},
 	'pay_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'bat_b02.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '弗拉维安',
+			mainTitle: "瀑拉毕乌斯",
 			subTitle: '战场'
 		},
 		notifyEnter: true,
-		displayName: '弗拉维安'
+		displayName: "瀑拉毕乌斯"
 	},
 	'pvp_n_5-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（三明治）'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：三明治房间'
+		displayName: "PvP : 三明治室"
 	},
 	'aldeg_cas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '新天鹅堡',
+			mainTitle: "娜易修潘斯塔引",
 			subTitle: '鲁因'
 		},
 		notifyEnter: true,
-		displayName: '新天鹅堡'
+		displayName: "娜易修潘斯塔引"
 	},
 	'ba_maison.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '瓦尔蒙德宅邸庭院'
+			mainTitle: "霸肋门德大宅庭院"
 		},
 		notifyEnter: true,
-		displayName: '瓦尔蒙德宅邸庭院'
+		displayName: "霸肋门德大宅庭院"
 	},
 	'moc_fild12.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'cmd_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '圣达曼要塞（东）'
+			mainTitle: "要塞都市 山特乐曼 东部"
 		},
 		notifyEnter: true,
-		displayName: '圣达曼要塞（东）'
+		displayName: "要塞都市 山特乐曼 东部"
 	},
 	'moc_fild11.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'moc_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'jupe_ele_r.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '朱佩洛斯电梯房'
+			mainTitle: "优配擂斯电梯室"
 		},
 		notifyEnter: true,
-		displayName: '朱佩洛斯电梯房'
+		displayName: "优配擂斯电梯室"
 	},
 	'moc_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '苏格拉特沙漠'
+			mainTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '苏格拉特沙漠'
+		displayName: "苏克拉特沙漠"
 	},
 	'x_prt.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '普隆德拉',
+			mainTitle: "次元外的普隆德拉",
 			subTitle: '异次元'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉－异次元'
+		displayName: "次元外的普隆德拉"
 	},
 	'c_tower1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '钟楼 1层',
+			mainTitle: "艾尔帕兰 钟塔 地上 1层",
 			subTitle: '艾尔帕兰'
 		},
 		notifyEnter: true,
-		displayName: '钟楼 1层'
+		displayName: "艾尔帕兰 钟塔 地上 1层"
 	},
 	'priest_3-1.rsw': {
-		displayName: '圣所'
+		displayName: "牧师转职所"
 	},
 	'gef_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'gef_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'gef_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'gef_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '吉芬原野'
+			mainTitle: "吉芬野外"
 		},
 		notifyEnter: true,
-		displayName: '吉芬原野'
+		displayName: "吉芬野外"
 	},
 	'prt_fild10.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉南部西侧'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉南部西侧'
+		displayName: "普隆德拉野外"
 	},
 	'pvp_n_2-2.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 房间（Rock On）'
+			mainTitle: "PvP : 雷达锁定室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：Rock On 房间'
+		displayName: "PvP : 雷达锁定室"
 	},
 	'prt_fild05.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉西门'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉西门'
+		displayName: "普隆德拉野外"
 	},
 	'prt_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉西部'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉西部'
+		displayName: "普隆德拉野外"
 	},
 	'e_hugel.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '被入侵的胡格尔'
+			mainTitle: "被侵略的毁葛"
 		},
 		notifyEnter: true,
-		displayName: '被入侵的胡格尔'
+		displayName: "被侵略的毁葛"
 	},
 	'ein_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '艾音布罗克矿山 1层'
+			mainTitle: "艾音贝赫矿山 1层"
 		},
 		notifyEnter: true,
-		displayName: '艾音布罗克矿山 1层'
+		displayName: "艾音贝赫矿山 1层"
 	},
 	'prt_fild00.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉西北部'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉西北部'
+		displayName: "普隆德拉野外"
 	},
 	'ba_bath.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '大型浴池冥想处'
+			mainTitle: "冥想大浴池"
 		},
 		notifyEnter: true,
-		displayName: '大型浴池冥想处'
+		displayName: "冥想大浴池"
 	},
 	'mjolnir_02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山北部区域'
+			mainTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山北部区域'
+		displayName: "妙勒尼山脉北区"
 	},
 	'x_ra.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '拉赫',
+			mainTitle: "次元外的拉赫",
 			subTitle: '异次元'
 		},
 		notifyEnter: true,
-		displayName: '拉赫－异次元'
+		displayName: "次元外的拉赫"
 	},
 	'mjolnir_11.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山南部区域'
+			mainTitle: "妙勒尼山脉南区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山南部区域'
+		displayName: "妙勒尼山脉南区"
 	},
 	'mjolnir_09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山南麓'
+			mainTitle: "妙勒尼山脉南区山麓"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山南麓'
+		displayName: "妙勒尼山脉南区山麓"
 	},
 	'mjolnir_08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山南部区域'
+			mainTitle: "妙勒尼山脉南区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山南部区域'
+		displayName: "妙勒尼山脉南区"
 	},
 	'mjolnir_03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '妙勒尼山北部区域'
+			mainTitle: "妙勒尼山脉北区"
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山北部区域'
+		displayName: "妙勒尼山脉北区"
 	},
 	'pvp_n_8-3.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 四人房'
+			mainTitle: "PvP : 四通道室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：四人房'
+		displayName: "PvP : 四通道室"
 	},
 	'cmd_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '圣达曼要塞（西）'
+			mainTitle: "要塞都市 山特乐曼 西部"
 		},
 		notifyEnter: true,
-		displayName: '圣达曼要塞（西）'
+		displayName: "要塞都市 山特乐曼 西部"
 	},
 	'pay_fild09.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'cmd_fild01.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '帕普奇查森林',
-			subTitle: '科莫多'
+			mainTitle: "克魔岛巴不其卡森林",
+			subTitle: "克魔岛"
 		},
 		notifyEnter: true,
-		displayName: '帕普奇查森林'
+		displayName: "克魔岛巴不其卡森林"
 	},
 	'beach_dun2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '卢安达北洞窟',
+			mainTitle: "克魔岛 北边洞穴卢安达",
 			subTitle: '可可岛'
 		},
 		notifyEnter: true,
-		displayName: '卢安达北洞窟'
+		displayName: "克魔岛 北边洞穴卢安达"
 	},
 	'1@gl_he.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '污染次元',
+			mainTitle: "污染的次元",
 			subTitle: '克雷斯特汉姆'
 		},
 		notifyEnter: true,
-		displayName: '污染次元'
+		displayName: "污染的次元"
 	},
 	'pvp_y_6-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 普隆德拉房间'
+			mainTitle: "PvP : 普隆德拉"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：普隆德拉房间'
+		displayName: "PvP : 普隆德拉"
 	},
 	'cmd_in02.rsw': {
-		displayName: '可可岛内部'
+		displayName: "克魔岛内部"
 	},
 	'quiz_01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '问答革命'
+			mainTitle: "益智游戏竞技场"
 		},
 		notifyEnter: true,
-		displayName: '问答革命'
+		displayName: "益智游戏竞技场"
 	},
 	'guild_vs1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '公会竞技场'
+			mainTitle: "公会对抗竞技场"
 		},
 		notifyEnter: true,
-		displayName: '公会竞技场'
+		displayName: "公会对抗竞技场"
 	},
 	'guild_vs4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '公会竞技场'
+			mainTitle: "公会对抗竞技场"
 		},
 		notifyEnter: true,
-		displayName: '公会竞技场'
+		displayName: "公会对抗竞技场"
 	},
 	'guild_vs5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '公会竞技场'
+			mainTitle: "公会对抗竞技场"
 		},
 		notifyEnter: true,
-		displayName: '公会竞技场'
+		displayName: "公会对抗竞技场"
 	},
 	'rebel_in.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '克拉纳·内米耶里'
+			mainTitle: "克莱纳·奈米艾利"
 		},
 		notifyEnter: true,
-		displayName: '克拉纳·内米耶里'
+		displayName: "克莱纳·奈米艾利"
 	},
 	'tur_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '海龟村'
+			mainTitle: "良龟村"
 		},
 		notifyEnter: true,
-		displayName: '海龟村'
+		displayName: "良龟村"
 	},
 	'tur_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '海龟岛地下城'
+			mainTitle: "乌龟岛密穴"
 		},
 		notifyEnter: true,
-		displayName: '海龟岛地下城'
+		displayName: "乌龟岛密穴"
 	},
 	'thor_v01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '托尔火山地下城 1F'
+			mainTitle: "托尔火山密穴 1层"
 		},
 		notifyEnter: true,
-		displayName: '托尔火山地下城 1F'
+		displayName: "托尔火山密穴 1层"
 	},
 	'tur_dun01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '海龟岛'
+			mainTitle: "乌龟岛"
 		},
 		notifyEnter: true,
-		displayName: '海龟岛'
+		displayName: "乌龟岛"
 	},
 	'lighthalzen.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '里希塔乐镇',
+			mainTitle: "企业之都里希塔乐镇",
 			subTitle: '施瓦茨瓦尔德共和国繁荣城邦'
 		},
 		notifyEnter: true,
-		displayName: '里希塔乐镇'
+		displayName: "企业之都里希塔乐镇"
 	},
 	'bat_a02.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '提拉谷',
+			mainTitle: "提耶拉峡谷",
 			subTitle: '战场'
 		},
 		notifyEnter: true,
-		displayName: '提拉谷'
+		displayName: "提耶拉峡谷"
 	},
 	'prtg_cas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '克里姆希尔德城堡',
-			subTitle: '女武神领域'
+			mainTitle: "克林喜德",
+			subTitle: "瓦尔基里雷恩"
 		},
 		notifyEnter: true,
-		displayName: '克里姆希尔德城堡'
+		displayName: "克林喜德"
 	},
 	'lhz_dun_n.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '陨落者之墓'
+			mainTitle: "战死者之墓"
 		},
 		notifyEnter: true,
-		displayName: '陨落者之墓'
+		displayName: "战死者之墓"
 	},
 	'1@mjo2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '遗忘洞窟',
+			mainTitle: "妙勒尼山脉遗忘的空洞",
 			subTitle: '妙勒尼山脉'
 		},
 		notifyEnter: true,
-		displayName: '妙勒尼山脉 - 遗忘洞窟'
+		displayName: "妙勒尼山脉遗忘的空洞"
 	},
 	'aldeg_cas02.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '霍恩施万高城堡',
+			mainTitle: "乎汗修番佳乌",
 			subTitle: '卢因'
 		},
 		notifyEnter: true,
-		displayName: '霍恩施万高城堡'
+		displayName: "乎汗修番佳乌"
 	},
 	'aldeg_cas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '纽伦堡城堡',
+			mainTitle: "纽蓝贝勒克",
 			subTitle: '卢因'
 		},
 		notifyEnter: true,
-		displayName: '纽伦堡城堡'
+		displayName: "纽蓝贝勒克"
 	},
 	'pvp_y_1-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 艾尔贝塔房间'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：艾尔贝塔房间'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'dew_dun01.rsw': {
 		backgroundBmp: 'dungeon',
@@ -7209,40 +7209,40 @@ const MapInfo = {
 	'payg_cas04.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '圣坛城堡',
+			mainTitle: "红楼",
 			subTitle: '绿林湖'
 		},
 		notifyEnter: true,
-		displayName: '圣坛城堡'
+		displayName: "红楼"
 	},
 	'job_hunte.rsw': {
-		displayName: '猎人转职场'
+		displayName: "猎人转职考场"
 	},
 	'gld_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会地下城',
+			mainTitle: "青林湖泊 公会地下密穴",
 			subTitle: '巴尔德'
 		},
 		notifyEnter: true,
-		displayName: '巴尔德公会地下城'
+		displayName: "青林湖泊 公会地下密穴"
 	},
 	'ba_chess.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '将杀'
+			mainTitle: "将死宫"
 		},
 		notifyEnter: true,
-		displayName: '将杀'
+		displayName: "将死宫"
 	},
 	'gld_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会地下城',
+			mainTitle: "瓦尔基里雷恩 公会地下密穴",
 			subTitle: '女武神'
 		},
 		notifyEnter: true,
-		displayName: '女武神公会地下城'
+		displayName: "瓦尔基里雷恩 公会地下密穴"
 	},
 	'morocc_in.rsw': {
 		displayName: '梦罗克内部'
@@ -7250,82 +7250,82 @@ const MapInfo = {
 	'sp_rudus.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '鲁杜斯 F1',
+			mainTitle: "实验体废弃场 鲁杜斯 1层",
 			subTitle: '实验废弃物处理场'
 		},
 		notifyEnter: true,
-		displayName: '鲁杜斯 F1'
+		displayName: "实验体废弃场 鲁杜斯 1层"
 	},
 	'pvp_y_1-5.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 梦罗克房间'
+			mainTitle: "PvP : 梦罗克"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：梦罗克房间'
+		displayName: "PvP : 梦罗克"
 	},
 	'in_rogue.rsw': {
-		displayName: '盗贼公会内部'
+		displayName: "流氓公会内部"
 	},
 	'monk_test.rsw': {
-		displayName: '圣卡皮托利纳修道院'
+		displayName: "圣·卡毕利那修道院"
 	},
 	'moro_cav.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '火焰洞窟'
+			mainTitle: "火焰洞穴"
 		},
 		notifyEnter: true,
-		displayName: '火焰洞窟'
+		displayName: "火焰洞穴"
 	},
 	'in_sphinx5.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '梦罗克斯芬克斯 B5',
-			subTitle: '苏格拉特沙漠'
+			mainTitle: "梦罗克史芬克斯 地下5层",
+			subTitle: "苏克拉特沙漠"
 		},
 		notifyEnter: true,
-		displayName: '梦罗克斯芬克斯 B5'
+		displayName: "梦罗克史芬克斯 地下5层"
 	},
 	'pvp_n_1-1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 三明治房间'
+			mainTitle: "PvP : 三明治室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：三明治房间'
+		displayName: "PvP : 三明治室"
 	},
 	'gl_in01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '克雷斯特汉姆内部',
+			mainTitle: "克雷斯特汉姆 室内",
 			subTitle: '克雷斯特汉姆'
 		},
 		notifyEnter: true,
-		displayName: '克雷斯特汉姆内部'
+		displayName: "克雷斯特汉姆 室内"
 	},
 	'sec_pri.rsw': {
-		displayName: '冥想之间（英灵殿监狱）'
+		displayName: "巴哈拉宫 反省的房间(监狱)"
 	},
 	'tha_t02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '博物馆',
-			subTitle: '塔纳托斯塔'
+			mainTitle: "达纳托斯之塔 下层部 博物馆",
+			subTitle: "达纳托斯塔"
 		},
 		notifyEnter: true,
-		displayName: '塔纳托斯塔博物馆'
+		displayName: "达纳托斯之塔 下层部 博物馆"
 	},
 	'ecl_in02.rsw': {
-		displayName: '艾可拉珠内部'
+		displayName: "埃克拉珠内部"
 	},
 	'ama_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '榻榻米迷宫'
+			mainTitle: "樱花城 榻榻米迷宫"
 		},
 		notifyEnter: true,
-		displayName: '榻榻米迷宫'
+		displayName: "樱花城 榻榻米迷宫"
 	},
 	'gon_in.rsw': {
 		displayName: '昆仑内部'
@@ -7333,28 +7333,28 @@ const MapInfo = {
 	'gon_fild01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '昆仑原野'
+			mainTitle: "昆仑野外"
 		},
 		notifyEnter: true,
-		displayName: '昆仑原野'
+		displayName: "昆仑野外"
 	},
 	'gon_dun03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '桃花乡',
+			mainTitle: "昆仑 武陵道院",
 			subTitle: '昆仑'
 		},
 		notifyEnter: true,
-		displayName: '桃花乡'
+		displayName: "昆仑 武陵道院"
 	},
 	'gon_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '西王母神殿',
+			mainTitle: "昆仑西王母神殿",
 			subTitle: '昆仑'
 		},
 		notifyEnter: true,
-		displayName: '西王母神殿'
+		displayName: "昆仑西王母神殿"
 	},
 	'prt_are01.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -7367,11 +7367,11 @@ const MapInfo = {
 	'um_fild03.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '卡拉拉沼泽',
-			subTitle: '乌帕拉'
+			mainTitle: "汶巴拉卡拉拉森林",
+			subTitle: "汶巴拉"
 		},
 		notifyEnter: true,
-		displayName: '卡拉拉沼泽'
+		displayName: "汶巴拉卡拉拉森林"
 	},
 	'thana_scene01.rsw': {
 		backgroundBmp: 'field_s2',
@@ -7384,28 +7384,28 @@ const MapInfo = {
 	'ama_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '天津町原野'
+			mainTitle: "樱花城野外"
 		},
 		notifyEnter: true,
-		displayName: '天津町原野'
+		displayName: "樱花城野外"
 	},
 	'prt_sewb2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '下水道 F2',
+			mainTitle: "普隆德拉 地下水道 2层",
 			subTitle: '普隆德拉'
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉下水道 F2'
+		displayName: "普隆德拉 地下水道 2层"
 	},
 	'nif_fild02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: '山谷',
+			mainTitle: "尼芙菲姆 鬼之峡谷",
 			subTitle: '尼芙菲姆'
 		},
 		notifyEnter: true,
-		displayName: '尼芙菲姆山谷'
+		displayName: "尼芙菲姆 鬼之峡谷"
 	},
 	'nif_in.rsw': {
 		displayName: '尼芙菲姆内部'
@@ -7413,11 +7413,11 @@ const MapInfo = {
 	'valkyrie.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: '女武神大厅',
+			mainTitle: "瓦尔基里神殿(伟大战士的殿堂)",
 			subTitle: '荣誉大厅'
 		},
 		notifyEnter: true,
-		displayName: '女武神大厅'
+		displayName: "瓦尔基里神殿(伟大战士的殿堂)"
 	},
 	'y_airport.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -7430,21 +7430,21 @@ const MapInfo = {
 	'lou_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '洛阳原野'
+			mainTitle: "龙之城野外"
 		},
 		notifyEnter: true,
-		displayName: '洛阳原野'
+		displayName: "龙之城野外"
 	},
 	'hu_fild06.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '胡格尔原野'
+			mainTitle: "毁葛野外"
 		},
 		notifyEnter: true,
-		displayName: '胡格尔原野'
+		displayName: "毁葛野外"
 	},
 	'lou_in01.rsw': {
-		displayName: '洛阳内部'
+		displayName: "龙之城内部"
 	},
 	'new_4-1.rsw': {
 		backgroundBmp: 'field_s2',
@@ -7455,23 +7455,23 @@ const MapInfo = {
 		displayName: '初心者修炼场'
 	},
 	'jawaii_in.rsw': {
-		displayName: '爪哇伊内部'
+		displayName: "爪哇内部"
 	},
 	'gefenia01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬尼亚'
+			mainTitle: "葛帔尼亚"
 		},
 		notifyEnter: true,
-		displayName: '吉芬尼亚'
+		displayName: "葛帔尼亚"
 	},
 	'gefenia04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬尼亚'
+			mainTitle: "葛帔尼亚"
 		},
 		notifyEnter: true,
-		displayName: '吉芬尼亚'
+		displayName: "葛帔尼亚"
 	},
 	'que_god01.rsw': {
 		displayName: '任务地图'
@@ -7479,430 +7479,430 @@ const MapInfo = {
 	'ayo_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '阿育王朝原野'
+			mainTitle: "哎哟泰雅野外"
 		},
 		notifyEnter: true,
-		displayName: '阿育王朝原野'
+		displayName: "哎哟泰雅野外"
 	},
 	'ayo_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '古代神殿迷宫'
+			mainTitle: "哎哟泰雅 古代神殿迷宫"
 		},
 		notifyEnter: true,
-		displayName: '古代神殿迷宫'
+		displayName: "哎哟泰雅 古代神殿迷宫"
 	},
 	'pay_d03_i.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '月光噩梦',
+			mainTitle: "月夜猫的噩梦",
 			subTitle: '幻影'
 		},
 		notifyEnter: true,
-		displayName: '月光噩梦'
+		displayName: "月夜猫的噩梦"
 	},
 	'yuno_fild08.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '基尔·哈伊尔学院'
+			mainTitle: "朱诺 启·海伊洛学院"
 		},
 		notifyEnter: true,
-		displayName: '基尔·哈伊尔学院'
+		displayName: "朱诺 启·海伊洛学院"
 	},
 	'pay_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'um_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '木匠商店',
-			subTitle: '乌帕拉'
+			mainTitle: "汶巴拉树木里的木工所",
+			subTitle: "汶巴拉"
 		},
 		notifyEnter: true,
-		displayName: "Carpenter's Shop in the Tree"
+		displayName: "汶巴拉树木里的木工所"
 	},
 	'turbo_n_4.rsw': {
-		displayName: 'Turbo Track Stadium'
+		displayName: "竞速竞赛场"
 	},
 	'einbroch.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Einbroch',
+			mainTitle: "钢铁之都 艾音布罗克",
 			subTitle: 'City of Steel in the Schwartzwald Republic'
 		},
 		notifyEnter: true,
-		displayName: 'Einbroch, the City of Steel'
+		displayName: "钢铁之都 艾音布罗克"
 	},
 	'ein_in01.rsw': {
-		displayName: 'Inside Einbroch'
+		displayName: "室内"
 	},
 	'airplane.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Airship'
+			mainTitle: "飞空艇"
 		},
 		notifyEnter: true,
-		displayName: 'Airship'
+		displayName: "飞空艇"
 	},
 	'job_star.rsw': {
-		displayName: 'The Sun, the Moon and the Stars'
+		displayName: "太阳和月亮和星星之地"
 	},
 	'ein_fild07.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Einbroch Field'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: 'Einbroch Field'
+		displayName: "艾音布罗克野外"
 	},
 	'prt_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '普隆德拉东北部'
+			mainTitle: "普隆德拉野外"
 		},
 		notifyEnter: true,
-		displayName: '普隆德拉东北部'
+		displayName: "普隆德拉野外"
 	},
 	'ba_lost.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Lost Farm Valley'
+			mainTitle: "失落的山谷饲养场"
 		},
 		notifyEnter: true,
-		displayName: 'Lost Farm Valley'
+		displayName: "失落的山谷饲养场"
 	},
 	'pvp_y_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP Waiting Room'
+			mainTitle: "PvP : 待机室"
 		},
 		notifyEnter: true,
-		displayName: 'PvP : Waiting Room'
+		displayName: "PvP : 待机室"
 	},
 	'bat_c01.rsw': {
 		notifyEnter: true,
-		displayName: 'Krieger von Midgard'
+		displayName: "克里格·冯·米德加尔特"
 	},
 	'lhz_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Lighthalzen Field'
+			mainTitle: "里希塔乐镇野外"
 		},
 		notifyEnter: true,
-		displayName: 'Lighthalzen Field'
+		displayName: "里希塔乐镇野外"
 	},
 	'hero_ent2.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: "2nd Hero's Gateway",
+			mainTitle: "英雄之地第二英雄之门",
 			subTitle: 'Herosria'
 		},
 		notifyEnter: true,
-		displayName: "Herosria 2nd Hero's Gateway"
+		displayName: "英雄之地第二英雄之门"
 	},
 	'job3_guil03.rsw': {
-		displayName: 'Isolated mansion'
+		displayName: "偏僻公馆"
 	},
 	'yuno_pre.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Schwartzwald Government Buildings'
+			mainTitle: "秀发兹发德政府厅舍"
 		},
 		notifyEnter: true,
-		displayName: 'Schwartzwald Government Buildings'
+		displayName: "秀发兹发德政府厅舍"
 	},
 	'lhz_dun03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Somatology Laboratory F3'
+			mainTitle: "生体研究所 地下3层"
 		},
 		notifyEnter: true,
-		displayName: 'Somatology Laboratory F3'
+		displayName: "生体研究所 地下3层"
 	},
 	'lhz_dun02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Somatology Laboratory F2'
+			mainTitle: "生体研究所 地下2层"
 		},
 		notifyEnter: true,
-		displayName: 'Somatology Laboratory F2'
+		displayName: "生体研究所 地下2层"
 	},
 	'jupe_ele.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Juperos Elevator'
+			mainTitle: "优配擂斯电梯室"
 		},
 		notifyEnter: true,
-		displayName: 'Juperos Elevator'
+		displayName: "优配擂斯电梯室"
 	},
 	'ver_tunn.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Tunnel Outskirts',
+			mainTitle: "贝鲁兹外围隧道",
 			subTitle: 'Verus'
 		},
 		notifyEnter: true,
-		displayName: 'Verus - Tunnel Outskirts'
+		displayName: "贝鲁兹外围隧道"
 	},
 	'jupe_area1.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Juperos, Restricted Zone'
+			mainTitle: "优配擂斯保安区域"
 		},
 		notifyEnter: true,
-		displayName: 'Juperos, Restricted Zone'
+		displayName: "优配擂斯保安区域"
 	},
 	'juperos_01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '朱诺斯遗迹外部'
+			mainTitle: "优配擂斯废墟外部"
 		},
 		notifyEnter: true,
-		displayName: '朱诺斯遗迹外部'
+		displayName: "优配擂斯废墟外部"
 	},
 	'odin_tem01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: "Odin's Temple West Area"
+			mainTitle: "毁葛奥丁神殿西区"
 		},
 		notifyEnter: true,
-		displayName: "Odin's Temple West Area"
+		displayName: "毁葛奥丁神殿西区"
 	},
 	'tha_t12.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Room of Hatred',
+			mainTitle: "达纳托斯之塔 上层部 憎恨之房",
 			subTitle: 'Thanatos Tower Upper Level'
 		},
 		notifyEnter: true,
-		displayName: 'Thanatos Tower Upper Level - Room of Hatred'
+		displayName: "达纳托斯之塔 上层部 憎恨之房"
 	},
 	'gld2_ald.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Tears of Hero',
+			mainTitle: "深渊回廊 : 英雄之泪",
 			subTitle: 'Louis Abyss Corridor'
 		},
 		notifyEnter: true,
-		displayName: 'Corridor of the Abyss: Tears of Hero'
+		displayName: "深渊回廊 : 英雄之泪"
 	},
 	'1@pop1.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: "Pope's Office",
+			mainTitle: "教皇执勤室",
 			subTitle: 'Half Moon in the Daylight'
 		},
 		notifyEnter: true,
-		displayName: "Pope's Office"
+		displayName: "教皇执勤室"
 	},
 	'tha_t01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '博物馆入口',
+			mainTitle: "达纳托斯之塔 下层部 博物馆入口",
 			subTitle: '达纳托斯塔'
 		},
 		notifyEnter: true,
-		displayName: '达纳托斯塔博物馆入口'
+		displayName: "达纳托斯之塔 下层部 博物馆入口"
 	},
 	'abyss_03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Underground Cave 3F',
+			mainTitle: "毁葛深渊湖水 地下洞穴 3层",
 			subTitle: 'Abyss Lake'
 		},
 		notifyEnter: true,
-		displayName: 'Abyss Lake Underground Cave 3F'
+		displayName: "毁葛深渊湖水 地下洞穴 3层"
 	},
 	'abyss_01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '地下洞穴1层',
+			mainTitle: "毁葛深渊湖水 地下洞穴 1层",
 			subTitle: '深渊湖'
 		},
 		notifyEnter: true,
-		displayName: '深渊湖地下洞穴1层'
+		displayName: "毁葛深渊湖水 地下洞穴 1层"
 	},
 	'ba_2whs01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Upper Floor of Tartaros Storage'
+			mainTitle: "塔尔塔罗斯储藏室上层"
 		},
 		notifyEnter: true,
-		displayName: 'Upper Floor of Tartaros Storage'
+		displayName: "塔尔塔罗斯储藏室上层"
 	},
 	'mal_in02.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Inside the Ship',
+			mainTitle: "船内部",
 			subTitle: 'Malangdo'
 		},
 		notifyEnter: true,
-		displayName: 'Inside the Ship'
+		displayName: "船内部"
 	},
 	'auction_01.rsw': {
-		displayName: 'Auction Hall'
+		displayName: "拍卖场"
 	},
 	'hero_out2.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Lacusarium',
+			mainTitle: "英雄之地湖畔竞技场",
 			subTitle: 'Herosria'
 		},
 		notifyEnter: true,
-		displayName: 'Herosria Lacusarium'
+		displayName: "英雄之地湖畔竞技场"
 	},
 	'1@crd.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Volcano Island Corodo'
+			mainTitle: "火山岛 克鲁岛"
 		},
 		notifyEnter: true,
-		displayName: 'Volcano Island Corodo'
+		displayName: "火山岛 克鲁岛"
 	},
 	'kh_vila.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "Kiel Hyre's Cottage"
+			mainTitle: "启·海伊洛别墅"
 		},
 		notifyEnter: true,
-		displayName: "Kiel Hyre's Cottage"
+		displayName: "启·海伊洛别墅"
 	},
 	'kh_kiehl01.rsw': {
-		displayName: "Kiel's Room"
+		displayName: "基尔的房间"
 	},
 	'ein_fild05.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Einbroch Field'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: 'Einbroch Field'
+		displayName: "艾音布罗克野外"
 	},
 	'ein_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Einbroch Field'
+			mainTitle: "艾音布罗克野外"
 		},
 		notifyEnter: true,
-		displayName: 'Einbroch Field'
+		displayName: "艾音布罗克野外"
 	},
 	'jupe_cave.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Juperos Dungeon Entrance'
+			mainTitle: "优配擂斯洞穴入口"
 		},
 		notifyEnter: true,
-		displayName: 'Juperos Dungeon Entrance'
+		displayName: "优配擂斯洞穴入口"
 	},
 	'arug_dun01.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Guild Dungeon',
+			mainTitle: "公会地下密穴",
 			subTitle: 'Arunafeltz'
 		},
 		notifyEnter: true,
-		displayName: 'Arunafeltz Guild Dungeon'
+		displayName: "公会地下密穴"
 	},
 	'iz_dun00.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '海底洞穴1层',
+			mainTitle: "依斯鲁得海底洞穴 1层",
 			subTitle: '柏伊亚岚岛'
 		},
 		notifyEnter: true,
-		displayName: '海底洞穴1层'
+		displayName: "依斯鲁得海底洞穴 1层"
 	},
 	'prt_lib.rsw': {
 		backgroundBmp: 'noname',
 		signName: {
-			mainTitle: 'Memorial of Royal Family',
+			mainTitle: "王室的记忆",
 			subTitle: 'Prontera Royal Palace'
 		},
 		notifyEnter: true,
-		displayName: 'Memorial of Royal Family'
+		displayName: "王室的记忆"
 	},
 	'hugel.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Hugel',
+			mainTitle: "田园都市毁葛",
 			subTitle: 'Quaint Garden Village'
 		},
 		notifyEnter: true,
-		displayName: 'Hugel, the Quaint Garden Village'
+		displayName: "田园都市毁葛"
 	},
 	'ra_san03.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: 'Sanctuary East Area 1F',
+			mainTitle: "拉赫神殿 圣域 1层 东区",
 			subTitle: 'Rachel Temple'
 		},
 		notifyEnter: true,
-		displayName: 'Rachel Temple Sanctuary East Area 1F'
+		displayName: "拉赫神殿 圣域 1层 东区"
 	},
 	'1@glast.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Past Glastheim'
+			mainTitle: "过去的克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: 'Past Glastheim'
+		displayName: "过去的克雷斯特汉姆"
 	},
 	'ra_fild04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Audumla Grassland'
+			mainTitle: "拉赫 奥顿拉草原"
 		},
 		notifyEnter: true,
-		displayName: 'Audumla Grassland'
+		displayName: "拉赫 奥顿拉草原"
 	},
 	'ra_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Od Canyon'
+			mainTitle: "拉赫欧兹峡谷"
 		},
 		notifyEnter: true,
-		displayName: 'Od Canyon'
+		displayName: "拉赫欧兹峡谷"
 	},
 	'bossnia_01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Bossnia'
+			mainTitle: "波士尼亚"
 		},
 		notifyEnter: true,
-		displayName: 'Bossnia'
+		displayName: "波士尼亚"
 	},
 	'1@iwp.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: 'Frozen Scale Hill'
+			mainTitle: "冰鳞山丘"
 		},
 		notifyEnter: true,
-		displayName: 'Frozen Scale Hill'
+		displayName: "冰鳞山丘"
 	},
 	'ra_temple.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: 'Sesilmir',
+			mainTitle: "菲依雅大神殿(瑟斯隆尼勒)",
 			subTitle: "Freya's Grand Temple"
 		},
 		notifyEnter: true,
-		displayName: "Freya's Grand Temple (Sesilmir)"
+		displayName: "菲依雅大神殿(瑟斯隆尼勒)"
 	},
 	'int_land01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '孤岛'
+			mainTitle: "偏僻岛"
 		},
 		notifyEnter: true,
-		displayName: '孤岛'
+		displayName: "偏僻岛"
 	},
 	'ra_in01.rsw': {
-		displayName: 'Inside Rachel'
+		displayName: "拉赫内部"
 	},
 	'grademk.rsw': {
 		backgroundBmp: 'village_s1',
@@ -7910,116 +7910,116 @@ const MapInfo = {
 			subTitle: 'Grade Enhancer'
 		},
 		notifyEnter: true,
-		displayName: 'Grade Enhancer'
+		displayName: "阶级强化所"
 	},
 	'1@tnm2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: "Demon's Tower - Top floor"
+			mainTitle: "魔神之塔顶层"
 		},
 		notifyEnter: true,
-		displayName: "Demon's Tower - Top floor"
+		displayName: "魔神之塔顶层"
 	},
 	'turbo_room.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'Waiting Room'
+			mainTitle: "竞速待机室"
 		},
 		notifyEnter: true,
-		displayName: 'Waiting Room'
+		displayName: "竞速待机室"
 	},
 	'bossnia_03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Bossnia'
+			mainTitle: "波士尼亚"
 		},
 		notifyEnter: true,
-		displayName: 'Bossnia'
+		displayName: "波士尼亚"
 	},
 	'1@ma_c.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Buwaya Cave'
+			mainTitle: "宝箱巨鳄洞穴"
 		},
 		notifyEnter: true,
-		displayName: 'Buwaya Cave'
+		displayName: "宝箱巨鳄洞穴"
 	},
 	'schg_cas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Himinn Castle',
+			mainTitle: "喜民",
 			subTitle: 'Nidhoggur'
 		},
 		notifyEnter: true,
-		displayName: 'Himinn Castle'
+		displayName: "喜民"
 	},
 	'mosk_dun03.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'Dremuci Forest',
+			mainTitle: "莫斯科比亚森林最深处",
 			subTitle: 'Moscovia'
 		},
 		notifyEnter: true,
-		displayName: 'Dremuci Forest'
+		displayName: "莫斯科比亚森林最深处"
 	},
 	'mosk_dun01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: 'Les Forest'
+			mainTitle: "莫斯科比亚森林"
 		},
 		notifyEnter: true,
-		displayName: 'Les Forest'
+		displayName: "莫斯科比亚森林"
 	},
 	'te_prt_gld.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Gloria',
+			mainTitle: "葛洛丽雅",
 			subTitle: 'Rune-Midgarts'
 		},
 		notifyEnter: true,
-		displayName: 'Gloria'
+		displayName: "葛洛丽雅"
 	},
 	'que_qaru03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Fallacious Okolnir'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: 'Fallacious Okolnir'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'que_qsch04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Fallacious Okolnir'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: 'Fallacious Okolnir'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'dic_fild02.rsw': {
 		backgroundBmp: 'field',
 		signName: {
-			mainTitle: 'Bottom of Kamidal Mountain',
+			mainTitle: "卡米达山麓",
 			subTitle: 'Jotunheim'
 		},
 		notifyEnter: true,
-		displayName: 'Bottom of Kamidal Mountain'
+		displayName: "卡米达山麓"
 	},
 	'te_aldecas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: 'Sorin Castle',
+			mainTitle: "索林城堡",
 			subTitle: 'Rune-Midgarts'
 		},
 		notifyEnter: true,
-		displayName: 'Sorin Castle'
+		displayName: "索林城堡"
 	},
 	'que_qsch03.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: 'Fallacious Okolnir'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: 'Fallacious Okolnir'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'te_aldecas04.rsw': {
 		backgroundBmp: 'siege',
@@ -8041,13 +8041,13 @@ const MapInfo = {
 	'5@tower.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '无限塔'
+			mainTitle: "无尽塔顶层"
 		},
 		notifyEnter: true,
-		displayName: '无限塔'
+		displayName: "无尽塔顶层"
 	},
 	'que_dan02.rsw': {
-		displayName: '朱诺废弃房屋内部'
+		displayName: "朱诺废弃屋内部"
 	},
 	'jor_dun03.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -8060,194 +8060,194 @@ const MapInfo = {
 	'spl_fild03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斯普兰迪德原野'
+			mainTitle: "辉煌领域野外"
 		},
 		notifyEnter: true,
-		displayName: '斯普兰迪德原野'
+		displayName: "辉煌领域野外"
 	},
 	'spl_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斯普兰迪德原野'
+			mainTitle: "辉煌领域野外"
 		},
 		notifyEnter: true,
-		displayName: '斯普兰迪德原野'
+		displayName: "辉煌领域野外"
 	},
 	'mid_campin.rsw': {
-		displayName: '米德加尔特远征营地内部'
+		displayName: "米德加尔特联合驻地内部"
 	},
 	'spl_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斯普兰迪德原野'
+			mainTitle: "辉煌领域野外"
 		},
 		notifyEnter: true,
-		displayName: '斯普兰迪德原野'
+		displayName: "辉煌领域野外"
 	},
 	'splendide.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '斯普兰迪德',
+			mainTitle: "守护精灵前线阵地辉煌领域",
 			subTitle: '约顿海姆拉比基地'
 		},
 		notifyEnter: true,
-		displayName: '斯普兰迪德'
+		displayName: "守护精灵前线阵地辉煌领域"
 	},
 	'job3_war02.rsw': {
-		displayName: '妖术师转职测试房间'
+		displayName: "大法师转职考场"
 	},
 	'job3_war01.rsw': {
-		displayName: '妖术师转职测试房间'
+		displayName: "大法师转职考场"
 	},
 	'1@def02.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '天空',
+			mainTitle: "波浪地下城 - 天空",
 			subTitle: '波利地下城'
 		},
 		notifyEnter: true,
-		displayName: '波利地下城 - 天空'
+		displayName: "波浪地下城 - 天空"
 	},
 	'glast_01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '格拉斯特海姆'
+			mainTitle: "克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆'
+		displayName: "克雷斯特汉姆"
 	},
 	'jor_ab02.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '废弃矿坑 2 楼'
+			mainTitle: "废弃坑洞 2层"
 		},
 		notifyEnter: true,
-		displayName: '废弃矿坑 2 楼'
+		displayName: "废弃坑洞 2层"
 	},
 	'gld_dun02_2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '公会地下城 F2',
+			mainTitle: "露依纳公会地下密穴 2层",
 			subTitle: '路易莎'
 		},
 		notifyEnter: true,
-		displayName: '路易莎地下城 2F'
+		displayName: "露依纳公会地下密穴 2层"
 	},
 	'mora.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '莫拉',
+			mainTitle: "草精族穆拉村",
 			subTitle: '彩虹桥抽奖村'
 		},
 		notifyEnter: true,
-		displayName: '抽奖村莫拉'
+		displayName: "草精族穆拉村"
 	},
 	'payg_cas03.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '圣影城堡',
+			mainTitle: "佛影",
 			subTitle: '绿林湖'
 		},
 		notifyEnter: true,
-		displayName: '圣影城堡'
+		displayName: "佛影"
 	},
 	'que_house_s.rsw': {
-		displayName: '奇怪的房子'
+		displayName: "可疑的家"
 	},
 	'iz_dun05.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '海底隧道 B6',
+			mainTitle: "依斯鲁得海底洞穴 6层",
 			subTitle: '依斯鲁得'
 		},
 		notifyEnter: true,
-		displayName: '海底隧道 B6'
+		displayName: "依斯鲁得海底洞穴 6层"
 	},
 	'que_ng.rsw': {
-		displayName: '未知地点'
+		displayName: "未知地区"
 	},
 	'que_lhz.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '生体实验研究所地下 4 楼'
+			mainTitle: "生体研究所 地下4层"
 		},
 		notifyEnter: true,
-		displayName: '生体实验研究所地下 4 楼'
+		displayName: "生体研究所 地下4层"
 	},
 	'gld2_gef.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '死者之山',
-			subTitle: '布里托尼亚深渊走廊'
+			mainTitle: "深渊回廊 : 亡者之丘",
+			subTitle: "怖立特离亚深渊走廊"
 		},
 		notifyEnter: true,
-		displayName: '深渊走廊：死者之山'
+		displayName: "深渊回廊 : 亡者之丘"
 	},
 	'bra_fild01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '巴西利斯原野'
+			mainTitle: "巴西野外"
 		},
 		notifyEnter: true,
-		displayName: '巴西利斯原野'
+		displayName: "巴西野外"
 	},
 	'job_ko.rsw': {
-		displayName: '隐藏地点'
+		displayName: "隐匿处"
 	},
 	'ma_zif04.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: '吉普尼'
+			mainTitle: "吉普尼车内部"
 		},
 		notifyEnter: true,
-		displayName: '吉普尼内部'
+		displayName: "吉普尼车内部"
 	},
 	'que_avan01.rsw': {
-		displayName: '阿凡特的实验室'
+		displayName: "阿凡特研究室"
 	},
 	'ecl_tdun04.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '彩虹桥塔 4F'
+			mainTitle: "彩虹桥高塔 4层"
 		},
 		notifyEnter: true,
-		displayName: '彩虹桥塔 4F'
+		displayName: "彩虹桥高塔 4层"
 	},
 	'rachel.rsw': {
 		backgroundBmp: 'village',
 		signName: {
-			mainTitle: '拉赫',
+			mainTitle: "阿卢纳贝兹教国 首都拉赫",
 			subTitle: '阿鲁纳佩尔兹学术国首都'
 		},
 		notifyEnter: true,
-		displayName: '拉赫'
+		displayName: "阿卢纳贝兹教国 首都拉赫"
 	},
 	'job3_rang01.rsw': {
-		displayName: '游侠转职等待室'
+		displayName: "游侠转职待机室"
 	},
 	'moc_prydn2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '金字塔 B2'
+			mainTitle: "梦罗克金字塔 地下2层 - 梦魇"
 		},
 		notifyEnter: true,
-		displayName: '梦罗克金字塔 B2 - 梦魇'
+		displayName: "梦罗克金字塔 地下2层 - 梦魇"
 	},
 	'iz_ng01.rsw': {
-		displayName: '忍者教程地图'
+		displayName: "忍者新手教学地图"
 	},
 	'que_qsch01.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '虚假的奥克尼尔'
+			mainTitle: "虚幻的奥克尼尔"
 		},
 		notifyEnter: true,
-		displayName: '虚假的奥克尼尔'
+		displayName: "虚幻的奥克尼尔"
 	},
 	'te_aldecas01.rsw': {
 		backgroundBmp: 'siege',
 		signName: {
-			mainTitle: '格拉里斯城堡',
+			mainTitle: "卢恩-米德加尔特",
 			subTitle: '卢恩-米德加尔特'
 		},
 		notifyEnter: true,
@@ -8263,10 +8263,10 @@ const MapInfo = {
 		displayName: '鲸鱼岛'
 	},
 	'ecl_in03.rsw': {
-		displayName: '艾可拉斯室内'
+		displayName: "埃克拉珠内部"
 	},
 	'1@ecl.rsw': {
-		displayName: '艾可拉斯内部'
+		displayName: "埃克拉珠内部"
 	},
 	'1@xm_d.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -8279,10 +8279,10 @@ const MapInfo = {
 	'1@dth2.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '生物岛'
+			mainTitle: "拜欧斯岛"
 		},
 		notifyEnter: true,
-		displayName: '生物岛'
+		displayName: "拜欧斯岛"
 	},
 	'moro_vol.rsw': {
 		backgroundBmp: 'field_s2',
@@ -8295,11 +8295,11 @@ const MapInfo = {
 	'ver_eju.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '东部遗迹',
+			mainTitle: "优配擂斯东边废墟",
 			subTitle: '朱佩罗斯'
 		},
 		notifyEnter: true,
-		displayName: '朱佩罗斯东部遗迹'
+		displayName: "优配擂斯东边废墟"
 	},
 	'1@lab.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -8315,94 +8315,94 @@ const MapInfo = {
 	'job4_tro.rsw': {
 		backgroundBmp: 'field2_s2',
 		signName: {
-			mainTitle: '空荡的卡瓦希尔船'
+			mainTitle: "克瓦希尔之空盒"
 		},
 		notifyEnter: true,
-		displayName: '空荡的卡瓦希尔船'
+		displayName: "克瓦希尔之空盒"
 	},
 	'pvp_y_3-4.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: 'PvP 艾尔贝塔房间'
+			mainTitle: "PvP : 艾尔贝塔"
 		},
 		notifyEnter: true,
-		displayName: 'PvP：艾尔贝塔房间'
+		displayName: "PvP : 艾尔贝塔"
 	},
 	'tur_dun06.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '地下沼泽区域'
+			mainTitle: "地下沼泽区"
 		},
 		notifyEnter: true,
-		displayName: '地下沼泽区域'
+		displayName: "地下沼泽区"
 	},
 	'1@gl_k2.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团 F1',
-			subTitle: '旧格拉斯特海姆'
+			mainTitle: "过去的古城骑士团 1层",
+			subTitle: "旧克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '旧格拉斯特海姆骑士团 F1'
+		displayName: "过去的古城骑士团 1层"
 	},
 	'1@gl_prq.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '格拉斯特海姆的陨落'
+			mainTitle: "克雷斯特汉姆的没落"
 		},
 		notifyEnter: true,
-		displayName: '格拉斯特海姆的陨落'
+		displayName: "克雷斯特汉姆的没落"
 	},
 	'pay_fild02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: '斐扬森林'
+			mainTitle: "斐扬树林"
 		},
 		notifyEnter: true,
-		displayName: '斐扬森林'
+		displayName: "斐扬树林"
 	},
 	'1@gl_kh.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团 F1',
-			subTitle: '旧格拉斯特海姆'
+			mainTitle: "过去的古城骑士团 1层",
+			subTitle: "旧克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '旧格拉斯特海姆骑士团 F2'
+		displayName: "过去的古城骑士团 1层"
 	},
 	'2@gl_kh.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '骑士团 F2',
-			subTitle: '旧格拉斯特海姆'
+			mainTitle: "过去的古城骑士团 2层",
+			subTitle: "旧克雷斯特汉姆"
 		},
 		notifyEnter: true,
-		displayName: '旧格拉斯特海姆骑士团 F2'
+		displayName: "过去的古城骑士团 2层"
 	},
 	'1@sthb.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '空中要塞 - 内部'
+			mainTitle: "空中要塞内部"
 		},
 		notifyEnter: true,
-		displayName: '空中要塞 - 内部'
+		displayName: "空中要塞内部"
 	},
 	'sp_rudus4.rsw': {
 		backgroundBmp: 'dungeon',
 		signName: {
-			mainTitle: '鲁杜斯 F4',
+			mainTitle: "实验体废弃场 鲁杜斯 4层",
 			subTitle: '实验废弃物处理区'
 		},
 		notifyEnter: true,
-		displayName: '鲁杜斯 F4'
+		displayName: "实验体废弃场 鲁杜斯 4层"
 	},
 	'1@ge_sn.rsw': {
 		backgroundBmp: 'dungeon_s2',
 		signName: {
-			mainTitle: '吉芬夜间竞技场'
+			mainTitle: "吉芬夜间斗技场"
 		},
 		notifyEnter: true,
-		displayName: '吉芬夜间竞技场'
+		displayName: "吉芬夜间斗技场"
 	},
 	'gw_fild01.rsw': {
 		backgroundBmp: 'field_s2',
@@ -8415,14 +8415,110 @@ const MapInfo = {
 	'moc_para01.rsw': {
 		backgroundBmp: 'village_s2',
 		signName: {
-			mainTitle: '乐园'
+			mainTitle: "乐园团内部"
 		},
 		notifyEnter: true,
-		displayName: '梦罗克伊甸园集团内部'
+		displayName: "乐园团内部"
 	},
 	'que_dan01.rsw': {
-		displayName: '胡格尔原野'
-	}
+		displayName: "毁葛野外"
+	},
+	"06guild_01.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_02.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_03.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_04.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_05.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_06.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_07.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_08.rsw": { displayName: "公会对抗竞技场" },
+	"06guild_r.rsw": { displayName: "公会对抗竞技场 等候室" },
+	"1@ba_go.rsw": { displayName: "时间庭园 - 生命殿堂" },
+	"1@ep21b.rsw": { displayName: "蛇的栖身处" },
+	"1@ep21c.rsw": { displayName: "蛇的栖身处" },
+	"1@f_lake.rsw": { displayName: "时间庭园 - 烈焰湖" },
+	"1@vrpop.rsw": { displayName: "幻想丛书 - 彩虹路" },
+	"1@wtgs.rsw": { displayName: "神秘幽灵船" },
+	"2@vrpop.rsw": { displayName: "幻想丛书 - 彩虹路" },
+	"3@vrpop.rsw": { displayName: "幻想丛书 - 彩虹湖" },
+	"ch1_sf01.rsw": { displayName: "安全地点" },
+	"ch1_sf02.rsw": { displayName: "安全地点" },
+	"ch1_sf03.rsw": { displayName: "安全地点" },
+	"cmd_fild05.rsw": { displayName: "巴不其卡 森林边界" },
+	"ein_fild02.rsw": { displayName: "艾音布罗克 旷野" },
+	"ein_fild10.rsw": { displayName: "艾音布罗克 旷野" },
+	"evt_mobroom.rsw": { displayName: "怪物洞穴" },
+	"evt_swar_b.rsw": { displayName: "梦罗克遗迹" },
+	"evt_swar_r.rsw": { displayName: "梦罗克遗迹" },
+	"evt_swar_s.rsw": { displayName: "梦罗克遗迹" },
+	"evt_swar_t.rsw": { displayName: "梦罗克遗迹" },
+	"for_dun01.rsw": { displayName: "时间庭园-被遗忘的时间第1区" },
+	"for_dun02.rsw": { displayName: "时间庭园-被遗忘的时间第2区" },
+	"g_room1-1.rsw": { displayName: "益智游戏竞技场" },
+	"g_room1-2.rsw": { displayName: "益智游戏竞技场" },
+	"g_room1-3.rsw": { displayName: "益智游戏竞技场" },
+	"g_room2.rsw": { displayName: "益智游戏竞技场" },
+	"gef_fild12.rsw": { displayName: "克特 森林" },
+	"gef_fild14.rsw": { displayName: "西边 兽人村落" },
+	"guild_vs1-1.rsw": { displayName: "公会对抗竞技场" },
+	"guild_vs1-2.rsw": { displayName: "公会对抗竞技场" },
+	"guild_vs1-3.rsw": { displayName: "公会对抗竞技场" },
+	"guild_vs1-4.rsw": { displayName: "公会对抗竞技场" },
+	"guild_vs2-1.rsw": { displayName: "公会对抗竞技场" },
+	"guild_vs2-2.rsw": { displayName: "公会对抗竞技场" },
+	"hu_fild07.rsw": { displayName: "毁葛 旷野" },
+	"jalbe_in.rsw": { displayName: "渔村艾尔贝塔 内部" },
+	"jor_albe.rsw": { displayName: "渔村艾尔贝塔" },
+	"jor_base.rsw": { displayName: "耶梦加得教团村落 耶梦村" },
+	"jor_crk.rsw": { displayName: "鳞岛" },
+	"jor_crk_p.rsw": { displayName: "鳞岛" },
+	"jor_mbase.rsw": { displayName: "凯渥宝乐格据点 露那佛玛" },
+	"jor_raise1.rsw": { displayName: "隆起的大地北部" },
+	"jor_raise2.rsw": { displayName: "隆起的大地南部" },
+	"jor_tmple1.rsw": { displayName: "耶梦加得教团神殿 津牡利1楼" },
+	"jor_tmple2.rsw": { displayName: "耶梦加得教团神殿 津牡利2楼" },
+	"mbase_in.rsw": { displayName: "露那佛玛 内部" },
+	"moc_akhet.rsw": { displayName: "古代神殿 阿克赫特" },
+	"moc_castle.rsw": { displayName: "梦罗克 城内" },
+	"moc_fild04.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild05.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild06.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild08.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild09.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild10.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild14.rsw": { displayName: "苏克拉特沙漠" },
+	"moc_fild15.rsw": { displayName: "苏克拉特沙漠" },
+	"n_castle.rsw": { displayName: "十字星" },
+	"nguild_alde.rsw": { displayName: "娜易修潘斯塔引" },
+	"nguild_gef.rsw": { displayName: "霍普立温" },
+	"nguild_pay.rsw": { displayName: "明亭" },
+	"nguild_prt.rsw": { displayName: "克林希特" },
+	"nif_fild03.rsw": { displayName: "尼芙菲姆 南瓜农场" },
+	"niflxmas.rsw": { displayName: "亡者国度 尼芙菲姆" },
+	"pay_fild05.rsw": { displayName: "斐扬树林" },
+	"pay_fild11.rsw": { displayName: "斐扬树林" },
+	"prt_mk.rsw": { displayName: "普隆德拉市场" },
+	"que_moc_16.rsw": { displayName: "刺客公会" },
+	"que_moon.rsw": { displayName: "太阳和月亮和星星之地" },
+	"que_san04.rsw": { displayName: "拉赫神殿 圣域 1层 南区" },
+	"que_sign02.rsw": { displayName: "尼芙菲姆 鬼之峡谷" },
+	"sword_1-1.rsw": { displayName: "剑士转职所" },
+	"sword_2-1.rsw": { displayName: "剑士转职所" },
+	"t_garden.rsw": { displayName: "时间庭园" },
+	"te_aldecas1.rsw": { displayName: "娜易修潘斯塔引" },
+	"te_aldecas2.rsw": { displayName: "乎汗修番佳乌" },
+	"te_aldecas3.rsw": { displayName: "纽蓝贝勒克" },
+	"te_aldecas4.rsw": { displayName: "布勒刺布勒克" },
+	"te_aldecas5.rsw": { displayName: "罗探布勒克" },
+	"tha_scene01.rsw": { displayName: "达纳托斯之塔 底层部" },
+	"verus02_a.rsw": { displayName: "研究楼-WISH" },
+	"verus02_b.rsw": { displayName: "研究楼-WISH" },
+	"vr_cas.rsw": { displayName: "幻想丛书 - 利利姆宫" },
+	"vr_clo1.rsw": { displayName: "幻想丛书 - 明镜修道院" },
+	"vr_clo2.rsw": { displayName: "幻想丛书 - 每一个瞬间" },
+	"vr_gen.rsw": { displayName: "幻想丛书 - 基因学者研究所" },
+	"vr_po.rsw": { displayName: "幻想丛书 - 波利德拉" },
+	"yuno_fild05.rsw": { displayName: "尔迈斯 瀑雷德" },
+	"yuno_fild10.rsw": { displayName: "朱诺 旷野" }
 };
 
 for (const map of Object.values(MapInfo)) {

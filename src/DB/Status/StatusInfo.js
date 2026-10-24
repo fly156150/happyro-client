@@ -69,7 +69,7 @@ StatusInfo[SC.MANU_DEF] = {
 	icon: 'efst_def.tga',
 	haveTimeLimit: 1,
 	posTimeLimitStr: 2,
-	descript: [['马努克的意志', COLOR_TITLE_BUFF], ['%s', COLOR_TIME], ['减少物理/魔法伤害'], ['来自马努克原野的怪物']]
+	descript: [['马努克的意志', COLOR_TITLE_BUFF], ['%s', COLOR_TIME], ['减少物理/魔法伤害'], ["来自马努克野外的怪物"]]
 };
 
 StatusInfo[SC.CONCENTRATION] = {
@@ -477,7 +477,7 @@ StatusInfo[SC.SPL_DEF] = {
 		['蜂蜜果酱', COLOR_TITLE_BUFF],
 		['%s', COLOR_TIME],
 		['降低受到的物理和魔法伤害'],
-		['来自斯普兰迪德原野魔物的伤害']
+		["来自辉煌领域原野魔物的伤害"]
 	]
 };
 
@@ -547,7 +547,7 @@ StatusInfo[SC.MANU_MATK] = {
 	icon: 'efst_matk.tga',
 	haveTimeLimit: 1,
 	posTimeLimitStr: 2,
-	descript: [['马努克的信仰', COLOR_TITLE_BUFF], ['%s', COLOR_TIME], ['提高魔法攻击，针对'], ['马努克原野的所有魔物']]
+	descript: [['马努克的信仰', COLOR_TITLE_BUFF], ['%s', COLOR_TIME], ['提高魔法攻击，针对'], ["马努克野外的所有魔物"]]
 };
 
 StatusInfo[SC.NOEQUIPARMOR] = {
@@ -636,7 +636,7 @@ StatusInfo[SC.SPL_ATK] = {
 		['食人花腌制果实', COLOR_TITLE_BUFF],
 		['%s', COLOR_TIME],
 		['提高对'],
-		['斯普兰迪德原野所有魔物的物理攻击']
+		["辉煌领域原野所有魔物的物理攻击"]
 	]
 };
 
@@ -1082,7 +1082,7 @@ StatusInfo[SC.SPL_MATK] = {
 	icon: 'efst_matk.tga',
 	haveTimeLimit: 1,
 	posTimeLimitStr: 2,
-	descript: [['康努斯之泪', COLOR_TITLE_BUFF], ['%s', COLOR_TIME], ['提高对斯普兰迪德原野所有怪物的'], ['魔法攻击力']]
+	descript: [['康努斯之泪', COLOR_TITLE_BUFF], ['%s', COLOR_TIME], ["提高对辉煌领域原野所有怪物的"], ['魔法攻击力']]
 };
 
 StatusInfo[SC.DEEP_SLEEP] = {
@@ -1557,7 +1557,7 @@ StatusInfo[SC.MANU_ATK] = {
 		['马努克的黄金机会', COLOR_TITLE_BUFF],
 		['%s', COLOR_TIME],
 		['提高对以下目标的物理攻击：'],
-		['马努克原野的所有怪物']
+		["马努克野外的所有怪物"]
 	]
 };
 
