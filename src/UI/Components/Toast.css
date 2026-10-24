@@ -1,9 +1,9 @@
 :host {
 	all: initial;
 	position: fixed;
-	top: 40%;
+	top: calc(env(safe-area-inset-top, 0px) + 66px);
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translateX(-50%);
 	z-index: 2147483647;
 	display: flex;
 	align-items: center;

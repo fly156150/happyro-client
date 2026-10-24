@@ -119,3 +119,17 @@ it('preserves catalog nodes across switches and clears them at session end', () 
 	endConnection();
 	expect(tools.getRoot().querySelectorAll('.game-tools-tab')).toHaveLength(0);
 });
+
+it('opens maps from the minimap even when another tab was selected or the window is visible', () => {
+ tools.selectTab('items');
+ tools._host.style.display = 'none';
+ tools.showMap();
+ expect(fixtures.preferences.tab).toBe('maps');
+ expect(tools._host.style.display).toBe('');
+ expect(tools.getRoot().querySelector('[data-tab-id=maps]').hidden).toBe(false);
+ tools.selectTab('items');
+ tools.showMap();
+ expect(tools._host.style.display).toBe('');
+ expect(tools.getRoot().querySelector('[data-tab-id=maps]').hidden).toBe(false);
+ expect(tools.getRoot().querySelector('[data-tab-id=items]').hidden).toBe(true);
+});

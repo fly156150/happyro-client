@@ -209,6 +209,18 @@ GameTools.centerInViewport = function centerInViewport() {
 	this._host.style.top = `${Math.max(0, (viewportHeight - height) / 2)}px`;
 };
 
+/** Minimap entry always opens the map tab, including an already visible window. */
+GameTools.showMap = function showMap() {
+	preferences.tab = 'maps';
+	preferences.save();
+	this.append();
+	this._host.style.display = '';
+	this.centerInViewport();
+	this.focus();
+	this.renderTabs({ reopening: true });
+	void this.refreshCapabilities();
+};
+
 GameTools.toggle = function toggle() {
 	if (this.__active && this._host.style.display !== 'none') {
 		clearToast(this.getRoot().querySelector('.game-tools-window'));

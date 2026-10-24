@@ -1,3 +1,4 @@
+import Platform from 'UI/Platform.js';
 import Interface from 'Preferences/Interface.js';
 import css from './Toast.css?raw';
 import desktopCSS from './ToastDesktop.css?raw';
@@ -28,9 +29,9 @@ export function showToast(container, message, kind = 'success') {
 	element.textContent = message;
 	const shadow = element.attachShadow({ mode: 'open' });
 	const style = document.createElement('style');
-	const desktopOwner = container.closest('[data-feedback-theme="desktop"]');
-	element.toggleAttribute('data-tablet', !desktopOwner && Math.min(screen.width, screen.height) >= 600 && matchMedia('(any-pointer: coarse)').matches);
-	style.textContent = desktopOwner ? desktopCSS : css;
+	const desktopTheme = !Platform.isMobile;
+	element.toggleAttribute('data-tablet', !desktopTheme && Math.min(screen.width, screen.height) >= 600 && matchMedia('(any-pointer: coarse)').matches);
+	style.textContent = desktopTheme ? desktopCSS : css;
 	const content = document.createElement('span');
 	content.className = 'message';
 	content.append(document.createElement('slot'));
@@ -46,7 +47,7 @@ export function showToast(container, message, kind = 'success') {
 	});
 	const record = { owner, dismiss, observer, timer: setTimeout(dismiss, Interface.toastDuration * 1000) };
 	active = record;
-	(desktopOwner || document.body).append(element);
+	document.body.append(element);
 	const options = { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden', 'style'] };
 	observer.observe(document.body, options);
 	const root = owner.getRootNode();

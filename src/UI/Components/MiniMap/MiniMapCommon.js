@@ -144,8 +144,8 @@ export function createMiniMap({
 		_ctx = root.querySelector('canvas').getContext('2d');
 		this.opacity = 2;
 
-		// Any click on the upper-right minimap opens the navigation window.
-		// Use a dynamic import to keep the minimap/navigation modules acyclic.
+		// Any click on the upper-right minimap opens the adventure map tab.
+		// Use a dynamic import to keep the minimap/adventure-tool modules acyclic.
 		const mapCanvas = root.querySelector('canvas');
 		if (mapCanvas) {
 			root.addEventListener(
@@ -161,9 +161,8 @@ export function createMiniMap({
 						return;
 					}
 					event.stopPropagation();
-					import('UI/Components/Navigation/Navigation.js').then(({ default: Navigation }) => {
-						Navigation.showCurrentMap();
-						Navigation.focus();
+					import('UI/Components/GameTools/GameTools.js').then(({ default: GameTools }) => {
+						GameTools.showMap();
 					});
 				},
 				true

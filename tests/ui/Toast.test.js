@@ -1,7 +1,9 @@
+import Platform from '../../src/UI/Platform.js';
+vi.mock('../../src/UI/Platform.js', () => ({ default: { isMobile: true } }));
 import Interface from '../../src/Preferences/Interface.js';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { showToast, clearToast } from '../../src/UI/Components/Toast.js';
-beforeEach(() => { Interface.toastDuration = 2; });
+beforeEach(() => { Interface.toastDuration = 2; Platform.isMobile = true; });
 afterEach(() => { vi.useRealTimers(); document.body.replaceChildren(); });
 it('replaces feedback, escapes names and expires ordinary feedback after two seconds', () => {
 	vi.useFakeTimers();
@@ -75,19 +77,19 @@ it('ignores pending requests without replacing actual results or errors',()=>{
  showToast(body,'操作完成','success');expect(document.querySelector('.ui-toast').textContent).toBe('操作完成');
 });
 
-it('keeps desktop adventure feedback in its window and mobile feedback in the viewport', () => {
- const owner = document.createElement('section');
+it('anchors desktop adventure and gameplay feedback to the same viewport', () => {
+ Platform.isMobile = false;
+ const owner = document.body.appendChild(document.createElement('section'));
  owner.dataset.feedbackTheme = 'desktop';
- const container = owner.appendChild(document.createElement('div'));
- document.body.append(owner);
- showToast(container, '已发放');
- const desktop = owner.querySelector('.ui-toast');
- expect(desktop).not.toBeNull();
- clearToast(container);
- delete owner.dataset.feedbackTheme;
- showToast(container, '已发放');
- expect(owner.querySelector('.ui-toast')).toBeNull();
- clearToast(container);
+ showToast(owner, '已发放');
+ const adventure = document.body.querySelector('.ui-toast');
+ expect(adventure.parentElement).toBe(document.body);
+ const style = adventure.shadowRoot.querySelector('style').textContent;
+ showToast(document.body, '需要学习《基础技能》Lv.2', 'error');
+ const gameplay = document.body.querySelector('.ui-toast');
+ expect(gameplay.parentElement).toBe(document.body);
+ expect(gameplay.shadowRoot.querySelector('style').textContent).toBe(style);
+ clearToast(document.body);
 });
 
 it('enlarges touch-tablet feedback while preserving phone and desktop themes', () => {
@@ -101,7 +103,7 @@ it('enlarges touch-tablet feedback while preserving phone and desktop themes', (
   showToast(owner,'保存成功');
   expect(document.querySelector('.ui-toast').hasAttribute('data-tablet')).toBe(false);
   vi.stubGlobal('screen',{width:1180,height:820});
-  owner.dataset.feedbackTheme='desktop';showToast(owner,'保存成功');
+  Platform.isMobile=false;owner.dataset.feedbackTheme='desktop';showToast(owner,'保存成功');
   expect(document.querySelector('.ui-toast').hasAttribute('data-tablet')).toBe(false);
  } finally {clearToast(owner);vi.unstubAllGlobals()}
 });

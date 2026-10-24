@@ -1,11 +1,11 @@
-/* Original adventure-tool feedback, positioned within its owning desktop window. */
+/* Shared desktop feedback, anchored above the play field like mobile feedback. */
 :host {
 	all: initial;
-	position: absolute;
-	top: 66px;
+	position: fixed;
+	top: calc(env(safe-area-inset-top, 0px) + 66px);
 	left: 50%;
 	transform: translateX(-50%);
-	z-index: 20;
+	z-index: 2147483647;
 	display: flex;
 	align-items: center;
 	gap: 14px;
