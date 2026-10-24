@@ -6056,7 +6056,7 @@ PACKET.ZC.COMPASS.size = 23;
 
 // 0x145
 PACKET.ZC.SHOW_IMAGE = function PACKET_ZC_SHOW_IMAGE(fp, end) {
-	this.imageName = fp.readBinaryString(16);
+	this.imageName = fp.readString(16);
 	this.type = fp.readUChar();
 };
 PACKET.ZC.SHOW_IMAGE.size = 19;
@@ -6758,7 +6758,7 @@ PACKET.ZC.SHOWDIGIT.size = 7;
 
 // 0x1b3
 PACKET.ZC.SHOW_IMAGE2 = function PACKET_ZC_SHOW_IMAGE2(fp, end) {
-	this.imageName = fp.readBinaryString(64);
+	this.imageName = fp.readString(64);
 	this.type = fp.readUChar();
 };
 PACKET.ZC.SHOW_IMAGE2.size = 67;
