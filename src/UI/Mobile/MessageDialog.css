@@ -1,16 +1,17 @@
-/* Message and invitation dialogs share the in-game confirmation chrome. */
+/* Only in-game dialogs use confirmation chrome; pre-game shares registration. */
 :host {
  position: fixed;
  inset: 0;
  pointer-events: none;
 }
-.ui-confirm { pointer-events: auto; }
-h2 {
+dialog { pointer-events: auto; box-sizing: border-box; }
+h2 { outline: none; }
+.ui-confirm h2 {
  margin: 0 0 12px;
  font-size: 16px;
  color: #f6d9a5;
  outline: none;
 }
-.ui-confirm-body > .text { margin: 0; white-space: normal; }
-.ui-confirm-body > .preserve-line-breaks { white-space: pre-line; }
+.container > .text { margin: 0; white-space: normal; }
+.container > .preserve-line-breaks { white-space: pre-line; }
 .btns:empty { display: none; }

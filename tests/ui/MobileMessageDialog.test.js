@@ -1,11 +1,14 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import Session from '../../src/Engine/SessionStorage.js';
 import { showMobileDialog, removeMobileDialogs } from '../../src/UI/Mobile/MessageDialog.js';
 const originalMethods = Object.fromEntries(['showModal', 'close'].map(name => [name, Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, name)]));
 beforeEach(() => {
+	Session.Playing = false;
 	Object.defineProperty(HTMLDialogElement.prototype, 'showModal', { configurable: true, value: function () { this.open = true; } });
 	Object.defineProperty(HTMLDialogElement.prototype, 'close', { configurable: true, value: function () { this.open = false; } });
 });
 afterEach(() => {
+	Session.Playing = false;
 	removeMobileDialogs(); document.body.replaceChildren(); vi.restoreAllMocks();
 	for (const [name, descriptor] of Object.entries(originalMethods)) {
 		if (descriptor) Object.defineProperty(HTMLDialogElement.prototype, name, descriptor);
@@ -56,4 +59,18 @@ it('keeps touch events native and clears all dialogs on a screen reset', () => {
 		expect(box._host.isConnected).toBe(false);
 		expect(callback).not.toHaveBeenCalled();
 	} finally { window.removeEventListener('touchstart', gameTouch); }
+});
+
+it('uses registration styling before play and restores it after leaving the game', () => {
+	for (const playing of [false, true, false]) {
+		Session.Playing = playing;
+		const callback = vi.fn();
+		const box = showMobileDialog({ text: '连接提示', buttons: [{ name: 'ok', primary: true, callback }] });
+		const dialog = box._shadow.querySelector('dialog');
+		expect(dialog.classList.contains('m-signup')).toBe(!playing);
+		expect(dialog.classList.contains('ui-confirm')).toBe(playing);
+		expect(box._shadow.querySelector('button').classList.contains('m-login__btn--primary')).toBe(!playing);
+		box._shadow.querySelector('button').click();
+		expect(callback).toHaveBeenCalledOnce();
+	}
 });

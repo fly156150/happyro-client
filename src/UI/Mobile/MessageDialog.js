@@ -1,3 +1,5 @@
+import Session from 'Engine/SessionStorage.js';
+import loginDialogCSS from './LoginDialog.css?raw';
 import menuLayoutCSS from './game/MenuLayout.css?raw';
 import { bindMobileViewport } from './game/MobileViewport.js';
 import confirmationCSS from '../Components/Confirmation.css?raw';
@@ -24,9 +26,11 @@ export function showMobileDialog({
 	const host = document.createElement('div');
 	host.className = 'mobile-message-host';
 	const root = host.attachShadow({ mode: 'open' });
-	root.innerHTML = `<style>${menuLayoutCSS}${confirmationCSS}${backdropCSS}${inputCSS}${css}</style><dialog class="mobile-menu-dialog ui-confirm" aria-labelledby="message-title" aria-describedby="message-text">
-		<div class="container ui-confirm-body"><h2 id="message-title" tabindex="-1" autofocus></h2><p id="message-text" class="text"></p></div>
-		<div class="btns ui-confirm-actions"></div></dialog>`;
+	const inGame = Session.Playing;
+	const themeCSS = inGame ? menuLayoutCSS + confirmationCSS + backdropCSS + inputCSS : loginDialogCSS;
+	root.innerHTML = `<style>${themeCSS}${css}</style><dialog class="${inGame ? 'mobile-menu-dialog ui-confirm' : 'm-signup'}" aria-labelledby="message-title" aria-describedby="message-text">
+		<div class="container ${inGame ? 'ui-confirm-body' : ''}"><h2 id="message-title" tabindex="-1" autofocus></h2><p id="message-text" class="text"></p></div>
+		<div class="btns ${inGame ? 'ui-confirm-actions' : 'm-signup__actions'}"></div></dialog>`;
 	const dialog = root.querySelector('dialog');
 	const heading = root.querySelector('h2');
 	heading.textContent = title;
@@ -64,6 +68,7 @@ export function showMobileDialog({
 		button.type = 'button';
 		button.textContent = labels[name.toLowerCase()] || name;
 		button.classList.toggle('primary', !!primary);
+		if (!inGame) button.classList.add('m-login__btn', primary ? 'm-login__btn--primary' : 'm-login__btn--secondary');
 		button.addEventListener('click', () => finish(callback));
 		root.querySelector('.btns').append(button);
 	}

@@ -15,10 +15,11 @@ import MobileGUIComponent from 'UI/MobileGUIComponent.js';
 import { normalizeRememberedAccount } from 'UI/Components/WinLogin/RememberedAccount.js';
 import htmlText from './WinLogin.html?raw';
 import cssText from './WinLogin.css?raw';
+import loginDialogCSS from '../LoginDialog.css?raw';
 import shellCSS from '../Shell.css?raw';
 import { withMobileShell } from '../Shell.js';
 
-const MobileWinLogin = new MobileGUIComponent('MobileWinLogin', cssText + shellCSS);
+const MobileWinLogin = new MobileGUIComponent('MobileWinLogin', loginDialogCSS + cssText + shellCSS);
 
 MobileWinLogin.render = () => htmlText;
 

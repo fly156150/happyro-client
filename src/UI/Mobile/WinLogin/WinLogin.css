@@ -6,43 +6,7 @@
 	z-index: 200;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
 
-	/* Neutral ramp — light mode */
-	--n-0: oklch(100% 0 0);
-	--n-50: oklch(98% 0.004 250);
-	--n-100: oklch(95% 0.006 250);
-	--n-200: oklch(90% 0.008 250);
-	--n-300: oklch(82% 0.01 250);
-	--n-500: oklch(55% 0.012 250);
-	--n-700: oklch(32% 0.012 250);
-	--n-900: oklch(14% 0.01 250);
 
-	/* Accent: warm amber */
-	--a-400: oklch(72% 0.16 52);
-	--a-500: oklch(62% 0.18 52);
-	--a-600: oklch(52% 0.17 52);
-	--a-100: oklch(95% 0.06 52);
-
-	/* Semantic roles */
-	--c-bg: var(--n-50);
-	--c-surface: var(--n-0);
-	--c-border: var(--n-200);
-	--c-text: var(--n-900);
-	--c-muted: var(--n-500);
-	--c-accent: var(--a-600);
-	--c-accent-hover: var(--a-500);
-	--c-accent-ring: oklch(62% 0.18 52 / 0.22);
-
-	/* Rhythm */
-	--sp-1: 4px;
-	--sp-2: 8px;
-	--sp-3: 12px;
-	--sp-4: 16px;
-	--sp-5: 20px;
-	--sp-6: 24px;
-
-	/* Radii */
-	--r-sm: 6px;
-	--r-md: 10px;
 }
 
 * {
@@ -201,115 +165,10 @@
 	gap: var(--sp-2);
 }
 
-/* Base button */
-.m-login__btn {
-	all: unset;
-	box-sizing: border-box;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 44px;
-	padding: 0 var(--sp-4);
-	border-radius: var(--r-sm);
-	font-size: 16px;
-	font-weight: 600;
-	cursor: pointer;
-	transition:
-		background 150ms ease,
-		color 150ms ease,
-		box-shadow 150ms ease,
-		opacity 150ms ease;
-	user-select: none;
-}
-
-.m-login__btn:active {
-	opacity: 0.72;
-}
-
-.m-login__btn:focus-visible {
-	outline: 2px solid var(--c-accent);
-	outline-offset: 2px;
-}
-
-/* Primary — filled accent */
-.m-login__btn--primary {
-	background: var(--c-accent);
-	color: var(--n-0);
-	box-shadow: 0 1px 2px oklch(0% 0 0 / 0.1);
-}
-
-/* Secondary — outlined accent */
-.m-login__btn--secondary {
-	border: 1.5px solid var(--c-accent);
-	color: var(--c-accent);
-}
-
-/* Touch taps can leave :hover active while a dialog is open. */
-@media (hover: hover) and (pointer: fine) {
-	.m-login__btn--primary:hover {
-		background: var(--c-accent-hover);
-		box-shadow: 0 2px 6px oklch(0% 0 0 / 0.14);
-	}
-
-	.m-login__btn--secondary:hover {
-		background: var(--a-100);
-	}
-}
 
 .m-login {
 	padding: max(12px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
 		max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-}
-
-.m-signup {
-	width: min(400px, calc(100% - 32px));
-	max-height: calc(100% - 32px);
-	margin: auto;
-	padding: var(--sp-6);
-	overflow-y: auto;
-	overscroll-behavior: contain;
-	border: 1px solid var(--c-border);
-	border-radius: var(--r-md);
-	background: var(--c-surface);
-	color: var(--c-text);
-	box-shadow: 0 12px 40px oklch(0% 0 0 / 0.18);
-	font:
-		16px/1.6 system-ui,
-		sans-serif;
-}
-
-.m-signup::backdrop {
-	background: oklch(14% 0.01 250 / 0.38);
-}
-.m-signup h2 {
-	margin: 0 0 var(--sp-4);
-	font-size: 20px;
-	color: var(--c-accent);
-}
-.m-signup p {
-	margin: 0 0 var(--sp-3);
-}
-.m-signup ol {
-	margin: 0 0 var(--sp-4);
-	padding-left: 24px;
-}
-.m-signup li + li {
-	margin-top: var(--sp-2);
-}
-.m-signup__example {
-	padding: var(--sp-3);
-	border-radius: var(--r-sm);
-	background: var(--n-50);
-	color: var(--c-muted);
-}
-.m-signup__actions {
-	display: flex;
-	gap: var(--sp-2);
-	margin-top: var(--sp-5);
-}
-.m-signup__actions .m-login__btn {
-	flex: 1;
-	min-width: 0;
 }
 
 /* Landscape uses the available width; fields must not retain their intrinsic input width. */
