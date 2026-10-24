@@ -10,6 +10,7 @@ export function createMapLoadRecovery({
 	recoveryTimeoutMs = 10000
 }) {
 	let attempt = 0;
+	let request = 0;
 	let context = null;
 	let timer = null;
 	let phase = 'idle';
@@ -51,16 +52,18 @@ export function createMapLoadRecovery({
 	function awaitRequest(callback, mode) {
 		clearDeadline();
 		const id = attempt;
+		const requestId = ++request;
+		const awaiting = () => active(id) && requestId === request && phase === 'recovering';
 		phase = 'recovering';
 		recoveryMode = mode;
 		show(mode === 'previous' ? '地图加载失败，正在返回原位置…' : mode === 'prontera' ? '正在返回普隆德拉…' : '正在重试加载地图…', true);
 		timer = setTimer(() => {
-			if (active(id) && phase === 'recovering') failRequest('恢复请求超时，请重试加载或退出游戏。');
+			if (awaiting()) failRequest('恢复请求超时，请重试加载或退出游戏。');
 		}, recoveryTimeoutMs);
 		Promise.resolve().then(() => {
-			if (active(id) && phase === 'recovering') return callback();
+			if (awaiting()) return callback();
 		}).catch(() => {
-			if (active(id) && phase === 'recovering') failRequest('无法完成地图恢复，请重试加载或退出游戏。');
+			if (awaiting()) failRequest('无法完成地图恢复，请重试加载或退出游戏。');
 		});
 	}
 

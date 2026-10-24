@@ -190,20 +190,24 @@ StatusIcons.update = function update(index, state, life) {
 };
 
 function loadStatusIcon(index) {
+	const status = _status[index];
+	const request = {};
+	status.iconRequest = request;
+	const current = () => _status[index] === status && status.iconRequest === request;
 	const isTKM = Session.Entity && DB.isTaeKwon(Session.Entity._job);
 	const tkmVariant = (isTKM && TKM_ICON_OVERRIDE[index]) || null;
 	const iconName = tkmVariant || StatusTable[index].icon;
 	_status[index].tkmVariant = tkmVariant;
 	Client.loadFile(`data/texture/effect/${iconName}`, data => {
 		Texture.load(data, function () {
-			if (_status[index] && !_status[index].img) {
-				addResizedStatusIcon(this, index);
+			if (current() && !status.img) {
+				addResizedStatusIcon(this, index, current);
 			}
 		});
 	});
 }
 
-function addResizedStatusIcon(img, index) {
+function addResizedStatusIcon(img, index, current) {
 	if (img.width < 33 && img.height < 33) {
 		_status[index].img = img;
 		_status[index].icon = img.toDataURL();
@@ -231,12 +235,13 @@ function addResizedStatusIcon(img, index) {
 	ctx.restore();
 
 	const resizedImg = new Image();
-	resizedImg.src = canvas.toDataURL();
 	resizedImg.onload = () => {
+		if (!current()) return;
 		_status[index].img = resizedImg;
 		_status[index].icon = resizedImg.src;
 		addElement(_status[index].element);
 	};
+	resizedImg.src = canvas.toDataURL();
 }
 
 /**

@@ -105,6 +105,19 @@ describe('map loading recovery', () => {
 		await vi.advanceTimersByTimeAsync(60000);
 		expect(vi.getTimerCount()).toBe(0);
 	});
+	it('ignores a timed-out request rejection after retrying the same map attempt', async () => {
+		let reject;
+		onRecover.mockReturnValue(new Promise((_, r) => { reject = r; }));
+		recovery.begin({ token: 1 }); recovery.failed('missing');
+		await vi.advanceTimersByTimeAsync(10000);
+		state().onRetry(); await Promise.resolve();
+		expect(onRetry).toHaveBeenCalledOnce();
+		reject(new Error('late failure'));
+		await vi.advanceTimersByTimeAsync(0);
+		expect(state().busy).toBe(true);
+		expect(state().message).toContain('正在重试');
+		expect(vi.getTimerCount()).toBe(1);
+	});
 	it('ignores a rejected promise belonging to a replaced loading attempt', async () => {
 		let reject;
 		onRecover.mockReturnValue(new Promise((_, r) => { reject = r; }));
