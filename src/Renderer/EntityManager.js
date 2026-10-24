@@ -385,6 +385,7 @@ function render(gl, modelView, projection, fog, renderEffects) {
 				const dx = _list[i].position[0] - playerX;
 				const dy = _list[i].position[1] - playerY;
 				if (dx * dx + dy * dy > viewAreaSq) {
+					if (_list[i].showExamName) _list[i].display.remove();
 					continue;
 				}
 			}
@@ -399,13 +400,14 @@ function render(gl, modelView, projection, fog, renderEffects) {
 /**
  * Intersect Entities
  */
-function intersect() {
+function intersect(all = false) {
+	const hits = [];
 	let i, count;
 	let entity;
 
 	// Stop rendering if no units to render (should never happened...)
 	if (!_list.length) {
-		return;
+		return all ? hits : null;
 	}
 
 	// Only re-sort pick list when entities or priority changed
@@ -448,12 +450,13 @@ function intersect() {
 				y > entity.boundingRect.y1 &&
 				y < entity.boundingRect.y2
 			) {
-				return entity;
+				if (!all) return entity;
+				hits.push(entity);
 			}
 		}
 	}
 
-	return null;
+	return all ? hits : null;
 }
 
 /**

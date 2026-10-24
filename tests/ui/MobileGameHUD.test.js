@@ -460,3 +460,24 @@ it('places the waiting entry in battle status and clears it after revival', () =
  expect(reopen.hidden).toBe(true);
  expect(root.querySelector('[data-target]').textContent).toBe('自动战斗已停止');
 });
+
+it('shows instance names and explicit attack in exams, retaining candidate buttons during polling', () => {
+ actions.attackExamTarget = vi.fn(); actions.chooseExamTarget = vi.fn(); actions.toggleAutoCombat = vi.fn();
+ const exam = { name: '转职目标们', canAttack: true, candidates: [
+  { id: 1, name: '转职目标', selected: false }, { id: 2, name: '转职目标们', selected: true }
+ ] };
+ view.update({ ...state, exam });
+ expect(root.querySelector('[data-auto-target]').hidden).toBe(true);
+ expect(root.querySelector('[data-target]').textContent).toBe('转职目标们');
+ expect(root.querySelector('[data-auto-toggle]').textContent).toBe('攻击');
+ const button = root.querySelector('[data-exam-target="1"]'); view.update({ ...state, exam });
+ expect(root.querySelector('[data-exam-target="1"]')).toBe(button);
+ button.click(); expect(actions.chooseExamTarget).toHaveBeenCalledWith(1); expect(actions.attackExamTarget).not.toHaveBeenCalled();
+ click('[data-auto-toggle]'); expect(actions.attackExamTarget).toHaveBeenCalledOnce(); expect(actions.toggleAutoCombat).not.toHaveBeenCalled();
+ view.update({ ...state, exam: { name: '', canAttack: false, candidates: [] } });
+ expect(root.querySelector('[data-auto-toggle]').disabled).toBe(true);
+ expect(root.querySelector('[data-exam-targets]').hidden).toBe(true);
+ view.update(state); expect(root.querySelector('[data-auto-toggle]').disabled).toBe(false);
+ expect(root.querySelector('[data-auto-target]').hidden).toBe(false);
+ click('[data-auto-toggle]'); expect(actions.toggleAutoCombat).toHaveBeenCalledOnce();
+});

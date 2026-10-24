@@ -1,3 +1,4 @@
+import { isIdentificationExam, createExamTargets } from 'UI/Game/IdentificationExam.js';
 import { createSelfActions } from 'UI/Game/SelfActions.js';
 import { gameDeathSnapshot } from 'UI/Game/GameDeath.js';
 import { createScreenWakeLock } from './ScreenWakeLock.js';
@@ -55,6 +56,7 @@ let selfActions;
 let controls;
 let shortcuts;
 let autoCombat;
+let examTargets;
 let inventory;
 let equipment;
 let containers;
@@ -72,6 +74,8 @@ let modal = false;
 HUD.actions = {};
 
 function cancelSceneInput() {
+	examTargets?.clear();
+	if (isIdentificationExam(MapRenderer.currentMap)) Commands.stopAttack();
 	autoCombat?.stop();
 	shortcuts?.cancel();
 	controls?.cancel();
@@ -97,6 +101,7 @@ function snapshot() {
 	const diagnosticStart = CombatDiagnostics.begin();
 	view.updateShortcuts(shortcuts.snapshot());
 	view.update({
+		exam: isIdentificationExam(MapRenderer.currentMap) ? examTargets?.snapshot() : null,
 		death: gameDeathSnapshot(),
 		autoCombat: autoCombat.snapshot(),
 		unreadMail: gameMailUnread(),
@@ -138,6 +143,20 @@ HUD.onAppend = function () {
 			Session.Entity &&
 			Session.Entity.action !== Session.Entity.ACTION.DIE
 		);
+	examTargets = createExamTargets({
+		enabled: () => enabled() && isIdentificationExam(MapRenderer.currentMap),
+		get: id => EntityManager.get(id),
+		focus: () => EntityManager.getFocusEntity(),
+		stop: Commands.stopAttack,
+		select: entity => {
+			const previous = EntityManager.getFocusEntity();
+			if (previous && previous !== entity) previous.onFocusEnd();
+			EntityManager.setFocusEntity(entity);
+			EntityManager.setOverEntity(entity);
+			entity.onFocus({ attack: false });
+		},
+		attack: () => Commands.attackSelected(controls?.isMoving() || false)
+	});
 	autoCombat = createGameAutoCombatRuntime({
 		enabled,
 		isMoving: () => controls?.isMoving() || false,
@@ -201,6 +220,14 @@ HUD.onAppend = function () {
 		clearPlayerSelection: () => {
 			cancelSceneInput();
 			EntityManager.setFocusEntity(null);
+			snapshot();
+		},
+		chooseExamTarget: id => {
+			examTargets.choose(id);
+			snapshot();
+		},
+		attackExamTarget: () => {
+			if (!examTargets.attack()) view.notice('请先选择魔物');
 			snapshot();
 		},
 		toggleAutoCombat: () => {
@@ -278,6 +305,8 @@ HUD.onAppend = function () {
 	controls = bindPointerControls(HUD.getRoot(), Renderer.canvas, {
 		enabled,
 		startMove: () => {
+			examTargets.clear();
+			if (isIdentificationExam(MapRenderer.currentMap)) Commands.stopAttack();
 			autoCombat.pauseForMovement();
 		},
 		move: (x, y) => {
@@ -306,6 +335,7 @@ HUD.onAppend = function () {
 		tap: (x, y, pressedTarget) => {
 			if (pressedTarget && EntityManager.get(pressedTarget.GID) !== pressedTarget) return;
 			const hit = pressedTarget || Commands.pickSceneEntity(x, y);
+			examTargets.clear();
 			if (
 				hit &&
 				[hit.constructor.TYPE_ITEM, hit.constructor.TYPE_NPC, hit.constructor.TYPE_NPC2].includes(
@@ -319,9 +349,13 @@ HUD.onAppend = function () {
 				autoCombat.stop('手动施法，自动战斗已停止');
 				shortcuts.pick(x, y);
 			} else if (hit && hit.objecttype === hit.constructor.TYPE_MOB) {
-				if (!autoCombat.attackTarget(hit.GID)) view.notice('当前无法攻击这只魔物');
+				if (isIdentificationExam(MapRenderer.currentMap)) {
+					autoCombat.stop();
+					examTargets.pick(EntityManager.intersect(true));
+				} else if (!autoCombat.attackTarget(hit.GID)) view.notice('当前无法攻击这只魔物');
 			} else {
 				autoCombat.stop('手动操作，自动战斗已停止');
+				if (isIdentificationExam(MapRenderer.currentMap)) Commands.stopAttack();
 				Commands.tapScene(x, y);
 			}
 
@@ -389,6 +423,8 @@ HUD.onAppend = function () {
 	updateViewport();
 };
 HUD.onRemove = function (resetInteraction = true) {
+	examTargets?.clear();
+	examTargets = null;
 	selfActions?.destroy();
 	selfActions = null;
 	releaseScreenWakeLock?.();

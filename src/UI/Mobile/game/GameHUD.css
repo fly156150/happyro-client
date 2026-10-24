@@ -1061,3 +1061,9 @@ dd {
 }
 
 .battle-status .death-reopen[hidden] { display: none; }
+
+.exam-targets { display: grid; gap: 6px; max-height: min(180px, 30dvh); overflow-y: auto; padding: 8px; }
+.exam-targets[hidden], .battle-tools [hidden] { display: none; }
+.exam-targets button { border: 1px solid #ecce94; border-radius: 6px; padding: 8px; background: #483a25b8; text-align: left; overflow-wrap: anywhere; }
+.exam-targets button[aria-pressed="true"] { background: #78603b; }
+.battle-status.exam-status [data-target] { white-space: normal; overflow: visible; overflow-wrap: anywhere; }

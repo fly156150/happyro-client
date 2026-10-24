@@ -1,6 +1,6 @@
-vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({ getCurrentAdventureMap: () => 'izlude', normalizeAdventureMap: value => value, getAdventureActionState: () => ({ allowed: false }), teleportToCoordinate: vi.fn() }));
+vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({ getCurrentAdventureMap: () => state.map, normalizeAdventureMap: value => value, getAdventureActionState: () => ({ allowed: false }), teleportToCoordinate: vi.fn() }));
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-const state = vi.hoisted(() => ({ session: {}, act: vi.fn(), stop: vi.fn() }));
+const state = vi.hoisted(() => ({ map: 'izlude', session: {}, act: vi.fn(), stop: vi.fn() }));
 vi.mock('Engine/SessionStorage.js', () => ({ default: state.session }));
 vi.mock('UI/Game/GameAutoCombat.js', async () => {
 	const { createAutoCombatController } = await import('../../src/UI/Game/AutoCombatController.js');
@@ -16,7 +16,7 @@ import { notifyGameInput } from '../../src/Controls/GameInputIntent.js';
 import { endConnection } from '../../src/Network/ConnectionLifecycle.js';
 let runtime;
 beforeEach(() => {
-	vi.useFakeTimers(); vi.clearAllMocks();
+	vi.useFakeTimers(); vi.clearAllMocks(); state.map = 'izlude';
 	Object.assign(state.session, { Playing: true, FreezeUI: false, Entity: { action: 0, ACTION: { DIE: 9, WALK: 1 } } });
 	vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
 });
@@ -69,4 +69,14 @@ it('map disposal allows a fresh runtime with one timer and no inherited attack s
 	runtime = createGameAutoCombatRuntime(); runtime.start(); runtime.destroy();
 	runtime = createGameAutoCombatRuntime(); expect(vi.getTimerCount()).toBe(1);
 	expect(runtime.snapshot().active).toBe(false); vi.advanceTimersByTime(2000); expect(state.act).toHaveBeenCalledOnce();
+});
+
+it.each(['in_moc_16', 'job_hunte', 'job3_rang02'])('stops auto-combat in %s without automatically restarting on exit', map => {
+ runtime = createGameAutoCombatRuntime(); runtime.start();
+ state.map = map; vi.advanceTimersByTime(200);
+ expect(runtime.snapshot().active).toBe(false); expect(runtime.start()).toBe(false);
+ expect(runtime.attackTarget(1)).toBe(false); expect(state.act).toHaveBeenCalledOnce();
+ state.map = 'prontera'; vi.advanceTimersByTime(1000);
+ expect(runtime.snapshot().active).toBe(false); expect(state.act).toHaveBeenCalledOnce();
+ expect(runtime.start()).toBe(true);
 });

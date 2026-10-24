@@ -198,7 +198,12 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	});
 	listen($('[data-auto-toggle]'), 'click', () => {
 		if (snapshot.target?.player || snapshot.target?.pet || snapshot.target?.mercenary || snapshot.target?.homunculus) actions.clearPlayerSelection();
+		else if (snapshot.exam) actions.attackExamTarget();
 		else actions.toggleAutoCombat();
+	});
+	listen($('[data-exam-targets]'), 'click', event => {
+		const button = event.target.closest('[data-exam-target]');
+		if (button) actions.chooseExamTarget(Number(button.dataset.examTarget));
 	});
 	listen($('[data-interact]'), 'click', () => actions.interact());
 	for (const button of root.querySelectorAll('[data-player-action]')) {
@@ -877,7 +882,27 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			const target = next.death?.dead ? null : next.target;
 			const player = target?.player, pet = target?.pet, mercenary = target?.mercenary, homunculus = target?.homunculus;
 			const hasActions = Boolean(player || pet || mercenary || homunculus);
-			text('[data-auto-toggle]', hasActions ? '取消选择' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
+			const exam = next.death?.dead ? null : next.exam;
+			const candidates = exam?.candidates || [];
+			const list = $('[data-exam-targets]');
+			list.hidden = candidates.length < 2;
+			// Preserve buttons during polling so a pointer release still clicks the same instance.
+			const key = JSON.stringify(candidates);
+			if (list.dataset.entries !== key) {
+				list.dataset.entries = key;
+				list.replaceChildren(...candidates.map((entry, index) => {
+					const button = document.createElement('button');
+					button.dataset.examTarget = entry.id;
+					button.textContent = `${index + 1}. ${entry.name}`;
+					button.setAttribute('aria-pressed', String(entry.selected));
+					return button;
+				}));
+			}
+			$('[data-auto-target]').hidden = Boolean(next.exam);
+			$('[data-auto-toggle]').disabled = Boolean(next.exam && !hasActions && !exam?.canAttack);
+			if (exam && !hasActions) text('[data-target]', exam.name || '点击魔物选择目标');
+			$('.battle-status').classList.toggle('exam-status', Boolean(exam));
+			text('[data-auto-toggle]', hasActions ? '取消选择' : next.exam ? '攻击' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
 			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!hasActions && Boolean(next.autoCombat?.active)));
 			$('[data-auto-toggle]').classList.toggle('clear-selection', hasActions);
 			$('[data-player-actions]').hidden = !player;

@@ -1,3 +1,5 @@
+import { isIdentificationExam } from './IdentificationExam.js';
+import { getCurrentAdventureMap } from 'UI/Components/GameTools/AdventureActionService.js';
 import { registerAutomationCombat } from './GameAutomation.js';
 import { cancelAutoCombatTeleport, consumeAutoCombatTeleport } from './AutoCombatTeleport.js';
 import Session from 'Engine/SessionStorage.js';
@@ -26,6 +28,7 @@ export function createGameAutoCombatRuntime({
 	const canRun = () =>
 		Boolean(
 			!destroyed &&
+			!isIdentificationExam(getCurrentAdventureMap()) &&
 			enabled() &&
 			Session.Playing &&
 			!Session.FreezeUI &&
@@ -65,7 +68,7 @@ export function createGameAutoCombatRuntime({
 		return false;
 	});
 	const timer = window.setInterval(() => {
-		if (Session.Entity?.action === Session.Entity?.ACTION.DIE) cancelAutoCombatTeleport();
+		if (isIdentificationExam(getCurrentAdventureMap()) || Session.Entity?.action === Session.Entity?.ACTION.DIE) cancelAutoCombatTeleport();
 		if (canRun() && consumeAutoCombatTeleport()) controller.start();
 		if (
 			canRun() &&

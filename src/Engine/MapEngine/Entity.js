@@ -1,3 +1,5 @@
+import MapRenderer from 'Renderer/MapRenderer.js';
+import { isIdentificationExam } from 'UI/Game/IdentificationExam.js';
 import { invalidateCompanionPrompts } from 'UI/Game/CompanionPrompt.js';
 import PetEvolution from 'UI/Components/PetEvolution/PetEvolution.js';
 import { chatSpeakerMetadata } from 'UI/Game/ChatSpeaker.js';
@@ -164,6 +166,7 @@ function onEntitySpam(pkt) {
 
 	syncWhiteImprison(entity, EffectManager);
 	localizeEntityName(entity, pkt.name);
+	entity.showExamName = entity.objecttype === Entity.TYPE_MOB && isIdentificationExam(MapRenderer.currentMap);
 
 	if (pkt.effectState & StatusState.EffectState.FALCON && DB.isHunter(pkt.job)) {
 		if (!entity.falcon) {

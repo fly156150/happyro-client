@@ -21,7 +21,7 @@ let directionalMovementPlayer = null;
 
 export function selectedTarget() {
 	const target = EntityManager.getFocusEntity();
-	return target && EntityManager.get(target.GID) === target && target.action !== target.ACTION.DIE ? target : null;
+	return target && EntityManager.get(target.GID) === target && target.action !== target.ACTION.DIE && !target.remove_tick ? target : null;
 }
 export function canAttack(target) {
 	if (!target || target === Session.Entity) return false;

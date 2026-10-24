@@ -155,6 +155,13 @@ const renderGUI = (function renderGUIClosure() {
 		if (entity.emblem.display) {
 			entity.emblem.render(_matrix);
 		}
+		if (entity.showExamName) {
+			if (entity.serverMonsterName && entity.effectColor[3] && entity.action !== entity.ACTION.DIE && entity.remove_tick === 0) {
+				entity.display.add();
+			} else {
+				entity.display.remove();
+			}
+		}
 		if (entity.display.display) {
 			entity.display.render(_matrix);
 		}
