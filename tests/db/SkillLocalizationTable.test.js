@@ -52,8 +52,8 @@ describe('SkillLocalizationTable', () => {
 		expect(SkillLocalizationTable[3036].description).toContain('范围：自身周围 7 格');
 		expect(SkillLocalizationTable[5452].description).toContain('伤害受自学战术');
 		expect(SkillLocalizationTable[2430].description).toContain('施法者乐理课程等级');
-		expect(SkillLocalizationTable[5481].description).toContain('伤害受猎影等级');
-		expect(SkillLocalizationTable[5489].description).toContain('伤害受暗转炮等级');
+		expect(SkillLocalizationTable[5481].description).toContain('伤害受诡影狩猎等级');
+		expect(SkillLocalizationTable[5489].description).toContain('伤害受暗战炮等级');
 		expect(SkillLocalizationTable[298].description).toContain('目标：单个敌人');
 		expect(SkillLocalizationTable[407].description).toContain('类型：辅助');
 		expect(SkillLocalizationTable[5204].name).toBe('侍从武器·幻影');
@@ -72,8 +72,8 @@ describe('SkillLocalizationTable', () => {
 		expect(SkillLocalizationTable[3031].description).toContain('解除着火、出血、深度睡眠和睡眠');
 		expect(SkillLocalizationTable[3032].description).toContain('解除冰冻、冷冻和冻结');
 		expect(SkillLocalizationTable[2253].description).toContain('周围 3×3 格时触发');
-		expect(SkillLocalizationTable[5463].description).toContain('朝阳、正午爆破、日落爆破');
-		expect(SkillLocalizationTable[5479].description).toContain('分身均施放暗转炮');
+		expect(SkillLocalizationTable[5463].description).toContain('天地一阳、天晨一阳、天阳');
+		expect(SkillLocalizationTable[5479].description).toContain('分身均施放暗战炮');
 		expect(SkillLocalizationTable[2414].description).toContain('箭矢不足 5 支时不会发动');
 		expect(SkillLocalizationTable[2418].description).toContain('箭矢不足 10 支时不会发动');
 		expect(SkillLocalizationTable[2494].description).toContain('准确的物品名称和数量');
@@ -137,13 +137,13 @@ describe('SkillLocalizationTable', () => {
 			5284: '圣灵镇魂',
 			5360: '矿工狂想曲',
 			5362: '晚霞小夜曲',
-			5434: '与铁虎共鸣',
-			5438: '与龟雪共鸣',
-			5443: '与玄鹿共鸣',
+			5434: '灵物交流：铁虎',
+			5438: '灵物交流：神龟',
+			5443: '灵物交流：玄鹿',
 			5460: '念力连击·冲击',
-			5488: '红炎炮',
-			5492: '暗转炮',
-			5506: '铁虎重击',
+			5488: '火焰炮',
+			5492: '暗战炮',
+			5506: '铁虎乱舞',
 			8024: '抹杀切割',
 			8029: '银脉冲锋',
 			8219: '光之盾',
@@ -179,7 +179,7 @@ describe('SkillLocalizationTable', () => {
 				/\b(?:Attack|Demolition|Endowed|Fire|Ground|MAX|Phantom|Poison|Random|Sign|Smoke Powder|Tear Gas|Water|Wind)\b/i
 			);
 			expect(`${entry.name}\n${entry.description}`).not.toMatch(
-				/\bFlee\b|\bzeny\b|\d+z\b|\s[Xx](?=\s?\d)|受课程|按课程|施法者课程|课程和职业|教训|符咒修炼|灵道术修炼|神秘生物精通|战斗自学|独学·魔导学|自学巫术|天机修炼|影子猎杀|冰闪炮|风魔手里剑－|苦无－|\(掌握等级/
+				/\bFlee\b|\bzeny\b|\d+z\b|\s[Xx](?=\s?\d)|受课程|按课程|施法者课程|课程和职业|教训|符咒修炼|灵道术修炼|神秘生物精通|战斗自学|独学·魔导学|自学巫术|天空精通|影子猎杀|冰闪炮|风魔手里剑－|苦无－|\(掌握等级/
 			);
 		}
 	});

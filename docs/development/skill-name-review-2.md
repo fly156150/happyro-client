@@ -1,0 +1,92 @@
+# 技能名称第二轮修订
+
+本次修订技能名称及直接引用，不调整效果与数值。以下为本次 86 项名称改动，供复核。状态词表另补充 58 项技能关联；物品装备说明中的历史名称尚未纳入本次修订。
+
+| ID | 标识 | 原名称 | 新名称 | 核对资料 |
+| --- | --- | --- | --- | --- |
+| 71 | `PR_SLOWPOISON` | 缓慢中毒 | 缓毒术 | [客户端名称资料](https://www.divine-pride.net/database/skill/71) |
+| 280 | `SA_FLAMELAUNCHER` | 火焰附加 | 火属性附加 | [客户端名称资料](https://www.divine-pride.net/database/skill/280) |
+| 281 | `SA_FROSTWEAPON` | 寒冰附加 | 水属性附加 | [客户端名称资料](https://www.divine-pride.net/database/skill/281) |
+| 282 | `SA_LIGHTNINGLOADER` | 雷电附加 | 风属性附加 | [客户端名称资料](https://www.divine-pride.net/database/skill/282) |
+| 283 | `SA_SEISMICWEAPON` | 地震附加 | 地属性附加 | [客户端名称资料](https://www.divine-pride.net/database/skill/283) |
+| 481 | `HP_MANARECHARGE` | 魔力充能 | 魔力减免 | [客户端名称资料](https://www.divine-pride.net/database/skill/481) |
+| 2417 | `WM_DOMINION_IMPULSE` | 支配冲动 | 支配动力 | [客户端名称资料](https://www.divine-pride.net/database/skill/2417) |
+| 5068 | `CG_SPECIALSINGER` | 熟练特殊歌手 | 职业演奏家 | [客户端名称资料](https://www.divine-pride.net/database/skill/5068) |
+| 5416 | `SOA_TALISMAN_MASTERY` | 符咒精通 | 符咒研究 | [客户端名称资料](https://www.divine-pride.net/database/skill/5416) |
+| 5417 | `SOA_SOUL_MASTERY` | 灵魂精通 | 引魂术研究 | [客户端名称资料](https://www.divine-pride.net/database/skill/5417) |
+| 5418 | `SOA_TALISMAN_OF_PROTECTION` | 守护符 | 护身符 | [客户端名称资料](https://www.divine-pride.net/database/skill/5418) |
+| 5420 | `SOA_TALISMAN_OF_MAGICIAN` | 魔法师符 | 法师符 | [客户端名称资料](https://www.divine-pride.net/database/skill/5420) |
+| 5422 | `SOA_TOTEM_OF_TUTELARY` | 守护图腾 | 城隍庙 | [客户端名称资料](https://www.divine-pride.net/database/skill/5422) |
+| 5424 | `SOA_TALISMAN_OF_SOUL_STEALING` | 摄魂符 | 窃魂平安符 | [客户端名称资料](https://www.divine-pride.net/database/skill/5424) |
+| 5433 | `SH_MYSTICAL_CREATURE_MASTERY` | 灵物理解 | 灵物互动 | [客户端名称资料](https://www.divine-pride.net/database/skill/5433) |
+| 5434 | `SH_COMMUNE_WITH_CHUL_HO` | 与铁虎共鸣 | 灵物交流：铁虎 | [客户端名称资料](https://www.divine-pride.net/database/skill/5434) |
+| 5435 | `SH_CHUL_HO_SONIC_CLAW` | 铁虎音速爪 | 铁虎空心爪 | [客户端名称资料](https://www.divine-pride.net/database/skill/5435) |
+| 5437 | `SH_HOGOGONG_STRIKE` | 虎高功乱打 | 虎高空乱打 | [客户端名称资料](https://www.divine-pride.net/database/skill/5437) |
+| 5438 | `SH_COMMUNE_WITH_KI_SUL` | 与龟雪共鸣 | 灵物交流：神龟 | [客户端名称资料](https://www.divine-pride.net/database/skill/5438) |
+| 5439 | `SH_KI_SUL_WATER_SPRAYING` | 龟雪洒水 | 神龟洒水炮 | [客户端名称资料](https://www.divine-pride.net/database/skill/5439) |
+| 5440 | `SH_MARINE_FESTIVAL_OF_KI_SUL` | 龟雪海洋祭典 | 神龟海洋庆典 | [客户端名称资料](https://www.divine-pride.net/database/skill/5440) |
+| 5441 | `SH_SANDY_FESTIVAL_OF_KI_SUL` | 龟雪沙滩祭典 | 神龟沙滩节 | [客户端名称资料](https://www.divine-pride.net/database/skill/5441) |
+| 5442 | `SH_KI_SUL_RAMPAGE` | 龟雪翻腾 | 神龟剧烈震荡 | [客户端名称资料](https://www.divine-pride.net/database/skill/5442) |
+| 5443 | `SH_COMMUNE_WITH_HYUN_ROK` | 与玄鹿共鸣 | 灵物交流：玄鹿 | [客户端名称资料](https://www.divine-pride.net/database/skill/5443) |
+| 5447 | `SH_TEMPORARY_COMMUNION` | 快速共鸣 | 急速交流 | [客户端名称资料](https://www.divine-pride.net/database/skill/5447) |
+| 5463 | `SKE_SKY_MASTERY` | 天空精通 | 天机修炼 | [客户端名称资料](https://www.divine-pride.net/database/skill/5463) |
+| 5464 | `SKE_WAR_BOOK_MASTERY` | 战争之书精通 | 兵法修炼 | [客户端名称资料](https://www.divine-pride.net/database/skill/5464) |
+| 5465 | `SKE_RISING_SUN` | 朝阳 | 天地一阳 | [客户端名称资料](https://www.divine-pride.net/database/skill/5465) |
+| 5466 | `SKE_NOON_BLAST` | 正午爆破 | 天晨一阳 | [客户端名称资料](https://www.divine-pride.net/database/skill/5466) |
+| 5467 | `SKE_SUNSET_BLAST` | 日落爆破 | 天阳 | [客户端名称资料](https://www.divine-pride.net/database/skill/5467) |
+| 5468 | `SKE_RISING_MOON` | 月升 | 天地一月 | [客户端名称资料](https://www.divine-pride.net/database/skill/5468) |
+| 5469 | `SKE_MIDNIGHT_KICK` | 午夜踢 | 天晨一月 | [客户端名称资料](https://www.divine-pride.net/database/skill/5469) |
+| 5470 | `SKE_DAWN_BREAK` | 破晓 | 天月 | [客户端名称资料](https://www.divine-pride.net/database/skill/5470) |
+| 5471 | `SKE_TWINKLING_GALAXY` | 闪耀银河 | 天地万星 | [客户端名称资料](https://www.divine-pride.net/database/skill/5471) |
+| 5472 | `SKE_STAR_BURST` | 星辰爆发 | 天命落星 | [客户端名称资料](https://www.divine-pride.net/database/skill/5472) |
+| 5473 | `SKE_STAR_CANNON` | 星辰炮 | 天星 | [客户端名称资料](https://www.divine-pride.net/database/skill/5473) |
+| 5474 | `SKE_ALL_IN_THE_SKY` | 天穹万象 | 天罗万象 | [客户端名称资料](https://www.divine-pride.net/database/skill/5474) |
+| 5475 | `SKE_ENCHANTING_SKY` | 苍穹附魔 | 天气地神 | [客户端名称资料](https://www.divine-pride.net/database/skill/5475) |
+| 5476 | `SS_TOKEDASU` | 消融 | 致命融化 | [客户端名称资料](https://www.divine-pride.net/database/skill/5476) |
+| 5478 | `SS_AKUMUKESU` | 噩梦消除 | 消除噩梦 | [客户端名称资料](https://www.divine-pride.net/database/skill/5478) |
+| 5479 | `SS_SHINKIROU` | 蜃景 | 海市蜃楼 | [客户端名称资料](https://www.divine-pride.net/database/skill/5479) |
+| 5480 | `SS_KAGEGARI` | 猎影 | 诡影狩猎 | [客户端名称资料](https://www.divine-pride.net/database/skill/5480) |
+| 5481 | `SS_KAGENOMAI` | 影舞 | 诡影舞动 | [客户端名称资料](https://www.divine-pride.net/database/skill/5481) |
+| 5482 | `SS_KAGEGISSEN` | 影闪 | 诡影闪光 | [客户端名称资料](https://www.divine-pride.net/database/skill/5482) |
+| 5483 | `SS_FUUMASHOUAKU` | 风魔手里剑·掌握 | 风魔飞镖·掌握 | [客户端名称资料](https://www.divine-pride.net/database/skill/5483) |
+| 5484 | `SS_FUUMAKOUCHIKU` | 风魔手里剑 - 构筑 | 风魔飞镖·构筑 | [客户端名称资料](https://www.divine-pride.net/database/skill/5484) |
+| 5485 | `SS_KUNAIWAIKYOKU` | 苦无 - 扭曲 | 飞刀·扭曲 | [客户端名称资料](https://www.divine-pride.net/database/skill/5485) |
+| 5486 | `SS_KUNAIKAITEN` | 苦无 - 旋转 | 飞刀·旋转 | [客户端名称资料](https://www.divine-pride.net/database/skill/5486) |
+| 5487 | `SS_KUNAIKUSSETSU` | 苦无 - 折射 | 飞刀·曲折 | [客户端名称资料](https://www.divine-pride.net/database/skill/5487) |
+| 5488 | `SS_SEKIENHOU` | 红炎炮 | 火焰炮 | [客户端名称资料](https://www.divine-pride.net/database/skill/5488) |
+| 5489 | `SS_REIKETSUHOU` | 冷血炮 | 冷焰炮 | [客户端名称资料](https://www.divine-pride.net/database/skill/5489) |
+| 5492 | `SS_ANTENPOU` | 暗转炮 | 暗战炮 | [客户端名称资料](https://www.divine-pride.net/database/skill/5492) |
+| 5493 | `SS_KAGEAKUMU` | 暗影·梦魇 | 诡影·噩梦 | [客户端名称资料](https://www.divine-pride.net/database/skill/5493) |
+| 5494 | `SS_HITOUAKUMU` | 梦魇苦无 | 飞刀·噩梦 | [客户端名称资料](https://www.divine-pride.net/database/skill/5494) |
+| 5495 | `SS_ANKOKURYUUAKUMU` | 暗黑龙·梦魇 | 暗黑龙·噩梦 | [客户端名称资料](https://www.divine-pride.net/database/skill/5495) |
+| 5499 | `SS_FOUR_CHARM` | 四色护符 | 四色符 | [客户端名称资料](https://www.divine-pride.net/database/skill/5499) |
+| 5500 | `NW_WILD_SHOT` | 野性射击 | 狂野射击 | [客户端名称资料](https://www.divine-pride.net/database/skill/5500) |
+| 5501 | `NW_MIDNIGHT_FALLEN` | 午夜坠落 | 午夜殒落 | [客户端名称资料](https://www.divine-pride.net/database/skill/5501) |
+| 5502 | `SKE_SKY_SUN` | 天空之日 | 天气神阳 | [客户端名称资料](https://www.divine-pride.net/database/skill/5502) |
+| 5503 | `SKE_SKY_MOON` | 天空之月 | 天气神月 | [客户端名称资料](https://www.divine-pride.net/database/skill/5503) |
+| 5504 | `SKE_STAR_LIGHT_KICK` | 星光踢 | 天星地行 | [客户端名称资料](https://www.divine-pride.net/database/skill/5504) |
+| 5505 | `HN_OVERCOMING_CRISIS` | 克服危机 | 征服危机 | [客户端名称资料](https://www.divine-pride.net/database/skill/5505) |
+| 5506 | `SH_CHUL_HO_BATTERING` | 铁虎重击 | 铁虎乱舞 | [客户端名称资料](https://www.divine-pride.net/database/skill/5506) |
+| 5507 | `SH_HYUN_ROK_SPIRIT_POWER` | 玄禄灵力 | 玄鹿灵力释放 | [客户端名称资料](https://www.divine-pride.net/database/skill/5507) |
+| 6001 | `DK_DRAGONIC_BREATH` | 龙之呼吸 | 天龙气息 | [客户端名称资料](https://www.divine-pride.net/database/skill/6001) |
+| 6002 | `MT_SPARK_BLASTER` | 火花爆破 | 火花四溅 | [客户端名称资料](https://www.divine-pride.net/database/skill/6002) |
+| 6005 | `BO_EXPLOSIVE_POWDER` | 爆炸粉末 | 爆破粉末 | [客户端名称资料](https://www.divine-pride.net/database/skill/6005) |
+| 6502 | `DK_DRAGONIC_PIERCE` | 龙之穿刺 | 神龙贯刺 | [客户端名称资料](https://www.divine-pride.net/database/skill/6502) |
+| 6503 | `IG_RADIANT_SPEAR` | 光辉长矛 | 光辉刺击 | [客户端名称资料](https://www.divine-pride.net/database/skill/6503) |
+| 6504 | `IG_IMPERIAL_CROSS` | 帝国十字 | 帝国十字斩 | [客户端名称资料](https://www.divine-pride.net/database/skill/6504) |
+| 6505 | `IG_IMPERIAL_PRESSURE` | 帝国压力 | 霸权震域 | [客户端名称资料](https://www.divine-pride.net/database/skill/6505) |
+| 6506 | `MT_RUSH_STRIKE` | 冲锋打击 | 冲锋斩击 | [客户端名称资料](https://www.divine-pride.net/database/skill/6506) |
+| 6507 | `MT_POWERFUL_SWING` | 强力挥击 | 爆发横扫 | [客户端名称资料](https://www.divine-pride.net/database/skill/6507) |
+| 6508 | `MT_ENERGY_CANNONADE` | 能量炮击 | 能量轰炸 | [客户端名称资料](https://www.divine-pride.net/database/skill/6508) |
+| 6510 | `BO_DUST_EXPLOSION` | 粉尘爆炸 | 星尘炸裂 | [客户端名称资料](https://www.divine-pride.net/database/skill/6510) |
+| 6511 | `SHC_CROSS_SLASH` | 交叉斩 | 十字斩击 | [客户端名称资料](https://www.divine-pride.net/database/skill/6511) |
+| 6512 | `ABC_HIT_AND_SLIDING` | 滑步打击 | 突击滑行 | [客户端名称资料](https://www.divine-pride.net/database/skill/6512) |
+| 6513 | `ABC_CHASING_BREAK` | 追击破坏 | 追击突断 | [客户端名称资料](https://www.divine-pride.net/database/skill/6513) |
+| 6514 | `ABC_CHASING_SHOT` | 追击射击 | 追袭射击 | [客户端名称资料](https://www.divine-pride.net/database/skill/6514) |
+| 6515 | `ABC_ABYSS_FLAME` | 深渊烈焰 | 深渊之焰 | [客户端名称资料](https://www.divine-pride.net/database/skill/6515) |
+| 6516 | `AG_ENERGY_CONVERSION` | 能量转换 | 能量转化 | [客户端名称资料](https://www.divine-pride.net/database/skill/6516) |
+| 6517 | `EM_PSYCHIC_STREAM` | 念力洪流 | 心灵波流 | [客户端名称资料](https://www.divine-pride.net/database/skill/6517) |
+| 6518 | `CD_DIVINUS_FLOS` | 神圣之花 | 神圣花雨 | [客户端名称资料](https://www.divine-pride.net/database/skill/6518) |
+| 6519 | `IQ_BLAZING_FLAME_BLAST` | 炽焰爆破 | 烈焰爆弹 | [客户端名称资料](https://www.divine-pride.net/database/skill/6519) |
+| 6520 | `WH_WILD_WALK` | 荒野疾行 | 狂野疾行 | [客户端名称资料](https://www.divine-pride.net/database/skill/6520) |
+| 6521 | `TR_RHYTHMICAL_WAVE` | 节奏波 | 节奏战波 | [客户端名称资料](https://www.divine-pride.net/database/skill/6521) |
