@@ -989,8 +989,8 @@ export function createEquipment({
 			for (let i = 0; i < equipmentKeys.length; i++) {
 				const key = equipmentKeys[i];
 				const equipmentItem = _list[key];
-				if (equipmentItem.location) {
-					SwitchEquip.equip(equipmentItem, equipmentItem.location, false);
+				if (equipmentItem.equipped) {
+					SwitchEquip.equip(equipmentItem, equipmentItem.equipped, false);
 				}
 			}
 		};

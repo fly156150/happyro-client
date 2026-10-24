@@ -742,13 +742,7 @@ function onFavItemList(pkt) {
  * Received Switch Equip List
  */
 function onSwitchEquipList(pkt) {
-	if (pkt && pkt.ItemInfo) {
-		pkt.ItemInfo.forEach(function (item) {
-			if (Inventory.getUI().getItemByIndex(item.index)) {
-				Inventory.getUI().addItemtoSwitch(item.index, item.location);
-			}
-		});
-	}
+	if (pkt && pkt.ItemInfo) Inventory.getUI().setSwitchItems(pkt.ItemInfo);
 }
 
 /**

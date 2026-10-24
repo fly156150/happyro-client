@@ -70,3 +70,9 @@
 `DesktopLightTheme.css` 集中管理桌面浅色背景、边框、文字、交互色及滚动条，仅由桌面战斗辅助及冒险工具加载。`AutoCombatLight.css` 与 `GameToolsLight.css` 负责各窗口的外观映射；共享业务组件和移动端样式不依赖这些文件。主题层不修改列表比例、角色表单列宽或底栏按钮高度。
 
 桌面浅色窗口须设置 `GUIComponent.nativeScrolling = true`，让浏览器滚动条主题实际生效；否则框架会注入旧 RO 自绘滚动条并将 `overflow-y` 改为 `hidden`。验收须在真实 GUIComponent 窗口检查无 `.ro-custom-scrollbar`，并验证滚轮移动。
+
+## 背包与装备快照
+
+完整背包列表先清空旧背包、已装备索引和装备模型，再按封包重建；装备切换完整列表替换旧配置，空列表也会清空。区分物品许可部位 `location`、实际穿戴部位 `equipped` 和切换配置部位，不能互相代替。
+
+切换预览使用独立副本，不修改真实装备；迟到的图片回调须核对当前配置或预览对象，多部位装备绘制和清理所有匹配格子。转职后的双持权限由服务端刷新，不要求重新登录。跨仓库边界与自动化证据见[装备权限审查](../../../../docs/development/equipment-permission-audit/README.md)。

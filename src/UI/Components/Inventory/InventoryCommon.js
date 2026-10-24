@@ -606,6 +606,7 @@ export function createInventory(config) {
 	 */
 	Component.clearItems = function clearItems() {
 		this.list.length = 0;
+		this.equippedItems.length = 0;
 		if (equipSwitch) this.equipswitchlist.length = 0;
 		this.newItems.length = 0;
 		this.getRoot().querySelector('.container .content')?.replaceChildren();
@@ -737,12 +738,12 @@ export function createInventory(config) {
 			return false;
 		}
 
-		const isInSwitchList = equipSwitch
-			? Component.equipswitchlist.some(equipItem => equipItem.index === item.index)
-			: false;
+		const switchItem = equipSwitch
+			? Component.equipswitchlist.find(entry => entry.index === item.index)
+			: undefined;
 
-		if (isInSwitchList) {
-			SwitchEquip.equip(item, item.location, true);
+		if (switchItem) {
+			SwitchEquip.equip(switchItem, switchItem.location, true);
 		}
 
 		if (tab === _preferences.tab) {
@@ -791,14 +792,16 @@ export function createInventory(config) {
 				}
 			}
 
-			if (isInSwitchList) {
+			if (switchItem) {
 				Client.loadFile(DB.INTERFACE_PATH + 'swap_equipment/bg_change.bmp', data => {
+					if (!this.equipswitchlist.includes(switchItem)) return;
 					const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 					if (el) {
 						el.style.backgroundImage = `url(${data})`;
 					}
 				});
 				Client.loadFile(DB.INTERFACE_PATH + 'swap_equipment/ico_change.bmp', data => {
+					if (!this.equipswitchlist.includes(switchItem)) return;
 					const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
 					if (el) {
 						el.style.backgroundImage = `url(${data})`;
@@ -1504,7 +1507,19 @@ export function createInventory(config) {
 	}
 
 	if (equipSwitch) {
-		Component.addItemtoSwitch = function (index, location) {
+		Component.setSwitchItems = function (items) {
+			this.equipswitchlist.length = 0;
+			this.getRoot().querySelectorAll('.switch1, .switch2').forEach(marker => {
+				marker.style.backgroundImage = 'none';
+			});
+			SwitchEquip.clearItems();
+			Equipment.getUI().equipItemsToSwitch();
+			for (const item of items) {
+				if (this.getItemByIndex(item.index)) this.addItemtoSwitch(item.index, item.location, false);
+			}
+		};
+
+		Component.addItemtoSwitch = function (index, location, notify = true) {
 			const original = this.getItemByIndex(index);
 			const item = original && { ...original, location };
 			if (!item) {
@@ -1526,12 +1541,14 @@ export function createInventory(config) {
 
 			const root = Component.getRoot();
 			Client.loadFile(DB.INTERFACE_PATH + 'swap_equipment/bg_change.bmp', data => {
+				if (!this.equipswitchlist.includes(item)) return;
 				const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 				if (el) {
 					el.style.backgroundImage = `url(${data})`;
 				}
 			});
 			Client.loadFile(DB.INTERFACE_PATH + 'swap_equipment/ico_change.bmp', data => {
+				if (!this.equipswitchlist.includes(item)) return;
 				const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
 				if (el) {
 					el.style.backgroundImage = `url(${data})`;
@@ -1539,7 +1556,7 @@ export function createInventory(config) {
 			});
 
 			SwitchEquip.equip(item, item.location, true);
-			ChatBox.addText(DB.getItemName(item) + ' ' + DB.getMessage(3143), ChatBox.TYPE.BLUE, ChatBox.FILTER.ITEM);
+			if (notify) ChatBox.addText(DB.getItemName(item) + ' ' + DB.getMessage(3143), ChatBox.TYPE.BLUE, ChatBox.FILTER.ITEM);
 		};
 
 		Component.removeItemFromSwitch = function (index) {
@@ -1562,7 +1579,7 @@ export function createInventory(config) {
 					sw2.style.backgroundImage = 'none';
 				}
 
-				SwitchEquip.unEquip(item.index, item.location);
+				SwitchEquip.unEquip(item.index, this.equipswitchlist[existingItemIndex].location);
 				this.equipswitchlist.splice(existingItemIndex, 1);
 
 				ChatBox.addText(

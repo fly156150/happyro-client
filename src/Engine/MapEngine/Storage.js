@@ -195,8 +195,8 @@ Storage.reqMoveItemToCart = function reqMoveItemToCart(index, count) {
  * @param {object} pkt - PACKET.ZC.SPLIT_SEND_ITEMLIST_SET
  */
 function onItemListSet(pkt) {
-	// Prepared mobile models are not mounted, so DOM removal cannot reset their data.
-	if (Platform.isMobile && pkt.invType === 0) {
+	// A complete inventory snapshot replaces both models, including live job/skill refreshes.
+	if (pkt.invType === 0) {
 		Inventory.getUI().prepare();
 		Equipment.getUI().prepare();
 		Inventory.getUI().clearItems();

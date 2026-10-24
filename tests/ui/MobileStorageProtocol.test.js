@@ -32,10 +32,10 @@ it('keeps the original desktop append path and does not publish a mobile modal',
  s.mobile=false;receive('NOTIFY_STOREITEM_COUNTINFO',{curCount:0,maxCount:600});expect(s.append).toHaveBeenCalledOnce();expect(interactionSnapshot()).toBeNull();
 });
 
-it('resets mobile container models at full-list boundaries without relying on detached DOM lifecycle',()=>{
+it('replaces inventory and equipment on both platforms without clearing unrelated cart data',()=>{
  receive('SPLIT_SEND_ITEMLIST_SET',{invType:0,name:''});expect(s.inventoryClear).toHaveBeenCalledOnce();expect(s.equipmentClear).toHaveBeenCalledOnce();
  receive('SPLIT_SEND_ITEMLIST_SET',{invType:1,name:''});expect(s.cartClear).toHaveBeenCalledOnce();
- s.mobile=false;receive('SPLIT_SEND_ITEMLIST_SET',{invType:0,name:''});receive('SPLIT_SEND_ITEMLIST_SET',{invType:1,name:''});expect(s.inventoryClear).toHaveBeenCalledOnce();expect(s.cartClear).toHaveBeenCalledOnce();
+ s.mobile=false;receive('SPLIT_SEND_ITEMLIST_SET',{invType:0,name:''});receive('SPLIT_SEND_ITEMLIST_SET',{invType:1,name:''});expect(s.inventoryClear).toHaveBeenCalledTimes(2);expect(s.equipmentClear).toHaveBeenCalledTimes(2);expect(s.cartClear).toHaveBeenCalledOnce();
 });
 
 it('keeps stored items on a zero-count rejection and resolves the pending request',()=>{

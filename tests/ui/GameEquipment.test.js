@@ -23,3 +23,20 @@ it('rejects stale indices, changed IDs, wrong slots and unsupported actions usin
  service.act('HEAD_TOP', 4, 300, 'equip'); service.act('ARMOR', 4, 301, 'equip'); service.act('ARMOR', 4, 300, 'use');
  items = []; service.act('ARMOR', 4, 300, 'equip'); expect(act).not.toHaveBeenCalled();
 });
+
+it('refreshes left-hand choices after gaining and losing dual-wield eligibility', () => {
+ let items = [{ index: 9, ID: 1201, worn: false, category: 'equipment', location: Location.WEAPON }];
+ const act = vi.fn();
+ const controller = createEquipmentController({ snapshot: () => items, act }, () => []);
+ const left = () => controller.snapshot().slots.find(slot => slot.key === 'SHIELD');
+ expect(left().candidates).toEqual([]);
+ items = [{ ...items[0], location: Location.WEAPON | Location.SHIELD }];
+ expect(left().candidates.map(item => item.index)).toEqual([9]);
+ controller.act('SHIELD', 9, 1201, 'equip');
+ expect(act).toHaveBeenLastCalledWith(9, 1201, 'equip', Location.SHIELD);
+ items = [{ ...items[0], location: Location.WEAPON }];
+ expect(left().candidates).toEqual([]);
+ act.mockClear();
+ controller.act('SHIELD', 9, 1201, 'equip');
+ expect(act).not.toHaveBeenCalled();
+});

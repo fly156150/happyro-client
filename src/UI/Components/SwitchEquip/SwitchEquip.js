@@ -156,6 +156,11 @@ SwitchEquip.onAppend = function onAppend() {
  */
 SwitchEquip.onRemove = function onRemove() {
 	Renderer.stop(swaprender);
+	SwitchEquip.clearItems();
+};
+
+/** Replace snapshot contents without closing the window or stopping its preview. */
+SwitchEquip.clearItems = function clearItems() {
 	SwitchEquip._list = {};
 
 	const root = SwitchEquip.getRoot();
@@ -203,7 +208,7 @@ SwitchEquip.toggle = function toggle() {
  */
 SwitchEquip.equip = function equip(item, location, inSwitchList) {
 	const it = DB.getItemInfo(item.ITID);
-	item.equipped = location;
+	item = { ...item, equipped: location };
 	SwitchEquip._list[item.index] = item;
 
 	const add3Dots = (string, limit) => {
@@ -215,23 +220,22 @@ SwitchEquip.equip = function equip(item, location, inSwitchList) {
 
 	const root = SwitchEquip.getRoot();
 	const selector = getSelectorFromLocation(location);
-	const el = root.querySelector(selector);
-	if (el) {
+	root.querySelectorAll(selector).forEach(el => {
 		el.innerHTML =
 			`<div class="item" data-index="${item.index}">` +
 			'<button></button>' +
 			`<span class="itemName">${add3Dots(_escapeHtml(DB.getItemName(item)), 19)}</span>` +
 			'</div>';
-	}
+	});
 
 	Client.loadFile(DB.INTERFACE_PATH + 'item/' + it.identifiedResourceName + '.bmp', data => {
-		const button = root.querySelector(`.item[data-index="${item.index}"] button`);
-		if (button) {
+		if (SwitchEquip._list[item.index] !== item) return;
+		root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach(button => {
 			button.style.backgroundImage = `url(${data})`;
 			if (!inSwitchList) {
 				button.style.filter = 'grayscale(100%)';
 			}
-		}
+		});
 	});
 };
 
@@ -247,8 +251,9 @@ SwitchEquip.unEquip = function unEquip(index, location) {
 	const item = SwitchEquip._list[index];
 	item.equipped = 0;
 
-	const el = root.querySelector(selector);
-	if (el) el.innerHTML = '';
+	root.querySelectorAll(selector).forEach(el => {
+		el.innerHTML = '';
+	});
 	delete SwitchEquip._list[index];
 };
 
