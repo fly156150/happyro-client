@@ -1,3 +1,4 @@
+import skillNames from 'DB/Skills/SkillNames.zh-CN.json';
 import { TALKIE_MESSAGE_SIZE } from 'Network/TalkieBoxProtocol.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
@@ -17,7 +18,7 @@ export function requestTalkieMessage() {
 		input.required = true;
 		input.maxLength = TALKIE_MESSAGE_SIZE - 1;
 		input.placeholder = '输入留言';
-		input.setAttribute('aria-label', '话匣子留言');
+		input.setAttribute('aria-label', `${skillNames.HT_TALKIEBOX}：留言`);
 		content.append(input);
 		input.addEventListener('input', () => input.setCustomValidity(talkieMessageError(input.value)));
 		input.addEventListener('keydown', event => {
@@ -28,7 +29,7 @@ export function requestTalkieMessage() {
 			}
 		});
 		const finish = value => { unsubscribe(); resolve(value); };
-		const dismiss = confirmAction(document.body, '话匣子留言', () => finish(input.value), {
+		const dismiss = confirmAction(document.body, `${skillNames.HT_TALKIEBOX}：留言`, () => finish(input.value), {
 			content, cancelled: () => finish(null)
 		});
 		const unsubscribe = onConnectionEnd(dismiss);

@@ -1,3 +1,4 @@
+import skillNames from '../../src/DB/Skills/SkillNames.zh-CN.json';
 import { readFileSync } from 'node:fs';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -14,7 +15,7 @@ function setup() {
  const convert = { setTitle: vi.fn(), remove: vi.fn(), material: [{ index: 2, count: 3 }] };
  const modal = { remove: vi.fn() };
  const code = ['open', 'setList', 'removeItem'].map(name => method(listSource, 'ItemListWindowSelection', name)).join('\n') + method(convertSource, 'ConvertItems', 'validItemSend');
- new Function('ItemListWindowSelection', 'ConvertItems', 'MakeModelMessage', 'getItemIndexById', code)(list, convert, modal, index => list.list.findIndex(item => item.index === index));
+ new Function('ItemListWindowSelection', 'ConvertItems', 'MakeModelMessage', 'getItemIndexById', 'skillNames', code)(list, convert, modal, index => list.list.findIndex(item => item.index === index), skillNames);
  return { list, convert };
 }
 describe('desktop material selection', () => {
@@ -32,7 +33,7 @@ describe('desktop material selection', () => {
    const { list, convert } = setup();
    list.open(type);
    expect(list.append).toHaveBeenCalledOnce();
-   expect(list.setTitle).toHaveBeenCalledWith(type === 0 ? '材料转换' : type === 1 ? '元素分析：纯矿转原石' : '元素分析：原石转纯矿');
+   expect(list.setTitle).toHaveBeenCalledWith(type === 0 ? '素材变化' : type === 1 ? '元素分析：纯矿转原石' : '元素分析：原石转纯矿');
    convert.validItemSend(confirm);
    expect(list.onItemListWindowSelected).toHaveBeenCalledExactlyOnceWith({ Type: type, Action: confirm ? 1 : 0, MaterialList: confirm ? [{ index: 2, count: 3 }] : [] });
   }

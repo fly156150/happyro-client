@@ -482,7 +482,7 @@ const CommandStore = {
 	},
 
 	taekwon: {
-		description: '根据跆拳任务完成度显示服务器跆拳小子排名前 10 名',
+		description: '根据太拳任务完成度显示服务器跆拳小子排名前 10 名',
 		callback: function () {
 			if (PACKETVER.value >= 20130605) {
 				const pkt = new PACKET.CZ.RANKING();

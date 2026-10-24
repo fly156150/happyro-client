@@ -1,3 +1,5 @@
+import skillNames from '../../DB/Skills/SkillNames.zh-CN.json';
+
 /** Reasons sent by rAthena in ZC_ACK_TOUSESKILL (PACKETVER 20211103). */
 export const skillFailReasons = {
 	0: '未通过技能判定，服务端未提供具体原因',
@@ -31,8 +33,8 @@ export const skillFailReasons = {
 	28: '需要靠近墙壁',
 	29: '需要至少 1% 的经验值',
 	30: '合唱成员 SP 不足',
-	31: '需要先触发武器格挡',
-	32: '需要先使用武器涂毒',
+	31: `需要先触发${skillNames.GC_WEAPONBLOCKING}`,
+	32: `需要先使用${skillNames.GC_POISONINGWEAPON}`,
 	33: '需要乘坐魔导机甲',
 	34: '需要装备足够的苦无',
 	35: '只能对玩家使用',
@@ -74,7 +76,7 @@ export const skillFailReasons = {
 	94: '搭档 SP 不足',
 	95: '需要装备武器',
 	96: '能量球数量不足',
-	97: '需要先触发武器格挡',
+	97: `需要先触发${skillNames.GC_WEAPONBLOCKING}`,
 	98: '陷阱数量已达上限',
 	99: '需要魔法书',
 	100: 'AP 不足',
@@ -114,7 +116,7 @@ const emotionFailureReasons = {
 export function skillFailMessage(pkt, { skillName, itemName, isDoram = false } = {}) {
 	if (!pkt || pkt.result) return '';
 	if (isBasicActionLevelFailure(pkt)) {
-		const name = isDoram ? '新基础技能' : '基础技能';
+		const name = skillNames[isDoram ? 'SU_BASIC_SKILL' : 'NV_BASIC'];
 		const level = isDoram ? 1 : pkt.NUM === 1 ? 2 : 3;
 		return `需要学习「${name}」Lv.${level}`;
 	}
@@ -131,7 +133,7 @@ export function skillFailMessage(pkt, { skillName, itemName, isDoram = false } =
 	} else if (pkt.cause === 20 && pkt.SKID === 5499) {
 		reason = '需要先召唤 10 枚同属性护符';
 	} else if (pkt.cause === 0 && pkt.SKID === 1) {
-		reason = '基础技能等级不足';
+		reason = `${skillNames.NV_BASIC}等级不足`;
 	} else if (pkt.cause === 112) {
 		reason = requiredStateReasons[pkt.NUM] || reason;
 	} else if (pkt.cause === 113 && pkt.NUM > 0) {
@@ -169,10 +171,10 @@ export const requiredStateReasons = {
 	13: '需要先召唤元素精灵',
 	14: '需要先召唤元素精灵',
 	15: '需要先骑乘大嘴鸟',
-	16: '需要太阳姿态或宇宙姿态',
-	17: '需要月亮姿态或宇宙姿态',
-	18: '需要星星姿态或宇宙姿态',
-	19: '需要宇宙姿态'
+	16: `需要${skillNames.SJ_SUNSTANCE}或${skillNames.SJ_UNIVERSESTANCE}`,
+	17: `需要${skillNames.SJ_LUNARSTANCE}或${skillNames.SJ_UNIVERSESTANCE}`,
+	18: `需要${skillNames.SJ_STARSTANCE}或${skillNames.SJ_UNIVERSESTANCE}`,
+	19: `需要${skillNames.SJ_UNIVERSESTANCE}`
 };
 
 // e_ammo_type; the server sends the accepted types as a bitmask.

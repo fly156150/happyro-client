@@ -1,10 +1,11 @@
+import skillNames from '../../src/DB/Skills/SkillNames.zh-CN.json';
 import { expect, it, vi } from 'vitest';
 import PACKET from '../../src/Network/PacketStructure.js';
 import BinaryReader from '../../src/Utils/BinaryReader.js';
 import { talkieMessageError, showTalkieMessage, requestTalkieMessage } from '../../src/Engine/MapEngine/TalkieBox.js';
 import { endConnection } from '../../src/Network/ConnectionLifecycle.js';
 vi.mock('../../src/UI/Components/Confirmation.js', () => ({ confirmAction: vi.fn((container, message, action, options) => {
-	globalThis.talkiePrompt = { action, options };
+	globalThis.talkiePrompt = { message, action, options };
 	return options.cancelled;
 }) }));
 it('validates the UTF-8 field without splitting Chinese characters', () => {
@@ -33,6 +34,8 @@ it('round trips a Chinese message through the fixed-size ground-skill packet', (
 });
 it('returns confirmed text and cancels unfinished input on disconnect', async () => {
 	const accepted = requestTalkieMessage();
+	expect(globalThis.talkiePrompt.message).toBe(`${skillNames.HT_TALKIEBOX}：留言`);
+	expect(globalThis.talkiePrompt.options.content.querySelector('input').getAttribute('aria-label')).toBe(globalThis.talkiePrompt.message);
 	globalThis.talkiePrompt.options.content.querySelector('input').value = '欢迎';
 	globalThis.talkiePrompt.action();
 	await expect(accepted).resolves.toBe('欢迎');

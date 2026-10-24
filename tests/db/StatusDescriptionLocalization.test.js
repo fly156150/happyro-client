@@ -18,12 +18,12 @@ describe('status description localization', () => {
 	});
 	it('contains Chinese descriptions for the novice spawn buffs', () => {
 		expect(StatusInfo[SC.BLESSING].descript[0][0]).toBe('天使之赐福');
-		expect(StatusInfo[SC.INC_AGI].descript[0][0]).toBe('敏捷提升');
+		expect(StatusInfo[SC.INC_AGI].descript[0][0]).toBe('加速术');
 	});
 
 	it('covers every official stateiconinfo.lub description with Chinese after restore', () => {
 		expect(Object.keys(officialStateIconTranslations).length).toBe(720);
-		expect(officialStateIconTranslations['720'].descript[0][0]).toBe('全力推进');
+		expect(officialStateIconTranslations['720'].descript[0][0]).toBe('烈火战车');
 
 		const statusInfo = {};
 		for (const id of Object.keys(officialStateIconTranslations)) {
@@ -48,8 +48,8 @@ describe('status description localization', () => {
 	it('applies the extracted Chinese overlay onto StatusInfo before Lua restore', () => {
 		const statusInfo = { 720: { icon: 'full_throttle.tga' } };
 		applyOfficialStateIconTranslations(statusInfo, officialStateIconTranslations);
-		expect(statusInfo[720].descript[0][0]).toBe('全力推进');
-		expect(StatusInfo[SC.FULL_THROTTLE].descript[0][0]).toBe('全力推进');
+		expect(statusInfo[720].descript[0][0]).toBe('烈火战车');
+		expect(StatusInfo[SC.FULL_THROTTLE].descript[0][0]).toBe('烈火战车');
 	});
 
 	it('copies haveTimeLimit 0 from the official overlay instead of leaving a timed flag', () => {
@@ -81,7 +81,7 @@ it('keeps reviewed skill titles consistent without renaming independent ailments
  expect(StatusInfo[SC.BLESSING].descript[0][0]).toBe(skillNames[34].name);
  expect(StatusInfo[SC.ANGELUS].descript[0][0]).toBe(skillNames[33].name);
  expect(StatusInfo[SC.KYRIE].descript[0][0]).toBe(skillNames[73].name);
- expect(skillNames[8].name).toBe('钢铁之心');
+ expect(skillNames[8].name).toBe('霸体');
  expect(StatusInfo[SC.ENDURE].descript[0][0]).toBe('霸体');
  for (const id of [50, 737, 1142, 1210, 1211, 1212]) {
   expect(StatusInfo[id].descript).toEqual(officialStateIconTranslations[id].descript);
@@ -93,12 +93,12 @@ it('keeps reviewed skill titles consistent without renaming independent ailments
 });
 
 it('keeps skill-derived titles and countdown rows distinct', () => {
- expect(StatusInfo[SC.SOULCOLLECT].descript[0][0]).toBe('灵魂收集');
+ expect(StatusInfo[SC.SOULCOLLECT].descript[0][0]).toBe('灵魂蓄积');
  const benedictio = StatusInfo[SC.BENEDICTIO];
- expect(benedictio.descript[0][0]).toBe('圣体降福');
+ expect(benedictio.descript[0][0]).toBe('圣之祈福');
  expect(benedictio.descript[benedictio.posTimeLimitStr - 1][0]).toBe('%s');
- expect(StatusInfo[SC.RG_CCONFINE_M].descript[0][0]).toBe('近身禁锢（施法者）');
- expect(StatusInfo[SC.RG_CCONFINE_S].descript[0][0]).toBe('近身禁锢（目标）');
- expect(skillNames[2279].name).toBe('强力挥击');
+ expect(StatusInfo[SC.RG_CCONFINE_M].descript[0][0]).toBe('紧密的约束（施法者）');
+ expect(StatusInfo[SC.RG_CCONFINE_S].descript[0][0]).toBe('紧密的约束（目标）');
+ expect(skillNames[2279].name).toBe('挥斧重击');
  expect(skillNames[6507].name).toBe('爆发横扫');
 });

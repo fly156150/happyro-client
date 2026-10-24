@@ -1,3 +1,4 @@
+import skillNames from 'DB/Skills/SkillNames.zh-CN.json';
 import Session from 'Engine/SessionStorage.js';
 import { createGameInventory } from './GameInventory.js';
 import { showInteraction, clearInteraction, interactionSnapshot } from './ServerInteraction.js';
@@ -61,7 +62,7 @@ export function openGameMaterials(type, submit) {
 	};
 	showInteraction({
 		kind: 'materials',
-		title: type === 0 ? '材料转换' : type === 1 ? '元素分析：纯矿转原石' : '元素分析：原石转纯矿',
+		title: type === 0 ? skillNames.GN_CHANGEMATERIAL : type === 1 ? `${skillNames.SO_EL_ANALYSIS}：纯矿转原石` : `${skillNames.SO_EL_ANALYSIS}：原石转纯矿`,
 		token,
 		service,
 		close: () => finish(0)

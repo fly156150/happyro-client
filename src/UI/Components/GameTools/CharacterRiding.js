@@ -1,3 +1,4 @@
+import skillNames from '../../../DB/Skills/SkillNames.zh-CN.json';
 import escapeHtml from './escapeHtml.js';
 
 
@@ -12,7 +13,8 @@ const actions = {
 	warg_rider: ridingActions,
 	hawk: { enable: '召唤', disable: '召回' }
 };
-const skills = { cart: '手推车使用', peco: '骑乘大嘴鸟', dragon: '龙训练', gryphon: '骑乘大嘴鸟', mado: '魔导机甲执照', falcon: '猎鹰精通', warg: '狼群精通', warg_rider: '骑乘狼', hawk: '猎鹰精通' };
+const skillKeys = { cart: 'MC_PUSHCART', peco: 'KN_RIDING', dragon: 'RK_DRAGONTRAINING', gryphon: 'KN_RIDING', mado: 'NC_MADOLICENCE', falcon: 'HT_FALCON', warg: 'RA_WUGMASTERY', warg_rider: 'RA_WUGRIDER', hawk: 'WH_HAWK_M' };
+const skills = Object.fromEntries(Object.entries(skillKeys).map(([kind, key]) => [kind, skillNames[key]]));
 const reasons = {
 	riding_busy: '请结束对话、交易或仓库等操作后重试',
 	riding_job_required: '当前职业无法使用',

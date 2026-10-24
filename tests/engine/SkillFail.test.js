@@ -42,7 +42,7 @@ describe('skill failure explanations', () => {
 	it('does not invent a level failure from the ambiguous default code', () => {
 		expect(failure(0)).toContain('服务端未提供具体原因');
 		expect(failure(10)).toContain('服务端未提供具体原因');
-		expect(failure(0, { SKID: 1 })).toContain('基础技能等级不足');
+		expect(failure(0, { SKID: 1 })).toContain('基本技能等级不足');
 		expect(failure(250)).toContain('未识别的失败原因（250）');
 	});
 	it('ignores successful acknowledgements', () => {
@@ -65,7 +65,7 @@ describe('skill failure explanations', () => {
 
 it('explains emotion prerequisites without mislabeling cooldown or blocked state', () => {
  const emotion = cause => skillFailMessage({ result: 0, SKID: 1, NUM: 1, cause });
- expect(emotion(0)).toBe('需要学习「基础技能」Lv.2');
+ expect(emotion(0)).toBe('需要学习「基本技能」Lv.2');
  expect(emotion(4)).toBe('表情发送太快了，请稍后再试。');
  expect(emotion(11)).toContain('不能主动发送');
  expect(emotion(23)).toContain('当前状态不能发送表情');
@@ -74,8 +74,8 @@ it('explains emotion prerequisites without mislabeling cooldown or blocked state
 });
 
 it.each([
- [1, false, '需要学习「基础技能」Lv.2'],
- [2, false, '需要学习「基础技能」Lv.3'],
+ [1, false, '需要学习「基本技能」Lv.2'],
+ [2, false, '需要学习「基本技能」Lv.3'],
  [1, true, '需要学习「新基础技能」Lv.1'],
  [2, true, '需要学习「新基础技能」Lv.1']
 ])('distinguishes basic action %i for doram=%s', (NUM, isDoram, expected) => {

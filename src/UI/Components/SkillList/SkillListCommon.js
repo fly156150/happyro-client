@@ -34,6 +34,11 @@ function _escapeHTML(text) {
 	return div.innerHTML;
 }
 
+function _skillTreeName(name) {
+	const characters = Array.from(String(name));
+	return _escapeHTML(characters.length > 7 ? characters.slice(0, 7).join('') + '...' : name);
+}
+
 function _isNumeric(val) {
 	return !isNaN(parseFloat(val)) && isFinite(val);
 }
@@ -714,7 +719,7 @@ export function createSkillList({
 				element.setAttribute('data-index', key);
 				element.setAttribute('draggable', 'true');
 				element.innerHTML =
-					`<div class="name">${_escapeHTML(sk.SkillName).substr(0, 7)}...<br/></div>` +
+					`<div class="name">${_skillTreeName(sk.SkillName)}<br/></div>` +
 					'<div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div>' +
 					'<div class=selectable>' +
 					'<span class="level" style="display: none">' +
@@ -796,7 +801,7 @@ export function createSkillList({
 		element.setAttribute('data-index', skill.SKID);
 		element.setAttribute('draggable', 'true');
 		element.innerHTML =
-			`<div class="name">${_escapeHTML(sk.SkillName).substr(0, 7)}...<br/></div>` +
+			`<div class="name">${_skillTreeName(sk.SkillName)}<br/></div>` +
 			'<div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div>' +
 			'<div class="levelupcontainer"></div>' +
 			'<div class=selectable>' +
