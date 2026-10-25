@@ -693,9 +693,9 @@ export function createInventory(config) {
 				Component.newItems.push(item.index);
 			}
 			if (getItemTab(item) === _preferences.tab) {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				Client.loadFile(DB.INTERFACE_PATH + 'basic_interface/new_item.bmp', data => {
-					const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-					if (el) {
+					if (el && Component.isNewItem(item.index)) {
 						el.style.backgroundImage = `url(${data})`;
 					}
 				});
@@ -765,13 +765,16 @@ export function createInventory(config) {
 					'</div>'
 			);
 
+			// Bind images to this render, not a reusable inventory index.
+			const itemElement = content.lastElementChild;
+
 			Client.loadFile(
 				DB.INTERFACE_PATH +
 					'item/' +
 					(item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) +
 					'.bmp',
 				data => {
-					const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+					const icon = itemElement.querySelector('.icon');
 					if (icon) {
 						icon.style.backgroundImage = `url(${data})`;
 					}
@@ -780,13 +783,14 @@ export function createInventory(config) {
 
 			if (Component.isNewItem(item.index)) {
 				Client.loadFile(DB.INTERFACE_PATH + 'basic_interface/new_item.bmp', data => {
-					const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+					if (!Component.isNewItem(item.index)) return;
+					const el = itemElement.querySelector('.new_item');
 					if (el) {
 						el.style.backgroundImage = `url(${data})`;
 					}
 				});
 			} else {
-				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				const el = itemElement.querySelector('.new_item');
 				if (el) {
 					el.style.backgroundImage = '';
 				}
@@ -795,14 +799,14 @@ export function createInventory(config) {
 			if (switchItem) {
 				Client.loadFile(DB.INTERFACE_PATH + 'swap_equipment/bg_change.bmp', data => {
 					if (!this.equipswitchlist.includes(switchItem)) return;
-					const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+					const el = itemElement.querySelector('.switch1');
 					if (el) {
 						el.style.backgroundImage = `url(${data})`;
 					}
 				});
 				Client.loadFile(DB.INTERFACE_PATH + 'swap_equipment/ico_change.bmp', data => {
 					if (!this.equipswitchlist.includes(switchItem)) return;
-					const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+					const el = itemElement.querySelector('.switch2');
 					if (el) {
 						el.style.backgroundImage = `url(${data})`;
 					}
@@ -811,7 +815,7 @@ export function createInventory(config) {
 
 			if (enchantGrade && item.enchantgrade) {
 				Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/grade_icon' + item.enchantgrade + '.bmp', data => {
-					const el = root.querySelector(`.item[data-index="${item.index}"] .grade`);
+					const el = itemElement.querySelector('.grade');
 					if (el) {
 						el.style.backgroundImage = `url(${data})`;
 					}

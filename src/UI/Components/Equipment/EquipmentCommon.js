@@ -564,16 +564,18 @@ export function createEquipment({
 				'</div>';
 		});
 
+		// A later snapshot may reuse both the index and the source object.
+		const btns = root.querySelectorAll(`.item[data-index="${item.index}"] button`);
 		Client.loadFile(DB.INTERFACE_PATH + 'item/' + it.identifiedResourceName + '.bmp', data => {
-			const btns = root.querySelectorAll(`.item[data-index="${item.index}"] button`);
 			btns.forEach(btn => {
 				btn.style.backgroundImage = `url(${data})`;
 			});
 		});
 
 		if (enchantGrade && item.enchantgrade) {
+			const grades = root.querySelectorAll(`.item[data-index="${item.index}"] .grade`);
 			Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/grade_icon' + item.enchantgrade + '.bmp', data => {
-				root.querySelectorAll(`.item[data-index="${item.index}"] .grade`).forEach(el => {
+				grades.forEach(el => {
 					el.style.backgroundImage = `url(${data})`;
 				});
 			});
