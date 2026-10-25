@@ -41,7 +41,7 @@ async function mount(mapName, context={}) {
 }
 it.each([false,true])('uses server arrival selection, then preserves a manual coordinate (mobile=%s)',async mobile=>{
  await mount('comodo',{mobile});
- expect(container.textContent).toContain('自动选择安全落点');
+ expect(container.textContent).not.toContain('自动选择安全落点');
  const teleport=container.querySelector('.catalog-teleport');expect(teleport.disabled).toBe(false);teleport.click();
  expect(teleportToCoordinate).toHaveBeenLastCalledWith(expect.objectContaining({mapName:'comodo',x:0,y:0,automatic:true}));
  container.querySelector('.catalog-map-picker').click();container.querySelector('.catalog-teleport').click();

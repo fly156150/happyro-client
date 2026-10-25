@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	listNavigationMaps,
+ listSharedMaps,
 	listNavigationRows,
 	searchNavigationMaps,
 	searchNavigationRows
@@ -85,7 +86,7 @@ describe('navigation data', () => {
 		expect(searchNavigationRows([], rows, 'PORING', 'MOB', localizers)).toHaveLength(1);
 	});
 
-	it('searches maps by localized name or resource id without duplicates', () => {
+	it('searches maps only by displayed name without duplicates', () => {
 		const entries = [
 			mapEntry('prontera', '普隆德拉'),
 			mapEntry('prt_fild08', '普隆德拉原野 08'),
@@ -96,7 +97,7 @@ describe('navigation data', () => {
 		const localizedResults = searchNavigationMaps(entries, '普隆德拉', 'MAP');
 		expect(localizedResults).toHaveLength(3);
 		expect(localizedResults[0]).toMatchObject({ id: 'prontera', name: '普隆德拉' });
-		expect(searchNavigationMaps(entries, 'prt_fild08', 'MAP')[0]).toMatchObject({
+		expect(searchNavigationMaps(entries, '普隆德拉原野 08', 'MAP')[0]).toMatchObject({
 			type: 'MAP',
 			mapName: 'prt_fild08',
 			name: '普隆德拉原野 08',
@@ -193,4 +194,30 @@ describe('navigation data', () => {
 		expect(localizeNavigationNpcName('카프라 이동 서비스 직원')).toBe('卡普拉 传送服务职员');
 		expect(localizeNavigationNpcName('카프라 미스티')).toBe('卡普拉 米斯蒂');
 	});
+});
+
+it('excludes old names and codes while preserving channel filtering', () => {
+ const entries = [
+  {map:'prontera',name:'普隆德拉',supported:true,aliases:['卢恩·米德加兹王国 首都普隆德拉']},
+  {map:'prt_fild08',name:'普隆德拉南门',supported:true,aliases:['南门','普隆德拉野外']},
+  {map:'prt_fild08a',name:'普隆德拉南门',supported:true,aliases:['南门','普隆德拉野外']},
+  {map:'gate',name:'南门训练区',supported:true,aliases:[]}
+ ];
+ expect(searchNavigationMaps(entries,'首都','MAP').map(row=>row.name)).toEqual([]);
+ expect(searchNavigationMaps(entries,'南门','MAP').map(row=>row.id)).toEqual(['gate','prt_fild08']);
+ expect(searchNavigationMaps(entries,'普隆德拉野外','MAP',{channelsEnabled:true}).map(row=>row.id)).toEqual([]);
+});
+
+it('excludes resource-only maps from player navigation even for exact/current-map searches', () => {
+ const entries=[{map:'new_event',name:'new_event',supported:true,player_hidden:true},{map:'pprontera',name:'pprontera',supported:true,player_hidden:true},{map:'alde_gld',name:'艾尔帕兰 露依纳',aliases:['艾尔帕兰卫星都市 露依纳'],supported:true,player_hidden:false}];
+ expect(listSharedMaps(entries).map(row=>row.mapName)).toEqual(['alde_gld']);
+ for(const map of ['new_event','pprontera']) expect(searchNavigationMaps(entries,map,'MAP',{scope:'CURRENT',currentMap:map})).toEqual([]);
+ expect(searchNavigationMaps(entries,'艾尔帕兰','MAP')[0].name).toBe('艾尔帕兰 露依纳');
+});
+
+it('matches only visible map names when a former city alias exists',()=>{
+ const entries=[{map:'alde_gld',name:'艾尔帕兰 露依纳',supported:true},{map:'aldeg_cas01',name:'娜易修潘斯塔引',supported:true,aliases:['露依纳 公会 01 (艾尔帕兰)']}];
+ expect(searchNavigationMaps(entries,'艾尔帕兰','MAP').map(row=>row.id)).toEqual(['alde_gld']);
+ expect(searchNavigationMaps(entries,'alde_gld','MAP')).toEqual([]);
+ expect(searchNavigationMaps(entries,'卫星都市','MAP')).toEqual([]);
 });

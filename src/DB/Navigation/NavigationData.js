@@ -6,7 +6,7 @@ function getNpcInstanceName(instanceNames, mapName, x, y) {
 
 export function listSharedMaps(mapCatalogEntries, options = {}) {
 	const { channelsEnabled = false } = options;
-	return mapCatalogEntries.filter(map => map.supported && isVisibleMapChannel(map.map, channelsEnabled) && (options.scope !== 'CURRENT' || map.map === options.currentMap)).map(map => ({
+	return mapCatalogEntries.filter(map => map.supported && !map.player_hidden && isVisibleMapChannel(map.map, channelsEnabled) && (options.scope !== 'CURRENT' || map.map === options.currentMap)).map(map => ({
 		type: 'MAP', id: map.map, mapName: map.map,
 		name: getMapChannelDisplayName(map.map, map.name, channelsEnabled),
 		mapDisplayName: getMapChannelDisplayName(map.map, map.name, channelsEnabled), x: null, y: null
@@ -183,15 +183,12 @@ export function searchNavigationMaps(mapCatalogEntries, query, type, options = {
 	if (!normalizedQuery) return [];
 	if (type !== 'ALL' && type !== 'MAP') return [];
 	const results = listSharedMaps(mapCatalogEntries, options).filter(
-		result =>
-			result.id.toLocaleLowerCase().includes(normalizedQuery) ||
-			result.name.toLocaleLowerCase().includes(normalizedQuery)
+		result => result.name.toLocaleLowerCase().includes(normalizedQuery)
 	);
 	const matchRank = result => {
-		const id = result.id.toLocaleLowerCase();
 		const name = result.name.toLocaleLowerCase();
-		if (id === normalizedQuery || name === normalizedQuery) return 0;
-		if (id.startsWith(normalizedQuery) || name.startsWith(normalizedQuery)) return 1;
+		if (name === normalizedQuery) return 0;
+		if (name.startsWith(normalizedQuery)) return 1;
 		return 2;
 	};
 	return results

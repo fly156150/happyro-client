@@ -1,4 +1,4 @@
-// Names verified against docs/localization/map-name-scans/merged/data in the root repository.
+// Names verified against localization/maps/display-names.json in the root repository.
 import { describe, expect, it } from 'vitest';
 import MapInfo from '../../src/DB/Map/MapTable.js';
 import {
@@ -29,12 +29,12 @@ describe('adventure achievement map localization', () => {
 
 		localizeAdventureAchievementMaps(achievements, MapInfo);
 
-		expect(achievements[120001].title).toBe('探索普隆德拉野外（1）');
-		expect(achievements[120003].title).toBe('探索普隆德拉野外（3）');
-		expect(achievements[120007].title).toBe('探索普隆德拉野外（7）');
-		expect(achievements[120011].title).toBe('探索吉芬野外（1）');
-		expect(achievements[120012].title).toBe('探索吉芬野外（2）');
-		expect(achievements[120001].content.details).toBe('发现普隆德拉野外（1）的宝藏');
-		expect(achievements[129001].resource[1].text).toBe('完成探索普隆德拉野外（1）');
+		expect(achievements[120001].title).toBe('探索普隆德拉北门');
+		expect(achievements[120003].title).toBe('探索普隆德拉东北遗迹');
+		expect(achievements[120007].title).toBe('探索蝗虫区');
+		expect(achievements[120011].title).toBe('探索吉芬野外 00');
+		expect(achievements[120012].title).toBe('探索吉芬野外 01');
+		expect(achievements[120001].content.details).toBe('发现普隆德拉北门的宝藏');
+		expect(achievements[129001].resource[1].text).toBe('完成探索普隆德拉北门');
 	});
 });
