@@ -1,3 +1,4 @@
+import { createBattleStatusDetails } from './BattleStatusDetails.js';
 import { createDeathPrompt } from './DeathPrompt.js';
 import { createStatusIconsView } from './StatusIconsView.js';
 import menuListFlushCSS from './MenuListFlush.css?raw';
@@ -98,6 +99,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	const abort = new AbortController();
 	const chatPreview = createChatPreview(root);
 	const statusIcons = createStatusIconsView(root);
+	const battleDetails = createBattleStatusDetails(root, statusIcons.hide);
 	const releaseNotificationInset = bindHUDNotificationInset(root);
 	let settingsCleanup;
 	let combatSettingsCleanup;
@@ -304,6 +306,8 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		const fit = fittedMapRect(canvas.width, canvas.height, mapImage.width, mapImage.height);
 		fit.x = canvas.width - fit.width;
+		// Captions follow the drawn map, not the transparent canvas padding.
+		canvas.closest('.map').style.setProperty('--map-caption-shift', String(mapImage.image ? (fit.x + fit.width / 2) / canvas.width - 0.5 : 0));
 		if (mapImage.image) {
 			const image = mapImage.image;
 			const source = mapImageSourceRect(
@@ -878,16 +882,6 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			deathPrompt.update(next.death);
 			text('[data-panel=menu]', next.unreadMail ? '菜单 · 新邮件' : '菜单');
 			if (next.death?.dead || performance.now() >= noticeUntil) text('[data-target]', next.death?.dead ? '已倒下' : next.autoCombat?.status || '自动战斗已停止');
-			const species = next.autoCombat?.species || [];
-			const targetLabel = species.length > 1 ? `${species.length} 种魔物` : species[0]?.name || '全部魔物';
-			const targetDescription = `目标：${species.map(entry => entry.name).join('、') || '全部魔物'}`;
-			$('[data-auto-target]').title = targetDescription;
-			$('[data-auto-target]').setAttribute('aria-label', `战斗设置，${targetDescription}`);
-			if (!next.death?.dead && performance.now() >= noticeUntil && !next.exam) {
-				const status = next.autoCombat?.status;
-				text('[data-target]', !status || status === '自动战斗已停止' ? `目标：${targetLabel}` : `${status} · 目标：${targetLabel}`);
-			}
-			$('[data-target]').title = $('[data-target]').textContent;
 			const target = next.death?.dead ? null : next.target;
 			const player = target?.player, pet = target?.pet, mercenary = target?.mercenary, homunculus = target?.homunculus;
 			const hasActions = Boolean(player || pet || mercenary || homunculus);
@@ -925,6 +919,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			$('[data-homunculus-actions]').hidden = !homunculus;
 			$('.target-actions').hidden = !cancelSelection || !$('.skill-prompt').hidden;
 			$('.battle-status').hidden = cancelSelection || !$('.skill-prompt').hidden;
+			battleDetails.update($('[data-target]').textContent);
 			for (const button of root.querySelectorAll('[data-mercenary-action]')) button.disabled = !mercenary?.canOperate;
 			text('[data-mercenary-action=aggressive]', mercenary?.aggressive ? '主动' : '被动');
 			$('[data-mercenary-action=aggressive]').dataset.mode = mercenary?.aggressive ? 'active' : 'passive';
@@ -1075,6 +1070,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			const target = snapshot.death?.dead ? null : snapshot.target;
 			const hasActions = Boolean(target?.self || target?.player || target?.pet || target?.mercenary || target?.homunculus);
 			$('.battle-status').hidden = Boolean(state.pending) || hasActions;
+			if ($('.battle-status').hidden) battleDetails.hide();
 			$('.target-actions').hidden = Boolean(state.pending) || !hasActions;
 			$('.skill-prompt').hidden = !state.pending;
 			$('.skill-actions').hidden = !state.pending;
@@ -1088,6 +1084,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		notice(message) {
 			noticeUntil = performance.now() + 3000;
 			text('[data-target]', message);
+			battleDetails.update(message);
 		},
 		close,
 		destroy() {
@@ -1095,6 +1092,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			releaseChatPreviewLayout();
 			chatPreview.destroy();
 			statusIcons.destroy();
+			battleDetails.destroy();
 			releaseNotificationInset();
 			menuSelects.destroy();
 			close(false);

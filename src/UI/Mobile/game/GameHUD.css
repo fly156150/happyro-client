@@ -128,9 +128,10 @@ button.surface,
 	gap: 8px;
 }
 .map {
+	--map-canvas-size: 88px;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	align-items: center;
 	padding: 0;
 	width: 96px;
 	border: 0;
@@ -139,16 +140,18 @@ button.surface,
 }
 .map span,
 .map small {
+	transform: translateX(calc(var(--map-canvas-size) * var(--map-caption-shift, 0)));
+	text-align: center;
 	text-shadow:
 		0 1px 2px #000,
 		0 0 4px #000;
 }
 .map canvas {
-	width: 88px;
-	height: 88px;
+	width: var(--map-canvas-size);
+	height: var(--map-canvas-size);
 }
 .map span {
-	max-width: 100%;
+	max-width: calc(100% - var(--map-canvas-size) * var(--map-caption-shift, 0) * 2);
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -201,7 +204,7 @@ button.surface,
 	pointer-events: auto;
 	border-radius: 8px;
 }
-.battle-status span {
+.battle-status [data-target] {
 	flex: 1;
 	min-width: 0;
 	overflow: hidden;
@@ -387,19 +390,18 @@ dd {
 	font-size: 16px;
 }
 @media (max-height: 360px) {
-	.map canvas {
-		width: 76px;
-		height: 76px;
+	.map {
+		--map-canvas-size: 76px;
 	}
 }
 
 .status-effects {
 	display: grid;
 	grid-auto-flow: column;
-	grid-template-rows: repeat(4, 32px);
-	grid-auto-columns: 32px;
+	grid-template-rows: repeat(4, var(--hud-status-icon-size, 32px));
+	grid-auto-columns: var(--hud-status-icon-size, 32px);
 	direction: rtl;
-	gap: 4px;
+	gap: var(--hud-status-icon-gap, 4px);
 	max-width: min(45vw, 248px);
 	overflow-x: auto;
 	pointer-events: auto;
@@ -410,8 +412,8 @@ dd {
 .status-effect {
 	position: relative;
 	direction: ltr;
-	width: 32px;
-	height: 32px;
+	width: var(--hud-status-icon-size, 32px);
+	height: var(--hud-status-icon-size, 32px);
 	padding: 0;
 	border: 0;
 	border-radius: 0;
@@ -421,12 +423,12 @@ dd {
 	place-items: center;
 }
 [data-status-icons] img {
-	width: 32px;
-	height: 32px;
+	width: var(--hud-status-icon-size, 32px);
+	height: var(--hud-status-icon-size, 32px);
 }
 @media (max-height: 500px) {
 	.status-effects {
-		grid-template-rows: repeat(2, 32px);
+		grid-template-rows: repeat(2, var(--hud-status-icon-size, 32px));
 	}
 }
 .panel header {
@@ -1037,7 +1039,7 @@ dd {
  color: #a8ddff; border-color: #4c879f; background: #173c50;
 }
 
-.status-description {
+.status-description, .battle-description {
  position: fixed;
  z-index: 51;
  padding: 6px 10px;
@@ -1072,3 +1074,16 @@ dd {
 .battle-status.exam-status [data-target] { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
 
 .battle-tools:has([data-auto-target][hidden]) [data-auto-toggle] { grid-column: 2 / -1; }
+
+.battle-status button[data-target] {
+ flex: 1;
+ height: auto;
+ min-height: 0;
+ padding: 0;
+ border: 0;
+ border-radius: 0;
+ background: none;
+ font: inherit;
+ text-align: left;
+}
+.battle-description { width: max-content; max-width: min(360px, calc(100vw - 16px)); }

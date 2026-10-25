@@ -305,10 +305,7 @@ export function createAutoCombatPanel(body, actions) {
 			if (!body.contains(speciesList)) return;
 			for (const entry of entries) species.set(entry.id, entry.name);
 			renderSpecies();
-			if (!species.size) {
-				notice.textContent = '当前地图没有配置魔物';
-				speciesList.append(notice);
-			}
+
 		} catch {
 			if (!body.contains(speciesList)) return;
 			notice.textContent = '地图魔物加载失败';

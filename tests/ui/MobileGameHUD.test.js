@@ -119,8 +119,8 @@ it('groups six skills and combat controls at the bottom right and highlights onl
  expect(root.querySelector('.battle-dock [data-auto-toggle]')).not.toBeNull();
  view.update({ ...state, autoCombat: { active: true, species: [{ id: 1002, name: '波利' }], status: '攻击：波利' } });
  expect(root.querySelector('[data-auto-target]').textContent).toBe('战斗设置');
- expect(root.querySelector('[data-auto-target]').title).toContain('波利');
- expect(root.querySelector('[data-target]').textContent).toContain('目标：波利');
+ expect(root.querySelector('[data-auto-target]').title).toBe('');
+ expect(root.querySelector('[data-target]').textContent).toBe('攻击：波利');
  expect(root.querySelector('[data-auto-toggle]').getAttribute('aria-pressed')).toBe('true');
  expect(root.querySelector('[data-auto-toggle]').textContent).toBe('停止战斗');
  view.updateShortcuts({ page: 0, pages: 6, slots: Array.from({ length: 6 }, (_, index) => ({ index, name: '技能', available: true, empty: true })), pending: { index: 2, name: '狂击' } });
@@ -450,8 +450,10 @@ it('right-aligns narrow minimaps without stretching wide maps', () => {
  view.update({...state, position: null});
  view.setMap({width: 100, height: 200, image: {width: 200, height: 200}});
  expect(drawImage.mock.lastCall.slice(-4)).toEqual([64, 0, 64, 128]);
+ expect(root.querySelector('.map').style.getPropertyValue('--map-caption-shift')).toBe('0.25');
  view.setMap({width: 200, height: 100, image: {width: 200, height: 200}});
  expect(drawImage.mock.lastCall.slice(-4)).toEqual([0, 32, 128, 64]);
+ expect(root.querySelector('.map').style.getPropertyValue('--map-caption-shift')).toBe('0');
 });
 
 it('places the waiting entry in battle status and clears it after revival', () => {
@@ -470,7 +472,7 @@ it('places the waiting entry in battle status and clears it after revival', () =
  view.update(state);
  expect(prompt.querySelector('dialog').open).toBe(false);
  expect(reopen.hidden).toBe(true);
- expect(root.querySelector('[data-target]').textContent).toBe('目标：全部魔物');
+ expect(root.querySelector('[data-target]').textContent).toBe('自动战斗已停止');
 });
 
 it('shows instance names and explicit attack in exams, retaining candidate buttons during polling', () => {
@@ -520,4 +522,25 @@ it.each(['self', 'player', 'pet', 'mercenary', 'homunculus'])('hides combat hint
  expect(root.querySelector('.target-actions').hidden).toBe(true);
  view.updateShortcuts({page:0,pages:1,slots:[]});
  expect(root.querySelector('.battle-status').hidden).toBe(false);
+});
+
+it('opens only the full battle status without appending target descriptions', () => {
+ const autoCombat={status:'手动操作，自动战斗已停止',species:[{id:1002,name:'波利'},{id:1007,name:'疯兔'}]};
+ view.update({...state,autoCombat});
+ const button=root.querySelector('[data-target]');
+ expect(button.textContent).toBe('手动操作，自动战斗已停止');
+ button.click();
+ const detail=root.querySelector('.battle-description');
+ expect(detail.hidden).toBe(false);
+ expect(detail.textContent).toBe('手动操作，自动战斗已停止');
+ expect(button.getAttribute('aria-expanded')).toBe('true');
+ expect(root.querySelector('.backdrop').hidden).toBe(true);
+ view.update({...state,autoCombat:{status:'正在寻找目标',species:[]}});
+ expect(detail.textContent).toBe('正在寻找目标');
+ button.click();expect(detail.hidden).toBe(true);
+ button.click();root.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape'}));expect(detail.hidden).toBe(true);
+ button.click();document.body.dispatchEvent(new Event('pointerdown',{bubbles:true}));expect(detail.hidden).toBe(true);
+ button.click();root.querySelector('[data-panel=menu]').dispatchEvent(new Event('pointerdown',{bubbles:true,composed:true}));expect(detail.hidden).toBe(true);
+ button.click();view.notice('<b>完整临时提示</b>');expect(detail.textContent).toBe('<b>完整临时提示</b>');expect(detail.querySelector('b')).toBeNull();
+ view.update({...state,target:{self:true}});expect(detail.hidden).toBe(true);
 });

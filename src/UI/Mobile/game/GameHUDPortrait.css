@@ -56,11 +56,8 @@
 	--portrait-profile-width: 320px;
 }
 :host([data-menu-arrangement='stacked']) .map {
+	--map-canvas-size: var(--portrait-map-canvas);
 	width: var(--portrait-map-width);
-}
-:host([data-menu-arrangement='stacked']) .map canvas {
-	width: var(--portrait-map-canvas);
-	height: var(--portrait-map-canvas);
 }
 :host([data-menu-arrangement='stacked']) .top-left {
 	width: min(var(--portrait-profile-width), calc(100% - var(--portrait-map-width) - 36px));

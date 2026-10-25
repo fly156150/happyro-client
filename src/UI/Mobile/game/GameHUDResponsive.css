@@ -203,12 +203,9 @@
 	padding: 8px 14px;
 }
 :host([data-menu-density='spacious']) .map {
+	--map-canvas-size: 128px;
 	width: 144px;
 	gap: 3px;
-}
-:host([data-menu-density='spacious']) .map canvas {
-	width: 128px;
-	height: 128px;
 }
 :host([data-menu-density='spacious']) .map span {
 	font-size: 14px;
@@ -252,7 +249,7 @@
 	padding: 7px 10px;
 }
 :host([data-menu-density='spacious']) .battle-tools button,
-:host([data-menu-density='spacious']) .battle-status button,
+:host([data-menu-density='spacious']) .battle-status button:not([data-target]),
 :host([data-menu-density='spacious']) .target-actions button {
 	min-height: var(--battle-action-height);
 	font-size: 14px;
@@ -301,11 +298,8 @@
 	--landscape-map-canvas: 153.6px;
 }
 :host([data-menu-arrangement='wide']) .map {
+	--map-canvas-size: var(--landscape-map-canvas);
 	width: var(--landscape-map-width);
-}
-:host([data-menu-arrangement='wide']) .map canvas {
-	width: var(--landscape-map-canvas);
-	height: var(--landscape-map-canvas);
 }
 
 /* Item sprites reserve a separate count row; skill icon geometry is unchanged. */
@@ -343,4 +337,10 @@
 }
 :host([data-phone-screen][data-orientation='landscape']) .status-effect {
  flex: 0 0 32px;
+}
+
+/* Keep status effects legible on tablets, including compact split views. */
+:host(:not([data-phone-screen])[data-menu-density]) {
+	--hud-status-icon-size: 40px;
+	--hud-status-icon-gap: 5px;
 }

@@ -69,7 +69,7 @@ it('loads distant map species, retains edits made during loading and never uses 
  expect(actions.targets).not.toHaveBeenCalled();
 });
 
-it('offers retry after map data fails and shows a clear empty-map result', async () => {
+it('offers retry after map data fails and leaves an empty map list without explanatory copy', async () => {
  const body = document.body.appendChild(document.createElement('div'));
  const mapSpecies = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce([]);
  createAutoCombatPanel(body, {snapshot:()=>({species:[],skills:[],ranges:{search:20,activity:30}}),mapSpecies,skills:()=>[],configure:vi.fn()});
@@ -77,7 +77,7 @@ it('offers retry after map data fails and shows a clear empty-map result', async
  expect(body.querySelector('[data-auto-species]').textContent).toContain('加载失败');
  body.querySelector('[data-auto-species] button').click();
  await Promise.resolve();
- expect(body.querySelector('[data-auto-species]').textContent).toBe('当前地图没有配置魔物');
+ expect(body.querySelector('[data-auto-species]').textContent).toBe('');
 });
 
 it('ignores late results after the settings contents are replaced', async () => {
