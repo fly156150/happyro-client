@@ -12,6 +12,7 @@
  * Load dependencies
  */
 import DB from 'DB/DBManager.js';
+import { questTargetName } from 'DB/Quest/QuestTargetName.js';
 import Network from 'Network/NetworkManager.js';
 import PACKET from 'Network/PacketStructure.js';
 import Quest from 'UI/Components/Quest/Quest.js';
@@ -58,7 +59,7 @@ function onAllQuestList(pkt) {
 					lvlMax: hunt.lvlMax || null,
 					huntCount: hunt.huntCount || 0,
 					maxCount: hunt.maxCount || 0,
-					mobName: hunt.mobName || ''
+					mobName: questTargetName(hunt)
 				};
 				const ID = hunt.huntID ? hunt.huntID : hunt.mobGID;
 				local_quest.hunt_list[ID] = local_hunt; // prefer huntid over the mobGID
@@ -107,7 +108,7 @@ function onAddQuest(pkt) {
 				lvlMax: hunt.lvlMax || null,
 				huntCount: hunt.huntCount || 0,
 				maxCount: hunt.maxCount || 0,
-				mobName: hunt.mobName || ''
+				mobName: questTargetName(hunt)
 			};
 			const ID = hunt.huntID ? hunt.huntID : hunt.mobGID;
 			quest.hunt_list[ID] = local_hunt; // prefer huntid over the mobGID
@@ -161,7 +162,7 @@ function onUpdateMissionHunt(pkt) {
 					lvlMax: local_hunt.lvlMax || null,
 					huntCount: local_hunt.huntCount || 0,
 					maxCount: local_hunt.maxCount || 0,
-					mobName: local_hunt.mobName || ''
+					mobName: questTargetName(local_hunt)
 				};
 				Quest.getUI().addQuest(local_quest, local_quest.questID);
 			}
