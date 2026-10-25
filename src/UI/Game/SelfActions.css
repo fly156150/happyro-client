@@ -5,7 +5,6 @@
 button { min-width: 0; height: var(--target-action-height, 30px); min-height: var(--target-action-height, 30px); border: 1px solid #ecce94; border-radius: 6px; background: #483a25b8; color: inherit; padding: var(--target-action-padding, 4px 2px); font: inherit; cursor: pointer; touch-action: manipulation; }
 button:disabled { opacity: .5; cursor: default; }
 button:focus-visible { outline: 2px solid #ffca67; outline-offset: 2px; }
-p { margin: 6px 0 0; overflow-wrap: anywhere; }
 .emotions { position: absolute; right: 0; bottom: calc(100% + 10px); width: min(280px, calc(100vw - 32px)); max-height: min(240px, 50dvh); overflow: hidden; display: flex; flex-direction: column; padding: 8px; border: 1px solid #657584; border-radius: 8px; background: #19212a; box-shadow: 0 4px 16px #0006; z-index: 1; }
 .emotion-list { min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
 .emotions button { height: 44px; padding: 0; border-color: #657584; background: #394753; }
@@ -38,6 +37,5 @@ p { margin: 6px 0 0; overflow-wrap: anywhere; }
  background-color: #fff4d7; border-color: #af8841; color: #70511e; opacity: 1;
 }
 :host([data-desktop]) .actions button[aria-pressed='true'] { box-shadow: inset 0 0 0 1px #af8841, 0 2px 6px #0002; }
-:host([data-desktop]) p { position: absolute; right: 0; bottom: calc(100% + 8px); width: max-content; max-width: 280px; margin: 0; padding: 8px 12px; border: 1px solid #c6a76b; border-radius: 6px; background: #fff6e5; color: #704b21; }
 
 :host([data-desktop]) .action-label { display: none; }

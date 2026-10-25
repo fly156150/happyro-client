@@ -1,3 +1,4 @@
+import { showToast, clearToast } from 'UI/Components/Toast.js';
 import Session from 'Engine/SessionStorage.js';
 import EntityManager from 'Renderer/EntityManager.js';
 import Network from 'Network/NetworkManager.js';
@@ -26,7 +27,7 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
  host.hidden = true;
  host.toggleAttribute('data-desktop', desktop);
  const root = host.attachShadow({ mode: 'open' });
- root.innerHTML = `<style>${css}</style><div class="actions"><button data-emotions aria-expanded="false">表情</button><button data-sit>坐下</button><button data-mount hidden>骑乘</button></div><p role="status" hidden></p><div class="emotions" hidden aria-label="选择表情"><div class="emotion-list"></div></div>`;
+ root.innerHTML = `<style>${css}</style><div class="actions"><button data-emotions aria-expanded="false">表情</button><button data-sit>坐下</button><button data-mount hidden>骑乘</button></div><div class="emotions" hidden aria-label="选择表情"><div class="emotion-list"></div></div>`;
  parent.append(host);
  const $ = selector => root.querySelector(selector);
  const abort = new AbortController();
@@ -34,7 +35,10 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
  const alive = () => Session.Playing && Session.Entity && Session.Entity.action !== Session.Entity.ACTION.DIE;
  const current = () => !disposed && alive() && Session.Entity === owner && (desktop || EntityManager.getFocusEntity() === owner);
  const allowed = () => current() && !Session.FreezeUI;
- function message(text = '') { $('p').textContent = text; $('p').hidden = !text; }
+ function message(text = '') {
+  if (text) showToast(host, text, 'error');
+  else clearToast(host);
+ }
  function closePalette() { $('.emotions').hidden = true; $('[data-emotions]').setAttribute('aria-expanded', 'false'); }
  function accept(snapshot) {
   const rows = (snapshot.riding || []).filter(entry => mounts.includes(entry.kind));
@@ -71,6 +75,7 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
  }
  async function load() {
   const token = ++version;
+  let failure = '';
   loading = true;
   render();
   try {
@@ -78,9 +83,9 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
    if (token !== version || !current()) return;
    accept(snapshot);
   } catch (error) {
-   if (token === version && current()) message(error.message);
+   if (token === version && current()) failure = error.message;
   }
-  if (token === version) { loading = false; ready = true; render(); }
+  if (token === version) { loading = false; ready = true; render(); if (failure) message(failure); }
  }
  function update() {
   const visible = Boolean(!disposed && alive() && (desktop || EntityManager.getFocusEntity() === Session.Entity));
@@ -178,6 +183,6 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
  }, { signal: abort.signal });
  return {
   update,
-  destroy() { disposed = true; version++; abort.abort(); host.remove(); }
+  destroy() { disposed = true; version++; abort.abort(); clearToast(host); host.remove(); }
  };
 }

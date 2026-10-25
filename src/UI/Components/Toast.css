@@ -1,7 +1,12 @@
 :host {
 	all: initial;
 	position: fixed;
-	top: calc(env(safe-area-inset-top, 0px) + 66px);
+	/* Follow the portrait HUD, keeping feedback above the central character. */
+	top: clamp(
+		calc(env(safe-area-inset-top, 0px) + 66px),
+		var(--mobile-notification-top, calc(env(safe-area-inset-top, 0px) + 66px)),
+		25dvh
+	);
 	left: 50%;
 	transform: translateX(-50%);
 	z-index: 2147483647;

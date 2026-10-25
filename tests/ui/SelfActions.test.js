@@ -6,6 +6,7 @@ vi.mock('Network/NetworkManager.js', () => ({ default: { sendPacket: s.send } })
 vi.mock('Network/PacketStructure.js', () => ({ default: { CZ: { REQUEST_ACT2: class {}, REQ_EMOTION: class {} } } }));
 vi.mock('UI/Components/GameTools/AdventureControlService.js', () => ({ loadCurrentCharacter: s.load, maintainCurrentCharacter: s.mutate }));
 vi.mock('../../src/UI/Game/ChatEmotionImages.js', () => ({ loadChatEmotionImages: async () => ({}) }));
+import Interface from '../../src/Preferences/Interface.js';
 import { createSelfActions } from '../../src/UI/Game/SelfActions.js';
 let parent, view, root, stop;
 const flush = async () => { await new Promise(resolve => setTimeout(resolve, 0)); };
@@ -19,7 +20,7 @@ beforeEach(() => {
  parent = document.body.appendChild(document.createElement('div')); stop = vi.fn();
  view = createSelfActions(parent, stop); root = parent.firstChild.shadowRoot;
 });
-afterEach(() => { view.destroy(); parent.remove(); });
+afterEach(() => { view.destroy(); parent.remove(); vi.useRealTimers(); });
 async function select() { s.focus = s.session.Entity; view.update(); await flush(); }
 it('only shows on self selection and uses live sit state', async () => {
  view.update(); expect(parent.firstChild.hidden).toBe(true); expect(s.load).not.toHaveBeenCalled();
@@ -47,7 +48,7 @@ it('shows eligible mounts with unmet conditions and does not offer followers as 
  await select(); const button = root.querySelector('[data-mount]');
  expect(button.hidden).toBe(false); expect(button.disabled).toBe(false);
  button.click(); await flush();
- expect(root.querySelector('p').textContent).toBe('需要学习「骑乘术」技能 Lv.1');
+ expect(document.querySelector('.ui-toast').textContent).toBe('需要学习「骑乘术」技能 Lv.1');
  expect(s.mutate).not.toHaveBeenCalled();
  s.load.mockResolvedValue({ riding: [mount(false)] });
  button.click(); await flush(); expect(s.mutate).toHaveBeenCalledOnce();
@@ -55,7 +56,7 @@ it('shows eligible mounts with unmet conditions and does not offer followers as 
 it('rejects stale selection and changed mount state before sending', async () => {
  await select(); s.load.mockResolvedValue({ riding: [mount(true)] });
  root.querySelector('[data-mount]').click(); await flush(); expect(s.mutate).not.toHaveBeenCalled();
- expect(root.querySelector('p').textContent).toContain('状态已变化');
+ expect(document.querySelector('.ui-toast').textContent).toContain('状态已变化');
  let resolve; s.load.mockImplementation(() => new Promise(r => { resolve = r; }));
  root.querySelector('[data-mount]').click(); s.focus = null; view.update();
  resolve({ riding: [mount(true)] }); await flush(); expect(s.mutate).not.toHaveBeenCalled();
@@ -113,7 +114,7 @@ it('still offers local actions when initial mount lookup fails', async () => {
  s.load.mockRejectedValue(new Error('读取失败'));
  await select(); expect(parent.firstChild.hidden).toBe(false);
  expect(root.querySelector('[data-mount]').hidden).toBe(true);
- expect(root.querySelector('p').textContent).toBe('读取失败');
+ expect(document.querySelector('.ui-toast').textContent).toBe('读取失败');
 });
 
 it('keeps desktop controls visible without selecting self and preserves actions when another entity is focused', async () => {
@@ -138,7 +139,7 @@ it.each([false, true])('refreshes eligibility on click after Zeny changes (deskt
  s.load.mockResolvedValue({ riding: [{ ...mount(false), reason: 'riding_insufficient_zeny' }] });
  await select(); const button = root.querySelector('[data-mount]');
  expect(button.hidden).toBe(false); button.click(); await flush();
- expect(root.querySelector('p').textContent).toBe('Zeny 不足'); expect(s.mutate).not.toHaveBeenCalled();
+ expect(document.querySelector('.ui-toast').textContent).toBe('Zeny 不足'); expect(s.mutate).not.toHaveBeenCalled();
  s.load.mockResolvedValue({ riding: [mount(false)] }); button.click(); await flush();
  expect(s.mutate).toHaveBeenCalledOnce();
 });
@@ -146,4 +147,16 @@ it('hides riding when the new job has no mount', async () => {
  await select(); s.load.mockResolvedValue({ riding: [{kind: 'falcon', active: true}] });
  s.session.Entity._job = 3; view.update(); await flush();
  expect(root.querySelector('[data-mount]').hidden).toBe(true);
+});
+
+it.each([false,true])('automatically dismisses failed mount feedback without a persistent status panel (desktop=%s)', async desktop => {
+ view.destroy();view=createSelfActions(parent,stop,{desktop});root=parent.firstChild.shadowRoot;
+ s.load.mockResolvedValue({riding:[{...mount(false),reason:'riding_insufficient_zeny'}]});
+ await select();vi.useFakeTimers();
+ root.querySelector('[data-mount]').click();await vi.advanceTimersByTimeAsync(0);
+ expect(document.querySelector('.ui-toast').textContent).toBe('Zeny 不足');
+ expect(root.querySelector('p[role="status"]')).toBeNull();
+ await vi.advanceTimersByTimeAsync(Interface.toastDuration*1000);
+ expect(document.querySelector('.ui-toast')).toBeNull();
+ expect(s.mutate).not.toHaveBeenCalled();
 });
