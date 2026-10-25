@@ -42,3 +42,5 @@ npm run build:pwa
 ```
 
 产物位于 `dist/Web`，由 Gateway `ROBROWSER_PATH` 提供。
+
+上述本机 make 启停入口面向 Linux systemd；macOS 使用已配置的 launchd 服务，见根仓库[服务管理](../../docs/operations/services.md)。构建与重启是两个步骤，核对服务实际使用的产物路径后再验收。
