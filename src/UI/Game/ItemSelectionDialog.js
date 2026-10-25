@@ -1,3 +1,5 @@
+const ITEMS_PER_PAGE = 10;
+
 /** Keep selection across pages until the user explicitly confirms. */
 export function openItemSelectionDialog(
 	container,
@@ -64,7 +66,7 @@ export function openItemSelectionDialog(
 		results.setAttribute('aria-busy', 'true');
 		status.hidden = true;
 		try {
-			const response = await searchItems({ query, page: targetPage, perPage: 20 });
+			const response = await searchItems({ query, page: targetPage, perPage: ITEMS_PER_PAGE });
 			if (closed || token !== requestId) return;
 			clearImages();
 			results.replaceChildren();
@@ -84,14 +86,14 @@ export function openItemSelectionDialog(
 					updateSelection();
 				};
 				const caption = document.createElement('span');
-				caption.textContent = `${name}${item.count === undefined ? ` · ${item.id}` : ` ×${item.count}`}${existing.has(item.id) ? `（${existingLabel}）` : ''}`;
+				caption.textContent = `${name}${item.count === undefined ? ` · ${item.id}` : ` ×${item.count}`}${existing.has(item.id) && existingLabel ? `（${existingLabel}）` : ''}`;
 				row.append(checkbox, image(item.icon), caption);
 				results.append(row);
 			}
 			if (!response.data.length) results.textContent = emptyMessage;
 			page = targetPage;
 			total = response.total;
-			$('[data-page]').textContent = `${page} / ${Math.max(1, Math.ceil(total / 20))}`;
+			$('[data-page]').textContent = `${page} / ${Math.max(1, Math.ceil(total / ITEMS_PER_PAGE))}`;
 			status.hidden = true;
 			status.textContent = '';
 		} catch {
@@ -103,7 +105,7 @@ export function openItemSelectionDialog(
 			if (!closed && token === requestId) {
 				results.removeAttribute('aria-busy');
 				previous.disabled = page <= 1;
-				next.disabled = total <= page * 20;
+				next.disabled = total <= page * ITEMS_PER_PAGE;
 			}
 		}
 	}

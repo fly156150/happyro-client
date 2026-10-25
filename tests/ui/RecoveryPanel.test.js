@@ -135,3 +135,22 @@ it('disables a step instead of clamping it to a non-multiple boundary', () => {
  target.value='87';target.dispatchEvent(new Event('change'));
  expect(up.disabled).toBe(false);up.click();expect(state.recovery.hp.trigger).toBe(80);
 });
+
+it('pages recovery items by ten and retains selection across the last page', async () => {
+ actions.recoveryItems = () => Array.from({length:11}, (_,i) => ({id:501+i,hp:true,count:1}));
+ actions.recoveryItemName = id => `道具 ${id}`;
+ editor.destroy(); editor = createRecoveryPanel(body, actions);
+ body.querySelector('.recovery-select').click();
+ await vi.waitFor(() => expect(body.querySelectorAll('.pickup-results .pickup-item')).toHaveLength(10));
+ expect(body.querySelector('[data-page]').textContent).toBe('1 / 2');
+ body.querySelector('[data-item-id="501"]').click();
+ body.querySelector('[data-next]').click();
+ await vi.waitFor(() => expect(body.querySelector('[data-item-id="511"]')).not.toBeNull());
+ expect(body.querySelectorAll('.pickup-results .pickup-item')).toHaveLength(1);
+ expect(body.querySelector('[data-next]').disabled).toBe(true);
+ body.querySelector('[data-item-id="511"]').click();
+ body.querySelector('[data-previous]').click();
+ await vi.waitFor(() => expect(body.querySelector('[data-item-id="501"]')?.checked).toBe(true));
+ body.querySelector('[data-confirm]').click();
+ expect(state.recovery.hp.items).toEqual([501,511]);
+});

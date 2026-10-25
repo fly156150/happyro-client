@@ -854,3 +854,28 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel #mobile-recovery-settings .recovery-item-details > small {
  font-size: var(--panel-caption);
 }
+
+/* Spacious item selection is limited to tablets, including landscape. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-results {
+ font-size: var(--panel-text);
+ line-height: 1.5;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-item {
+ box-sizing: border-box;
+ min-height: 56px;
+ gap: 12px;
+ padding-block: 10px;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-item-icon {
+ flex-basis: 32px;
+ width: 32px;
+ height: 32px;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-item input[type='checkbox'] {
+ width: 22px;
+ height: 22px;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-item input[type='checkbox']:checked::after {
+ left: 7px;
+ top: 4px;
+}

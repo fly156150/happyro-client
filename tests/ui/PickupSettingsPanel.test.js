@@ -30,6 +30,8 @@ it('allows editing and saving while pickup is off',()=>{
 });
 it('keeps multi-page selections pending until confirmation and avoids duplicates',async()=>{
  mount();click('添加');await search([{Id:501,names:{'zh-CN':'红色药水'}}],41);
+ expect(searchAdventureItems).toHaveBeenLastCalledWith({query:'药水',page:1,perPage:10});
+ expect(section.querySelector('[data-page]').textContent).toBe('1 / 5');
  choose('[data-item-id="501"]');expect(draft.excluded).toEqual([]);expect(persist).not.toHaveBeenCalled();
  searchAdventureItems.mockResolvedValueOnce({data:[{Id:502,names:{'zh-CN':'橙色药水'}}],total:41});click('下一页');
  await vi.waitFor(()=>expect(section.querySelector('[data-item-id="502"]')).not.toBeNull());choose('[data-item-id="502"]');

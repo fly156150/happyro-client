@@ -94,7 +94,6 @@ export function createRecoveryPanel(body, actions) {
 			title: `选择 ${key.toUpperCase()} 道具`,
 			searchLabel: '搜索道具',
 			placeholder: '输入道具名称或 ID',
-			existingLabel: '已选择',
 			allowEmptyQuery: true,
 			emptyMessage: '背包中暂无符合条件的道具',
 			existingItems: settings[key].items.map(id => ({ id })),
