@@ -1,5 +1,6 @@
 /* eslint-disable */
 import fs from 'fs';
+import { verifyNaviReview } from '../../scripts/verify-navi-review.mjs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
@@ -58,6 +59,7 @@ const entryMap = {
 };
 
 (async function build() {
+	verifyNaviReview();
 	const basePath = dist + platform;
 
 	const modules = {
