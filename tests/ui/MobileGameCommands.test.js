@@ -293,11 +293,11 @@ it('revalidates confirmed trades and reports rejected friend requests',()=>{
  expect(playerAction('friend',42)).toBe('好友请求未发送');
 });
 
-it('selects self without walking and clears self on the next ground tap', () => {
+it('ignores self taps without walking or opening actions', () => {
  const self = entity(0); s.session.Entity = s.over = self;
  tapScene(1, 2);
- expect(s.target).toBe(self); expect(s.walk).not.toHaveBeenCalled();
- expect(targetSnapshot().self).toBe(true);
+ expect(s.target).toBeNull(); expect(s.walk).not.toHaveBeenCalled();
+ expect(targetSnapshot().self).not.toBe(true);
  s.over = null; tapScene(3, 4);
  expect(s.target).toBeNull(); expect(s.walk).toHaveBeenCalledOnce();
 });

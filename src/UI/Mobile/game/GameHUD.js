@@ -341,6 +341,8 @@ HUD.onAppend = function () {
 		tap: (x, y, pressedTarget) => {
 			if (pressedTarget && EntityManager.get(pressedTarget.GID) !== pressedTarget) return;
 			const hit = pressedTarget || Commands.pickSceneEntity(x, y);
+			// Keep self taps inert unless a skill is awaiting its target.
+			if (hit === Session.Entity && !shortcuts.snapshot().pending) return;
 			examTargets.clear();
 			if (
 				hit &&

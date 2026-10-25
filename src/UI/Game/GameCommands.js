@@ -98,14 +98,11 @@ export function tapScene(x, y, pressedTarget) {
 	Mouse.world.x = ground ? pos[0] : -1;
 	Mouse.world.y = ground ? pos[1] : -1;
 	const target = pressedTarget || EntityManager.intersect();
+	// Ignore ordinary self taps; manual self-targeted skills use their own picker.
+	if (target === Session.Entity) return;
 	const previous = EntityManager.getFocusEntity();
 	Session.moveAction = null;
 	Session.autoFollow = false;
-	if (target === Session.Entity) {
-		if (previous && previous !== target) previous.onFocusEnd();
-		EntityManager.setFocusEntity(target);
-		return;
-	}
 	if (previous === Session.Entity) EntityManager.setFocusEntity(null);
 	if (target && target !== Session.Entity) {
 		if (previous && previous !== target) previous.onFocusEnd();

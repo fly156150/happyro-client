@@ -108,12 +108,8 @@ function onMouseDown(event) {
 				return;
 			}
 			if (entityOver === Session.Entity && !KEYS.ALT && !KEYS.SHIFT && !KEYS.CTRL && Mouse.state !== Mouse.MOUSE_STATE.USESKILL) {
-				clearAttackIntent();
-				notifyGameInput('action');
-				if (entityFocus && entityFocus !== entityOver) entityFocus.onFocusEnd();
-				EntityManager.setFocusEntity(entityOver);
-				Session.moveAction = null;
-				Session.autoFollow = false;
+				// Self-action controls are opened explicitly, not by clicking the character.
+				combatHandledClick = true;
 				return;
 			}
 			clearAttackIntent();
