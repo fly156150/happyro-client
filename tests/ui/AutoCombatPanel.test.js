@@ -89,3 +89,19 @@ it('ignores late results after the settings contents are replaced', async () => 
  await Promise.resolve();
  expect(body.textContent).toBe('已关闭');
 });
+
+it('keeps skills in one list and preserves buffs when choosing normal attacks', () => {
+ const body=document.body.appendChild(document.createElement('div'));
+ const configure=vi.fn();
+ createAutoCombatPanel(body,{
+  snapshot:()=>({species:[],skills:[5,34],ranges:{search:20,activity:30}}),mapSpecies:()=>[],
+  skills:()=>[{id:5,kind:'attack',name:'狂击',level:3},{id:34,kind:'buff',name:'天使之赐福',level:3}],configure
+ });
+ expect(body.querySelectorAll('[data-auto-skills] h4')).toHaveLength(0);
+ expect([...body.querySelectorAll('[data-auto-skills] [data-skill]')].map(n=>Number(n.dataset.skill))).toEqual([5,34]);
+ expect(body.querySelector('#auto-skills-title').textContent).toBe('攻击方式');
+ body.querySelector('[data-normal-attack]').click();
+ expect(body.querySelector('[data-skill="34"]').getAttribute('aria-checked')).toBe('true');
+ expect(body.querySelector('[data-skill="5"]').getAttribute('aria-checked')).toBe('false');
+ expect(configure.mock.calls.at(-1)[1]).toEqual([34]);
+});

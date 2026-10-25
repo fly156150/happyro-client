@@ -268,7 +268,10 @@ export function createAutoCombatPanel(body, actions) {
 		for (const button of body.querySelectorAll('[data-species]'))
 			button.setAttribute('aria-checked', String(chosenSpecies.has(Number(button.dataset.species))));
 		$('[data-all-species]').setAttribute('aria-pressed', String(!targets.length));
-		$('[data-normal-attack]').setAttribute('aria-pressed', String(count === 0));
+		$('[data-normal-attack]').setAttribute(
+			'aria-pressed',
+			String(!entries.some(skill => skill.kind !== 'buff' && chosenSkills.has(skill.id)))
+		);
 		$('[data-skill-count]').textContent = count ? `已选 ${count} 项` : '未选技能';
 	}
 	$('[data-all-species]').onclick = () => {
@@ -276,7 +279,7 @@ export function createAutoCombatPanel(body, actions) {
 		updateSummary();
 	};
 	$('[data-normal-attack]').onclick = () => {
-		chosenSkills.clear();
+		for (const skill of entries) if (skill.kind !== 'buff') chosenSkills.delete(skill.id);
 		updateSummary();
 	};
 	function save() {
@@ -301,22 +304,21 @@ export function createAutoCombatPanel(body, actions) {
 		notice.textContent = '正在加载当前地图魔物…';
 		speciesList.append(notice);
 		try {
-			const entries = await actions.mapSpecies();
+			const mapEntries = await actions.mapSpecies();
 			if (!body.contains(speciesList)) return;
-			for (const entry of entries) species.set(entry.id, entry.name);
+			for (const entry of mapEntries) species.set(entry.id, entry.name);
 			renderSpecies();
-
 		} catch {
 			if (!body.contains(speciesList)) return;
 			notice.textContent = '地图魔物加载失败';
-			const retry = document.createElement('button');
-			retry.type = 'button';
-			retry.textContent = '重试';
-			retry.onclick = () => {
+			const loadRetry = document.createElement('button');
+			loadRetry.type = 'button';
+			loadRetry.textContent = '重试';
+			loadRetry.onclick = () => {
 				notice.remove();
 				loadSpecies();
 			};
-			notice.append(retry);
+			notice.append(loadRetry);
 		}
 	}
 	loadSpecies();

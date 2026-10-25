@@ -213,3 +213,54 @@ it('backs off an interrupted cast immediately instead of waiting out its full du
  time=1200;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
  expect(controller.snapshot().active).toBe(true);
 });
+
+function setupBuffs() {
+ const effects=new Set();
+ skills=[{id:34,name:'赐福',kind:'buff',available:true},{id:29,name:'加速术',kind:'buff',available:true},{id:33,name:'天使之障壁',kind:'buff',available:true}];
+ data.hasStatus=id=>effects.has(id);data.buff=vi.fn(()=>true);
+ controller.configure([],skills.map(s=>s.id),{search:20,activity:30});
+ return effects;
+}
+it('maintains self buffs while idle, skips existing effects and resumes after expiry',()=>{
+ const effects=setupBuffs();targets=[];effects.add(12);effects.add(9);
+ controller.start();expect(data.buff).toHaveBeenCalledOnce();expect(data.buff.mock.calls[0][0].id).toBe(34);
+ controller.skillFeedback({id:34,phase:'executed'});effects.add(10);
+ time=1000;controller.tick();expect(data.buff).toHaveBeenCalledOnce();
+ time=11000;effects.delete(10);controller.tick();expect(data.buff).toHaveBeenCalledTimes(2);
+ controller.stop();time=22000;controller.tick();expect(data.buff).toHaveBeenCalledTimes(2);
+});
+it('bounds consecutive buffs and yields an attack even when multiple effects are missing',()=>{
+ const effects=setupBuffs();controller.start();
+ effects.add(10);controller.skillFeedback({id:34,phase:'executed'});
+ time=1000;controller.tick();expect(data.buff.mock.calls.at(-1)[0].id).toBe(29);
+ effects.add(12);controller.skillFeedback({id:29,phase:'executed'});
+ time=2000;controller.tick();expect(data.buff).toHaveBeenCalledTimes(2);expect(data.act).toHaveBeenCalledOnce();
+ time=3000;controller.tick();expect(data.buff.mock.calls.at(-1)[0].id).toBe(33);
+});
+it('does not abort a self buff when the monster disappears, and never casts it offensively',()=>{
+ const effects=setupBuffs();controller.start();targets=[];time=1000;controller.tick();
+ expect(data.buff).toHaveBeenCalledOnce();expect(data.act).not.toHaveBeenCalled();
+ effects.add(10);controller.skillFeedback({id:34,phase:'executed'});controller.tick();
+ expect(data.buff).toHaveBeenCalledTimes(2);
+});
+it('skips unavailable buffs and continues attacking after buff failures or missing confirmation',()=>{
+ setupBuffs();skills[1].available=skills[2].available=false;
+ controller.start();controller.skillFeedback({id:34,phase:'failed'});
+ time=1000;controller.tick();expect(data.act).toHaveBeenLastCalledWith(expect.anything(),null);
+ time=11000;controller.tick();expect(data.buff).toHaveBeenCalledTimes(2);
+ time=19000;controller.tick();time=19200;controller.tick();expect(data.act).toHaveBeenCalledTimes(2);
+});
+it('pauses buff maintenance during manual movement and does not immediately spam dispelled buffs',()=>{
+ const effects=setupBuffs();skills[1].available=skills[2].available=false;targets=[];
+ controller.start();effects.add(10);controller.skillFeedback({id:34,phase:'executed'});
+ time=1000;controller.tick();effects.delete(10);time=2000;controller.tick();expect(data.buff).toHaveBeenCalledOnce();
+ controller.pauseForMovement();time=12000;controller.tick();expect(data.buff).toHaveBeenCalledOnce();
+ controller.resumeAfterMovement();controller.tick();expect(data.buff).toHaveBeenCalledTimes(2);
+});
+
+it('does not exhaust the buff allowance on unreachable monsters',()=>{
+ const effects=setupBuffs();data.reachable=()=>false;controller.start();
+ effects.add(10);controller.skillFeedback({id:34,phase:'executed'});time=1000;controller.tick();
+ effects.add(12);controller.skillFeedback({id:29,phase:'executed'});time=2000;controller.tick();
+ expect(data.buff).toHaveBeenCalledTimes(3);expect(data.act).not.toHaveBeenCalled();
+});

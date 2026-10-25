@@ -124,3 +124,27 @@ it('makes offensive healing selectable but never casts it on a living-element ta
  controller.stop();state.cast.mockClear();state.entities[0].job=1015; // Zombie, Undead 1.
  controller.start();expect(state.cast).toHaveBeenLastCalledWith(28,5,10);
 });
+
+it('offers audited buffs and targets the player without focusing a monster', async () => {
+ const {playerStatuses}=await import('../../src/Network/PlayerStatuses.js');playerStatuses.clear();
+ state.session.Entity.GID=99;state.session.Entity.life.hp=100;
+ state.skills=[{SKID:34,type:16,level:3,spcost:8},{SKID:29,type:16,level:3,spcost:8},{SKID:45,type:4,level:2,spcost:8}];
+ const controller=createGameAutoCombat(()=>true);
+ expect(controller.skills().every(skill=>skill.kind==='buff')).toBe(true);
+ controller.configure([],[34],{search:20,activity:30});controller.start();
+ expect(state.cast).toHaveBeenCalledExactlyOnceWith(34,3,99);expect(state.focus).toBeNull();
+ controller.stop();playerStatuses.clear();
+});
+it('preserves existing buffs and blocks unsafe undead self buffs or insufficient HP', async () => {
+ const {playerStatuses}=await import('../../src/Network/PlayerStatuses.js');playerStatuses.clear();
+ state.session.Entity.GID=99;state.session.Entity.life.hp=15;
+ state.skills=[{SKID:34,type:16,level:3,spcost:8},{SKID:29,type:16,level:3,spcost:8}];
+ const controller=createGameAutoCombat(()=>true);
+ expect(controller.skills().find(s=>s.id===29).available).toBe(false);
+ playerStatuses.update({index:97,state:1,RemainMS:10000});
+ expect(controller.skills().every(s=>!s.available)).toBe(true);
+ playerStatuses.clear();playerStatuses.update({index:10,state:1,RemainMS:10000});
+ controller.configure([],[34],{search:20,activity:30});controller.start();
+ expect(state.cast).not.toHaveBeenCalled();expect(state.attack).toHaveBeenCalledOnce();
+ controller.stop();playerStatuses.clear();
+});

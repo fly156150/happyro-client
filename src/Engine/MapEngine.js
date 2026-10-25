@@ -1,3 +1,4 @@
+import { playerStatuses } from 'Network/PlayerStatuses.js';
 import { recoveryDefinition } from 'DB/Items/RecoveryItems.js';
 import { itemUseExecution } from 'Network/ItemUseExecution.js';
 import { createMapLoadRecovery, createMapLoadRecoveryView } from './MapEngine/MapLoadRecovery.js';
@@ -1077,6 +1078,7 @@ function onRestartAnswer(pkt) {
 		GuildEngine.guild_id = 0;
 		BasicInfo.getUI().remove();
 		PlayerViewEquip.getUI().remove();
+		playerStatuses.clear();
 		StatusIcons.clean();
 		ChatBox.clean();
 		ShortCut.clean();
@@ -1103,6 +1105,7 @@ function onDisconnectAnswer(pkt) {
 			WhisperBox.clearAll();
 			BasicInfo.getUI().remove();
 			PlayerViewEquip.getUI().remove();
+			playerStatuses.clear();
 			StatusIcons.clean();
 			ChatBox.clean();
 			ShortCut.clean();
@@ -1494,6 +1497,7 @@ function prepareRecoveryLogin() {
 	UIManager.removeComponents();
 	WhisperBox.clearAll();
 	GuildEngine.guild_id = 0;
+	playerStatuses.clear();
 	StatusIcons.clean();
 	ShortCut.clean();
 	Quest.getUI().clean();

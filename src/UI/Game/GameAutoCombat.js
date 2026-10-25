@@ -1,3 +1,5 @@
+import { playerStatuses } from 'Network/PlayerStatuses.js';
+import { buffRule } from './CombatBuffRules.js';
 import { combatSkillPriority, isOffensiveSupportSkill } from './CombatSkillAffinity.js';
 import { loadAutoCombatMapSpecies } from './AutoCombatMapSpecies.js';
 import { getCurrentAdventureMap } from 'UI/Components/GameTools/AdventureActionService.js';
@@ -49,18 +51,29 @@ export function createGameAutoCombat(enabled) {
 			.filter(
 				skill =>
 					canExecuteSkill(skill) &&
-					(skill.type & (SKILL_INF.ENEMY | SKILL_INF.PLACE) || isOffensiveSupportSkill(skill.SKID))
+					(buffRule(skill.SKID) ||
+						skill.type & (SKILL_INF.ENEMY | SKILL_INF.PLACE) ||
+						isOffensiveSupportSkill(skill.SKID))
 			)
 			.map(skill => {
+				const rule = buffRule(skill.SKID);
 				const reason =
 					remainingCooldown(skill.SKID) > 0
 						? '冷却中'
 						: skill.spcost > Session.Entity.life.sp
 							? 'SP 不足'
-							: '';
+							: rule?.hpCost && Session.Entity.life.hp <= rule.hpCost
+								? 'HP 不足'
+								: rule?.blockedBy?.some(id => playerStatuses.has(id))
+									? '当前状态无法使用'
+									: '';
 				return {
 					id: skill.SKID,
-					priority: target ? combatSkillPriority({ id: skill.SKID, level: skill.level }, target) : undefined,
+					kind: rule ? 'buff' : 'attack',
+					priority:
+						target && !rule
+							? combatSkillPriority({ id: skill.SKID, level: skill.level }, target)
+							: undefined,
 					name: SkillInfo[skill.SKID]?.SkillName || `技能 ${skill.SKID}`,
 					loadIcon: callback => {
 						const name = SkillInfo[skill.SKID]?.Name;
@@ -100,6 +113,19 @@ export function createGameAutoCombat(enabled) {
 			position: () => Session.Entity.position,
 			targets,
 			skills,
+			hasStatus: id => playerStatuses.has(id),
+			buff: skill => {
+				const current = skills().find(
+					entry => entry.id === skill.id && entry.kind === 'buff' && entry.available
+				);
+				if (!current || playerStatuses.has(buffRule(current.id).status)) return false;
+				stop();
+				Commands.stopAttack();
+				const result = SkillTargetSelection.onUseSkillToId(current.id, current.level, Session.Entity.GID);
+				ownsAction = result !== false;
+				ownedMove = Session.moveAction;
+				return result;
+			},
 			stop,
 			pickupTurn: takeAutomationPickupTurn,
 			cancelPickup: cancelAutomationPickup,

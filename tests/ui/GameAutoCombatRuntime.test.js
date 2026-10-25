@@ -1,15 +1,15 @@
-vi.mock('UI/Game/GameAutoRecovery.js', () => ({ loadRecoveryItemIcon: vi.fn(), recoveryItems: () => [], recoveryItemName: id => String(id), createGameAutoRecovery: () => ({ tick: vi.fn(), reset: vi.fn(), snapshot: () => ({status: ''}) }) }));
+vi.mock('UI/Game/GameAutoRecovery.js', () => ({ loadRecoveryItemIcon: vi.fn(), recoveryItems: () => [], recoveryItemName: id => String(id), createGameAutoRecovery: () => ({ tick: (...args) => state.recoveryTick(...args), reset: vi.fn(), snapshot: () => ({status: ''}) }) }));
 import { reportSkillExecution } from '../../src/Network/SkillExecution.js';
 vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({ getCurrentAdventureMap: () => state.map, normalizeAdventureMap: value => value, getAdventureActionState: () => ({ allowed: false }), teleportToCoordinate: vi.fn() }));
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-const state = vi.hoisted(() => ({ map: 'izlude', session: {}, act: vi.fn(), stop: vi.fn(), feedback: vi.fn() }));
+const state = vi.hoisted(() => ({ skills: [], buff: vi.fn(), recoveryTick: vi.fn(), map: 'izlude', session: {}, act: vi.fn(), stop: vi.fn(), feedback: vi.fn() }));
 vi.mock('Engine/SessionStorage.js', () => ({ default: state.session }));
 vi.mock('UI/Game/GameAutoCombat.js', async () => {
 	const { createAutoCombatController } = await import('../../src/UI/Game/AutoCombatController.js');
 	return { createGameAutoCombat: enabled => ({...createAutoCombatController({
 		enabled, position: () => [0, 0], now: () => performance.now(), random: () => 0,
 		targets: () => [{ id: 1, species: 1002, name: '波利', position: [1, 0] }],
-		skills: () => [], reachable: () => true, chasing: () => false, busy: () => false,
+		skills: () => state.skills, hasStatus: () => false, buff: state.buff, reachable: () => true, chasing: () => false, busy: () => false,
 		select: vi.fn(), act: state.act, stop: state.stop
 	}), skillFeedback: state.feedback}) };
 });
@@ -18,7 +18,7 @@ import { notifyGameInput } from '../../src/Controls/GameInputIntent.js';
 import { endConnection } from '../../src/Network/ConnectionLifecycle.js';
 let runtime;
 beforeEach(() => {
-	vi.useFakeTimers(); vi.clearAllMocks(); state.map = 'izlude';
+	vi.useFakeTimers(); vi.clearAllMocks(); state.map = 'izlude'; state.skills = [];
 	Object.assign(state.session, { Playing: true, FreezeUI: false, Entity: { action: 0, ACTION: { DIE: 9, WALK: 1 } } });
 	vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
 });
@@ -99,3 +99,13 @@ it('replaces an existing presentation runtime instead of adding another automati
  expect(previous.start()).toBe(false); expect(vi.getTimerCount()).toBe(1);
  previous.destroy(); expect(vi.getTimerCount()).toBe(1);
 });
+
+ it('continues checking automatic recovery while a self buff awaits confirmation', () => {
+  state.skills=[{id:34,kind:'buff',available:true,name:'赐福'}];
+  runtime=createGameAutoCombatRuntime();runtime.configure([],[34],{search:20,activity:30});runtime.start();
+  expect(state.buff).toHaveBeenCalledOnce();state.recoveryTick.mockClear();
+  vi.advanceTimersByTime(2000);
+  expect(state.buff).toHaveBeenCalledOnce();expect(state.act).not.toHaveBeenCalled();
+  expect(state.recoveryTick).toHaveBeenCalledTimes(10);
+  expect(state.recoveryTick.mock.calls.every(([,active])=>active)).toBe(true);
+ });

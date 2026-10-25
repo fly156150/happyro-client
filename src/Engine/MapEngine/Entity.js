@@ -1,3 +1,4 @@
+import { playerStatuses } from 'Network/PlayerStatuses.js';
 import { reportSkillExecution } from 'Network/SkillExecution.js';
 import MapRenderer from 'Renderer/MapRenderer.js';
 import { isIdentificationExam } from 'UI/Game/IdentificationExam.js';
@@ -1887,6 +1888,7 @@ function onEntityCastCancel(pkt) {
  * @param {object} pkt - PACKET.ZC.MSG_STATE_CHANGE
  */
 function onEntityStatusChange(pkt) {
+	if (pkt.AID === Session.AID || pkt.AID === Session.Entity?.GID) playerStatuses.update(pkt);
 	const entity = EntityManager.get(pkt.AID);
 
 	// Monster/Active monster transformations - special handling

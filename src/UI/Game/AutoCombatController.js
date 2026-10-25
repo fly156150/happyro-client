@@ -1,5 +1,6 @@
+import { createAutoCombatScheduler } from './AutoCombatScheduler.js';
 import { defaultRecoverySettings, validRecoverySettings } from './RecoverySettings.js';
-import { createAutoCombatSkillState, AUTO_COMBAT_SKILL_TIMING } from './AutoCombatSkillState.js';
+import { AUTO_COMBAT_SKILL_TIMING } from './AutoCombatSkillState.js';
 import { chooseCombatSkill } from './CombatSkillAffinity.js';
 import { getClientDefaults } from 'Core/ClientDefaults.js';
 
@@ -39,7 +40,8 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		progressAt = 0,
 		status = '自动战斗已停止';
 	const skipped = new Map();
-	const skillState = createAutoCombatSkillState();
+	const scheduler = createAutoCombatScheduler();
+	const skillState = scheduler.execution;
 	function suppressSkill(id, now) {
 		skillState.suppress(id, target.id, now);
 		data.stop();
@@ -48,14 +50,14 @@ export function createAutoCombatController(data, configuration = { species: [], 
 	function skillFeedback(event) {
 		if (!active) return;
 		const now = data.now();
-		if (skillState.feedback(event, target?.id, now) === 'failed') {
+		if (skillState.feedback(event, now) === 'failed') {
 			data.stop();
 			nextAction = now + AUTO_COMBAT_SKILL_TIMING.retry;
 		}
 	}
 	const distance = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]));
 	function stop(message = '自动战斗已停止') {
-		skillState.reset();
+		scheduler.reset();
 		data.cancelPickup?.();
 		idleSince = null;
 		if (active || target) data.stop();
@@ -103,6 +105,30 @@ export function createAutoCombatController(data, configuration = { species: [], 
 					distance(origin, entity.position) <= ranges.activity &&
 					(skipped.get(entity.id) || 0) <= now
 			);
+		if (skillState.maintaining()) {
+			if (skillState.poll(target?.id, now, false, data.hasStatus)) {
+				data.stop();
+				data.clearExpiredCast?.();
+				nextAction = now + AUTO_COMBAT_SKILL_TIMING.retry;
+			}
+			if (skillState.waiting() || now < nextAction) return;
+		}
+		if (continuous && now >= nextAction && !data.busy()) {
+			const buff = scheduler.chooseBuff(
+				data.skills(),
+				selected,
+				data.hasStatus,
+				now,
+				targets.some(candidate => data.reachable(candidate))
+			);
+			if (buff) {
+				scheduler.beginBuff(buff, now);
+				status = `补充增益：${buff.name}`;
+				if (data.buff(buff) === false) skillState.suppress(buff.id, 'self', now);
+				nextAction = now + 900;
+				return;
+			}
+		}
 		const current = target && targets.find(entity => entity.id === target.id);
 		if (target && !current) {
 			if (!continuous) {
@@ -176,7 +202,10 @@ export function createAutoCombatController(data, configuration = { species: [], 
 			.skills(target)
 			.filter(
 				skill =>
-					selected.includes(skill.id) && skill.available && skillState.available(skill.id, target.id, now)
+					skill.kind !== 'buff' &&
+					selected.includes(skill.id) &&
+					skill.available &&
+					skillState.available(skill.id, target.id, now)
 			);
 		const skill = skillState.useNormalAttack(now) ? null : chooseCombatSkill(skills, data.random);
 		if (skill) skillState.begin(skill.id, target.id, now);
@@ -197,6 +226,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 			skillState.clearPending();
 			target = null;
 		}
+		scheduler.attack();
 		nextAction = now + 900;
 	}
 	return {
@@ -228,7 +258,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 			status = '寻找附近目标';
 		},
 		start() {
-			skillState.reset();
+			scheduler.reset();
 			data.cancelPickup?.();
 			idleSince = null;
 			if (!data.enabled()) return false;
