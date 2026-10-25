@@ -40,6 +40,7 @@ export function createGameSocial(canOperate, shortcuts) {
 						.map(skill => ({
 							...skill,
 							name: SkillInfo[skill.SKID].SkillName,
+							descriptionMarkup: DB.getSkillDescription(skill.SKID),
 							description: toPlainRagnarokText(DB.getSkillDescription(skill.SKID)),
 							active: canExecuteSkill(skill),
 							learnable:

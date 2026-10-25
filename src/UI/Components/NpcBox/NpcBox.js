@@ -8,15 +8,16 @@
  * @author Vincent Thibault
  */
 
-import { applyColorCodes as processColorCodes } from 'Utils/RagnarokText.js';
+import { formatNPCMarkup as processText } from 'Utils/RagnarokText.js';
 import { ensureReadableText } from 'Utils/ReadableText.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import Renderer from 'Renderer/Renderer.js';
 import UIManager from 'UI/UIManager.js';
+import { hasHigherFocusedWindow } from 'UI/Game/DialogueKeyboardFocus.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import 'UI/Elements/Elements.js';
 import ItemInfo from 'UI/Components/ItemInfo/ItemInfo.js';
-import Navigation from 'UI/Components/Navigation/Navigation.js';
+import { prepareNpcNaviLinks, handleNpcNaviClick } from 'UI/Game/NpcNaviLinks.js';
 import htmlText from './NpcBox.html?raw';
 import cssText from './NpcBox.css?raw';
 import NpcMenu from 'UI/Components/NpcMenu/NpcMenu.js';
@@ -43,50 +44,6 @@ let _needCleanUp = false;
  * @var {integer} NPC GID
  */
 NpcBox.ownerID = 0;
-
-/**
- * Process NAVI tags in text
- */
-function processNAVITags(text) {
-	if (!text) {
-		return '';
-	}
-	text = String(text);
-	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
-		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
-	});
-}
-
-/**
- * Process ITEM tags in text
- */
-function processItemTags(text) {
-	if (!text) {
-		return '';
-	}
-	if (typeof text !== 'string') {
-		text = String(text);
-	}
-	return text.replace(
-		/<(ITEMLINK|ITEM)>([\s\S]*?)<INFO>([\s\S]*?)<\/INFO><\/\1>/g,
-		(match, tag, itemName, itemId) => {
-			return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
-		}
-	);
-}
-
-/**
- * Process all text formatting
- */
-function processText(text) {
-	if (!text) {
-		return '';
-	}
-	text = processItemTags(text);
-	text = processNAVITags(text);
-	text = processColorCodes(text);
-	return text;
-}
 
 /**
  * Initialize Component
@@ -129,23 +86,9 @@ NpcBox.init = function init() {
 			ItemInfo.setItem({ ITID: itemId, IsIdentified: true });
 			return;
 		}
-
-		const naviLink = e.target.closest('.navi-link');
-		if (naviLink) {
-			const naviInfo = naviLink.dataset.naviInfo;
-			const displayName = naviLink.dataset.naviName;
-			if (!naviInfo) {
-				return;
-			}
-			if (Navigation.uid === naviInfo && Navigation._host && Navigation._host.style.display !== 'none') {
-				Navigation.hide();
-				return;
-			}
-			Navigation.show();
-			Navigation.uid = naviInfo;
-			Navigation.setNaviInfo(naviInfo, displayName);
-		}
+		handleNpcNaviClick(e);
 	});
+	root.addEventListener('keydown', handleNpcNaviClick);
 
 	this.draggable();
 };
@@ -190,6 +133,7 @@ function _isVisible(el) {
  * Add support for Enter key
  */
 NpcBox.onKeyDown = function onKeyDown(event) {
+	if (hasHigherFocusedWindow(this, UIManager.components)) return true;
 	if (NpcMenu._host && NpcMenu._host.style.display !== 'none' && NpcMenu.__active) {
 		return true;
 	}
@@ -257,6 +201,7 @@ NpcBox.setText = function setText(text, gid) {
 	div.innerHTML = processText(text);
 	content.appendChild(div);
 	ensureReadableText(div);
+	prepareNpcNaviLinks(div);
 };
 
 /**

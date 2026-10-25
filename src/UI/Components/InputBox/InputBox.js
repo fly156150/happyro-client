@@ -12,6 +12,7 @@ import Renderer from 'Renderer/Renderer.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import DB from 'DB/DBManager.js';
 import UIManager from 'UI/UIManager.js';
+import { hasHigherFocusedWindow } from 'UI/Game/DialogueKeyboardFocus.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import 'UI/Elements/Elements.js';
 import htmlText from './InputBox.html?raw';
@@ -107,6 +108,7 @@ InputBox.onRemove = function onRemove() {
  * @return {boolean}
  */
 InputBox.onKeyDown = function onKeyDown(event) {
+	if (hasHigherFocusedWindow(this, UIManager.components)) return true;
 	if (event.which === KEYS.ENTER) {
 		validate();
 		event.stopImmediatePropagation();

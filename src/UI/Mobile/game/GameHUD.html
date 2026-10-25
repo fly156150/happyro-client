@@ -47,10 +47,14 @@
 		<div class="battle-controls">
 			<div class="exam-targets surface" data-exam-targets hidden aria-label="选择魔物"></div>
 			<div class="battle-status surface">
-				<button type="button" data-target aria-live="polite">自动战斗已停止</button>
-				<button data-interact hidden></button>
+				<span data-target aria-live="polite">自动战斗已停止</span>
 			</div>
-			<div class="target-actions" hidden>
+			<div class="battle-tools interaction-actions context-actions" hidden>
+				<button type="button" class="surface" data-interact hidden></button>
+				<button type="button" class="surface" data-interact-cancel>取消</button>
+			</div>
+			<div class="battle-tools death-actions"></div>
+			<div class="target-actions context-actions" hidden>
 				<div class="player-actions" data-player-actions hidden>
 					<button data-player-action="private">私聊</button>
 					<button data-player-action="equipment">装备</button>
@@ -79,6 +83,7 @@
 			<div class="skill-prompt surface" hidden>
 				<span data-skill-prompt role="status"></span>
 			</div>
+			<div class="npc-navi-dock"></div>
 			<div class="battle-tools">
 				<button class="surface" data-self-actions aria-expanded="false">动作</button>
 				<button class="surface" data-panel="autoCombat" data-auto-target>战斗设置</button>
@@ -90,7 +95,7 @@
 				><button data-shortcut-page="1" aria-label="下一组快捷键">›</button
 				><button data-panel="shortcuts">快捷键</button>
 			</div>
-			<div class="skill-actions" hidden>
+			<div class="skill-actions context-actions" hidden>
 				<button class="surface" data-skill-self hidden>对自己施放</button>
 				<button class="surface" data-skill-cancel>取消施法</button>
 			</div>

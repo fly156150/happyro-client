@@ -74,8 +74,8 @@ export function openItemTransformation(kind, itemId) {
 			? recipe.Materials.map(entry => ({ id: entry.MaterialItemID, count: entry.Amount }))
 			: [];
 	}
-	function explanation(item, recipe) {
-		const lines = [toPlainRagnarokText(recipe.NeedSource_String || '')];
+	function explanation(item, recipe, markup = false) {
+		const lines = [markup ? recipe.NeedSource_String || '' : toPlainRagnarokText(recipe.NeedSource_String || '')];
 		if (kind === 'reform') {
 			lines.push(
 				`改造结果：${DB.getItemName({ ITID: recipe.ResultItemId, IsIdentified: true })}`,
@@ -111,6 +111,7 @@ export function openItemTransformation(kind, itemId) {
 						return {
 							...row,
 							requiredCount: required(item, recipe),
+							descriptionMarkup: explanation(item, recipe, true),
 							description: explanation(item, recipe)
 						};
 					}),
@@ -145,7 +146,8 @@ export function openItemTransformation(kind, itemId) {
 					count,
 					name: DB.getItemName(item),
 					identity: identity(item),
-					description: explanation(item, recipe)
+					descriptionMarkup: explanation(item, recipe, true),
+							description: explanation(item, recipe)
 				});
 			}
 			return '';

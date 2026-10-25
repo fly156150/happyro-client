@@ -1,8 +1,9 @@
 import { expect, it, vi } from 'vitest';
+vi.mock('UI/Components/Navigation/NaviActionService.js', () => ({ prepareNaviLinks:vi.fn(), isNaviAvailable:vi.fn(()=>true),  handleNaviClick: vi.fn() }));
 import { createInventoryPanel } from '../../src/UI/Mobile/game/InventoryPanel.js';
 it('supports category dropdowns, exact-index actions, live server updates and shortcut confirmation without losing selection', () => {
  const body = document.body.appendChild(document.createElement('div'));
- let items = [{ index: 2, ID: 501, name: '药水', count: 3, category: 'usable', description: '<img onerror=alert(1)>', action: 'use', reason: '', identified: true, shortcut: true }, { index: 3, ID: 1201, name: '短剑', count: 1, category: 'equipment', action: 'equip', reason: '', identified: true, shortcut: true }];
+ let items = [{ index: 2, ID: 501, name: '药水', count: 3, category: 'usable', descriptionMarkup: '<img onerror=alert(1)>', action: 'use', reason: '', identified: true, shortcut: true }, { index: 3, ID: 1201, name: '短剑', count: 1, category: 'equipment', action: 'equip', reason: '', identified: true, shortcut: true }];
  const actions = { preview: vi.fn(async () => ({ image: '', art: '' })), snapshot: () => items, act: vi.fn(() => ''), bind: vi.fn(() => true), shortcuts: () => ({ page: 1, pages: 8, total: 36, slots: [{ index: 5 }] }), slotName: () => '旧技能' };
  const panel = createInventoryPanel(body, actions);
  const category = value => { const select = body.querySelector('[aria-label="背包分类"]'); select.value = value; select.dispatchEvent(new Event('change')); };
@@ -58,7 +59,7 @@ it('ignores stale image loads and displays the selected illustration directly wi
 
 it('moves numeric weight and count below the picture without removing descriptive text',async()=>{
  const body=document.body.appendChild(document.createElement('div'));
- const item={index:1,ID:1,name:'材料',count:12,identified:true,worn:true,reason:'此物品没有直接使用操作',description:'制作材料\n数量：999\n重量 : 3.5\n携带重量增加 10%。'};
+ const item={index:1,ID:1,name:'材料',count:12,identified:true,worn:true,reason:'此物品没有直接使用操作',descriptionMarkup:'制作材料\n数量：999\n重量 : 3.5\n携带重量增加 10%。'};
  createInventoryPanel(body,{snapshot:()=>[item],preview:async()=>({image:'material.bmp'})});
  body.querySelector('[data-index="1"]').click();await Promise.resolve();
  const media=body.querySelector('.inventory-item-media');
@@ -85,11 +86,23 @@ it('filters detailed item types and resets scroll when switching categories', ()
 
 it('shows inserted cards and enchants and refreshes them from the equipment state',()=>{
  const body=document.body.appendChild(document.createElement('div'));
- const item={index:1,ID:100,name:'装备',count:1,identified:true,worn:true,sockets:[{kind:'card',slot:1,name:'卡片',description:'攻击 +10'},{kind:'enchant',slot:4,name:'锐利',description:'暴击 +6'}]};
+ const item={index:1,ID:100,name:'装备',count:1,identified:true,worn:true,sockets:[{kind:'card',slot:1,name:'卡片',descriptionMarkup:'攻击 +10'},{kind:'enchant',slot:4,name:'锐利',descriptionMarkup:'暴击 +6'}]};
  const panel=createInventoryPanel(body,{snapshot:()=>[item],preview:async()=>null});
  body.querySelector('[data-index="1"]').click();
  expect([...body.querySelectorAll('.inventory-sockets h4')].map(e=>e.textContent)).toEqual(['已插卡片','附魔']);
  expect(body.querySelectorAll('.inventory-sockets details')).toHaveLength(2);
  expect(body.querySelector('.inventory-sockets details p').textContent).toBe('攻击 +10');
  item.sockets=[];panel.update();expect(body.querySelector('.inventory-sockets')).toBeNull();
+});
+
+it('keeps the empty selection DOM stable across repeated inventory refreshes', () => {
+ const body=document.body.appendChild(document.createElement('div'));
+ const items=Array.from({length:80},(_,i)=>({index:i+1,ID:501,name:`物品${i}`,count:1,identified:true}));
+ const panel=createInventoryPanel(body,{snapshot:()=>items,preview:async()=>null});
+ const detail=body.querySelector('.inventory-detail');const children=[...detail.childNodes];
+ const list=body.querySelector('.inventory-list');const rows=[...list.children];list.scrollTop=1000;
+ for(let i=0;i<20;i++)panel.update();
+ expect([...detail.childNodes]).toEqual(children);expect([...list.children]).toEqual(rows);expect(list.scrollTop).toBe(1000);
+ rows[0].click();items.splice(0,1);panel.update();
+ const empty=[...detail.childNodes];panel.update();expect([...detail.childNodes]).toEqual(empty);
 });

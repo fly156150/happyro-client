@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
@@ -161,7 +162,9 @@ export function createShopPanel(body, service) {
 		add.disabled = !state.allowed || !item || !capacity(item, 1) || Boolean(quantityDialog);
 		remove.disabled = !state.allowed || !item || !capacity(item, -1) || Boolean(quantityDialog);
 		const detail = $('.inventory-detail');
-		if (!item) detail.textContent = '请选择物品查看说明';
+		if (!item) {
+			if (detail.textContent !== '请选择物品查看说明') detail.textContent = '请选择物品查看说明';
+		}
 		else {
 			if (!detail.querySelector('h3'))
 				detail.innerHTML = '<h3></h3><p class="shop-price"></p><p class="item-description"></p>';
@@ -174,7 +177,7 @@ export function createShopPanel(body, service) {
 							.map(m => `${m.name}${m.refine_level ? `（精炼 +${m.refine_level}）` : ''} × ${m.amount}`)
 							.join('、')
 					: '');
-			detail.querySelector('.item-description').textContent = item.description || '';
+			renderDescriptionMarkup(detail.querySelector('.item-description'), item.descriptionMarkup || item.description || '');
 		}
 		if (quantityDialog) {
 			const current = state.items.find(entry => keyOf(entry) === quantityDialog.key);

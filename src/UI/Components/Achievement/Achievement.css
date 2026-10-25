@@ -550,6 +550,9 @@
 
 .detail-view .d-desc {
 	color: #6699ff;
+	white-space: pre-line;
+	overflow: auto;
+	overflow-wrap: anywhere;
 	height: 57px;
 	width: 200px;
 }

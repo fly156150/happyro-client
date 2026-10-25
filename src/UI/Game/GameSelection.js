@@ -20,6 +20,7 @@ export function selectionEntries(values, type) {
 					? {
 							id: value,
 							name: info.SkillName,
+							descriptionMarkup: DB.getSkillDescription(value),
 							description: toPlainRagnarokText(DB.getSkillDescription(value)),
 							file: info.Name
 						}

@@ -41,7 +41,8 @@ import {
 import {
 	getAdventureActionState,
 	subscribeAdventureActions,
-	teleportToCoordinate
+	teleportToCoordinate,
+	teleportToNpc
 } from '../GameTools/AdventureActionService.js';
 import {
 	npcAvailabilityBatches,
@@ -210,11 +211,6 @@ let _autoWalkRequested = false;
 let _resumeAutoWalkAfterMapLoad = false;
 let _dialogueWarp = null;
 const _routeStateListeners = new Set();
-let _teleportCooldownUntil = 0;
-let _teleportCooldownTimer = null;
-let _npcTeleportPending = false;
-let _npcTeleportRequestId = 0;
-let _npcTeleportTimer = null;
 let _npcAvailabilityRequestId = 0;
 let _npcAvailabilityPending = null;
 let _npcAvailabilityTimer = null;
@@ -559,7 +555,7 @@ Navigation.onAppend = function onAppend() {
 	initializePathFindingWorker();
 	_unsubscribeAdventureActions?.();
 	_unsubscribeAdventureActions = subscribeAdventureActions(state => {
-		if (state.kind === 'coordinate' && state.message) this.setActionStatus(state.message, state.error);
+		if ((state.kind === 'coordinate' || state.kind === 'npc') && state.message) this.setActionStatus(state.message, state.error);
 		this.updateTeleportButton();
 	});
 	this.updateTeleportButton();
@@ -623,9 +619,7 @@ Navigation.onRemove = function onRemove() {
 	if (!_resumeAutoWalkAfterMapLoad) this.stopAutoWalk();
 	this.clearPath();
 	terminatePathFindingWorker();
-	clearTimeout(_npcTeleportTimer);
 	clearTimeout(_npcAvailabilityTimer);
-	_npcTeleportPending = false;
 	_npcAvailabilityPending = null;
 	_unsubscribeAdventureActions?.();
 	_unsubscribeAdventureActions = null;
@@ -994,8 +988,9 @@ Navigation.updateTeleportButton = function updateTeleportButton() {
 	button.style.display = 'inline-block';
 	button.disabled = !hasCoordinateTarget || !canTeleportTarget || !coordinateActionState.canTeleport;
 	npcButton.style.display = npcTeleportable && canTeleportTarget ? 'inline-block' : 'none';
-	npcButton.disabled = _npcTeleportPending || Date.now() < _teleportCooldownUntil;
-	npcButton.textContent = _npcTeleportPending ? '正在传送...' : '传送到 NPC 附近';
+	const npcActionState = getAdventureActionState(npcTarget);
+	npcButton.disabled = !npcActionState.canTeleport;
+	npcButton.textContent = npcActionState.npcPending ? '正在传送...' : '传送到 NPC 附近';
 };
 
 Navigation.setActionStatus = function setActionStatus(message, isError = false) {
@@ -1133,83 +1128,10 @@ Navigation.teleportToSelectedTarget = function teleportToSelectedTarget() {
 	this.updateTeleportButton();
 };
 
-Navigation.onMapTeleportResult = function onMapTeleportResult(packet) {
-	const messages = {
-		1: '当前角色没有传送权限',
-		2: '跨地图传送已关闭',
-		3: `传送冷却中，请等待 ${packet.cooldownRemaining} 秒`,
-		4: '目标地图不可用',
-		5: '当前地图规则禁止传送',
-		6: '目标坐标无效',
-		7: '传送失败，请稍后重试'
-	};
-	if (packet.result === 0) {
-		this.clear();
-		this.setActionStatus('');
-	} else {
-		this.setActionStatus(messages[packet.result] || '传送请求被服务器拒绝', true);
-	}
-	this.updateTeleportButton();
-};
-
 Navigation.teleportToSelectedNpc = function teleportToSelectedNpc() {
 	const npc = this.targetResult;
-	if (
-		_npcTeleportPending ||
-		npc?.type !== 'NPC' ||
-		!npc.mapName ||
-		!Number.isFinite(npc.x) ||
-		!Number.isFinite(npc.y) ||
-		!Number.isFinite(npc.npcClass) ||
-		!canSelfTeleport() ||
-		Date.now() < _teleportCooldownUntil
-	)
-		return;
-
-	_npcTeleportPending = true;
-	const requestId = ++_npcTeleportRequestId;
-	const packet = new PACKET.CZ.HAPPYRO_NPC_TELEPORT();
-	packet.requestId = requestId;
-	packet.mapName = normalizeMapName(npc.mapName);
-	packet.npcX = Math.max(0, Math.floor(npc.x));
-	packet.npcY = Math.max(0, Math.floor(npc.y));
-	packet.npcClass = Math.floor(npc.npcClass);
-	Network.sendPacket(packet);
+	if (!canSelfTeleport() || !teleportToNpc(npc)) return;
 	this.setActionStatus('正在等待服务器确认...');
-	this.updateTeleportButton();
-	clearTimeout(_npcTeleportTimer);
-	_npcTeleportTimer = setTimeout(() => {
-		if (!_npcTeleportPending || requestId !== _npcTeleportRequestId) return;
-		_npcTeleportPending = false;
-		this.setActionStatus('服务器响应超时，请稍后重试', true);
-		this.updateTeleportButton();
-	}, 8000);
-};
-
-Navigation.onNpcTeleportResult = function onNpcTeleportResult(packet) {
-	if (packet.requestId !== _npcTeleportRequestId) return;
-	clearTimeout(_npcTeleportTimer);
-	_npcTeleportPending = false;
-	const messages = {
-		1: '当前角色没有传送权限',
-		2: '跨地图传送已关闭',
-		3: `传送冷却中，请等待 ${packet.cooldownRemaining} 秒`,
-		4: '目标地图不可用',
-		5: 'NPC 当前不存在或不可见',
-		6: '当前地图规则禁止传送',
-		7: 'NPC 附近没有可用落点',
-		8: '传送失败，请稍后重试'
-	};
-	if (packet.result === 0) {
-		_teleportCooldownUntil = Date.now() + packet.cooldownRemaining * 1000;
-		this.clear();
-		this.setActionStatus(`已传送到 NPC 附近 (${packet.x}, ${packet.y})`);
-		clearTimeout(_teleportCooldownTimer);
-		_teleportCooldownTimer = setTimeout(() => this.updateTeleportButton(), packet.cooldownRemaining * 1000);
-	} else {
-		if (packet.result === 3) _teleportCooldownUntil = Date.now() + packet.cooldownRemaining * 1000;
-		this.setActionStatus(messages[packet.result] || '传送请求被服务器拒绝', true);
-	}
 	this.updateTeleportButton();
 };
 

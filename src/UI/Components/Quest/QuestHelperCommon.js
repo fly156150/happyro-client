@@ -17,7 +17,7 @@ import { formatDateTime } from 'Utils/DateTime';
  * @author Vincent Thibault
  */
 
-import { applyColorCodes as processColorCodes } from 'Utils/RagnarokText.js';
+import { formatNPCMarkup as processText } from 'Utils/RagnarokText.js';
 import { ensureReadableText } from 'Utils/ReadableText.js';
 import DB from 'DB/DBManager.js';
 import Client from 'Core/Client.js';
@@ -27,52 +27,7 @@ import UIManager from 'UI/UIManager.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import 'UI/Elements/Elements.js';
 import ItemInfo from 'UI/Components/ItemInfo/ItemInfo.js';
-import Navigation from 'UI/Components/Navigation/Navigation.js';
-
-/**
- * Process item tags in text (<ITEM>Name<INFO>ID</INFO></ITEM>)
- * @param {string} text - The text to process
- * @returns {string} HTML with processed item tags
- */
-function processItemTags(text) {
-	if (!text) {
-		return '';
-	}
-	text = String(text);
-	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, (match, itemName, itemId) => {
-		return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
-	});
-}
-
-/**
- * Process NAVI tags in text (<NAVI>Display Name<INFO>mapname,x,y,0,000,flag</INFO></NAVI>)
- * @param {string} text - The text to process
- * @returns {string} HTML with processed NAVI tags
- */
-function processNAVITags(text) {
-	if (!text) {
-		return '';
-	}
-	text = String(text);
-	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
-		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
-	});
-}
-
-/**
- * Process all text formatting (color codes and item tags)
- * @param {string} text - The text to process
- * @returns {string} Fully processed HTML
- */
-function processText(text) {
-	if (!text) {
-		return '';
-	}
-	text = processItemTags(text);
-	text = processNAVITags(text);
-	text = processColorCodes(text);
-	return text;
-}
+import { handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
 
 /**
  * Create a QuestHelper component from a version-specific configuration.
@@ -112,6 +67,7 @@ export function createQuestHelper(config) {
 	 */
 	QuestHelper.init = function init() {
 		const root = QuestHelper.getRoot();
+		root.addEventListener('keydown', handleNaviClick);
 
 		const closeBtn = root.querySelector(renewLayout ? '.quest-info-bottom-btn' : '.quest-info-close-btn');
 		if (closeBtn) {
@@ -137,22 +93,7 @@ export function createQuestHelper(config) {
 				return;
 			}
 
-			const naviLink = event.target.closest('.navi-link');
-			if (naviLink) {
-				const naviInfo = naviLink.dataset.naviInfo;
-				const displayName = naviLink.dataset.naviName;
-				if (!naviInfo) {
-					return;
-				}
-				const navHostDisplay = Navigation._host ? getComputedStyle(Navigation._host).display : 'none';
-				if (Navigation.uid === naviInfo && navHostDisplay !== 'none') {
-					Navigation.hide();
-					return;
-				}
-				Navigation.show();
-				Navigation.uid = naviInfo;
-				Navigation.setNaviInfo(naviInfo, displayName);
-			}
+			handleNaviClick(event);
 		});
 
 		this.draggable('.titlebar');
@@ -268,6 +209,7 @@ export function createQuestHelper(config) {
 						deadlineEl.textContent = `截止时间 [${formatDateTime(quest.end_time * 1000)}]`;
 					}
 				}
+				prepareNaviLinks(root);
 				ensureReadableText(root);
 			}
 		: function setQuestInfo(quest) {
@@ -314,6 +256,7 @@ export function createQuestHelper(config) {
 				if (selectEl) {
 					selectEl.addEventListener('change', e => onSelectMonster(e));
 				}
+				prepareNaviLinks(root);
 				ensureReadableText(root);
 			};
 

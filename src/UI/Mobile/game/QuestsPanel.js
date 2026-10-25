@@ -1,3 +1,6 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
+import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
+import { activateNavi, isNaviAvailable, prepareNaviLinks, handleNaviClick } from 'UI/Components/Navigation/NaviActionService.js';
 import { formatDateTime } from 'Utils/DateTime';
 import { createFeedback } from 'UI/Components/Feedback.js';
 import { setListItemText } from './ListItemText.js';
@@ -6,6 +9,8 @@ export function createQuestsPanel(body, actions) {
 	body.innerHTML =
 		'<div class="skills-toolbar menu-form-row"><select aria-label="任务分类"><option value="all">全部任务</option><option value="1">进行中</option><option value="0">已暂停</option><option value="2">已完成</option></select></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="任务列表"></div><section class="inventory-detail" aria-label="任务详情"></section></div><div class="quest-actions menu-footer menu-footer--trailing"></div>';
 	const feedback = createFeedback(body);
+	body.addEventListener('click', handleNaviClick);
+	body.addEventListener('keydown', handleNaviClick);
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),
 		detail = $('.inventory-detail');
@@ -13,9 +18,13 @@ export function createQuestsPanel(body, actions) {
 		state,
 		detailKey = '';
 	const nodes = new Map();
-	function paragraph(value) {
+	function paragraph(value, markup) {
 		const p = document.createElement('p');
-		p.textContent = value;
+		if (markup) {
+			p.innerHTML = formatRagnarokMarkup(markup);
+			prepareNaviLinks(p);
+			queueMicrotask(() => ensureReadableText(p));
+		} else p.textContent = value;
 		return p;
 	}
 	function update() {
@@ -77,7 +86,7 @@ export function createQuestsPanel(body, actions) {
 		const title = document.createElement('h3');
 		title.className = 'menu-detail-heading';
 		title.textContent = q.title;
-		content.append(title, paragraph(q.summary), paragraph(q.description));
+		content.append(title, paragraph(q.summary, q.summaryMarkup), paragraph(q.description, q.descriptionMarkup));
 		for (const hunt of q.objectives) content.append(paragraph(`${hunt.name}：${hunt.count} / ${hunt.total}`));
 		if (q.end_time) content.append(paragraph(`截止时间：${formatDateTime(q.end_time * 1000)}`));
 		for (const reward of q.rewards) content.append(paragraph(`${reward.name} × ${reward.ItemNum}`));
@@ -96,9 +105,11 @@ export function createQuestsPanel(body, actions) {
 			operations.append(button);
 		}
 		for (const target of q.targets || []) {
+			if (target.inline) continue;
+			if (!isNaviAvailable(target.naviInfo)) { operations.append(paragraph(target.name)); continue; }
 			const button = document.createElement('button');
-			button.textContent = `查看地图：${target.name}`;
-			button.onclick = () => actions.showMap(target);
+			button.textContent = `前往：${target.name}`;
+			button.onclick = () => (actions.activateNavi || activateNavi)(target.naviInfo, target.name, button);
 			operations.append(button);
 		}
 	}

@@ -92,7 +92,8 @@ import GameTools from 'UI/Components/GameTools/GameTools.js';
 import {
 	handleMapTeleportResult as handleGameToolsMapTeleportResult,
 	handleNpcTeleportResult as handleGameToolsNpcTeleportResult,
-	notifyAdventureConfigChanged
+	notifyAdventureConfigChanged,
+	notifyAdventureMapReady
 } from 'UI/Components/GameTools/AdventureActionService.js';
 import { handleNpcAvailabilityResult as handleGameToolsNpcAvailabilityResult } from 'UI/Components/GameTools/NpcAvailabilityService.js';
 import CaptchaUpload from 'UI/Components/Captcha/CaptchaUpload.js';
@@ -632,12 +633,10 @@ function onMonsterSpawnResult(pkt) {
 
 function onNpcTeleportResult(pkt) {
 	handleGameToolsNpcTeleportResult(pkt);
-	Navigation.onNpcTeleportResult(pkt);
 }
 
 function onMapTeleportResult(pkt) {
 	handleGameToolsMapTeleportResult(pkt);
-	Navigation.onMapTeleportResult(pkt);
 }
 
 function onNpcAvailabilityResult(pkt) {
@@ -786,6 +785,7 @@ function onMapChange(pkt, forceReload = false) {
 		if (!isCurrentLoad()) return;
 		mapLoadRecovery.loaded(recoveryAttempt);
 		Network.sendPacket(new PACKET.CZ.NOTIFY_ACTORINIT());
+		notifyAdventureMapReady();
 		cameraReady?.then(() => {
 			if (isCurrentLoad()) gameRecoveryReady(prepareRecoveryLogin);
 		});

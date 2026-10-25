@@ -247,7 +247,7 @@ export function targetSnapshot() {
 				: target.objecttype === T.TYPE_PC && target !== Session.Entity
 					? '交易'
 					: target.objecttype === T.TYPE_WARP
-						? '进入'
+						? '进入传送阵'
 						: ''
 	};
 }

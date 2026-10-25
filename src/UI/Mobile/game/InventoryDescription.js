@@ -1,3 +1,6 @@
+import { formatRagnarokMarkup, toPlainRagnarokText } from 'Utils/RagnarokText.js';
+import { handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
+
 /** Shared read-only inventory presentation; callers own all item actions. */
 export function createInventoryDescription(item, previewItem) {
 	const title = document.createElement('h3');
@@ -11,11 +14,14 @@ export function createInventoryDescription(item, previewItem) {
 	let weight = '—';
 	const description = document.createElement('p');
 	description.className = 'item-description';
-	description.textContent =
-		(item.description || '')
+	const descriptionMarkup =
+		(item.descriptionMarkup || '')
+			.replace(/(?:\\n|\^n)/gi, '\n')
 			.split(/\r?\n/)
 			.filter(line => {
-				const field = line.match(/^\s*(重量|Weight|数量|Quantity|Amount)\s*[:：]\s*(\d+(?:\.\d+)?)\s*$/i);
+				const plain = toPlainRagnarokText(line);
+				if (/^[\t _-]+$/.test(plain)) return false;
+				const field = plain.match(/^\s*(重量|Weight|数量|Quantity|Amount)\s*[:：]\s*(\d+(?:\.\d+)?)\s*$/i);
 				if (!field) return true;
 				if (/^(重量|Weight)$/i.test(field[1])) weight = field[2];
 				return false;
@@ -23,6 +29,7 @@ export function createInventoryDescription(item, previewItem) {
 			.join('\n')
 			.replace(/\n(?:[\t ]*\n)+/g, '\n\n')
 			.trim() || '暂无物品说明';
+	description.innerHTML = formatRagnarokMarkup(descriptionMarkup);
 	const media = document.createElement('div');
 	media.className = 'inventory-item-media';
 	const metadata = document.createElement('div');
@@ -39,6 +46,8 @@ export function createInventoryDescription(item, previewItem) {
 	reason.hidden = !reason.textContent;
 	const content = document.createElement('div');
 	content.className = 'inventory-item-description';
+	content.addEventListener('click', handleNaviClick);
+	content.addEventListener('keydown', handleNaviClick);
 	const heading = document.createElement('div');
 	heading.className = 'inventory-item-overview';
 	const summary = document.createElement('div');
@@ -61,13 +70,14 @@ export function createInventoryDescription(item, previewItem) {
 			name.textContent = `${entry.name} · 槽位 ${entry.slot}`;
 			const text = document.createElement('p');
 			text.className = 'item-description';
-			text.textContent = entry.description;
+			text.innerHTML = formatRagnarokMarkup(entry.descriptionMarkup);
 			details.append(name, text);
 			section.append(details);
 		}
 		summary.append(section);
 	}
 	heading.append(media, summary);
+	prepareNaviLinks(summary);
 	content.append(heading);
 	void previewItem(item.index, item.ID).then(preview => {
 		if (!content.isConnected || !preview) return;

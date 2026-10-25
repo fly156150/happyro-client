@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { requestMobileInput } from './MobileInputEditor.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
@@ -61,7 +62,7 @@ export function createVendingPanel(body, service) {
 		const content = document.createElement('div');
 		const description = document.createElement('p');
 		description.className = 'item-description';
-		description.textContent = item.description || '';
+		renderDescriptionMarkup(description, item.descriptionMarkup || item.description || '');
 		if (state.owned) {
 			content.append(description);
 			confirmAction(body, item.name, () => {}, { content });

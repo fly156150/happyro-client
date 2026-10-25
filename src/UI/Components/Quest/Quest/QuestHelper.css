@@ -85,6 +85,8 @@
 }
 
 #QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .npc-sprite {
+	/* Decorative art must not intercept links underneath its transparent area. */
+	pointer-events: none;
 	position: absolute;
 	top: 0px;
 	right: 0px;

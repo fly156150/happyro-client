@@ -1,3 +1,4 @@
+import { replaceNavigationClose } from 'UI/Game/NavigationVisit.js';
 import headerCSS from '../DesktopWindowHeader.css?raw';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 import { trackTabView } from './TabViewState.js';
@@ -28,6 +29,7 @@ const mountedTabs = new Map();
 let activeTabId;
 let capabilities;
 let shouldRestoreAfterMapLoad = false;
+let mapCloseCallback;
 
 function validationMessage(input) {
 	const { validity } = input;
@@ -151,6 +153,10 @@ GameTools.mountTab = function mountTab(tab, reopening = false) {
 		content.append(container);
 		const view = trackTabView(container);
 		const context = {
+			openMap: target => {
+				this.selectTab('maps');
+				mountedTabs.get('maps')?.container.dispatchEvent(new CustomEvent('game-tools-open-map', { detail: target }));
+			},
 			openMonster: id => {
 				this.selectTab('monsters');
 				mountedTabs.get('monsters')?.container.dispatchEvent(new CustomEvent('game-tools-open-monster', { detail: id }));
@@ -171,6 +177,7 @@ GameTools.mountTab = function mountTab(tab, reopening = false) {
 };
 
 onConnectionEnd(() => {
+	mapCloseCallback = undefined;
 	for (const entry of mountedTabs.values()) {
 		entry.cleanup?.();
 		entry.view.destroy();
@@ -210,7 +217,21 @@ GameTools.centerInViewport = function centerInViewport() {
 };
 
 /** Minimap entry always opens the map tab, including an already visible window. */
-GameTools.showMap = function showMap() {
+GameTools.showMonster = function showMonster(id, onClose) {
+ mapCloseCallback = replaceNavigationClose(mapCloseCallback, onClose);
+ preferences.tab = 'monsters';
+ preferences.save();
+ this.append();
+ this._host.style.display = '';
+ this.centerInViewport();
+ this.focus();
+ this.renderTabs({ reopening: true });
+ mountedTabs.get('monsters')?.container.dispatchEvent(new CustomEvent('game-tools-open-monster', { detail: id }));
+ void this.refreshCapabilities();
+};
+
+GameTools.showMap = function showMap(target, onClose) {
+	mapCloseCallback = replaceNavigationClose(mapCloseCallback, onClose);
 	preferences.tab = 'maps';
 	preferences.save();
 	this.append();
@@ -218,6 +239,7 @@ GameTools.showMap = function showMap() {
 	this.centerInViewport();
 	this.focus();
 	this.renderTabs({ reopening: true });
+	if (target) mountedTabs.get('maps')?.container.dispatchEvent(new CustomEvent('game-tools-open-map', { detail: target }));
 	void this.refreshCapabilities();
 };
 
@@ -232,6 +254,9 @@ GameTools.toggle = function toggle() {
 			entry.container.dispatchEvent(new Event('game-tools-reset-feedback'));
 		}
 		this._host.style.display = 'none';
+		const callback = mapCloseCallback;
+		mapCloseCallback = undefined;
+		callback?.();
 		return;
 	}
 	this.append();

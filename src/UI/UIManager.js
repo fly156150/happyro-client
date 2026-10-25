@@ -8,6 +8,7 @@
  * @author Vincent Thibault
  */
 
+import { bindTipBoxLinks } from 'UI/Components/TipBox/TipBoxService.js';
 import Platform from 'UI/Platform.js';
 import { showMobileDialog, removeMobileDialogs } from 'UI/Mobile/MessageDialog.js';
 import GUIComponent from 'UI/GUIComponent.js';
@@ -15,6 +16,8 @@ import CommonCSS from 'UI/Common.css?raw';
 import UIVersionManager from 'UI/UIVersionManager.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import ClampToViewport from 'UI/ClampToViewport.js';
+
+bindTipBoxLinks();
 
 /**
  * Centralize popup position

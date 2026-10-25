@@ -90,3 +90,15 @@ it.each(['说明\n重量：7','说明\n\n重量：7','说明\n________\n重量�
  expect(createGameInventory(()=>true).snapshot()[0].description).toBe('说明\n重量：7');
  spy.mockRestore();
 });
+
+it('preserves NAVI source separately from searchable plain text without leaking identified descriptions', () => {
+ const source = ['^FF0000说明', '<NAVI>目的地<INFO>prontera,151,187,0,100,0,0</INFO></NAVI>'];
+ const spy = vi.spyOn(DB, 'getItemInfo').mockReturnValue({ identifiedDescriptionName: source, unidentifiedDescriptionName: '未知物品' });
+ const inventory = createGameInventory(() => true);
+ expect(inventory.snapshot()[0].description).toBe('说明\n目的地');
+ expect(inventory.snapshot()[0].descriptionMarkup).toBe(source.join('\n'));
+ s.items[0].IsIdentified = false;
+ expect(inventory.snapshot()[0].descriptionMarkup).toBe('未知物品');
+ expect(source).toHaveLength(2);
+ spy.mockRestore();
+});

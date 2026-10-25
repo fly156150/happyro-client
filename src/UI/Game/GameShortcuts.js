@@ -131,6 +131,7 @@ export function createGameShortcuts(moving = () => false) {
 						isSkill: true,
 						ID: skill.SKID,
 						tier: tiers.get(skill.SKID) || '其它',
+						descriptionMarkup: DB.getSkillDescription(skill.SKID),
 						description: toPlainRagnarokText(DB.getSkillDescription(skill.SKID)),
 						skillDetail: {
 							name: SkillInfo[skill.SKID]?.SkillName || String(skill.SKID),
@@ -138,6 +139,7 @@ export function createGameShortcuts(moving = () => false) {
 							level: skill.level,
 							max: Math.max(SkillInfo[skill.SKID]?.MaxLv || skill.level, skill.level),
 							requirements: [], reason: '',
+							descriptionMarkup: DB.getSkillDescription(skill.SKID),
 							description: toPlainRagnarokText(DB.getSkillDescription(skill.SKID))
 						},
 						level: skill.level,

@@ -110,3 +110,12 @@ it('does not report arrival when walking stops at matching coordinates on anothe
  expect(state.active).toBe(false);expect(state.message).toBe('寻路已停止');
  expect(navigation.clear).not.toHaveBeenCalled();
 });
+
+it('keeps the source restorable during preview and releases it only when walking starts',async()=>{
+ const {beginNavigationVisit}=await import('../../src/UI/Game/NavigationVisit.js');
+ const source={restore:vi.fn(),discard:vi.fn()};const visit=beginNavigationVisit(source);
+ service.previewAdventureRoute(target);expect(source.discard).not.toHaveBeenCalled();
+ expect(service.startAdventureRoute(target)).toBe(false);expect(source.discard).not.toHaveBeenCalled();
+ mock.listener({...mock.state,pending:false,path:[{x:10,y:10},{x:30,y:30}]});
+ expect(service.startAdventureRoute(target)).toBe(true);expect(source.discard).toHaveBeenCalledOnce();visit.close();expect(source.restore).not.toHaveBeenCalled();
+});

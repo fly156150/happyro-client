@@ -30,7 +30,7 @@ export function createDeathPrompt(parent, actions, reopenParent) {
 	const heading = $('h2');
 	const reopen = document.createElement('button');
 	reopen.type = 'button';
-	reopen.className = 'death-reopen';
+	reopen.className = 'surface death-reopen';
 	reopen.textContent = '返回 / 复活';
 	reopen.hidden = true;
 	reopenParent.append(reopen);

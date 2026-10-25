@@ -71,3 +71,11 @@ it('keeps the pet menu open when a performance is rejected after the pet disappe
  expect(interactionSnapshot()?.service).toBe(service);
  expect(body.querySelector('dialog')).toBeNull();
 });
+
+it('does not rebuild pet information during unchanged polling but renders server changes',()=>{
+ const body=document.body.appendChild(document.createElement('div'));const panel=createPetPanel(body,open());
+ const infoRoot=body.querySelector('[data-info]');const rows=[...infoRoot.children];
+ for(let i=0;i<20;i++)panel.update();expect([...infoRoot.children]).toEqual(rows);
+ updateGamePetInfo({...info,nFullness:60});panel.update();expect(infoRoot.textContent).toContain('60 / 100');
+ const updated=[...infoRoot.children];panel.update();expect([...infoRoot.children]).toEqual(updated);
+});

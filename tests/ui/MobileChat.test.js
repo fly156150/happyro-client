@@ -140,3 +140,11 @@ it('closes after an accepted emotion but keeps text messages and rejected emotio
  type('普通消息');submit();expect(close).toHaveBeenCalledTimes(1);
  type('/lv');submit();expect(close).toHaveBeenCalledTimes(2);
 });
+
+it('keeps private contact nodes stable for unrelated messages and preserves scroll on updates',()=>{
+ const panel=createChatPanel(body,s.send);choose('private');
+ const messages=Array.from({length:40},(_,i)=>incoming(i+1,`对象${i}`));panel.update(messages);
+ const contacts=q('.chat-contact-list');const nodes=[...contacts.children];contacts.scrollTop=180;
+ panel.update([...messages,{id:41,channel:'public',text:'普通消息'}]);expect([...contacts.children]).toEqual(nodes);expect(contacts.scrollTop).toBe(180);
+ panel.update([...messages,incoming(42,'对象0')]);expect(contacts.scrollTop).toBe(180);
+});

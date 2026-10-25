@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 /** Shared read-only skill detail for the skills and shortcut menus. */
 export function createSkillDescription(skill) {
  const content = document.createElement('div');
@@ -10,7 +11,7 @@ export function createSkillDescription(skill) {
  requirements.textContent = `前置技能：${skill.requirements.join('；') || '无'}${skill.reason ? '\n' + skill.reason : ''}`;
  const description = document.createElement('p');
  description.className = 'item-description';
- description.textContent = skill.description;
+ renderDescriptionMarkup(description, skill.descriptionMarkup || skill.description, { navigation: true });
  content.append(title, summary, requirements, description);
  return content;
 }

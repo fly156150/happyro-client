@@ -13,6 +13,7 @@ import CommonCSS from './Common.css?raw';
 import Mouse from 'Controls/MouseEventHandler.js';
 import UIPreferences from 'Preferences/UI.js';
 import Session from 'Engine/SessionStorage.js';
+import { acquireInputFreeze, releaseInputFreeze } from 'UI/InputFreeze.js';
 import Targa from 'Loaders/Targa.js';
 import ClampToViewport from 'UI/ClampToViewport.js';
 import { getLocalizedButtonLabel } from 'UI/LocalizedButtonLabels.js';
@@ -222,7 +223,9 @@ class GUIComponent {
 			return;
 		}
 
+		this._host.toggleAttribute('data-freeze-input', this.mouseMode === MouseMode.FREEZE);
 		parent.appendChild(this._host);
+		this._host.dispatchEvent(new Event('x_append'));
 
 		// Bind keydown
 		if (this.onKeyDown) {
@@ -232,7 +235,7 @@ class GUIComponent {
 		// Freeze mode
 		if (this.mouseMode === MouseMode.FREEZE) {
 			Mouse.intersect = false;
-			Session.FreezeUI = true;
+			acquireInputFreeze(this);
 			_Cursor?.setType(_Cursor?.ACTION?.DEFAULT ?? 0);
 		}
 
@@ -317,6 +320,7 @@ class GUIComponent {
 	 */
 	remove() {
 		this.__active = false;
+		releaseInputFreeze(this);
 
 		if (this.__loaded && this._host && this._host.parentNode) {
 			// Hook
@@ -340,8 +344,7 @@ class GUIComponent {
 
 			// Freeze mode cleanup
 			if (this.mouseMode === MouseMode.FREEZE) {
-				Mouse.intersect = true;
-				Session.FreezeUI = false;
+				Mouse.intersect = !Session.FreezeUI;
 			}
 
 			// Scrollbar observer cleanup

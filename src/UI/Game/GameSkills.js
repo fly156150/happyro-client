@@ -68,6 +68,7 @@ export function createGameSkills(canOperate, shortcuts) {
 						tier: tiers.get(id) || '其它',
 						name: info.SkillName,
 						icon: icons.get(id),
+						descriptionMarkup: DB.getSkillDescription(id),
 						description: toPlainRagnarokText(DB.getSkillDescription(id)),
 						level,
 						max: Math.max(info.MaxLv, level),

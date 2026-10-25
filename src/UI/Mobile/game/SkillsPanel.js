@@ -42,6 +42,8 @@ export function createSkillsPanel(body, actions) {
 	function renderDetail() {
 		const skill = state.skills.find(entry => entry.id === selected);
 		if (!skill) {
+			if (key === 'empty') return;
+			key = 'empty';
 			const hint = document.createElement('div');
 			hint.className = 'skills-empty-message';
 			hint.textContent = '点击技能查看说明、学习或设置快捷键';

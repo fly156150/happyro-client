@@ -119,9 +119,6 @@ describe('world map navigation', () => {
 		const requestHandler = navigationSource.match(
 			/Navigation\.teleportToSelectedTarget = function teleportToSelectedTarget\(\) \{[\s\S]*?\n\};/
 		)?.[0];
-		const resultHandler = navigationSource.match(
-			/Navigation\.onMapTeleportResult = function onMapTeleportResult\(packet\) \{[\s\S]*?\n\};/
-		)?.[0];
 
 		for (const started of [false, true]) {
 			const Navigation = { hide: vi.fn(), setActionStatus: vi.fn(), updateTeleportButton: vi.fn() };
@@ -142,7 +139,8 @@ describe('world map navigation', () => {
 			expect(Navigation.setActionStatus).toHaveBeenCalledTimes(started ? 1 : 0);
 			expect(Navigation.updateTeleportButton).toHaveBeenCalledTimes(started ? 1 : 0);
 		}
-		expect(resultHandler).not.toContain("this.setActionStatus('瞬间转移')");
+		expect(navigationSource).toContain('subscribeAdventureActions(state =>');
+		expect(navigationSource).not.toContain('Navigation.onMapTeleportResult');
 		expect(adventureActionSource).toContain("setStatus('', false, null)");
 	});
 

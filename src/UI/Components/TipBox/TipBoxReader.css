@@ -1,0 +1,84 @@
+.tipbox-reader {
+ --tipbox-top: calc(env(safe-area-inset-top, 0px) + 20px);
+ --tipbox-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+ --tipbox-left: calc(env(safe-area-inset-left, 0px) + 16px);
+ --tipbox-right: calc(env(safe-area-inset-right, 0px) + 16px);
+ box-sizing: border-box;
+ position: fixed;
+ inset: var(--tipbox-top) var(--tipbox-right) var(--tipbox-bottom) var(--tipbox-left);
+ width: min(720px, calc(100vw - var(--tipbox-left) - var(--tipbox-right)));
+ height: min(680px, 82dvh, calc(100dvh - var(--tipbox-top) - var(--tipbox-bottom)));
+ max-width: calc(100vw - var(--tipbox-left) - var(--tipbox-right));
+ max-height: calc(100dvh - var(--tipbox-top) - var(--tipbox-bottom));
+ margin: auto;
+ padding: 0;
+ overflow: hidden;
+ color: #f5f2e9;
+ background: #19212a;
+ border: 1px solid #65717b;
+ border-radius: 12px;
+ box-shadow: 0 8px 32px #0008;
+ font: 14px/1.65 system-ui, sans-serif;
+ text-align: left;
+ overscroll-behavior: contain;
+ -webkit-text-size-adjust: 100%;
+}
+.tipbox-reader[open] { display: flex; flex-direction: column; }
+.tipbox-reader::backdrop { background: #0008; }
+.tipbox-reader * { box-sizing: border-box; }
+.tipbox-reader [hidden] { display: none !important; }
+.tipbox-header {
+ display: flex;
+ flex: 0 0 auto;
+ align-items: center;
+ gap: 10px;
+ padding: 10px 12px;
+ border-bottom: 1px solid #52606d;
+}
+.tipbox-header h2 {
+ flex: 1 1 auto;
+ min-width: 0;
+ margin: 0;
+ font-size: 16px;
+ line-height: 1.4;
+ overflow-wrap: anywhere;
+}
+.tipbox-reader button {
+ flex: 0 0 auto;
+ min-height: 36px;
+ padding: 5px 12px;
+ color: #ffd27f;
+ border: 1px solid #aa874b;
+ border-radius: 7px;
+ background: #0003;
+ font: inherit;
+ cursor: pointer;
+ touch-action: manipulation;
+}
+.tipbox-reader button:disabled { opacity: .45; cursor: default; }
+.tipbox-reader :is(button, .tipbox-link):focus-visible { outline: 2px solid #ffd27f; outline-offset: 2px; }
+.tipbox-header h2:focus { outline: none; }
+.tipbox-body {
+ /* Keep a fixed breathing space even when the content padding scrolls away. */
+ margin-block: 8px;
+ flex: 1 1 auto;
+ min-height: 0;
+ padding: 16px;
+ overflow: auto;
+ overscroll-behavior: contain;
+ scrollbar-gutter: stable;
+}
+.tipbox-text { white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
+.tipbox-text :is(.tipbox-link, .item-link, .navi-link, .markup-url) { color: #8ed4ff; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.tipbox-text :is(.tipbox-link, .item-link, .navi-link, .markup-url) span { color: inherit !important; }
+.tipbox-image { margin: 18px 0 0; text-align: center; }
+.tipbox-image img { max-width: 100%; height: auto; }
+.tipbox-pages {
+ display: flex;
+ flex: 0 0 auto;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ padding: 10px 12px;
+ border-top: 1px solid #52606d;
+}

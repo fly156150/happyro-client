@@ -1,0 +1,36 @@
+/* Desktop help uses the same palette, title bar, controls and scrollbars as adventure tools. */
+.tipbox-reader[data-feedback-theme='desktop'] {
+ width: min(720px, calc(100vw - var(--tipbox-left) - var(--tipbox-right)));
+ height: min(620px, calc(100dvh - var(--tipbox-top) - var(--tipbox-bottom)));
+ font: 12px/1.6 Arial, sans-serif;
+}
+.tipbox-reader[data-feedback-theme='desktop']::backdrop { background: #0003; }
+.tipbox-reader[data-feedback-theme='desktop'] .tipbox-toolbar {
+ display: flex;
+ flex: 0 0 auto;
+ gap: 8px;
+ padding: 6px 12px;
+ border-bottom: 1px solid var(--desktop-divider);
+ border-radius: 0;
+}
+.tipbox-reader[data-feedback-theme='desktop'] .tipbox-body {
+ margin: 10px 12px;
+ padding: 12px;
+ border: 1px solid var(--desktop-divider);
+ border-radius: var(--desktop-panel-radius);
+ background: var(--desktop-card);
+}
+.tipbox-reader[data-feedback-theme='desktop'] .tipbox-pages {
+ border-color: var(--desktop-divider);
+ padding: 6px 12px;
+}
+.tipbox-reader[data-feedback-theme='desktop'] .tipbox-text :is(.tipbox-link, .item-link, .navi-link, .markup-url) { color: #1665a5; }
+.tipbox-reader[data-feedback-theme='desktop'] .desktop-window-header { cursor: default; }
+.tipbox-reader[data-feedback-theme='desktop'] :focus-visible { outline-color: #676e75; }
+
+/* The reader owns a separate shadow root, so document cursor rules cannot reach it. */
+:host-context(.custom-cursor) .tipbox-reader[data-feedback-theme='desktop'],
+:host-context(.custom-cursor) .tipbox-reader[data-feedback-theme='desktop'] *,
+:host-context(.custom-cursor) .tipbox-reader[data-feedback-theme='desktop']::backdrop {
+ cursor: none !important;
+}

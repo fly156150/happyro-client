@@ -125,3 +125,15 @@ button:focus-visible,
 
 /* Match the list's reserved scrollbar space, including when it is not overflowing. */
 .combat-dialog .recovery-items-heading { overflow: hidden; scrollbar-gutter: stable; }
+
+/* Floating navigation actions match the translucent desktop HUD, without hover changes. */
+.npc-navi-controls button,
+.npc-navi-controls button:hover:not(:disabled),
+.npc-navi-controls button:active:not(:disabled) {
+ color: #ecce94;
+ border: 1px solid #ecce94;
+ border-radius: 6px;
+ background: rgba(0, 0, 0, 0.6);
+ box-shadow: none;
+ transition: none;
+}

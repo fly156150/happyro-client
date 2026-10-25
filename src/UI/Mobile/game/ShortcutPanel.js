@@ -1,3 +1,4 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import { createInventoryDescription } from './InventoryDescription.js';
 import { createSkillDescription } from './SkillDescription.js';
 import ItemType from 'DB/Items/ItemType.js';
@@ -183,8 +184,10 @@ export function createShortcutPanel(body, actions) {
 				detail.replaceChildren(createSkillDescription(actions.skillDetail(entry.ID) || entry.skillDetail));
 			} else {
 				const item = actions.itemDetail(entry.ID);
-				if (item) detail.replaceChildren(createInventoryDescription(item, actions.previewItem));
-				else detail.textContent = '物品已经变化，请重新选择';
+				if (item) {
+					detail.replaceChildren(createInventoryDescription(item, actions.previewItem));
+					ensureReadableText(detail);
+				} else detail.textContent = '物品已经变化，请重新选择';
 			}
 			const select = $('.shortcut-level select');
 			select.replaceChildren();

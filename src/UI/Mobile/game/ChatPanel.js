@@ -125,8 +125,13 @@ export function createChatPanel(
 		renderComposer();
 		update();
 	}
+	let contactsKey = '';
 	function renderContacts() {
+		const nextContactsKey = JSON.stringify([composer.receiver, [...composer.contacts], messages.filter(m => m.incomingPrivate && !composer.read.has(m.id)).map(m => [m.id, m.privatePeer])]);
+		if (nextContactsKey === contactsKey) return;
+		contactsKey = nextContactsKey;
 		const list = $('.chat-contact-list');
+		const scrollTop = list.scrollTop;
 		list.replaceChildren();
 		for (const name of [...composer.contacts].reverse()) {
 			const unread = messages.filter(
@@ -162,6 +167,7 @@ export function createChatPanel(
 			row.append(button, remove);
 			list.append(row);
 		}
+		list.scrollTop = scrollTop;
 	}
 	function openRecipients() {
 		const field = document.createElement('input');
@@ -183,6 +189,7 @@ export function createChatPanel(
 	$('[data-new-private]').onclick = openRecipients;
 	function update(next = messages) {
 		messages = next;
+		const scrollTop = log.scrollTop;
 		const atBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 24;
 		for (const message of messages) {
 			if (message.privatePeer) {
@@ -251,7 +258,7 @@ export function createChatPanel(
 				})
 		);
 		renderContacts();
-		if (atBottom) log.scrollTop = log.scrollHeight;
+		log.scrollTop = atBottom ? log.scrollHeight : scrollTop;
 	}
 	let loading;
 	async function ensureEmotions() {

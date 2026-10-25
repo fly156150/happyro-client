@@ -1,3 +1,4 @@
+import { abandonNavigationVisit } from 'UI/Game/NavigationVisit.js';
 import Session from 'Engine/SessionStorage.js';
 import Network from 'Network/NetworkManager.js';
 import PACKET from 'Network/PacketStructure.js';
@@ -111,6 +112,7 @@ export function startAdventureRoute(nextTarget) {
 	timer = null;
 	target = { ...nextTarget };
 	navigationStarted = false;
+	abandonNavigationVisit();
 	update(true, '');
 	const position = getCurrentAdventurePosition();
 	Navigation.navigateTo({

@@ -76,3 +76,13 @@
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] .inventory-list {
  overflow-anchor: none;
 }
+
+/* NAVI remains readable inside colored item and socket descriptions. */
+.inventory-item-description .navi-link {
+ color: #8ed4ff;
+ text-decoration: underline;
+ text-underline-offset: 2px;
+ cursor: pointer;
+}
+.inventory-item-description .navi-link span { color: inherit !important; }
+.inventory-item-description .navi-link:hover { color: #c8eaff; }

@@ -215,8 +215,9 @@ const onKeyEvent = event => {
 	KEYS.CTRL = !!event.ctrlKey;
 	KEYS.ALT = !!event.altKey;
 };
-window.addEventListener('keydown', onKeyEvent);
-window.addEventListener('keyup', onKeyEvent);
+// Track physical modifiers before dialogs stop gameplay key propagation.
+window.addEventListener('keydown', onKeyEvent, true);
+window.addEventListener('keyup', onKeyEvent, true);
 
 /**
  * Reset keys state when window got focused

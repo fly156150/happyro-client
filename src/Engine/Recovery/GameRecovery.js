@@ -1,3 +1,4 @@
+import { acquireInputFreeze, releaseInputFreeze } from 'UI/InputFreeze.js';
 import gameSession from '../Auth/GameSession.js';
 import Network from 'Network/NetworkManager.js';
 import Session from 'Engine/SessionStorage.js';
@@ -8,8 +9,7 @@ import { showMobileDialog } from 'UI/Mobile/MessageDialog.js';
 import { createRecoveryController } from './RecoveryController.js';
 
 let dialog;
-let frozenBeforeCheck = false;
-let checking = false;
+const recoveryInput = Symbol('game-recovery');
 let charServer;
 let prepareLogin;
 let automaticAttempted = false;
@@ -34,14 +34,8 @@ function present(state, message) {
 	if (state === 'disconnected') queueMicrotask(tryAutomaticRecovery);
 	dialog?.remove();
 	dialog = null;
-	if (state === 'checking') {
-		checking = true;
-		frozenBeforeCheck = Session.FreezeUI;
-		Session.FreezeUI = true;
-	} else if (checking) {
-		checking = false;
-		Session.FreezeUI = state === 'disconnected' ? true : frozenBeforeCheck;
-	}
+	if (['checking', 'disconnected', 'restoring'].includes(state)) acquireInputFreeze(recoveryInput);
+	else releaseInputFreeze(recoveryInput);
 	if (!['checking', 'disconnected', 'restoring'].includes(state)) return;
 	const waiting = state === 'checking';
 	const restoring = state === 'restoring';
@@ -80,7 +74,7 @@ const recovery = createRecoveryController({
 	probe: () => Network.requestPing(),
 	close: () => {
 		Session.Playing = false;
-		Session.FreezeUI = true;
+		acquireInputFreeze(recoveryInput);
 		Network.close();
 	},
 	capture: () => ({ map: MapRenderer.currentMap, zoom: Camera.zoomFinal, angle: [...Camera.angleFinal] }),
@@ -93,7 +87,7 @@ const recovery = createRecoveryController({
 	present,
 	login: () => {
 		prepareLogin?.();
-		Session.FreezeUI = frozenBeforeCheck = false;
+		releaseInputFreeze(recoveryInput);
 		import('Engine/LoginEngine.js').then(module => module.default.reload(true));
 	},
 	visible: () => !document.hidden
@@ -108,8 +102,7 @@ export function recoverLogin(accountId, servers) {
 }
 export function gameRecoveryReady(cleanup) {
 	prepareLogin = cleanup;
-	frozenBeforeCheck = false;
-	Session.FreezeUI = false;
+	releaseInputFreeze(recoveryInput);
 	recovery.ready({ accountId: Session.AID, characterId: Session.GID, serverKey: serverKey(), charServer });
 }
 window.addEventListener('online', () => {

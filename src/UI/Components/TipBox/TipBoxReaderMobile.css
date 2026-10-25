@@ -1,0 +1,63 @@
+/* Share adventure-menu density tokens; phone/tablet identity survives rotation and narrow windows. */
+.tipbox-reader[data-feedback-theme='mobile'] {
+ font-size: var(--panel-text);
+ line-height: 1.65;
+}
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-header {
+ gap: var(--panel-gap);
+ padding: 6px 10px;
+}
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-header h2 {
+ font-size: var(--panel-title);
+ line-height: 1.4;
+ display: -webkit-box;
+ -webkit-box-orient: vertical;
+ -webkit-line-clamp: 2;
+ overflow: hidden;
+}
+.tipbox-reader[data-feedback-theme='mobile'] button {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ min-width: 44px;
+ min-height: max(44px, var(--panel-control));
+ padding: var(--panel-control-padding);
+ font-size: var(--panel-text);
+ line-height: 1.2;
+ white-space: nowrap;
+}
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-body {
+ padding: max(12px, var(--panel-gap));
+}
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-pages {
+ gap: var(--panel-gap);
+ padding: var(--menu-footer-padding) max(12px, var(--panel-gap));
+}
+/* Compact header actions match the other touch windows; reading controls keep their larger targets. */
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-header-actions {
+ display: flex;
+ flex: 0 0 auto;
+ align-items: center;
+ gap: 6px;
+ margin-left: auto;
+}
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-header-actions > button {
+ min-width: 0;
+ height: 30px;
+ min-height: 30px;
+ padding: 0 8px;
+ font-size: 12px;
+ border-radius: 6px;
+}
+:host(:not([data-phone-screen])) .tipbox-reader[data-feedback-theme='mobile'] .tipbox-header {
+ padding: 8px 12px;
+}
+:host(:not([data-phone-screen])) .tipbox-reader[data-feedback-theme='mobile'] .tipbox-header-actions > button {
+ height: 40px;
+ min-height: 40px;
+ padding-inline: 12px;
+ font-size: 16px;
+}
+.tipbox-reader[data-feedback-theme='mobile'] { outline: none; }
+.tipbox-reader[data-feedback-theme='mobile'] .tipbox-body:focus { outline: none; }
+.tipbox-reader[data-feedback-theme='mobile'][data-input='pointer'] :focus { outline: none; }

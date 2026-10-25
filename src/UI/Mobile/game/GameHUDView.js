@@ -1,3 +1,4 @@
+import { bindNpcNaviControls } from 'UI/Game/NpcNaviPrompt.js';
 import { createBattleStatusDetails } from './BattleStatusDetails.js';
 import { createDeathPrompt } from './DeathPrompt.js';
 import { createStatusIconsView } from './StatusIconsView.js';
@@ -211,6 +212,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (button) actions.chooseExamTarget(Number(button.dataset.examTarget));
 	});
 	listen($('[data-interact]'), 'click', () => actions.interact());
+	listen($('[data-interact-cancel]'), 'click', () => actions.clearPlayerSelection());
 	for (const button of root.querySelectorAll('[data-player-action]')) {
 		listen(button, 'click', () => {
 			const player = snapshot.target?.player;
@@ -326,16 +328,74 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		drawPlayerArrow(ctx, point, snapshot.direction ?? 0, 0.65);
 	}
 	const menuSelects = createMenuSelects(body);
+	const naviControls = bindNpcNaviControls($('.npc-navi-dock'));
 	const deathPrompt = createDeathPrompt(root, {
 		snapshot: () => actions.deathSnapshot(),
 		returnToSavePoint: () => actions.returnToSavePoint(),
 		revive: () => actions.revive(),
 		open: () => { actions.cancelSceneInput(); actions.setModal(true); },
 		close: () => actions.setModal(Boolean(currentPanel))
-	}, $('.battle-status'));
+	}, $('.death-actions'));
+	let navigationPanelVersion = 0;
+	let navigationPanelSuspended = false;
+	listen(body, 'navi-source-suspend', event => {
+		if (!['quests', 'inventory', 'equipment', 'cart', 'storage', 'shortcuts', 'skills'].includes(currentPanel)) return;
+		const version = navigationPanelVersion;
+		event.detail.suspend = () => {
+			if (version !== navigationPanelVersion) return false;
+			const scrolls = [body, ...body.querySelectorAll('*')]
+				.filter(node => node.scrollTop || node.scrollLeft)
+				.map(node => ({ node, top: node.scrollTop, left: node.scrollLeft }));
+			navigationPanelSuspended = true;
+			backdrop.hidden = true;
+			actions.setModal(false);
+			return {
+				restore() {
+					if (version !== navigationPanelVersion || !body.isConnected) return;
+					// Permission-dependent snapshots must be restored before refreshing the hidden panel.
+					actions.setModal(true);
+					navigationPanelSuspended = false;
+					updatePanels();
+					backdrop.hidden = false;
+					for (const { node, top, left } of scrolls) {
+						if (!node.isConnected) continue;
+						node.scrollTop = top;
+						node.scrollLeft = left;
+					}
+				},
+				discard() { if (version === navigationPanelVersion) close(false); }
+			};
+		};
+	});
+	function updatePanels() {
+		if (navigationPanelSuspended) return;
+		renderDetails();
+		inventoryPanel?.update();
+		equipmentPanel?.update();
+		skillsPanel?.update();
+		attributesPanel?.update();
+		petPanel?.update();
+		companionsPanel?.update();
+		mailPanel?.update();
+		bankPanel?.update();
+		vendingPanel?.update();
+		tradePanel?.update();
+		shopPanel?.update();
+		containerPanel?.update();
+		questsPanel?.update();
+		chatPanel?.refresh();
+		socialPanel?.update();
+		selectionPanel?.update();
+		materialsPanel?.update();
+		refinementPanel?.update();
+		enchantPanel?.update();
+		menuSelects.sync();
+	}
 	function close(notify = true) {
 		menuSelects.close();
 		if (!currentPanel || (notify && serverState?.canClose === false)) return;
+		navigationPanelVersion++;
+		navigationPanelSuspended = false;
 		attributesPanel?.destroy();
 		combatSettingsCleanup?.();
 		combatSettingsCleanup = null;
@@ -407,6 +467,8 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (currentPanel === 'status') statusPanel?.update(snapshot.statuses || []);
 	}
 	function open(panel, slotIndex) {
+		navigationPanelVersion++;
+		navigationPanelSuspended = false;
 		attributesPanel?.destroy();
 		combatSettingsCleanup?.();
 		combatSettingsCleanup = null;
@@ -880,6 +942,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		update(next) {
 			snapshot = next;
 			deathPrompt.update(next.death);
+			naviControls.update(!next.death?.dead);
 			text('[data-panel=menu]', next.unreadMail ? '菜单 · 新邮件' : '菜单');
 			if (next.death?.dead || performance.now() >= noticeUntil) text('[data-target]', next.death?.dead ? '已倒下' : next.autoCombat?.status || '自动战斗已停止');
 			const target = next.death?.dead ? null : next.target;
@@ -943,8 +1006,10 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			}
 			for (const button of root.querySelectorAll('[data-player-action]')) button.disabled = !player?.name || (button.dataset.playerAction === 'friend' && player.friend);
 			$('[data-player-action=friend]').title = player?.friend ? '已是好友' : '加好友';
-			$('[data-interact]').hidden = !next.target?.interaction || (player && next.target.interaction === '交易');
-			text('[data-interact]', next.target?.interaction);
+			const interaction = !next.death?.dead && next.target?.interaction && !(player && next.target.interaction === '交易') && next.target.interaction;
+			$('.interaction-actions').hidden = !interaction || !$('.skill-prompt').hidden;
+			$('[data-interact]').hidden = !interaction;
+			text('[data-interact]', interaction);
 			text('[data-name]', next.name);
 			text('[data-job]', `Lv.${next.level} ${next.job}`);
 			$('[data-ap-row]').hidden = !(next.maxAp > 0);
@@ -959,27 +1024,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			text('[data-coordinates]', next.position?.map(Math.floor).join(', '));
 			statusIcons.update(next.statuses || []);
 			drawMap($('[data-mini-map]'));
-			renderDetails();
-			inventoryPanel?.update();
-			equipmentPanel?.update();
-			skillsPanel?.update();
-			attributesPanel?.update();
-			petPanel?.update();
-			companionsPanel?.update();
-			mailPanel?.update();
-			bankPanel?.update();
-			vendingPanel?.update();
-			tradePanel?.update();
-			shopPanel?.update();
-			containerPanel?.update();
-			questsPanel?.update();
-			chatPanel?.refresh();
-			socialPanel?.update();
-			selectionPanel?.update();
-			materialsPanel?.update();
-			refinementPanel?.update();
-			enchantPanel?.update();
-			menuSelects.sync();
+			updatePanels();
 		},
 		setMap(image) {
 			mapImage = image;
@@ -1073,6 +1118,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			if ($('.battle-status').hidden) battleDetails.hide();
 			$('.target-actions').hidden = Boolean(state.pending) || !hasActions;
 			$('.skill-prompt').hidden = !state.pending;
+			$('.interaction-actions').hidden = Boolean(state.pending) || !snapshot.target?.interaction || (snapshot.target?.player && snapshot.target.interaction === '交易') || Boolean(snapshot.death?.dead);
 			$('.skill-actions').hidden = !state.pending;
 			$('.shortcut-tools').hidden = Boolean(state.pending);
 			text(
@@ -1089,6 +1135,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		close,
 		destroy() {
 			deathPrompt.destroy();
+			naviControls.destroy();
 			releaseChatPreviewLayout();
 			chatPreview.destroy();
 			statusIcons.destroy();

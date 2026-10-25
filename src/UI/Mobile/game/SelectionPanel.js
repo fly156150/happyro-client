@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createEquipmentFilters } from 'UI/Game/EquipmentFilters.js';
 import { interactionReview, interactionFooter } from './InteractionPanel.js';
@@ -81,7 +82,7 @@ export function createSelectionPanel(body, service) {
 		title.textContent = entry.name;
 		const description = document.createElement('p');
 		description.className = 'item-description';
-		description.textContent = entry.description || '';
+		renderDescriptionMarkup(description, entry.descriptionMarkup || entry.description || '');
 		const materials = [];
 		if (entry.materials) {
 			for (let index = 0; index < 3; index++) {

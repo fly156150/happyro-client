@@ -10,26 +10,25 @@ export function createBattleStatusDetails(root, onOpen) {
  root.append(tooltip);
  const abort = new AbortController();
  let message = button.textContent;
- button.setAttribute('aria-expanded', 'false');
+
  function hide() {
   tooltip.hidden = true;
-  button.setAttribute('aria-expanded', 'false');
+
   button.removeAttribute('aria-describedby');
  }
  function show() {
-  if (status.hidden || !message) return hide();
+  if (status.hidden || getComputedStyle(status).display === 'none' || !message) return hide();
   tooltip.textContent = message;
   tooltip.hidden = false;
-  button.setAttribute('aria-expanded', 'true');
+
   button.setAttribute('aria-describedby', tooltip.id);
   const rect = button.getBoundingClientRect();
   const width = tooltip.offsetWidth, height = tooltip.offsetHeight;
   tooltip.style.left = `${Math.max(8, Math.min(rect.left, window.innerWidth - width - 8))}px`;
   tooltip.style.top = `${Math.max(8, Math.min(rect.top - height - 8, window.innerHeight - height - 8))}px`;
  }
- button.addEventListener('click', () => {
-  if (tooltip.hidden) { onOpen(); show(); } else hide();
- }, {signal: abort.signal});
+ button.addEventListener('pointerenter', () => { onOpen(); show(); }, {signal: abort.signal});
+ button.addEventListener('pointerleave', hide, {signal: abort.signal});
  document.addEventListener('pointerdown', event => {
   const path = event.composedPath();
   if (!path.includes(button) && !path.includes(tooltip)) hide();
@@ -40,7 +39,7 @@ export function createBattleStatusDetails(root, onOpen) {
   update(text) {
    message = text;
    button.title = text;
-   button.setAttribute('aria-label', `${text}，点击查看完整提示`);
+   button.setAttribute('aria-label', text);
    if (!tooltip.hidden) show();
   },
   hide,

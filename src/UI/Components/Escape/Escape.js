@@ -154,6 +154,8 @@ function onToggleShortcutUI() {
 Escape.showDeathMenu = function showDeathMenu(hasSiegfried) {
 	const root = this.getRoot();
 	this._host.style.display = '';
+	// The menu was already mounted but hidden when other windows took focus.
+	this.focus();
 	root.querySelector('.savepoint').style.display = '';
 	if (hasSiegfried) {
 		root.querySelector('.resurection').style.display = '';

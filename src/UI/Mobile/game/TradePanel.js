@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { requestMobileInput } from './MobileInputEditor.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
@@ -297,7 +298,9 @@ export function createTradePanel(body, service) {
 				rows = state[side];
 			const signature = JSON.stringify([
 				money,
-				rows.map(({ index, name, count, description, icon }) => ({ index, name, count, description, icon }))
+				rows.map(({ index, name, count, description, descriptionMarkup, icon }) => ({
+					index, name, count, description, descriptionMarkup, icon
+				}))
 			]);
 			if (parent.dataset.signature === signature) continue;
 			parent.dataset.signature = signature;
@@ -311,7 +314,7 @@ export function createTradePanel(body, service) {
 				button.onclick = () => {
 					const description = document.createElement('p');
 					description.className = 'item-description';
-					description.textContent = entry.description || '暂无物品说明';
+					renderDescriptionMarkup(description, entry.descriptionMarkup || entry.description || '暂无物品说明');
 					confirmAction(body, entry.name, () => {}, { content: description });
 				};
 

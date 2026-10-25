@@ -1,4 +1,7 @@
+vi.mock('UI/Game/NpcNaviPrompt.js', () => ({ showNpcNaviPrompt: navi.open }));
 import { afterEach, expect, it, vi } from 'vitest';
+const navi = vi.hoisted(() => ({ available: vi.fn(() => true), open: vi.fn(() => true) }));
+vi.mock('UI/Components/Navigation/NpcNaviService.js', () => ({ isNpcNaviAvailable: navi.available, openNpcNaviMap: navi.open }));
 import { createNPCPanel, updateNPCCutin } from '../../src/UI/Mobile/game/NPCPanel.js';
 afterEach(() => document.body.replaceChildren());
 it('separates scrollable choices from actions and retains protocol option values', () => {
@@ -91,4 +94,15 @@ it('rechecks each page and keeps non-NPC result headings', () => {
  expect(body.querySelector('.npc-lines').textContent).toContain('[玩家]');
  createNPCPanel(body,{kind:'notice',title:'助理阿隆佐',lines:['[助理阿隆佐]']});
  expect(body.querySelector('.npc-lines').textContent).toBe('[助理阿隆佐]');
+});
+
+it('renders colored NAVI without attribute corruption and delegates nested text clicks', () => {
+ const body = document.body.appendChild(document.createElement('div'));
+ createNPCPanel(body, { kind: 'npc', id: 7, mode: 'next', lines: ['请找<NAVI>^4D4DFF[牧羊人]^000000<INFO>lasa_fild01,353,370,000,1,</INFO></NAVI>。'] });
+ const link = body.querySelector('.navi-link');
+ expect(link.dataset.naviName).toBe('[牧羊人]');
+ expect(link.dataset.naviInfo).toBe('lasa_fild01,353,370,000,1,');
+ expect(body.querySelector('.npc-lines').textContent).toBe('请找[牧羊人]。');
+ link.querySelector('span').click();expect(navi.open).toHaveBeenCalledWith('lasa_fild01,353,370,000,1,',expect.objectContaining({label:'[牧羊人]'}));
+ expect(body.querySelector('.npc-navi-teleport')).toBeNull();
 });

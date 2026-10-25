@@ -25,7 +25,7 @@ vi.mock('../../src/UI/Components/GameTools/WorldMapPreview.js', () => ({ drawWor
 vi.mock('../../src/UI/Components/GameTools/WorldCatalogService.js', () => ({ toCatalogNpcs: () => [], npcCatalogKey: vi.fn(), npcTeleportEnabled: vi.fn() }));
 vi.mock('UI/Components/Navigation/NavigationAutoWalk.js', () => ({ remainingPathFromPosition: vi.fn() }));
 vi.mock('../../src/UI/Components/GameTools/WorldAssetService.js', async original => ({
- ...await original(), loadCatalogMap: async () => ({}), loadCatalogMapImage: async () => null,
+ ...await original(), loadCatalogMap: async () => ({ gat: { width: 400, height: 400 } }), loadCatalogMapImage: async () => null,
  loadNpcAssets: async () => ({ mapImages: [] }), canvasToMapCoordinate: () => ({ x: 9, y: 11 })
 }));
 import catalog from '../../src/UI/Components/GameTools/MapCatalogTab.js';

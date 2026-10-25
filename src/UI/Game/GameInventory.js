@@ -35,6 +35,7 @@ export function createGameInventory(canOperate) {
 	}
 	function describe({ item, worn }) {
 		const info = DB.getItemInfo(item.ITID);
+		const description = item.IsIdentified ? info.identifiedDescriptionName : info.unidentifiedDescriptionName;
 		const file = item.IsIdentified ? info.identifiedResourceName : info.unidentifiedResourceName;
 		if (file && !icons.has(file)) {
 			icons.set(file, '');
@@ -73,9 +74,8 @@ export function createGameInventory(canOperate) {
 			type: item.type,
 			subtypes: itemSubtypes(item),
 			category: equippable ? 'equipment' : usable ? 'usable' : 'other',
-			description: toPlainRagnarokText(
-				item.IsIdentified ? info.identifiedDescriptionName : info.unidentifiedDescriptionName
-			)
+			descriptionMarkup: Array.isArray(description) ? description.filter(Boolean).join('\n') : description || '',
+			description: toPlainRagnarokText(description)
 				.replace(/^[\t _-]+\r?$/gm, '')
 				.replace(/\n(?:[\t ]*\r?\n)+/g, '\n\n')
 				.replace(/\r?\n(?:[\t ]*\r?\n)*(?=[\t ]*(?:重量|Weight)\s*[:：])/gi, '\n')

@@ -33,6 +33,7 @@
 	line-height: 1.5;
 }
 .item-description p {
+	white-space: pre-line;
 	margin: 0 0 5px;
 }
 .item-grant-panel label {
@@ -120,3 +121,7 @@
  padding-inline: 0;
  text-align: left;
 }
+
+.item-description .navi-link { color: #1665a5; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.item-description .navi-link span { color: inherit !important; }
+.mobile-adventure .item-description .navi-link { color: #8ed4ff; }

@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
 import { interactionColumns, interactionReview, interactionFooter } from './InteractionPanel.js';
@@ -64,7 +65,7 @@ export function createEnchantPanel(body, service) {
 		title.textContent = selectedItem?.name || '请选择装备';
 		const description = document.createElement('p');
 		description.className = 'item-description';
-		description.textContent = selectedItem?.description || '';
+		renderDescriptionMarkup(description, selectedItem?.descriptionMarkup || selectedItem?.description || '');
 		result.append(title, description);
 		detail.replaceChildren();
 		footer.querySelector('button')?.remove();

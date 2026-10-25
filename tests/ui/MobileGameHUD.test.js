@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+vi.mock('UI/Components/Navigation/NpcNaviService.js', () => ({ isNpcNaviAvailable: () => false, openNpcNaviMap: vi.fn() }));
+vi.mock('UI/Components/Navigation/NaviActionService.js', () => ({ prepareNaviLinks:vi.fn(), isNaviAvailable:vi.fn(()=>true),  handleNaviClick: vi.fn(), activateNavi: vi.fn() }));
 import { createGameHUDView } from '../../src/UI/Mobile/game/GameHUDView.js';
 import { clearChatFeed, publishChatMessage, subscribeChatFeed } from '../../src/UI/Game/ChatFeed.js';
 
@@ -369,7 +371,7 @@ it('shows player actions separately and hides combat status',()=>{
  click('[data-player-action=private]');expect(actions.playerAction).toHaveBeenCalledWith('private',42);
  actions.playerAction.mockReturnValue('目标已离开');click('[data-player-action=equipment]');expect(document.querySelector('.ui-toast').textContent).toBe('目标已离开');
  view.update({...state,target:{player:{id:42,name:'玩家',friend:true}}});expect(root.querySelector('[data-player-action=friend]').disabled).toBe(true);expect(root.querySelector('[data-player-action=friend]').textContent).toBe('好友');
- view.update({...state,target:{interaction:'进入'}});expect(root.querySelector('[data-player-actions]').hidden).toBe(true);expect(root.querySelector('[data-interact]').hidden).toBe(false);
+ view.update({...state,target:{interaction:'进入传送阵'}});expect(root.querySelector('[data-player-actions]').hidden).toBe(true);expect(root.querySelector('[data-interact]').hidden).toBe(false);
 });
 
 it('confirms a trade once with the captured player identity and acknowledges friend requests',()=>{
@@ -456,14 +458,14 @@ it('right-aligns narrow minimaps without stretching wide maps', () => {
  expect(root.querySelector('.map').style.getPropertyValue('--map-caption-shift')).toBe('0');
 });
 
-it('places the waiting entry in battle status and clears it after revival', () => {
+it('places the waiting entry outside battle status and clears it after revival', () => {
  const death = { dead: true, tokenCount: 0 };
  actions.deathSnapshot = () => death;
  view.update({ ...state, death });
  const prompt = root.querySelector('.mobile-death-host').shadowRoot;
  expect(prompt.querySelector('#death-description').hidden).toBe(true);
  prompt.querySelector('[data-wait]').click();
- const reopen = root.querySelector('.battle-status .death-reopen');
+ const reopen = root.querySelector('.death-actions .death-reopen');
  expect(reopen.hidden).toBe(false);
  expect(root.querySelector('[data-target]').textContent).toBe('已倒下');
  reopen.click();
@@ -524,23 +526,72 @@ it.each(['self', 'player', 'pet', 'mercenary', 'homunculus'])('hides combat hint
  expect(root.querySelector('.battle-status').hidden).toBe(false);
 });
 
-it('opens only the full battle status without appending target descriptions', () => {
+it('keeps battle information as plain text with a hover explanation', () => {
  const autoCombat={status:'手动操作，自动战斗已停止',species:[{id:1002,name:'波利'},{id:1007,name:'疯兔'}]};
  view.update({...state,autoCombat});
  const button=root.querySelector('[data-target]');
  expect(button.textContent).toBe('手动操作，自动战斗已停止');
- button.click();
+ button.dispatchEvent(new Event('pointerenter'));
  const detail=root.querySelector('.battle-description');
  expect(detail.hidden).toBe(false);
  expect(detail.textContent).toBe('手动操作，自动战斗已停止');
- expect(button.getAttribute('aria-expanded')).toBe('true');
+ expect(button.tagName).toBe('SPAN');
+ expect(root.querySelector('.battle-status button')).toBeNull();
  expect(root.querySelector('.backdrop').hidden).toBe(true);
  view.update({...state,autoCombat:{status:'正在寻找目标',species:[]}});
  expect(detail.textContent).toBe('正在寻找目标');
- button.click();expect(detail.hidden).toBe(true);
- button.click();root.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape'}));expect(detail.hidden).toBe(true);
- button.click();document.body.dispatchEvent(new Event('pointerdown',{bubbles:true}));expect(detail.hidden).toBe(true);
- button.click();root.querySelector('[data-panel=menu]').dispatchEvent(new Event('pointerdown',{bubbles:true,composed:true}));expect(detail.hidden).toBe(true);
- button.click();view.notice('<b>完整临时提示</b>');expect(detail.textContent).toBe('<b>完整临时提示</b>');expect(detail.querySelector('b')).toBeNull();
+ button.dispatchEvent(new Event('pointerleave'));expect(detail.hidden).toBe(true);
+ button.dispatchEvent(new Event('pointerenter'));root.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape'}));expect(detail.hidden).toBe(true);
+ button.dispatchEvent(new Event('pointerenter'));document.body.dispatchEvent(new Event('pointerdown',{bubbles:true}));expect(detail.hidden).toBe(true);
+ button.dispatchEvent(new Event('pointerenter'));root.querySelector('[data-panel=menu]').dispatchEvent(new Event('pointerdown',{bubbles:true,composed:true}));expect(detail.hidden).toBe(true);
+ button.dispatchEvent(new Event('pointerenter'));view.notice('<b>完整临时提示</b>');expect(detail.textContent).toBe('<b>完整临时提示</b>');expect(detail.querySelector('b')).toBeNull();
  view.update({...state,target:{self:true}});expect(detail.hidden).toBe(true);
+});
+
+it('renders warp entry and cancellation outside the battle information surface', () => {
+ actions.interact=vi.fn();actions.clearPlayerSelection=vi.fn();
+ view.update({...state,target:{interaction:'进入传送阵'}});
+ const entry=root.querySelector('[data-interact]'),cancel=root.querySelector('[data-interact-cancel]');
+ expect(root.querySelector('.battle-status button')).toBeNull();
+ expect(entry.closest('.battle-status')).toBeNull();expect(entry.textContent).toBe('进入传送阵');
+ expect(root.querySelector('.interaction-actions').hidden).toBe(false);
+ entry.click();expect(actions.interact).toHaveBeenCalledOnce();
+ cancel.click();expect(actions.clearPlayerSelection).toHaveBeenCalledOnce();
+ view.update({...state,target:null});expect(root.querySelector('.interaction-actions').hidden).toBe(true);
+});
+
+it('suspends an inventory visit and restores its exact selection and scroll, but never revives a replaced panel',()=>{
+ click('[data-panel="menu"]');[...root.querySelectorAll('.menu-grid button')].find(b=>b.textContent==='背包').click();
+ const list=root.querySelector('.inventory-list');list.scrollTop=120;
+ const request={suspend:null};list.dispatchEvent(new CustomEvent('navi-source-suspend',{bubbles:true,detail:request}));
+ const visit=request.suspend();expect(root.querySelector('.backdrop').hidden).toBe(true);expect(actions.setModal).toHaveBeenLastCalledWith(false);
+ visit.restore();expect(root.querySelector('.backdrop').hidden).toBe(false);expect(root.querySelector('.inventory-list')).toBe(list);expect(list.scrollTop).toBe(120);
+ const next=request.suspend();click('[data-close]');next.restore();expect(root.querySelector('.backdrop').hidden).toBe(true);
+});
+it('discards a suspended inventory window when travel starts',()=>{
+ click('[data-panel="menu"]');[...root.querySelectorAll('.menu-grid button')].find(b=>b.textContent==='背包').click();
+ const request={suspend:null};root.querySelector('.inventory-list').dispatchEvent(new CustomEvent('navi-source-suspend',{bubbles:true,detail:request}));
+ const visit=request.suspend();visit.discard();visit.restore();expect(root.querySelector('.backdrop').hidden).toBe(true);
+});
+
+
+it('keeps a suspended item description intact across modal permission changes and polling', async()=>{
+ let modal=false;
+ actions.setModal.mockImplementation(value=>{modal=value;});
+ actions.inventoryPreview=async()=>null;
+ const item={index:1,ID:501,name:'导航物品',count:1,identified:true,descriptionMarkup:'物品说明',action:'use'};
+ actions.inventorySnapshot=()=>[{...item,reason:modal?'':'当前无法操作物品'}];
+ click('[data-panel="menu"]');[...root.querySelectorAll('.menu-grid button')].find(b=>b.textContent==='背包').click();
+ root.querySelector('[data-index="1"]').click();await Promise.resolve();
+ const description=root.querySelector('.inventory-item-description');
+ const list=root.querySelector('.inventory-list');list.scrollTop=180;
+ const request={suspend:null};description.dispatchEvent(new CustomEvent('navi-source-suspend',{bubbles:true,detail:request}));
+ const visit=request.suspend();expect(modal).toBe(false);
+ for(let i=0;i<10;i++)view.update(state);
+ expect(root.querySelector('.inventory-item-description')).toBe(description);
+ visit.restore();view.update(state);
+ expect(modal).toBe(true);expect(root.querySelector('.inventory-item-description')).toBe(description);expect(list.scrollTop).toBe(180);
+ const next=request.suspend();item.count=2;view.update(state);
+ expect(root.querySelector('[data-index="1"]').textContent).toContain('×1');
+ next.restore();expect(root.querySelector('[data-index="1"]').textContent).toContain('×2');expect(list.scrollTop).toBe(180);
 });

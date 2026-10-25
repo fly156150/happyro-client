@@ -38,7 +38,7 @@ AutoCombat.onAppend = function () {
 		}
 	});
 	selfActions = createSelfActions(this._container, () => runtime.stop(), { desktop: true });
-	this._container.prepend(this._container.querySelector('.self-actions-host'));
+	this._container.querySelector('.npc-navi-dock').after(this._container.querySelector('.self-actions-host'));
 	view.update(runtime.snapshot());
 };
 AutoCombat.openSettings = () => view?.open();

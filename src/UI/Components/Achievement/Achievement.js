@@ -1,3 +1,6 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
+import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
+import { prepareNaviLinks, handleNaviClick } from 'UI/Components/Navigation/NaviActionService.js';
 import { dateParts } from 'Utils/DateTime';
 /**
  * UI/Components/Achievement/Achievement.js
@@ -45,6 +48,8 @@ class AchievementComponent extends GUIComponent {
 
 	init() {
 		const root = this.getRoot();
+		root.addEventListener('click', handleNaviClick, true);
+		root.addEventListener('keydown', handleNaviClick, true);
 
 		MAJOR_CATEGORIES = [
 			{ id: 0, name: DB.getMessage(2656) },
@@ -398,12 +403,14 @@ class AchievementComponent extends GUIComponent {
 				item.innerHTML = `
 					<div class="icon" data-background="achievement_re/icon_${groupName}.bmp"></div>
 					<div class="title">${info.title || '未知'}</div>
-					<div class="desc">${info.content && info.content.summary ? info.content.summary : ''}</div>
+					<div class="desc">${formatRagnarokMarkup(info.content?.summary || '')}</div>
 					<div class="reward-icon" data-background="${isClaimed ? 'achievement_re/badge_complete.bmp' : ''}"></div>
 					<div class="reward-pts">${info.score || 0}</div>
 					<div class="date-completed" data-background="${rewardBoxBg}">${dtStr}</div>
 				`;
 
+				prepareNaviLinks(item);
+				queueMicrotask(() => ensureReadableText(item));
 				GUIComponent.processDataAttrs(item);
 				item.querySelectorAll(
 					'[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]'
@@ -508,12 +515,14 @@ class AchievementComponent extends GUIComponent {
 			item.innerHTML = `
 			<div class="icon" data-background="achievement_re/icon_${groupName}.bmp"></div>
 			<div class="title">${info.title || '未知'}</div>
-			<div class="desc">${info.content && info.content.summary ? info.content.summary : ''}</div>
+			<div class="desc">${formatRagnarokMarkup(info.content?.summary || '')}</div>
 			<div class="reward-icon" data-background="${isCompleted ? 'achievement_re/badge_complete.bmp' : ''}"></div>
 			<div class="reward-pts">${info.score || 0}</div>
 			<div class="date-completed" data-background="${rewardBoxBg}">${dtStr}</div>
 		`;
 
+			prepareNaviLinks(item);
+			queueMicrotask(() => ensureReadableText(item));
 			GUIComponent.processDataAttrs(item);
 			item.querySelectorAll(
 				'[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]'
@@ -558,7 +567,9 @@ class AchievementComponent extends GUIComponent {
 		}
 
 		root.querySelector('.js-d-title').textContent = info.title || '未知';
-		root.querySelector('.js-d-desc').textContent = info.content && info.content.details ? info.content.details : '';
+		root.querySelector('.js-d-desc').innerHTML = formatRagnarokMarkup(info.content?.details || '');
+		prepareNaviLinks(root.querySelector('.js-d-desc'));
+		ensureReadableText(root.querySelector('.js-d-desc'));
 		const dStamp = root.querySelector('.d-stamp');
 		// if completed display stamp on right side else empty
 		if (s && s.completed) {

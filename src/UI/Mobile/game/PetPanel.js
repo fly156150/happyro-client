@@ -15,6 +15,7 @@ export function createPetPanel(body, service) {
 	let dismiss,
 		lastPet = null,
 		evoKey = '',
+		infoKey = '',
 		lastMessage = service.snapshot().message || '',
 		nameDirty = false;
 	function cancel() {
@@ -98,14 +99,18 @@ export function createPetPanel(body, service) {
 					['自动喂食', state.supportsAutoFeed ? (state.autoFeed ? '已开启' : '未开启') : '不支持']
 				]
 			: [['状态', '暂无已召唤的宠物']];
-		$('[data-info]').replaceChildren();
-		for (const [label, value] of rows) {
-			const dt = document.createElement('dt'),
-				dd = document.createElement('dd');
-			dt.textContent = label;
-			if (label === '自动喂食') dd.append(createAutoFeedStatus(state.autoFeed, state.supportsAutoFeed));
-			else dd.textContent = value;
-			$('[data-info]').append(dt, dd);
+		const nextInfoKey = JSON.stringify(rows);
+		if (infoKey !== nextInfoKey) {
+			infoKey = nextInfoKey;
+			$('[data-info]').replaceChildren();
+			for (const [label, value] of rows) {
+				const dt = document.createElement('dt'),
+					dd = document.createElement('dd');
+				dt.textContent = label;
+				if (label === '自动喂食') dd.append(createAutoFeedStatus(state.autoFeed, state.supportsAutoFeed));
+				else dd.textContent = value;
+				$('[data-info]').append(dt, dd);
+			}
 		}
 		if (lastPet !== state.gid) {
 			lastPet = state.gid;

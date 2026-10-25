@@ -1,3 +1,4 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import { weaponSubtypeNames, armorSlotNames, cardSubtypeNames } from 'UI/Game/ItemSubtypeNames.js';
 import { requestGameToolsNumber } from './GameToolsNumberPrompt.js';
 import { createItemDropSources } from './ItemDropSources.js';
@@ -11,7 +12,8 @@ import {
 	searchAdventureItems
 } from './AdventureControlService.js';
 import { escapeCatalogHtml } from './CatalogData.js';
-import { toPlainRagnarokText } from '../../../Utils/RagnarokText.js';
+import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
+import { getNaviTarget, handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
 import { renderGameSelect, setGameSelectOptions } from './GameSelect.js';
 import { mountRemoteCatalogBrowser } from './RemoteCatalogBrowser.js';
 
@@ -80,16 +82,19 @@ function loadImage(element, path, assetUrls) {
 }
 
 function renderDescription(value) {
-	const lines = Array.isArray(value) ? value : [value];
-	return (
-		lines
-			.filter(Boolean)
-			.map(line => `<p>${escapeCatalogHtml(toPlainRagnarokText(line))}</p>`)
-			.join('') || '<p>暂无说明</p>'
-	);
+	// Format the entire description so RO colors continue across source lines.
+	const html = formatRagnarokMarkup(value);
+	return html.trim() ? `<p>${html}</p>` : '<p>暂无说明</p>';
 }
 
 function mount(container, context = {}) {
+	const onNavi = event => handleNaviClick(event, (info, label) => {
+		const target = getNaviTarget(info);
+		if (target.kind === 'monster') context.openMonster(target.monsterId);
+		else context.openMap({ id: target.mapName, mapName: target.mapName, x: target.x, y: target.y, name: label });
+	});
+	container.addEventListener('click', onNavi);
+	container.addEventListener('keydown', onNavi);
 	container.classList.add('world-catalog-tab', 'item-catalog-tab');
 	const assetUrls = new Map();
 	const dropSources = createItemDropSources(context);
@@ -279,11 +284,15 @@ function mount(container, context = {}) {
 			detail.innerHTML = `<div class="item-detail-content"><div class="item-overview"><div class="catalog-heading item-heading"><span class="catalog-portrait item-portrait"><img alt="${escapeCatalogHtml(name)}"></span>${context.mobile ? '' : `<div><h3>${escapeCatalogHtml(name)}</h3><p>${escapeCatalogHtml(item.AegisName)} · ID ${item.Id}</p></div>`}</div>
 			<div class="catalog-metadata">${metadata.map(([label, value]) => `<div><span>${label}</span><strong>${escapeCatalogHtml(value)}</strong></div>`).join('')}</div>
 			</div><div class="item-description">${renderDescription(item.description)}</div><section class="item-drop-sources" aria-label="掉落来源"><div class="item-source-list"></div></section></div>`;
+			prepareNaviLinks(detail.querySelector('.item-description'));
+			queueMicrotask(() => ensureReadableText(detail));
 			dropSources.render(detail.querySelector('.item-source-list'), item.Id);
 			renderActions(detail, item);
 			loadPortrait(detail.querySelector('.item-portrait img'), item);
 		},
 		cleanup() {
+			container.removeEventListener('click', onNavi);
+			container.removeEventListener('keydown', onNavi);
 			active = false;
 			container.removeEventListener('game-tools-close', resetAmounts);
 			dropSources.destroy();

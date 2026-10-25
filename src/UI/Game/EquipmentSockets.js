@@ -9,13 +9,15 @@ export function equipmentSockets(item) {
 		const id = Number(item.slot[`card${index + 1}`]);
 		if (!Number.isInteger(id) || id <= 0) return [];
 		const info = DB.getItemInfo(id);
+		const description = info.identifiedDescriptionName;
 		return [
 			{
 				id,
 				slot: index + 1,
 				kind: index < cardSlots ? 'card' : 'enchant',
 				name: info.identifiedDisplayName,
-				description: toPlainRagnarokText(info.identifiedDescriptionName).trim()
+				description: toPlainRagnarokText(description).trim(),
+				descriptionMarkup: Array.isArray(description) ? description.filter(Boolean).join('\n') : description || ''
 			}
 		];
 	});

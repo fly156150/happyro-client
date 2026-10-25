@@ -249,7 +249,6 @@
 	padding: 7px 10px;
 }
 :host([data-menu-density='spacious']) .battle-tools button,
-:host([data-menu-density='spacious']) .battle-status button:not([data-target]),
 :host([data-menu-density='spacious']) .target-actions button {
 	min-height: var(--battle-action-height);
 	font-size: 14px;

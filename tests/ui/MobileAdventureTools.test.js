@@ -106,3 +106,38 @@ it.each(['items', 'maps'])('returns from a monster to the same %s view and destr
  view.destroy();expect(cleanup).toHaveBeenCalledTimes(count+2);
  view=null;
 });
+
+it('opens an external NAVI monster directly instead of the default maps tab', () => {
+ const host=document.body.appendChild(document.createElement('div'));
+ const root=host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
+ const maps={id:'maps',mount:vi.fn()},monsters={id:'monsters',mount:vi.fn()};
+ view=createAdventureToolsView(root,{tabs:[],context:{initialMonsterId:1784},close:vi.fn()});
+ view.setTabs([maps,monsters]);
+ expect(view.activeFeature()).toBe('monsters');expect(maps.mount).not.toHaveBeenCalled();
+ expect(monsters.mount).toHaveBeenCalledWith(expect.anything(),expect.objectContaining({initialMonsterId:1784,returnLabel:'返回魔物列表'}));
+ expect(root.querySelector('.show-detail')).not.toBeNull();
+ monsters.mount.mock.calls[0][1].returnToCatalog();expect(root.querySelector('.show-detail')).toBeNull();
+});
+
+it('shows an external NAVI map detail immediately and does not reuse its target after switching tabs', () => {
+ const host=document.body.appendChild(document.createElement('div'));
+ const root=host.attachShadow({mode:'open'}).appendChild(document.createElement('div'));
+ const maps={id:'maps',mount:vi.fn()},monsters={id:'monsters',mount:vi.fn()};
+ const initialMap={id:'alberta',mapName:'alberta',x:98,y:154};
+ view=createAdventureToolsView(root,{tabs:[],context:{initialMap},close:vi.fn()});
+ view.setTabs([maps,monsters]);
+ expect(root.querySelector('.show-detail')).not.toBeNull();
+ expect(maps.mount).toHaveBeenCalledWith(expect.anything(),expect.objectContaining({initialMap}));
+ root.querySelector('[data-tool="monsters"]').click();root.querySelector('[data-tool="maps"]').click();
+ expect(maps.mount).toHaveBeenLastCalledWith(expect.anything(),expect.objectContaining({initialMap:null}));
+});
+
+
+it('opens an item NAVI map in the same tools window and restores its exact item view',()=>{
+ const {root,tabs}=mount();root.querySelector('[data-tool="items"]').click();root.querySelector('[data-catalog-key]').click();
+ const original=root.querySelector('.game-tools-tab');const input=original.querySelector('input');input.value='7';
+ const itemContext=tabs.find(t=>t.id==='items').mount.mock.calls[0][1];const target={id:'ecl_in01',mapName:'ecl_in01',x:66,y:95};
+ itemContext.openMap(target);expect(view.activeFeature()).toBe('maps');expect(root.querySelector('.show-detail')).not.toBeNull();
+ expect(tabs.find(t=>t.id==='maps').mount).toHaveBeenLastCalledWith(expect.anything(),expect.objectContaining({initialMap:target}));
+ root.querySelector('[data-tool="items"]').click();expect(root.querySelector('.game-tools-tab')).toBe(original);expect(input.value).toBe('7');expect(root.querySelector('.show-detail')).not.toBeNull();expect(tabs.find(t=>t.id==='items').mount).toHaveBeenCalledOnce();
+});

@@ -11,11 +11,11 @@ function targets(quest) {
 		for (const match of String(text || '').matchAll(/<NAVI>(.*?)<INFO>(.*?)<\/INFO><\/NAVI>/gi)) {
 			const [id, x, y] = match[2].split(',');
 			if (id && Number.isFinite(Number(x)) && Number.isFinite(Number(y)))
-				result.push({ id, name: toPlainRagnarokText(match[1]), x: Number(x), y: Number(y) });
+				result.push({ id, name: toPlainRagnarokText(match[1]), x: Number(x), y: Number(y), naviInfo: match[2], inline: true });
 		}
 	if (quest.npc_navi && !result.length) {
 		const [id, x, y] = String(quest.npc_navi).split(',');
-		result.push({ id, name: id, x: Number(x ?? quest.npc_pos_x), y: Number(y ?? quest.npc_pos_y) });
+		result.push({ id, name: id, x: Number(x ?? quest.npc_pos_x), y: Number(y ?? quest.npc_pos_y), naviInfo: [id, x ?? quest.npc_pos_x, y ?? quest.npc_pos_y].join(',') });
 	}
 	return result;
 }
@@ -27,6 +27,8 @@ export function createGameQuests(canOperate) {
 			.map(quest => ({
 				...quest,
 				targets: targets(quest),
+				summaryMarkup: quest.summary,
+				descriptionMarkup: quest.description,
 				title: toPlainRagnarokText(quest.title) || `任务 ${quest.questID}`,
 				summary: toPlainRagnarokText(quest.summary),
 				description: toPlainRagnarokText(quest.description),

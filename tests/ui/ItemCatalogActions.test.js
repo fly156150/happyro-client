@@ -207,3 +207,19 @@ it('retains cancelled drafts across selections and resets only when tools close'
  expect(requestGameToolsNumber).toHaveBeenLastCalledWith(root,expect.objectContaining({value:'',stepMin:0,stepButtons:[
  {delta:-1000000,label:'-100万'},{delta:-100000,label:'-10万'},{delta:100000,label:'+10万'},{delta:1000000,label:'+100万'}]}));
 });
+
+it.each([false,true])('renders catalog NAVI safely and opens tool pages without granting or teleporting on mobile=%s',async mobile=>{
+ const openMap=vi.fn(),openMonster=vi.fn();
+ searchAdventureItems.mockResolvedValue({data:[{Id:6081,Type:'Etc',AegisName:'Splendide_Coin',description:[
+  '<NAVI>^4D4DFF防具商^000000<INFO>ecl_in01,66,95,0,101,0</INFO></NAVI>',
+  '<NAVI>商人<INFO>spl_in01,110,322,0,101,0</INFO></NAVI>',
+  '<NAVI>魔物<INFO>STAPO,0,0,3,-222,1</INFO></NAVI>',
+  '<img src=x onerror=alert(1)>'
+ ]}],total:1,subtypes:[]});
+ cleanup=tab.mount(root,{mobile,openMap,openMonster,capabilities:{}});await tick();
+ const description=root.querySelector('.item-description');expect(description.querySelector('img')).toBeNull();expect(description.textContent).toContain('<img src=x onerror=alert(1)>');expect(description.textContent).not.toContain('<NAVI>');
+ const links=description.querySelectorAll('[data-navi-info]');expect(links[0].classList.contains('navi-link')).toBe(true);expect(links[1].classList.contains('navi-link')).toBe(false);expect(links[1].hasAttribute('tabindex')).toBe(false);
+ links[0].firstChild.click();expect(openMap).toHaveBeenCalledExactlyOnceWith({id:'ecl_in01',mapName:'ecl_in01',x:66,y:95,name:'防具商'});
+ links[1].click();expect(openMap).toHaveBeenCalledOnce();
+ links[2].dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));expect(openMonster).toHaveBeenCalledWith(expect.any(Number));expect(grantAdventureItem).not.toHaveBeenCalled();
+});

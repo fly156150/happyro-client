@@ -33,7 +33,7 @@ import PACKET from 'Network/PacketStructure.js';
 import Entity from 'Renderer/Entity/Entity.js';
 import Equipment from 'UI/Components/Equipment/Equipment.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
-import Navigation from 'UI/Components/Navigation/Navigation.js';
+import { handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
 import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
 
 /**
@@ -108,22 +108,7 @@ function handleMarkupClick(event) {
 		return;
 	}
 
-	const naviLink = event.target.closest('.navi-link');
-	if (!naviLink) {
-		return;
-	}
-	const naviInfo = naviLink.dataset.naviInfo;
-	const displayName = naviLink.dataset.naviName;
-	if (!naviInfo) {
-		return;
-	}
-	if (Navigation.uid === naviInfo && Navigation._host && Navigation._host.style.display !== 'none') {
-		Navigation.hide();
-		return;
-	}
-	Navigation.show();
-	Navigation.uid = naviInfo;
-	Navigation.setNaviInfo(naviInfo, displayName);
+	handleNaviClick(event);
 }
 
 /**
@@ -211,6 +196,7 @@ ItemInfo.init = function init() {
 
 	this.draggable('.title');
 	root.addEventListener('click', handleMarkupClick);
+	root.addEventListener('keydown', handleNaviClick);
 };
 
 ItemInfo.handleMarkupClick = handleMarkupClick;
@@ -307,6 +293,7 @@ ItemInfo.setItem = function setItem(item) {
 	if (descInner) {
 		const rawDesc = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
 		descInner.innerHTML = formatRagnarokMarkup(rawDesc);
+		prepareNaviLinks(descInner);
 	}
 
 	if (item.HireExpireDate) {

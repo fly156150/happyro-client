@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
 import ItemType from 'DB/Items/ItemType.js';
@@ -187,7 +188,7 @@ export function createContainerPanel(body, actions, initialSource) {
 		const title = document.createElement('h3');
 		title.textContent = item.name;
 		const description = document.createElement('p');
-		description.textContent = item.description;
+		renderDescriptionMarkup(description, item.descriptionMarkup || item.description, { navigation: true });
 		description.className = 'item-description';
 		const amount = createMenuField('input', 'segment');
 		amount.type = 'number';

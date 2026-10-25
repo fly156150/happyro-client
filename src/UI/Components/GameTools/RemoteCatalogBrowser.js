@@ -134,6 +134,14 @@ export function mountRemoteCatalogBrowser(container, options) {
 	options.onFiltersChange?.(filterValues());
 	options.onReady?.({
 		container,
+		select(item) {
+			clearTimeout(searchTimer);
+			requestToken++;
+			search.value = String(options.key(item));
+			Object.assign(state, { items: [item], selected: item, page: 1, total: 1, loading: false, error: '' });
+			renderList();
+			renderDetail();
+		},
 		reload: resetAndLoad,
 		reset() {
 			clearTimeout(searchTimer);
@@ -154,7 +162,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 		resetTabScroll(container, list);
 		void loadPage({ selectFirst: true });
 	});
-	void loadPage();
+	if (!state.selected) void loadPage();
 
 	return () => {
 		requestToken += 1;

@@ -1,4 +1,6 @@
 import { expect, it, vi } from 'vitest';
+vi.mock('UI/Components/Navigation/NpcNaviService.js', () => ({ isNpcNaviAvailable: () => false, openNpcNaviMap: vi.fn() }));
+vi.mock('UI/Components/Navigation/NaviActionService.js', () => ({ prepareNaviLinks:vi.fn(), isNaviAvailable:vi.fn(()=>true),  handleNaviClick: vi.fn(), activateNavi: vi.fn() }));
 import { createSkillsPanel } from '../../src/UI/Mobile/game/SkillsPanel.js';
 import { createShopPanel } from '../../src/UI/Mobile/game/ShopPanel.js';
 import { createContainerPanel } from '../../src/UI/Mobile/game/ContainerPanel.js';

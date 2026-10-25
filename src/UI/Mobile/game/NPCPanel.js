@@ -1,6 +1,7 @@
 import { ensureReadableText } from 'Utils/ReadableText.js';
 import { createMenuField } from './MenuFormControls.js';
 import NpcNameTable from 'DB/NpcNameTable.js';
+import { prepareNpcNaviLinks, handleNpcNaviClick } from 'UI/Game/NpcNaviLinks.js';
 import { formatNPCMarkup } from 'Utils/RagnarokText.js';
 
 /** Hide only a redundant opening speaker label; keep the original dialogue state intact. */
@@ -31,6 +32,9 @@ export function createNPCPanel(body, state) {
 	const text = document.createElement('div');
 	text.className = 'npc-lines';
 	text.innerHTML = formatNPCMarkup(dialogueLines(state));
+	prepareNpcNaviLinks(text);
+	text.addEventListener('click', handleNpcNaviClick);
+	text.addEventListener('keydown', handleNpcNaviClick);
 	text.hidden = !text.textContent;
 	content.append(text);
 	if (state.resultItems?.length) {
@@ -52,11 +56,11 @@ export function createNPCPanel(body, state) {
 	body.append(content, footer);
 	ensureReadableText(text);
 	updateNPCCutin(body, state);
-	function button(parent, label, respond) {
+	function button(parent, label, onPress) {
 		const node = document.createElement('button');
 		node.type = 'button';
 		node.textContent = label;
-		node.onclick = respond;
+		node.onclick = onPress;
 		parent.append(node);
 	}
 	if (state.kind === 'deal') {

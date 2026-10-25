@@ -1,4 +1,7 @@
+import { configureNpcNaviPrompt } from 'UI/Game/NpcNaviPrompt.js';
 import Platform from 'UI/Platform.js';
+import { createNaviDialogueGuard } from 'UI/Game/NaviDialogueGuard.js';
+import { interactionSnapshot } from 'UI/Game/ServerInteraction.js';
 import { mobileNPC } from './MobileNPC.js';
 /**
  * Engine/MapEngine/NPC.js
@@ -410,6 +413,16 @@ NpcBox.onClosePressed = function onClosePressed(NAID) {
  * Initialize
  */
 export default function NPCEngine() {
+	const prepareTeleport = createNaviDialogueGuard({
+			interaction: interactionSnapshot,
+			desktopBusy: () =>
+				!Platform.isMobile &&
+				(NpcBox.ownerID !== 0 ||
+					[NpcMenu, InputBox, WinPopup].some(
+						component => component._host?.isConnected && component._host.style.display !== 'none'
+					))
+		});
+	configureNpcNaviPrompt({ dialogueActive: () => !prepareTeleport().allowed });
 	Network.hookPacket(PACKET.ZC.SAY_DIALOG, Platform.isMobile ? mobileNPC.message : onMessage);
 	Network.hookPacket(PACKET.ZC.WAIT_DIALOG, Platform.isMobile ? mobileNPC.next : onNextAppear);
 	Network.hookPacket(PACKET.ZC.CLOSE_DIALOG, Platform.isMobile ? mobileNPC.closeButton : onCloseAppear);

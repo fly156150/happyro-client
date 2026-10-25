@@ -13,6 +13,7 @@ import { ensureReadableText } from 'Utils/ReadableText.js';
 import KEYS from 'Controls/KeyEventHandler.js';
 import Renderer from 'Renderer/Renderer.js';
 import UIManager from 'UI/UIManager.js';
+import { hasHigherFocusedWindow } from 'UI/Game/DialogueKeyboardFocus.js';
 import GUIComponent from 'UI/GUIComponent.js';
 import 'UI/Elements/Elements.js';
 import htmlText from './NpcMenu.html?raw';
@@ -105,6 +106,7 @@ NpcMenu.onRemove = function onRemove() {
  * Bind KeyDown event
  */
 NpcMenu.onKeyDown = function onKeyDown(event) {
+	if (hasHigherFocusedWindow(this, UIManager.components)) return true;
 	if (InputBox._host && InputBox._host.style.display !== 'none' && InputBox.__active) {
 		return true;
 	}

@@ -30,6 +30,15 @@
 	line-height: 1.6;
 	overflow-wrap: anywhere;
 }
+.npc-lines .navi-link {
+	color: #8ed4ff;
+	cursor: pointer;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+.npc-lines .navi-link:hover {
+	color: #c8eaff;
+}
 .npc-cutin {
 	float: right;
 	width: auto;
@@ -145,6 +154,6 @@
 
 /* Give the final line or choice a little more breathing room above the lower edge. */
 :host([data-menu-density]) .panel[data-view='npc'] .npc-content {
- box-sizing: border-box;
- padding-bottom: max(8px, var(--panel-gap));
+	box-sizing: border-box;
+	padding-bottom: max(8px, var(--panel-gap));
 }

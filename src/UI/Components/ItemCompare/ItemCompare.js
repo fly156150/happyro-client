@@ -25,6 +25,7 @@ import htmlText from './ItemCompare.html?raw';
 import cssText from './ItemCompare.css?raw';
 import ItemInfo from 'UI/Components/ItemInfo/ItemInfo.js';
 import Entity from 'Renderer/Entity/Entity.js';
+import { handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
 import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
 
 /**
@@ -122,6 +123,7 @@ ItemCompare.init = function init() {
 	const itemInfoTitle = itemInfoRoot ? itemInfoRoot.querySelector('.title') : null;
 	this.draggable(itemInfoTitle || '.title');
 	root.addEventListener('click', ItemInfo.handleMarkupClick);
+	root.addEventListener('keydown', handleNaviClick);
 };
 
 /**
@@ -200,6 +202,7 @@ ItemCompare.setItem = function setItem(item) {
 	if (descInner) {
 		const rawDesc = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
 		descInner.innerHTML = formatRagnarokMarkup(rawDesc);
+		prepareNaviLinks(descInner);
 	}
 
 	// Add view button (for cards)

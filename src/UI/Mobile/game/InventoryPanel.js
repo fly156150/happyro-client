@@ -1,3 +1,4 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
 import { createInventoryDescription } from './InventoryDescription.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
@@ -90,11 +91,12 @@ export function createInventoryPanel(body, actions) {
 	function renderDetail() {
 		const item = state.find(entry => entry.index === selected?.index && entry.ID === selected?.ID);
 		if (!item) {
+			if (detailKey === 'empty') return;
 			dismiss?.();
 			dismiss = null;
 			selected = null;
 			binding = false;
-			detailKey = '';
+			detailKey = 'empty';
 			const hint = document.createElement('div');
 			hint.className = 'inventory-empty-message';
 			hint.textContent = '点击物品查看详情和操作';
@@ -129,6 +131,7 @@ export function createInventoryPanel(body, actions) {
 		else ops.append(disabledAction('丢弃'));
 		const content = createInventoryDescription(item, actions.preview);
 		detail.replaceChildren(content, ops);
+		ensureReadableText(content);
 
 	}
 	function chooseDrop(item) {

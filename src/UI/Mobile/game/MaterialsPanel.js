@@ -1,3 +1,4 @@
+import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -153,12 +154,13 @@ export function createMaterialsPanel(body, service) {
 		if (!item) {
 			selected = null;
 			draft = null;
-			$('.inventory-detail').textContent = state.items.length
+			const hint = state.items.length
 				? state.instruction || '点选物品，输入数量后加入材料'
 				: '没有可用材料';
+			if ($('.inventory-detail').textContent !== hint) $('.inventory-detail').textContent = hint;
 		} else {
 			title.textContent = item.name;
-			description.textContent = item.description || '';
+			renderDescriptionMarkup(description, item.descriptionMarkup || item.description || '');
 			input.max = String(item.count);
 			revert.hidden = !draft?.dirty();
 			for (const control of $('.inventory-detail').querySelectorAll('button,input'))

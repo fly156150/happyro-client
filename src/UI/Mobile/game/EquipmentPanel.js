@@ -1,7 +1,12 @@
+import { ensureReadableText } from 'Utils/ReadableText.js';
+import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
+import { handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 /** Independent touch equipment view; server snapshots own all item and stat values. */
 export function createEquipmentPanel(body, actions) {
+	body.addEventListener('click', handleNaviClick);
+	body.addEventListener('keydown', handleNaviClick);
 	body.innerHTML =
 		'<nav class="equipment-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--stacked" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><div class="equipment-stats" hidden></div><div class="equipment-actions inventory-actions menu-footer menu-footer--trailing"></div>';
 	const $ = selector => body.querySelector(selector);
@@ -75,7 +80,7 @@ export function createEquipmentPanel(body, actions) {
 		title.textContent = item.name;
 		const description = document.createElement('p');
 		description.className = 'item-description';
-		description.textContent = item.description || '暂无装备说明';
+		description.innerHTML = formatRagnarokMarkup(item.descriptionMarkup || item.description || '暂无装备说明');
 		const status = document.createElement('p');
 		status.textContent = `数量：${item.count}${item.worn ? ' · 已穿戴' : ''}${!item.identified ? ' · 未鉴定' : ''}${item.damaged ? ' · 已损坏' : ''}`;
 		const overview = document.createElement('div');
@@ -111,13 +116,15 @@ export function createEquipmentPanel(body, actions) {
 				name.textContent = `${socket.name} · 槽位 ${socket.slot}`;
 				const text = document.createElement('p');
 				text.className = 'item-description';
-				text.textContent = socket.description;
+				text.innerHTML = formatRagnarokMarkup(socket.descriptionMarkup || socket.description || '');
 				details.append(name, text);
 				section.append(details);
 			}
 			summary.append(section);
 		}
+		prepareNaviLinks(summary);
 		overview.append(media, summary);
+		queueMicrotask(() => ensureReadableText(overview));
 		void actions.preview(item.index, item.ID).then(preview => {
 			if (!overview.isConnected || !preview) return;
 			const source = preview.art || preview.image || item.icon;

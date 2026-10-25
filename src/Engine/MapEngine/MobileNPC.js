@@ -51,7 +51,8 @@ function present(state) {
 			} else if (state.mode === 'close') close(state.id);
 		},
 		respond: value => {
-			if (interactionSnapshot()?.token !== token || state.mode === 'waiting') return false;
+			if (interactionSnapshot()?.token !== token || state.mode === 'waiting')
+				return false;
 			const mode = state.mode;
 			if (
 				mode === 'number' &&

@@ -37,15 +37,19 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		savedSource?.tabView?.destroy();
 		savedSource = null;
 	}
-	function openMonster(id) {
-		const tab = availableTabs.find(candidate => candidate.id === 'monsters');
-		if (!tab || !['items', 'maps'].includes(active?.id)) return;
+	function openTarget(id, target) {
+		const tab = availableTabs.find(candidate => candidate.id === id);
+		if (!tab || !['items', 'maps'].includes(active?.id) || active.id === id) return;
+		discardSavedSource();
 		savedSource = { tab: active, container: content.firstElementChild, cleanup, tabView, detail, scrolls: new Map(scrolls) };
 		savedSource.container.remove();
 		cleanup = null;
 		tabView = null;
-		open(tab, { initialMonsterId: id });
+		open(tab, target);
 	}
+	const openMonster = id => openTarget('monsters', { initialMonsterId: id });
+	const openMap = target => openTarget('maps', { initialMap: target });
+
 	function disposeTab() {
 		clearToast(content);
 		// Resolve outstanding confirmations before removing a feature view.
@@ -92,10 +96,24 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			tabView.restore();
 			return;
 		}
-		if (tab.id !== 'monsters') discardSavedSource();
-		cleanup = tab.mount(container, { ...context, ...target, openMonster, returnLabel: savedSource?.tab.id === 'maps' ? '返回地图' : '返回物品', returnToCatalog: () => { if (savedSource) open(savedSource.tab); } });
+		if (!target.initialMap && !target.initialMonsterId) discardSavedSource();
+		const initialMap = target.initialMap || context.initialMap;
+		cleanup = tab.mount(container, { ...context, ...target, openMonster, openMap, returnLabel: savedSource ? (savedSource.tab.id === 'maps' ? '返回地图' : '返回物品') : '返回魔物列表', returnToCatalog: () => { if (savedSource) open(savedSource.tab); else showList(); } });
 		tabView = trackTabView(container);
 		showList();
+		if (tab.id === 'maps' && initialMap) {
+			context.initialMap = null;
+			detail = true;
+			content.classList.add('show-detail');
+			back.textContent = '返回列表';
+			updateBack();
+		}
+		if (tab.id === 'monsters' && (target.initialMonsterId || context.initialMonsterId)) {
+			detail = true;
+			content.classList.add('show-detail');
+			back.textContent = '返回列表';
+			updateBack();
+		}
 		if (tab.id === 'character') {
 			detail = true;
 			content.classList.add('show-detail');
@@ -116,7 +134,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			button.onclick = () => open(tab);
 			navigation.append(button);
 		}
-		if (nextTabs.length) open(nextTabs[0]);
+		if (nextTabs.length) open(nextTabs.find(tab => tab.id === (context.initialMonsterId ? 'monsters' : context.initialMap ? 'maps' : '')) || nextTabs[0]);
 	}
 	content.addEventListener(
 		'click',

@@ -208,3 +208,15 @@ ui-button {
 		cursor: text !important;
 	}
 }
+
+/* Help references expose only readable labels; unavailable entries have no link class. */
+.tipbox-link { color: #1665a5; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.tipbox-link span { color: inherit !important; }
+.tipbox-link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+:host(#MobileAdventureTools) .tipbox-link { color: #8ed4ff; }
+
+:is(.navi-link, .markup-url, .item-link[data-item-id]) { color: #1665a5; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+:is(.navi-link, .markup-url, .item-link[data-item-id]) span { color: inherit !important; }
+:is(.navi-link, .markup-url, .item-link[data-item-id]):focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+:host(#MobileAdventureTools) :is(.navi-link, .markup-url, .item-link[data-item-id]) { color: #8ed4ff; }

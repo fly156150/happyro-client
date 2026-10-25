@@ -49,10 +49,14 @@ function mount(container, context = {}) {
 	let actionState = {};
 	let routeState = {};
 	let selectedCoordinate = null;
+	let initialTarget = context.initialMap;
+	let selectedReview = null;
+	let selectedTargetName = '';
 	let routeSelected = false;
 	let arrivalPreview = null;
 	let arrivalAbort = null;
 	let loadedMap = null;
+	let mapLoadError = false;
 	let loadingMapName = '';
 	let loadToken = 0;
 	let thumbnailToken = 0;
@@ -108,6 +112,18 @@ function mount(container, context = {}) {
 			hasImage: mapImageNames.has(MiniMapTable[resolvedMapName] || resolvedMapName)
 		};
 	};
+	const openTarget = target => {
+		if (!target?.mapName || !Number.isFinite(target.x) || !Number.isFinite(target.y)) return;
+		initialTarget = target;
+		loadingMapName = '';
+		browserApi?.select({
+			id: target.id || target.mapName,
+			mapName: target.mapName,
+			name: DB.getMapInfo?.(`${target.mapName}.rsw`)?.displayName || DB.getMapName?.(target.mapName, target.mapName) || target.mapName
+		});
+	};
+	const onOpenMap = event => openTarget(event.detail);
+	container.addEventListener('game-tools-open-map', onOpenMap);
 	const destroyBrowser = mountRemoteCatalogBrowser(container, {
 		placeholder: '搜索地图名称',
 		searchLabel: '搜索地图',
@@ -143,7 +159,7 @@ function mount(container, context = {}) {
 			const renderThumbnail = async thumbnail => {
 				const map = mapsById.get(thumbnail.dataset.mapThumb);
 				if (!map) return;
-				const image = await loadCatalogMapImage(map.mapName);
+				const image = await loadCatalogMapImage(map.mapName).catch(() => null);
 				if (token !== thumbnailToken || !thumbnail.isConnected) return;
 				if (image) {
 					const preview = document.createElement('img');
@@ -152,7 +168,7 @@ function mount(container, context = {}) {
 					thumbnail.replaceChildren(preview);
 					return;
 				}
-				const resource = await loadCatalogMap(map.mapName);
+				const resource = await loadCatalogMap(map.mapName).catch(() => null);
 				if (token !== thumbnailToken || !thumbnail.isConnected) return;
 				if (!resource?.gat?.cells) {
 					thumbnail.textContent = '无图';
@@ -186,22 +202,19 @@ function mount(container, context = {}) {
 		renderDetail(detail, map, api) {
 			if (loadingMapName !== map.mapName) {
 				loadingMapName = map.mapName;
-				selectedCoordinate =
-					context.initialMap?.id === map.id &&
-					Number.isFinite(context.initialMap.x) &&
-					Number.isFinite(context.initialMap.y)
-						? { x: context.initialMap.x, y: context.initialMap.y }
-						: { x: 0, y: 0, automatic: true };
-				routeSelected = Boolean(
-					context.initialMap?.id === map.id &&
-					Number.isFinite(context.initialMap.x) &&
-					Number.isFinite(context.initialMap.y)
-				);
+				const initial = initialTarget && (initialTarget.id === map.id || initialTarget.mapName === map.mapName) && Number.isFinite(initialTarget.x) && Number.isFinite(initialTarget.y)
+					? initialTarget : null;
+				initialTarget = null;
+				selectedCoordinate = initial ? { x: initial.x, y: initial.y } : { x: 0, y: 0, automatic: true };
+				selectedReview = initial?.dialogueTarget || null;
+				selectedTargetName = initial?.name || '';
+				routeSelected = Boolean(initial);
 				arrivalAbort?.abort();
 				arrivalAbort = new AbortController();
 				const signal = arrivalAbort.signal;
 				arrivalPreview = null;
-				requestArrivalPreview(map.mapName, signal)
+				// Reviewed NPC targets already carry their landing; no runtime preflight.
+				if (!selectedReview) requestArrivalPreview(map.mapName, signal)
 					.then(point => {
 						if (signal.aborted) return;
 						arrivalPreview = point;
@@ -213,13 +226,18 @@ function mount(container, context = {}) {
 						api.refreshDetail();
 					});
 				loadedMap = null;
+				mapLoadError = false;
 				selectedNpcKey = '';
 				npcAvailability = {};
 				const token = ++loadToken;
 				loadCatalogMap(map.mapName).then(resource => {
 					if (token !== loadToken) return;
 					loadedMap = resource;
-
+					mapLoadError = !resource?.gat?.width || !resource?.gat?.height;
+					api.refreshDetail();
+				}).catch(() => {
+					if (token !== loadToken) return;
+					mapLoadError = true;
 					api.refreshDetail();
 				});
 				mapNpcs = [];
@@ -242,7 +260,11 @@ function mount(container, context = {}) {
 				selectedCoordinate = { x: selectedNpc.x, y: selectedNpc.y };
 			}
 			const target = selectedCoordinate ? { ...map, ...selectedCoordinate } : null;
-			const routeTarget = routeSelected && target && !target.automatic ? target : null;
+			const grid = loadedMap?.gat;
+			const inBounds = point => point && grid?.width > 0 && grid?.height > 0 &&
+				Number.isFinite(point.x) && Number.isFinite(point.y) && point.x >= 0 && point.y >= 0 && point.x < grid.width && point.y < grid.height;
+			const targetInBounds = inBounds(target);
+			const routeTarget = routeSelected && targetInBounds && !target.automatic ? target : null;
 			const currentMap = getCurrentAdventureMap();
 			const sameMap = normalizeAdventureMap(map.mapName) === currentMap;
 			const currentPosition = getCurrentAdventurePosition();
@@ -256,12 +278,15 @@ function mount(container, context = {}) {
 			const routeActive = routeMatches && routeState.active;
 			const routePending = routeMatches && routeState.pending && !routeState.walking;
 			const routeUnavailable = routeMatches && routeState.unavailable;
-			const targetActionState = getAdventureActionState(target);
+			const reviewedTeleport = !selectedReview || (selectedReview.allowed && selectedReview.teleportAllowed &&
+				Number.isFinite(selectedReview.arrivalX) && Number.isFinite(selectedReview.arrivalY));
+			const teleportTarget = target && reviewedTeleport
+				? { ...target, ...(selectedReview ? { x: selectedReview.arrivalX, y: selectedReview.arrivalY } : {}) } : null;
+			const targetActionState = getAdventureActionState(teleportTarget);
 			const canTeleport =
-				target &&
-				loadedMap &&
-				Number.isFinite(target.x) &&
-				Number.isFinite(target.y) &&
+				teleportTarget &&
+				targetInBounds &&
+				inBounds(teleportTarget) &&
 				targetActionState.canTeleport;
 			const currentMapName =
 				DB.getMapInfo(`${currentMap}.rsw`)?.displayName || DB.getMapName(currentMap, currentMap);
@@ -274,13 +299,17 @@ function mount(container, context = {}) {
 				? npcTeleportEnabled(selectedNpc, npcAvailability[npcCatalogKey(selectedNpc)], npcActionState)
 				: false;
 			const canTeleportHere = selectedNpc ? canTeleportNpc : canTeleport;
-			const mapStatus = !Session.NavigationTeleportAllowed ? '当前账号没有传送权限' : '';
+			const mapStatus = mapLoadError ? '地图加载失败，请重新打开地图。'
+				: !loadedMap ? '地图正在加载…'
+				: target && !targetInBounds ? '目标坐标不在地图范围内'
+				: !reviewedTeleport ? (selectedReview.teleportReason === 'map_forbidden' ? '目标地图禁止直接传入' : '该目标没有可用的传送落点')
+				: !Session.NavigationTeleportAllowed ? '当前账号没有传送权限' : '';
 			const selectionLabel = selectedNpc
 				? `${selectedNpc.name} · ${selectedNpc.x}, ${selectedNpc.y}`
 				: selectedCoordinate?.automatic
 					? ''
 					: selectedCoordinate
-						? `${selectedCoordinate.x}, ${selectedCoordinate.y}`
+						? `${selectedTargetName ? `${selectedTargetName} · ` : ''}${selectedCoordinate.x}, ${selectedCoordinate.y}`
 						: '点击地图选择位置';
 			detail.innerHTML = `<div class="map-heading"><div><h3>${escapeCatalogHtml(map.name)}</h3><div class="map-heading-meta"><p>${escapeCatalogHtml(map.id)}</p><small class="map-current-position">角色位置：${escapeCatalogHtml(currentMapName)} (${currentPosition.x}, ${currentPosition.y})</small></div></div>${selectionLabel ? `<strong>${escapeCatalogHtml(selectionLabel)}</strong>` : ''}</div>
 					<div class="map-detail-body">
@@ -347,8 +376,11 @@ function mount(container, context = {}) {
 			const npcList = detail.querySelector('.map-npc-scroll');
 			if (npcList) npcList.scrollTop = npcListScrollTop;
 			picker.addEventListener('click', event => {
+				if (!grid?.width || !grid?.height) return;
 				const raw = canvasToMapCoordinate(canvas, event, loadedMap?.gat);
 				selectedNpcKey = '';
+				selectedReview = null;
+				selectedTargetName = '';
 				selectedCoordinate = findNearestWalkableCoordinate(loadedMap?.gat, raw);
 				routeSelected = Boolean(selectedCoordinate);
 				if (!selectedCoordinate) {
@@ -359,21 +391,24 @@ function mount(container, context = {}) {
 				if (!sameMap || !previewAdventureRoute(nextTarget)) api.refreshDetail();
 			});
 			detail.querySelector('.catalog-route').addEventListener('click', () => {
-				if (routePending || routeUnavailable) return;
+				if (!sameMap || !routeTarget || routePending || routeUnavailable) return;
 				if (routeActive) stopAdventureRoute();
 				else if (routeTarget) startAdventureRoute(routeTarget);
 			});
 			detail.querySelector('.catalog-teleport').addEventListener('click', () => {
+				if (!canTeleportHere) return;
 				const started = selectedNpc
 					? teleportToNpc(selectedNpc)
-					: target
-						? teleportToCoordinate(target)
+					: teleportTarget
+						? teleportToCoordinate(teleportTarget)
 						: false;
 				pendingSelectionClear = started ? 'teleport' : '';
 			});
 			for (const row of detail.querySelectorAll('.map-npc-row')) {
 				row.addEventListener('click', () => {
 					if (selectedNpcKey === row.dataset.npcKey) return;
+					selectedReview = null;
+					selectedTargetName = '';
 					selectedNpcKey = row.dataset.npcKey;
 					routeSelected = true;
 					const npc = mapNpcs.find(entry => npcCatalogKey(entry) === selectedNpcKey);
@@ -384,10 +419,13 @@ function mount(container, context = {}) {
 		},
 		onReady(api) {
 			browserApi = api;
+			if (initialTarget) openTarget(initialTarget);
 		}
 	});
 
 	const clearMapMarker = () => {
+		selectedReview = null;
+		selectedTargetName = '';
 		routeSelected = false;
 		selectedNpcKey = '';
 		selectedCoordinate = { x: 0, y: 0, automatic: true };
@@ -424,6 +462,7 @@ function mount(container, context = {}) {
 	}, 500);
 
 	return () => {
+		container.removeEventListener('game-tools-open-map', onOpenMap);
 		monsterTable.destroy();
 		arrivalAbort?.abort();
 		loadToken += 1;

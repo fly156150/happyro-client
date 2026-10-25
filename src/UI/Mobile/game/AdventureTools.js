@@ -1,3 +1,5 @@
+import { replaceNavigationClose } from 'UI/Game/NavigationVisit.js';
+import { acquireInputFreeze, releaseInputFreeze } from 'UI/InputFreeze.js';
 import menuNarrowTabletCSS from './MenuNarrowTablet.css?raw';
 import menuButtonSizingCSS from './MenuButtonSizing.css?raw';
 import adventureMenuLayoutCSS from './AdventureMenuLayout.css?raw';
@@ -46,37 +48,49 @@ Tools.nativeScrolling = true;
 let view,
 	disposers = [],
 	generation = 0,
-	abort,
-	previousFreeze,
-	inputOwned = false;
+	abort;
+let mapCloseCallback;
 
 Tools.openFromMenu = function (back) {
 	this.backToMenu = back;
 	this.append();
 };
-Tools.openMap = function (target, back) {
+Tools.openMonster = function (id, onClose) {
+ this.initialMapClose = onClose;
+ this.initialMonsterId = id;
+ this.append();
+};
+Tools.openMap = function (target, back, onClose) {
+	this.initialMapClose = onClose;
 	this.backToMenu = back;
 	this.initialMap = target;
 	this.append();
 };
 Tools.onAppend = async function () {
 	const initialMap = this.initialMap;
+	const onMapClose = replaceNavigationClose(mapCloseCallback, this.initialMapClose);
+	this.initialMapClose = null;
+	const initialMonsterId = this.initialMonsterId;
+	this.initialMonsterId = null;
 	const backToMenu = this.backToMenu;
 	this.backToMenu = null;
 	this.initialMap = null;
 	this.onRemove();
+	mapCloseCallback = onMapClose;
 	const request = ++generation;
 	notifyGameInput('action');
-	previousFreeze = Session.FreezeUI;
-	inputOwned = true;
-	Session.FreezeUI = true;
+	acquireInputFreeze(Tools);
 	abort = new AbortController();
 	const mount = this.getRoot().querySelector('.adventure-mount');
-	const context = { capabilities: {}, mobile: true, initialMap };
+	const context = { capabilities: {}, mobile: true, initialMap, initialMonsterId };
 	view = createAdventureToolsView(mount, {
 		tabs: [],
 		context,
-		close: () => this.remove(),
+		close: () => {
+			const callback = mapCloseCallback;
+			this.remove();
+			callback?.();
+		},
 		backToMenu: backToMenu
 			? () => {
 					this.remove();
@@ -122,9 +136,9 @@ Tools.onAppend = async function () {
 	view.setTabs(availableGameToolsTabs(capabilities));
 };
 Tools.onRemove = function () {
+	mapCloseCallback = undefined;
 	generation++;
-	if (inputOwned) Session.FreezeUI = previousFreeze;
-	inputOwned = false;
+	releaseInputFreeze(Tools);
 	abort?.abort();
 	abort = null;
 	for (const dispose of disposers) dispose();

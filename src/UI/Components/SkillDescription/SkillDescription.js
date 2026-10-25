@@ -17,45 +17,9 @@ import GUIComponent from 'UI/GUIComponent.js';
 import htmlText from './SkillDescription.html?raw';
 import cssText from './SkillDescription.css?raw';
 
-/**
- * Whitelist of allowed HTML tags in skill descriptions
- */
-const _allowedTags = new Set(['font', 'i', 'b']);
-
-/**
- * Sanitize and format RO text with ^rrggbb color codes, ^nItemID^NNN
- * item name substitution, and newline conversion.
- *
- * @param {string} value - raw skill description text
- * @returns {string} safe HTML string
- */
-function _formatROText(value) {
-	const tmp = document.createElement('div');
-	tmp.innerHTML = String(value);
-
-	tmp.querySelectorAll('*').forEach(el => {
-		if (!_allowedTags.has(el.tagName.toLowerCase())) {
-			el.replaceWith(...el.childNodes);
-		}
-	});
-
-	let txt = tmp.innerHTML;
-
-	let result;
-	const colorReg = /\^([a-fA-F0-9]{6})/;
-	while ((result = colorReg.exec(txt))) {
-		txt = txt.replace(result[0], `<span style="color:#${result[1]}">`) + '</span>';
-	}
-
-	const itemReg = /\^nItemID\^(\d+)/g;
-	while ((result = itemReg.exec(txt))) {
-		txt = txt.replace(result[0], DB.getItemInfo(result[1]).identifiedDisplayName);
-	}
-
-	txt = txt.replace(/\n/g, '<br/>');
-
-	return txt;
-}
+import { ensureReadableText } from 'Utils/ReadableText.js';
+import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
+import { prepareNaviLinks, handleNaviClick } from 'UI/Components/Navigation/NaviActionService.js';
 
 /**
  * Create Component
@@ -109,6 +73,8 @@ SkillDescription.onDragEnd = fitViewport;
  */
 SkillDescription.init = function init() {
 	const root = this.getRoot();
+	root.addEventListener('click', handleNaviClick);
+	root.addEventListener('keydown', handleNaviClick);
 
 	const closeBtn = root.querySelector('.close');
 	if (closeBtn) {
@@ -142,7 +108,9 @@ SkillDescription.setSkill = function setSkill(id, { above } = {}) {
 	root.querySelector('.title').textContent = DB.getSkillName(id);
 	const content = root.querySelector('.content');
 	if (content) {
-		content.innerHTML = _formatROText(DB.getSkillDescription(id));
+		content.innerHTML = formatRagnarokMarkup(DB.getSkillDescription(id)).replace(/\n/g, '<br/>');
+		prepareNaviLinks(content);
+		queueMicrotask(() => ensureReadableText(content));
 		content.scrollTop = 0;
 	}
 

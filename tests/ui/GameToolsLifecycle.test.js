@@ -133,3 +133,28 @@ it('opens maps from the minimap even when another tab was selected or the window
  expect(tools.getRoot().querySelector('[data-tab-id=maps]').hidden).toBe(false);
  expect(tools.getRoot().querySelector('[data-tab-id=items]').hidden).toBe(true);
 });
+
+it('opens the requested monster in the shared catalog from NAVI', () => {
+ tools.selectTab('monsters');
+ const selected=vi.fn();tools.getRoot().querySelector('[data-tab-id=monsters]').addEventListener('game-tools-open-monster',selected);
+ tools.selectTab('maps');tools.showMonster(1784);
+ expect(fixtures.preferences.tab).toBe('monsters');expect(selected).toHaveBeenCalledWith(expect.objectContaining({detail:1784}));
+ expect(tools.getRoot().querySelector('[data-tab-id=monsters]').hidden).toBe(false);
+});
+
+it('opens a specified map target and invokes only its current return callback on actual close', () => {
+ tools.showMap();
+ const maps = tools.getRoot().querySelector('[data-tab-id=maps]');
+ const selected = vi.fn(); maps.addEventListener('game-tools-open-map', selected);
+ const oldClose = vi.fn(), close = vi.fn();
+ tools.showMap({ mapName: 'alberta', x: 98, y: 154 }, oldClose);
+ tools.showMap({ mapName: 'prontera', x: 120, y: 130 }, close);
+ expect(selected).toHaveBeenLastCalledWith(expect.objectContaining({ detail: { mapName: 'prontera', x: 120, y: 130 } }));
+ expect(close).not.toHaveBeenCalled(); expect(oldClose).not.toHaveBeenCalled();
+ tools.toggle(); expect(close).toHaveBeenCalledOnce(); expect(oldClose).not.toHaveBeenCalled();
+ tools.toggle(); tools.toggle(); expect(close).toHaveBeenCalledOnce();
+});
+it('drops the NPC return callback on disconnect without restoring a stale interaction', () => {
+ const close = vi.fn(); tools.showMap({ mapName: 'alberta', x: 98, y: 154 }, close); endConnection();
+ expect(close).not.toHaveBeenCalled(); tools.toggle(); tools.toggle(); expect(close).not.toHaveBeenCalled();
+});
