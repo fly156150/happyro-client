@@ -76,3 +76,14 @@ it('applies combat and pickup defaults while retaining character preferences', a
 	expect(pickup.savePickupSettings(personal)).toBe(true); expect(pickup.loadPickupSettings()).toEqual(personal);
 	expect(pickup.pickupDefaults()).toMatchObject({ enabled: true, range: 9, categories: ['card'] });
 });
+
+it('loads recovery deployment defaults without changing saved character choices', async () => {
+ configure({autoRecovery:{hp:{trigger:80,target:100},sp:{trigger:50,target:90}}});
+ const {defaultRecoverySettings}=await import('../../src/UI/Game/RecoverySettings.js');
+ expect(defaultRecoverySettings()).toEqual({hp:{enabled:false,trigger:80,target:100,items:[]},sp:{enabled:false,trigger:50,target:90,items:[]}});
+ const {loadAutoCombatSettings,saveAutoCombatSettings}=await import('../../src/UI/Game/AutoCombatSettings.js');
+ const recovery=defaultRecoverySettings();recovery.hp.trigger=35;recovery.hp.items=[501];
+ saveAutoCombatSettings('saved-recovery',{species:[],skills:[],ranges:{search:20,activity:30},recovery});
+ expect(loadAutoCombatSettings('saved-recovery').recovery.hp).toMatchObject({trigger:35,items:[501]});
+ expect(defaultRecoverySettings().hp.items).toEqual([]);
+});

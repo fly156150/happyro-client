@@ -369,6 +369,38 @@
       "default": 4.5,
       "min": 4.5,
       "max": 7
+    },
+    "CLIENT_AUTO_RECOVERY_HP_TRIGGER_PERCENT": {
+      "path": "autoRecovery.hp.trigger",
+      "type": "number",
+      "default": 50,
+      "min": 1,
+      "max": 99,
+      "integer": true
+    },
+    "CLIENT_AUTO_RECOVERY_HP_TARGET_PERCENT": {
+      "path": "autoRecovery.hp.target",
+      "type": "number",
+      "default": 80,
+      "min": 2,
+      "max": 100,
+      "integer": true
+    },
+    "CLIENT_AUTO_RECOVERY_SP_TRIGGER_PERCENT": {
+      "path": "autoRecovery.sp.trigger",
+      "type": "number",
+      "default": 20,
+      "min": 1,
+      "max": 99,
+      "integer": true
+    },
+    "CLIENT_AUTO_RECOVERY_SP_TARGET_PERCENT": {
+      "path": "autoRecovery.sp.target",
+      "type": "number",
+      "default": 50,
+      "min": 2,
+      "max": 100,
+      "integer": true
     }
   }
 }

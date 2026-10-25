@@ -1,3 +1,4 @@
+import { itemUseExecution } from 'Network/ItemUseExecution.js';
 import { showToast } from 'UI/Components/Toast.js';
 import { finishItemOperation, receiveItemOperationResult } from 'UI/Game/ItemOperationFeedback.js';
 import { finishRefinement } from 'UI/Game/GameRefinement.js';
@@ -271,6 +272,7 @@ function onItemUseAnswer(pkt) {
 			// should we show a msg in chatbox ?
 		}
 	}
+	if (!pkt.hasOwnProperty('AID') || Session.Entity.GID === pkt.AID) itemUseExecution.receive(Session.Entity, pkt);
 	if (pkt.result) {
 		EffectManager.spamItem(pkt.id, pkt.AID, null, null, null);
 	}

@@ -231,7 +231,7 @@
 	-webkit-tap-highlight-color: transparent;
 	user-select: none;
 }
-.pickup-section .pickup-item input[type='checkbox'] {
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox'] {
 	appearance: none;
 	-webkit-appearance: none;
 	box-sizing: border-box;
@@ -241,11 +241,11 @@
 	position: relative;
 	padding: 0;
 }
-.pickup-section .pickup-item input[type='checkbox']:checked {
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox']:checked {
 	background: #a7803b;
 	border-color: #e6c17d;
 }
-.pickup-section .pickup-item input[type='checkbox']:checked::after {
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox']:checked::after {
 	content: '';
 	position: absolute;
 	left: 5px;
@@ -256,10 +256,10 @@
 	border-width: 0 2px 2px 0;
 	transform: rotate(45deg);
 }
-.pickup-section .pickup-item input[type='checkbox']:disabled {
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox']:disabled {
 	opacity: 0.5;
 }
-.pickup-section .pickup-item input[type='checkbox']:focus-visible {
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox']:focus-visible {
 	outline: 2px solid #ffca67;
 	outline-offset: 2px;
 }
@@ -366,6 +366,9 @@
 .pickup-rules-group,
 .pickup-exclusions-group { display: contents; }
 
-.pickup-rules-title { display: none; }
+.pickup-rules-title { display: block; margin: 0; font-size: inherit; }
+.pickup-section :is(.pickup-rules-title, .pickup-exclusions-group > h4) { color: var(--assist-heading, #f6d9a5); }
 
 .pickup-page-symbol { display: none; }
+
+.pickup-picker .item-picker-title { margin: 0; padding-bottom: 10px; border-bottom: 1px solid var(--assist-border, #52606d); font-size: 14px; flex-shrink: 0; }

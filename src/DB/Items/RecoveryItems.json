@@ -1,0 +1,2548 @@
+{
+  "sources": {
+    "db/re/item_db_usable.yml": "bb5a9e735195b76e2d42c4e393d206a6adcd94c1387226b1b9486a1de6c30e86",
+    "db/import/item_db.yml": "4904463d2ba6baf7ac90acdff9eff249d12469fe6ad6d5a6abe4baf9dfa85b07"
+  },
+  "items": [
+    {
+      "id": 500,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:500",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 501,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:501",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 502,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:502",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 503,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:503",
+      "hpAmount": "rand(175,235)",
+      "spAmount": "0"
+    },
+    {
+      "id": 504,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:504",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 505,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:505",
+      "hpAmount": "0",
+      "spAmount": "rand(40,60)"
+    },
+    {
+      "id": 507,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:507",
+      "hpAmount": "rand(18,28)",
+      "spAmount": "0"
+    },
+    {
+      "id": 508,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:508",
+      "hpAmount": "rand(38,58)",
+      "spAmount": "0"
+    },
+    {
+      "id": 509,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:509",
+      "hpAmount": "rand(75,115)",
+      "spAmount": "0"
+    },
+    {
+      "id": 510,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:510",
+      "hpAmount": "0",
+      "spAmount": "rand(15,30)"
+    },
+    {
+      "id": 512,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:512",
+      "hpAmount": "rand(16,22)",
+      "spAmount": "0"
+    },
+    {
+      "id": 513,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:513",
+      "hpAmount": "rand(17,21)",
+      "spAmount": "0"
+    },
+    {
+      "id": 514,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:514",
+      "hpAmount": "0",
+      "spAmount": "rand(10,15)"
+    },
+    {
+      "id": 515,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:515",
+      "hpAmount": "rand(18,20)",
+      "spAmount": "0"
+    },
+    {
+      "id": 516,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:516",
+      "hpAmount": "rand(15,23)",
+      "spAmount": "0"
+    },
+    {
+      "id": 517,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:517",
+      "hpAmount": "rand(70,100)",
+      "spAmount": "0"
+    },
+    {
+      "id": 518,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:518",
+      "hpAmount": "rand(70,100)",
+      "spAmount": "rand(20,40)"
+    },
+    {
+      "id": 519,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:519",
+      "hpAmount": "rand(27,37)",
+      "spAmount": "0"
+    },
+    {
+      "id": 520,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:520",
+      "hpAmount": "rand(175,235)",
+      "spAmount": "0"
+    },
+    {
+      "id": 521,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:521",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 522,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:522",
+      "hpAmount": "rand(400,600)",
+      "spAmount": "0"
+    },
+    {
+      "id": 528,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:528",
+      "hpAmount": "rand(72,108)",
+      "spAmount": "0"
+    },
+    {
+      "id": 529,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:529",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 530,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:530",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 531,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:531",
+      "hpAmount": "rand(25,35)",
+      "spAmount": "0"
+    },
+    {
+      "id": 532,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:532",
+      "hpAmount": "rand(26,34)",
+      "spAmount": "0"
+    },
+    {
+      "id": 533,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:533",
+      "hpAmount": "0",
+      "spAmount": "rand(15,25)"
+    },
+    {
+      "id": 534,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:534",
+      "hpAmount": "rand(27,33)",
+      "spAmount": "0"
+    },
+    {
+      "id": 535,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:535",
+      "hpAmount": "19",
+      "spAmount": "0"
+    },
+    {
+      "id": 537,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:537",
+      "hpAmount": "rand(50,90)",
+      "spAmount": "0"
+    },
+    {
+      "id": 538,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:538",
+      "hpAmount": "rand(160,200)",
+      "spAmount": "0"
+    },
+    {
+      "id": 539,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:539",
+      "hpAmount": "rand(270,330)",
+      "spAmount": "0"
+    },
+    {
+      "id": 540,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:540",
+      "hpAmount": "rand(185,225)",
+      "spAmount": "0"
+    },
+    {
+      "id": 541,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:541",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 542,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:542",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 543,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:543",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 544,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:544",
+      "hpAmount": "rand(25,60)",
+      "spAmount": "0"
+    },
+    {
+      "id": 545,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:545",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 546,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:546",
+      "hpAmount": "rand(175,235)",
+      "spAmount": "0"
+    },
+    {
+      "id": 547,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:547",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 548,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:548",
+      "hpAmount": "0",
+      "spAmount": "rand(10,15)"
+    },
+    {
+      "id": 550,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:550",
+      "hpAmount": "rand(10,15)",
+      "spAmount": "0"
+    },
+    {
+      "id": 551,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:551",
+      "hpAmount": "rand(50,60)",
+      "spAmount": "0"
+    },
+    {
+      "id": 552,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:552",
+      "hpAmount": "rand(70,90)",
+      "spAmount": "rand(20,30)"
+    },
+    {
+      "id": 553,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:553",
+      "hpAmount": "rand(35,70)",
+      "spAmount": "0"
+    },
+    {
+      "id": 555,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:555",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 556,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:556",
+      "hpAmount": "rand(20,25)",
+      "spAmount": "0"
+    },
+    {
+      "id": 557,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:557",
+      "hpAmount": "rand(25,30)",
+      "spAmount": "0"
+    },
+    {
+      "id": 558,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:558",
+      "hpAmount": "1",
+      "spAmount": "1"
+    },
+    {
+      "id": 559,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:559",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 560,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:560",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 561,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:561",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 562,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:562",
+      "hpAmount": "rand(70,100)",
+      "spAmount": "0"
+    },
+    {
+      "id": 563,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:563",
+      "hpAmount": "rand(375,445)",
+      "spAmount": "0"
+    },
+    {
+      "id": 564,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:564",
+      "hpAmount": "200",
+      "spAmount": "0"
+    },
+    {
+      "id": 565,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:565",
+      "hpAmount": "rand(142,274)",
+      "spAmount": "0"
+    },
+    {
+      "id": 567,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:567",
+      "hpAmount": "rand(117,192)",
+      "spAmount": "0"
+    },
+    {
+      "id": 568,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:568",
+      "hpAmount": "0",
+      "spAmount": "rand(10,20)"
+    },
+    {
+      "id": 569,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:569",
+      "hpAmount": "rand(44,66)",
+      "spAmount": "0"
+    },
+    {
+      "id": 570,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:570",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 571,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:571",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 572,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:572",
+      "hpAmount": "rand(160,200)",
+      "spAmount": "0"
+    },
+    {
+      "id": 574,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:574",
+      "hpAmount": "rand(33,42)",
+      "spAmount": "0"
+    },
+    {
+      "id": 575,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:575",
+      "hpAmount": "rand(270,330)",
+      "spAmount": "0"
+    },
+    {
+      "id": 576,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:576",
+      "hpAmount": "rand(150,300)",
+      "spAmount": "rand(20,30)"
+    },
+    {
+      "id": 577,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:577",
+      "hpAmount": "rand(60,70)",
+      "spAmount": "0"
+    },
+    {
+      "id": 578,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:578",
+      "hpAmount": "0",
+      "spAmount": "rand(16,28)"
+    },
+    {
+      "id": 579,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:579",
+      "hpAmount": "rand(100,150)",
+      "spAmount": "0"
+    },
+    {
+      "id": 580,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:580",
+      "hpAmount": "rand(50,90)",
+      "spAmount": "0"
+    },
+    {
+      "id": 581,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:581",
+      "hpAmount": "rand(20,30)",
+      "spAmount": "0"
+    },
+    {
+      "id": 582,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:582",
+      "hpAmount": "rand(10,20)",
+      "spAmount": "rand(10,20)"
+    },
+    {
+      "id": 584,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:584",
+      "hpAmount": "rand(40,70)",
+      "spAmount": "0"
+    },
+    {
+      "id": 586,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:586",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 587,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:587",
+      "hpAmount": "rand(270,330)",
+      "spAmount": "rand(20,30)"
+    },
+    {
+      "id": 588,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:588",
+      "hpAmount": "rand(40,70)",
+      "spAmount": "0"
+    },
+    {
+      "id": 589,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:589",
+      "hpAmount": "rand(375,445)",
+      "spAmount": "0"
+    },
+    {
+      "id": 590,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:590",
+      "hpAmount": "rand(50,90)",
+      "spAmount": "0"
+    },
+    {
+      "id": 596,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:596",
+      "hpAmount": "0",
+      "spAmount": "rand(1,100)"
+    },
+    {
+      "id": 597,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:597",
+      "hpAmount": "rand(10,400)",
+      "spAmount": "0"
+    },
+    {
+      "id": 598,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:598",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 599,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:599",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 607,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 5000,
+      "cooldownGroup": "Reuse_Limit_F",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 608,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 3000,
+      "cooldownGroup": "Reuse_Limit_G",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 663,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:663",
+      "hpAmount": "10",
+      "spAmount": "0"
+    },
+    {
+      "id": 669,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:669",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 680,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:680",
+      "hpAmount": "0",
+      "spAmount": "20"
+    },
+    {
+      "id": 685,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:685",
+      "hpAmount": "100",
+      "spAmount": "50"
+    },
+    {
+      "id": 11500,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11500",
+      "hpAmount": "rand(175,235)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11501,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11501",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11502,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11502",
+      "hpAmount": "0",
+      "spAmount": "rand(40,60)"
+    },
+    {
+      "id": 11503,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11503",
+      "hpAmount": "rand(400,500)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11504,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11504",
+      "hpAmount": "0",
+      "spAmount": "rand(50,70)"
+    },
+    {
+      "id": 11505,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11505",
+      "hpAmount": "0",
+      "spAmount": "150"
+    },
+    {
+      "id": 11506,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11506",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11507,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11507",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11508,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11508",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11509,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11509",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11510,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11510",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11511,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11511",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11512,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11512",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11513,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11513",
+      "hpAmount": "rand(5,25)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11514,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11514",
+      "hpAmount": "rand(335,415)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11516,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11516",
+      "hpAmount": "rand(16,22)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11517,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11517",
+      "hpAmount": "rand(400,600)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11518,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11518",
+      "hpAmount": "0",
+      "spAmount": "5"
+    },
+    {
+      "id": 11519,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11519",
+      "hpAmount": "rand(170,250)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11520,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11520",
+      "hpAmount": "0",
+      "spAmount": "rand(50,80)"
+    },
+    {
+      "id": 11521,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11521",
+      "hpAmount": "rand(400,800)",
+      "spAmount": "rand(50,80)"
+    },
+    {
+      "id": 11522,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 1000,
+      "cooldownGroup": "Reuse_Limit_E",
+      "hpAmount": "rand(400,800)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11523,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 2000,
+      "cooldownGroup": "Reuse_Limit_E",
+      "hpAmount": "rand(600,1000)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11524,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 3000,
+      "cooldownGroup": "Reuse_Limit_E",
+      "hpAmount": "rand(800,1200)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11525,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 5000,
+      "cooldownGroup": "Reuse_Limit_H",
+      "hpAmount": "rand(1500,2000)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11526,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11526",
+      "hpAmount": "0",
+      "spAmount": "rand(120,160)"
+    },
+    {
+      "id": 11527,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11527",
+      "hpAmount": "1200",
+      "spAmount": "440"
+    },
+    {
+      "id": 11528,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11528",
+      "hpAmount": "300",
+      "spAmount": "240"
+    },
+    {
+      "id": 11529,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11529",
+      "hpAmount": "120",
+      "spAmount": "60"
+    },
+    {
+      "id": 11530,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11530",
+      "hpAmount": "30",
+      "spAmount": "0"
+    },
+    {
+      "id": 11531,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11531",
+      "hpAmount": "0",
+      "spAmount": "10"
+    },
+    {
+      "id": 11532,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11532",
+      "hpAmount": "rand(17,23)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11533,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11533",
+      "hpAmount": "rand(17,23)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11534,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11534",
+      "hpAmount": "rand(17,23)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11535,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11535",
+      "hpAmount": "0",
+      "spAmount": "rand(8,16)"
+    },
+    {
+      "id": 11538,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11538",
+      "hpAmount": "rand(35,60)",
+      "spAmount": "rand(5,10)"
+    },
+    {
+      "id": 11539,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11539",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11540,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11540",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11541,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11541",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11542,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11542",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11543,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11543",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11544,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11544",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11545,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11545",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11546,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11546",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11547,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11547",
+      "hpAmount": "rand(500,700)",
+      "spAmount": "rand(60,85)"
+    },
+    {
+      "id": 11548,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11548",
+      "hpAmount": "10",
+      "spAmount": "0"
+    },
+    {
+      "id": 11549,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11549",
+      "hpAmount": "0",
+      "spAmount": "10"
+    },
+    {
+      "id": 11550,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11550",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 11555,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11555",
+      "hpAmount": "325",
+      "spAmount": "0"
+    },
+    {
+      "id": 11556,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11556",
+      "hpAmount": "0",
+      "spAmount": "rand(40,60)"
+    },
+    {
+      "id": 11557,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11557",
+      "hpAmount": "325",
+      "spAmount": "0"
+    },
+    {
+      "id": 11558,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11558",
+      "hpAmount": "325",
+      "spAmount": "0"
+    },
+    {
+      "id": 11562,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11562",
+      "hpAmount": "rand(65,90)",
+      "spAmount": "rand(35,40)"
+    },
+    {
+      "id": 11564,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11564",
+      "hpAmount": "1000",
+      "spAmount": "0"
+    },
+    {
+      "id": 11565,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11565",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11566,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11566",
+      "hpAmount": "rand(175,235)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11567,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11567",
+      "hpAmount": "rand(44,66)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11568,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11568",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11569,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11569",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11570,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11570",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11572,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11572",
+      "hpAmount": "0",
+      "spAmount": "rand(40,60)"
+    },
+    {
+      "id": 11573,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11573",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11574,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11574",
+      "hpAmount": "rand(175,235)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11577,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11577",
+      "hpAmount": "200",
+      "spAmount": "0"
+    },
+    {
+      "id": 11578,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11578",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11580,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11580",
+      "hpAmount": "rand(45,65)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11581,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11581",
+      "hpAmount": "rand(270,330)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11582,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11582",
+      "hpAmount": "rand(160,200)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11584,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11584",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11585,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11585",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11586,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11586",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11587,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11587",
+      "hpAmount": "1",
+      "spAmount": "1"
+    },
+    {
+      "id": 11588,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11588",
+      "hpAmount": "rand(32,56)",
+      "spAmount": "rand(16,28)"
+    },
+    {
+      "id": 11589,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11589",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 11590,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11590",
+      "hpAmount": "rand(760,810)",
+      "spAmount": "10"
+    },
+    {
+      "id": 11596,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11596",
+      "hpAmount": "rand(600,800)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11608,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11608",
+      "hpAmount": "rand(325,405)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11609,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11609",
+      "hpAmount": "0",
+      "spAmount": "rand(40,60)"
+    },
+    {
+      "id": 11610,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11610",
+      "hpAmount": "350",
+      "spAmount": "0"
+    },
+    {
+      "id": 11614,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11614",
+      "hpAmount": "rand(27,37)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11615,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11615",
+      "hpAmount": "rand(15,23)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11616,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11616",
+      "hpAmount": "rand(100,150)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11621,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 1000,
+      "cooldownGroup": "item:11621",
+      "hpAmount": "325",
+      "spAmount": "0"
+    },
+    {
+      "id": 11622,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 1000,
+      "cooldownGroup": "item:11622",
+      "hpAmount": "900",
+      "spAmount": "0"
+    },
+    {
+      "id": 11623,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 1000,
+      "cooldownGroup": "item:11623",
+      "hpAmount": "1800",
+      "spAmount": "0"
+    },
+    {
+      "id": 11624,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 10000,
+      "cooldownGroup": "item:11624",
+      "hpAmount": "0",
+      "spAmount": "180"
+    },
+    {
+      "id": 11630,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11630",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 11631,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11631",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 11632,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11632",
+      "hpAmount": "20",
+      "spAmount": "20"
+    },
+    {
+      "id": 11701,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11701",
+      "hpAmount": "rand(105,145)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11703,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11703",
+      "hpAmount": "0",
+      "spAmount": "rand(25,35)"
+    },
+    {
+      "id": 11704,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11704",
+      "hpAmount": "rand(70,90)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11705,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11705",
+      "hpAmount": "425",
+      "spAmount": "0"
+    },
+    {
+      "id": 11706,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11706",
+      "hpAmount": "rand(700,1000)",
+      "spAmount": "0"
+    },
+    {
+      "id": 11707,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11707",
+      "hpAmount": "0",
+      "spAmount": "rand(100,200)"
+    },
+    {
+      "id": 11708,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11708",
+      "hpAmount": "rand(30,50)",
+      "spAmount": "rand(1,5)"
+    },
+    {
+      "id": 11709,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11709",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11710,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11710",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11711,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11711",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11712,
+      "hp": true,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11712",
+      "hpAmount": "rand(50,70)",
+      "spAmount": "rand(10,12)"
+    },
+    {
+      "id": 11713,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:11713",
+      "hpAmount": "rand(40,45)",
+      "spAmount": "0"
+    },
+    {
+      "id": 12143,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12143",
+      "hpAmount": "25",
+      "spAmount": "25"
+    },
+    {
+      "id": 12188,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12188",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 12192,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12192",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 12193,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12193",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 12195,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12195",
+      "hpAmount": "0",
+      "spAmount": "20"
+    },
+    {
+      "id": 12196,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12196",
+      "hpAmount": "50",
+      "spAmount": "0"
+    },
+    {
+      "id": 12197,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12197",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 12233,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12233",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 12234,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12234",
+      "hpAmount": "25",
+      "spAmount": "0"
+    },
+    {
+      "id": 12245,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12245",
+      "hpAmount": "100",
+      "spAmount": "0"
+    },
+    {
+      "id": 12257,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12257",
+      "hpAmount": "25",
+      "spAmount": "25"
+    },
+    {
+      "id": 12271,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12271",
+      "hpAmount": "5",
+      "spAmount": "0"
+    },
+    {
+      "id": 12292,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12292",
+      "hpAmount": "20",
+      "spAmount": "0"
+    },
+    {
+      "id": 12293,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12293",
+      "hpAmount": "0",
+      "spAmount": "20"
+    },
+    {
+      "id": 12322,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12322",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 12331,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12331",
+      "hpAmount": "6",
+      "spAmount": "0"
+    },
+    {
+      "id": 12332,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12332",
+      "hpAmount": "0",
+      "spAmount": "6"
+    },
+    {
+      "id": 12335,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12335",
+      "hpAmount": "60",
+      "spAmount": "60"
+    },
+    {
+      "id": 12336,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12336",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 12337,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12337",
+      "hpAmount": "20",
+      "spAmount": "20"
+    },
+    {
+      "id": 12378,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12378",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 12402,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12402",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 12536,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12536",
+      "hpAmount": "20",
+      "spAmount": "20"
+    },
+    {
+      "id": 12601,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12601",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 12624,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12624",
+      "hpAmount": "3",
+      "spAmount": "3"
+    },
+    {
+      "id": 12704,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12704",
+      "hpAmount": "100",
+      "spAmount": "0"
+    },
+    {
+      "id": 12709,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12709",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 12711,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12711",
+      "hpAmount": "rand(50,90)",
+      "spAmount": "0"
+    },
+    {
+      "id": 12712,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12712",
+      "hpAmount": "0",
+      "spAmount": "50"
+    },
+    {
+      "id": 12739,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12739",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 12754,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12754",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 12856,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12856",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 12857,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:12857",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 14522,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:14522",
+      "hpAmount": "100",
+      "spAmount": "0"
+    },
+    {
+      "id": 14523,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:14523",
+      "hpAmount": "0",
+      "spAmount": "100"
+    },
+    {
+      "id": 14524,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:14524",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 14609,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:14609",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 14841,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:14841",
+      "hpAmount": "10",
+      "spAmount": "0"
+    },
+    {
+      "id": 14908,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:14908",
+      "hpAmount": "20",
+      "spAmount": "0"
+    },
+    {
+      "id": 22624,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22624",
+      "hpAmount": "100",
+      "spAmount": "0"
+    },
+    {
+      "id": 22657,
+      "hp": true,
+      "sp": false,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22657",
+      "hpAmount": "20",
+      "spAmount": "0"
+    },
+    {
+      "id": 22686,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22686",
+      "hpAmount": "5",
+      "spAmount": "5"
+    },
+    {
+      "id": 22701,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22701",
+      "hpAmount": "40",
+      "spAmount": "40"
+    },
+    {
+      "id": 22841,
+      "hp": false,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22841",
+      "hpAmount": "0",
+      "spAmount": "25"
+    },
+    {
+      "id": 22882,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22882",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 22991,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:22991",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 23042,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 3000,
+      "cooldownGroup": "Reuse_Limit_G",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 23317,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23317",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 23321,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23321",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 23362,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23362",
+      "hpAmount": "10",
+      "spAmount": "10"
+    },
+    {
+      "id": 23363,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23363",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 23367,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23367",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 23445,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23445",
+      "hpAmount": "20",
+      "spAmount": "20"
+    },
+    {
+      "id": 23660,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:23660",
+      "hpAmount": "18",
+      "spAmount": "18"
+    },
+    {
+      "id": 101126,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:101126",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 101276,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:101276",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 101322,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:101322",
+      "hpAmount": "30",
+      "spAmount": "30"
+    },
+    {
+      "id": 102908,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:102908",
+      "hpAmount": "20",
+      "spAmount": "20"
+    },
+    {
+      "id": 102910,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:102910",
+      "hpAmount": "50",
+      "spAmount": "50"
+    },
+    {
+      "id": 102925,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:102925",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 103656,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:103656",
+      "hpAmount": "100",
+      "spAmount": "100"
+    },
+    {
+      "id": 1100003,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:1100003",
+      "hpAmount": "rand(655,675)",
+      "spAmount": "0"
+    },
+    {
+      "id": 1100004,
+      "hp": false,
+      "sp": true,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:1100004",
+      "hpAmount": "0",
+      "spAmount": "rand(340,360)"
+    },
+    {
+      "id": 1100005,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:1100005",
+      "hpAmount": "rand(2730,2750)",
+      "spAmount": "0"
+    },
+    {
+      "id": 1100006,
+      "hp": true,
+      "sp": false,
+      "mode": "fixed",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:1100006",
+      "hpAmount": "1925",
+      "spAmount": "0"
+    },
+    {
+      "id": 1100015,
+      "hp": true,
+      "sp": true,
+      "mode": "percent",
+      "cooldownMs": 0,
+      "cooldownGroup": "item:1100015",
+      "hpAmount": "10",
+      "spAmount": "10"
+    }
+  ]
+}

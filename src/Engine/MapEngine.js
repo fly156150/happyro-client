@@ -1,3 +1,5 @@
+import { recoveryDefinition } from 'DB/Items/RecoveryItems.js';
+import { itemUseExecution } from 'Network/ItemUseExecution.js';
 import { createMapLoadRecovery, createMapLoadRecoveryView } from './MapEngine/MapLoadRecovery.js';
 import { clearCompanionPrompts } from 'UI/Game/CompanionPrompt.js';
 import PetEvolution from 'UI/Components/PetEvolution/PetEvolution.js';
@@ -1399,7 +1401,7 @@ function onDropItem(index, count) {
  *
  * @param {number} item's index
  */
-function onUseItem(index) {
+function onUseItem(index, options = {}) {
 	// Items are not usable when Laphine Synthesis, Upgrade, ItemReform UI is open (if they are available at all)
 	if (
 		(LaphineSys.__loaded && LaphineSys.__active && LaphineSys.ui.is(':visible')) ||
@@ -1418,7 +1420,9 @@ function onUseItem(index) {
 	}
 	pkt.index = index;
 	pkt.AID = Session.Entity.GID;
-	Network.sendPacket(pkt);
+	const item = Inventory.getUI().list.find(item => item.index === index);
+	if (!item) return false;
+	return itemUseExecution.request(Session.Entity, index, item.ITID, () => Network.sendPacket(pkt), options.complete, { ...recoveryDefinition(item.ITID), automatic: options.source === 'automation' });
 }
 
 /**

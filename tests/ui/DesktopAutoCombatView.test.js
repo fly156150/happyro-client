@@ -7,7 +7,7 @@ beforeEach(() => {
 	const host = document.createElement('div'); document.body.append(host);
 	root = host.attachShadow({ mode: 'open' });
 	state = { active: false, status: '自动战斗已停止', species: [], skills: [], ranges: { search: 20, activity: 30 } };
-	actions = {
+	actions = { recoveryItems: () => [], recoveryItemName: id => String(id),
 		snapshot: () => state,
 		start: vi.fn(() => { state.active = true; state.status = '寻找附近目标'; return true; }),
 		stop: vi.fn(message => { state.active = false; state.status = message || '自动战斗已停止'; }),

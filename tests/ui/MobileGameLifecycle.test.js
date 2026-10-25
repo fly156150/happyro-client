@@ -1,3 +1,4 @@
+vi.mock('UI/Game/GameAutoRecovery.js', () => ({ loadRecoveryItemIcon: vi.fn(), recoveryItems: () => [], recoveryItemName: id => String(id), createGameAutoRecovery: () => ({ tick: vi.fn(), reset: vi.fn(), snapshot: () => ({status: ''}) }) }));
 vi.mock('UI/Game/SelfActions.js', () => ({ createSelfActions: () => ({ update: vi.fn(), destroy: vi.fn() }) }));
 vi.mock('UI/Components/Inventory/Inventory.js', () => ({ default: { getUI: () => ({ getItemById: () => null }) } }));
 vi.mock('Renderer/EntityManager.js', () => ({ default: {get:vi.fn(),forEach:vi.fn()} }));

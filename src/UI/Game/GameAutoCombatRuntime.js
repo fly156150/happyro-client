@@ -1,3 +1,5 @@
+import { publishRecoveryStatus } from './RecoveryStatus.js';
+import { createGameAutoRecovery, recoveryItems, recoveryItemName, loadRecoveryItemIcon } from './GameAutoRecovery.js';
 import { subscribeSkillExecution } from 'Network/SkillExecution.js';
 import { isIdentificationExam } from './IdentificationExam.js';
 import { getCurrentAdventureMap } from 'UI/Components/GameTools/AdventureActionService.js';
@@ -9,6 +11,7 @@ import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 import { createGameAutoCombat } from './GameAutoCombat.js';
 
 const combatRuntimes = new Set();
+let disposeActiveRuntime = null;
 export function isAutoCombatEngaged() {
 	return [...combatRuntimes].some(controller => {
 		const state = controller.snapshot();
@@ -23,6 +26,7 @@ export function createGameAutoCombatRuntime({
 	update = () => {},
 	onDisconnect = () => {}
 } = {}) {
+	disposeActiveRuntime?.();
 	let destroyed = false;
 	let movementHeld = false;
 	let resumeAt = 0;
@@ -39,6 +43,7 @@ export function createGameAutoCombatRuntime({
 		);
 	const controller = createGameAutoCombat(canRun);
 	combatRuntimes.add(controller);
+	const recovery = createGameAutoRecovery(canRun);
 	const unsubscribeSkills = subscribeSkillExecution(controller.skillFeedback);
 	const unregisterAutomation = registerAutomationCombat(controller);
 	const abort = new AbortController();
@@ -46,6 +51,8 @@ export function createGameAutoCombatRuntime({
 		cancelAutoCombatTeleport();
 		movementHeld = false;
 		controller.stop(message);
+		recovery.reset();
+		publishRecoveryStatus('');
 		update(controller.snapshot());
 	};
 	const pauseForMovement = () => {
@@ -80,6 +87,8 @@ export function createGameAutoCombatRuntime({
 			Session.Entity?.action !== Session.Entity?.ACTION.WALK
 		)
 			controller.resumeAfterMovement();
+		recovery.tick(controller.snapshot().recovery, canRun() && controller.snapshot().active);
+		publishRecoveryStatus(recovery.snapshot().status);
 		controller.tick();
 		update(controller.snapshot());
 	}, 200);
@@ -98,6 +107,7 @@ export function createGameAutoCombatRuntime({
 	function destroy() {
 		if (destroyed) return;
 		destroyed = true;
+		if (disposeActiveRuntime === destroy) disposeActiveRuntime = null;
 		combatRuntimes.delete(controller);
 		unregisterAutomation();
 		clearInterval(timer);
@@ -105,7 +115,10 @@ export function createGameAutoCombatRuntime({
 		unsubscribeInput();
 		unsubscribeSkills();
 		unsubscribeConnection();
+		recovery.reset();
+		publishRecoveryStatus('');
 		controller.stop();
 	}
-	return { ...controller, stop, pauseForMovement, destroy };
+	disposeActiveRuntime = destroy;
+	return { ...controller, recoveryItems, recoveryItemName, loadRecoveryItemIcon, stop, pauseForMovement, destroy, recoveryStatus: () => recovery.snapshot() };
 }

@@ -1,20 +1,37 @@
-import { searchAdventureItems } from 'UI/Components/GameTools/AdventureControlService.js';
-
 /** Keep selection across pages until the user explicitly confirms. */
-export function openPickupItemPicker(container, { excluded, image, clearImages, confirm }) {
-	const existing = new Set(excluded.map(item => item.id));
+export function openItemSelectionDialog(
+	container,
+	{
+		existingItems,
+		image,
+		clearImages,
+		confirm,
+		searchItems,
+		title,
+		searchLabel,
+		placeholder,
+		existingLabel,
+		allowEmptyQuery = false,
+		emptyMessage = '没有找到物品'
+	}
+) {
+	const existing = new Set(existingItems.map(item => item.id));
 	const selected = new Map();
 	const dialog = document.createElement('dialog');
 	dialog.className = 'pickup-picker';
-	dialog.setAttribute('aria-label', '添加排除物品');
+	dialog.setAttribute('aria-label', title);
 	dialog.innerHTML = `
+		<h3 class="item-picker-title"></h3>
 		<div class="pickup-search"><input type="search" aria-label="搜索排除物品" placeholder="输入物品名称或 ID"><button type="button" data-search>搜索</button></div>
 		<div class="pickup-search-status" role="status" hidden></div>
 		<div class="pickup-results" aria-label="可选物品" tabindex="-1" autofocus></div>
 		<footer><span data-selected>已选 0 件</span><nav class="pickup-pagination" data-menu-pagination aria-label="物品搜索分页"><button type="button" data-previous aria-label="上一页" disabled><span class="pickup-page-label">上一页</span><span class="pickup-page-symbol" aria-hidden="true">‹</span></button><span data-page>1 / 1</span><button type="button" data-next aria-label="下一页" disabled><span class="pickup-page-label">下一页</span><span class="pickup-page-symbol" aria-hidden="true">›</span></button></nav>
 		<div class="pickup-picker-actions"><button type="button" data-cancel>取消</button><button type="button" data-confirm disabled>确认添加</button></div></footer>`;
 	const $ = selector => dialog.querySelector(selector);
+	$('.item-picker-title').textContent = title;
 	const input = $('input');
+	input.setAttribute('aria-label', searchLabel);
+	input.placeholder = placeholder;
 	const results = $('.pickup-results');
 	const status = $('.pickup-search-status');
 	const previous = $('[data-previous]');
@@ -38,7 +55,7 @@ export function openPickupItemPicker(container, { excluded, image, clearImages, 
 	async function search(targetPage = 1) {
 		const query = input.value.trim(),
 			token = ++requestId;
-		if (!query) {
+		if (!query && !allowEmptyQuery) {
 			status.hidden = false;
 			status.textContent = '请输入物品名称或 ID';
 			return;
@@ -47,31 +64,31 @@ export function openPickupItemPicker(container, { excluded, image, clearImages, 
 		results.setAttribute('aria-busy', 'true');
 		status.hidden = true;
 		try {
-			const response = await searchAdventureItems({ query, page: targetPage, perPage: 20 });
+			const response = await searchItems({ query, page: targetPage, perPage: 20 });
 			if (closed || token !== requestId) return;
 			clearImages();
 			results.replaceChildren();
 			results.scrollTop = 0;
 			for (const item of response.data) {
-				const name = item.names?.['zh-CN'] || item.AegisName;
+				const name = item.name;
 				const row = document.createElement('label');
 				row.className = 'pickup-item';
 				const checkbox = document.createElement('input');
 				checkbox.type = 'checkbox';
-				checkbox.dataset.itemId = item.Id;
-				checkbox.checked = existing.has(item.Id) || selected.has(item.Id);
-				checkbox.disabled = existing.has(item.Id);
+				checkbox.dataset.itemId = item.id;
+				checkbox.checked = existing.has(item.id) || selected.has(item.id);
+				checkbox.disabled = existing.has(item.id);
 				checkbox.onchange = () => {
-					if (checkbox.checked) selected.set(item.Id, { id: item.Id, name });
-					else selected.delete(item.Id);
+					if (checkbox.checked) selected.set(item.id, { id: item.id, name });
+					else selected.delete(item.id);
 					updateSelection();
 				};
-				const title = document.createElement('span');
-				title.textContent = `${name} · ${item.Id}${existing.has(item.Id) ? '（已排除）' : ''}`;
-				row.append(checkbox, image(item.icon), title);
+				const caption = document.createElement('span');
+				caption.textContent = `${name}${item.count === undefined ? ` · ${item.id}` : ` ×${item.count}`}${existing.has(item.id) ? `（${existingLabel}）` : ''}`;
+				row.append(checkbox, image(item.icon), caption);
 				results.append(row);
 			}
-			if (!response.data.length) results.textContent = '没有找到物品';
+			if (!response.data.length) results.textContent = emptyMessage;
 			page = targetPage;
 			total = response.total;
 			$('[data-page]').textContent = `${page} / ${Math.max(1, Math.ceil(total / 20))}`;
@@ -124,5 +141,6 @@ export function openPickupItemPicker(container, { excluded, image, clearImages, 
 	dialog.addEventListener('keydown', event => event.stopPropagation());
 	container.append(dialog);
 	dialog.showModal();
+	if (allowEmptyQuery) void search();
 	return close;
 }

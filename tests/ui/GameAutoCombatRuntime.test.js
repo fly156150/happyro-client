@@ -1,3 +1,4 @@
+vi.mock('UI/Game/GameAutoRecovery.js', () => ({ loadRecoveryItemIcon: vi.fn(), recoveryItems: () => [], recoveryItemName: id => String(id), createGameAutoRecovery: () => ({ tick: vi.fn(), reset: vi.fn(), snapshot: () => ({status: ''}) }) }));
 import { reportSkillExecution } from '../../src/Network/SkillExecution.js';
 vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({ getCurrentAdventureMap: () => state.map, normalizeAdventureMap: value => value, getAdventureActionState: () => ({ allowed: false }), teleportToCoordinate: vi.fn() }));
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -90,4 +91,11 @@ it('subscribes skill feedback only for the live runtime', () => {
  expect(state.feedback).not.toHaveBeenCalled();
  runtime=createGameAutoCombatRuntime();endConnection();state.feedback.mockClear();
  reportSkillExecution(19,'casting',10000);expect(state.feedback).not.toHaveBeenCalled();
+});
+
+it('replaces an existing presentation runtime instead of adding another automation timer', () => {
+ const previous = createGameAutoCombatRuntime(); previous.start();
+ runtime = createGameAutoCombatRuntime();
+ expect(previous.start()).toBe(false); expect(vi.getTimerCount()).toBe(1);
+ previous.destroy(); expect(vi.getTimerCount()).toBe(1);
 });

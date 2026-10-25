@@ -1,3 +1,4 @@
+import { createRecoveryPanel } from 'UI/Game/RecoveryPanel.js';
 import { bindDesktopDialogDrag } from '../DesktopDialogDrag.js';
 import { createAutoCombatPanel } from 'UI/Game/AutoCombatPanel.js';
 import { createPickupSettingsPanel } from 'UI/Game/PickupSettingsPanel.js';
@@ -87,9 +88,11 @@ SOFTWARE.
 				<div class="combat-tabbar">
 				<div class="combat-tabs desktop-tab-group" role="tablist" aria-label="战斗辅助配置">
 					<button type="button" role="tab" id="combat-tab" aria-controls="combat-panel" aria-selected="true" data-tab="combat">自动战斗</button>
+					<button type="button" role="tab" id="recovery-tab" aria-controls="recovery-panel" aria-selected="false" tabindex="-1" data-tab="recovery">自动恢复</button>
 					<button type="button" role="tab" id="pickup-tab" aria-controls="pickup-panel" aria-selected="false" tabindex="-1" data-tab="pickup">自动拾取</button>
 				</div>
 				</div>
+				<div id="recovery-panel" class="recovery-panel" role="tabpanel" aria-labelledby="recovery-tab" hidden></div>
 				<div id="combat-panel" role="tabpanel" aria-labelledby="combat-tab" class="desktop-combat-panel">
 					<div class="auto-config-body"></div>
 				</div>
@@ -111,10 +114,11 @@ SOFTWARE.
 
 	const restorePosition = bindDesktopDialogDrag($('.combat-dialog'), $('.desktop-window-header'), 'DesktopDialog.Position.AutoCombat', abort.signal);
 
-	let pickupEditor;
+	let pickupEditor, recoveryEditor;
 	function finishClose() {
 		pickupEditor?.flush();
 		pickupEditor?.destroy();
+		recoveryEditor?.destroy();
 		backdrop.hidden = true;
 		root.getRootNode().host?.removeAttribute('data-settings-open');
 
@@ -135,10 +139,13 @@ SOFTWARE.
 		}
 		$('#combat-panel').hidden = name !== 'combat';
 		$('#pickup-panel').hidden = name !== 'pickup';
+		$('#recovery-panel').hidden = name !== 'recovery';
+		if (name === 'recovery') recoveryEditor.refresh();
 	}
 	function open() {
 		if (!backdrop.hidden) return;
 		createAutoCombatPanel($('.auto-config-body'), actions);
+		recoveryEditor = createRecoveryPanel($('#recovery-panel'), actions);
 		pickupEditor = createPickupSettingsPanel(
 			$('.desktop-pickup-scroll'),
 			structuredClone(pickup.load()),
@@ -177,14 +184,9 @@ SOFTWARE.
 		button.onkeydown = event => {
 			if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
 			event.preventDefault();
-			const name =
-				event.key === 'Home'
-					? 'combat'
-					: event.key === 'End'
-						? 'pickup'
-						: button.dataset.tab === 'combat'
-							? 'pickup'
-							: 'combat';
+			const tabs = [...root.querySelectorAll('[data-tab]')];
+			const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs.at(-1) : tabs[(tabs.indexOf(button) + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+			const name = next.dataset.tab;
 			selectTab(name);
 			$(`[data-tab="${name}"]`).focus();
 		};
@@ -246,6 +248,7 @@ SOFTWARE.
 		destroy() {
 			root.getRootNode().host?.removeAttribute('data-settings-open');
 			pickupEditor?.destroy();
+		recoveryEditor?.destroy();
 			clearTimeout(feedbackTimer);
 			abort.abort();
 			root.replaceChildren();

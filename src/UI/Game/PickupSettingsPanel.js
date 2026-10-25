@@ -1,7 +1,7 @@
 import { pickupCategories, savePickupSettings, validPickupSettings } from './PickupSettings.js';
-import { loadAdventureAsset } from 'UI/Components/GameTools/AdventureControlService.js';
+import { loadAdventureAsset, searchAdventureItems } from 'UI/Components/GameTools/AdventureControlService.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
-import { openPickupItemPicker } from './PickupItemPicker.js';
+import { openItemSelectionDialog } from './ItemSelectionDialog.js';
 
 /** Shared pickup editor with immediate switches and debounced numeric persistence. */
 export function createPickupSettingsPanel(section, draft, persist = savePickupSettings) {
@@ -180,7 +180,6 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	const heading = document.createElement('h4');
 	heading.textContent = '排除物品';
 	exclusions.append(heading);
-	const excludedTitle = document.createElement('p');
 	const excluded = document.createElement('div');
 	excluded.className = 'pickup-excluded';
 	excluded.setAttribute('aria-label', '已排除物品');
@@ -195,8 +194,13 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	}
 	const add = button('添加', () => {
 		closePicker?.();
-		closePicker = openPickupItemPicker(section, {
-			excluded: draft.excluded,
+		closePicker = openItemSelectionDialog(section, {
+			title: '添加排除物品', searchLabel: '搜索排除物品', placeholder: '输入物品名称或 ID', existingLabel: '已排除',
+			searchItems: async options => {
+				const response = await searchAdventureItems(options);
+				return { ...response, data: response.data.map(item => ({ id: item.Id, name: item.names?.['zh-CN'] || item.AegisName, icon: item.icon })) };
+			},
+			existingItems: draft.excluded,
 			image: path => itemImage(path, imageUrls),
 			clearImages,
 			confirm: items => {
@@ -224,11 +228,10 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	const toolbar = document.createElement('div');
 	toolbar.className = 'pickup-toolbar';
 	toolbar.append(add, remove, clear);
-	exclusions.append(toolbar, excludedTitle, excluded);
+	exclusions.append(toolbar, excluded);
 	function updateSelection() {
 		remove.disabled = !selected.size;
 		clear.disabled = !draft.excluded.length;
-		excludedTitle.textContent = `已排除 ${draft.excluded.length} 件 · 已选 ${selected.size} 件`;
 	}
 	function renderExcluded() {
 		const scrollPositions = [];

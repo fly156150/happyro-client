@@ -1,3 +1,4 @@
+import { createRecoveryPanel } from 'UI/Game/RecoveryPanel.js';
 import { createAutoCombatPanel } from 'UI/Game/AutoCombatPanel.js';
 import { createPickupSettingsPanel } from 'UI/Game/PickupSettingsPanel.js';
 import { loadPickupSettings } from 'UI/Game/PickupSettings.js';
@@ -6,8 +7,10 @@ import { loadPickupSettings } from 'UI/Game/PickupSettings.js';
 export function createCombatSettingsPanel(body, actions, header) {
 	body.innerHTML = `<div class="settings-tabs menu-tabs" role="tablist" aria-label="战斗辅助设置">
 		<button type="button" role="tab" id="mobile-combat-tab" aria-controls="mobile-combat-settings" aria-selected="true" aria-pressed="true" data-assist-tab="combat">战斗设置</button>
+		<button type="button" role="tab" id="mobile-recovery-tab" aria-controls="mobile-recovery-settings" aria-selected="false" aria-pressed="false" tabindex="-1" data-assist-tab="recovery">自动恢复</button>
 		<button type="button" role="tab" id="mobile-pickup-tab" aria-controls="mobile-pickup-settings" aria-selected="false" aria-pressed="false" tabindex="-1" data-assist-tab="pickup">拾取设置</button>
 		</div>
+		<div class="recovery-panel" id="mobile-recovery-settings" role="tabpanel" aria-labelledby="mobile-recovery-tab" hidden></div>
 		<div class="auto-config-body" id="mobile-combat-settings" role="tabpanel" aria-labelledby="mobile-combat-tab"></div>
 		<div class="mobile-pickup-settings" id="mobile-pickup-settings" role="tabpanel" aria-labelledby="mobile-pickup-tab" hidden><section class="settings-section"></section></div>`;
 	const tabBar = body.querySelector('[role=tablist]');
@@ -17,6 +20,8 @@ export function createCombatSettingsPanel(body, actions, header) {
 	const combat = body.querySelector('#mobile-combat-settings');
 	const pickup = body.querySelector('#mobile-pickup-settings');
 	createAutoCombatPanel(combat, actions);
+	const recovery = body.querySelector('#mobile-recovery-settings');
+	const recoveryEditor = createRecoveryPanel(recovery, actions);
 	const editor = createPickupSettingsPanel(pickup.querySelector('section'), loadPickupSettings());
 	const tabs = [...tabBar.querySelectorAll('[data-assist-tab]')];
 	function select(name) {
@@ -28,6 +33,8 @@ export function createCombatSettingsPanel(body, actions, header) {
 		}
 		combat.hidden = name !== 'combat';
 		pickup.hidden = name !== 'pickup';
+		recovery.hidden = name !== 'recovery';
+		if (name === 'recovery') recoveryEditor.refresh();
 	}
 	for (const tab of tabs) {
 		tab.onclick = () => select(tab.dataset.assistTab);
@@ -35,7 +42,7 @@ export function createCombatSettingsPanel(body, actions, header) {
 			if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
 			event.preventDefault();
 			const target =
-				event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[1] : tabs.find(item => item !== tab);
+				event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs.at(-1) : tabs[(tabs.indexOf(tab) + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
 			select(target.dataset.assistTab);
 			target.focus({ preventScroll: true });
 		};
@@ -45,5 +52,6 @@ export function createCombatSettingsPanel(body, actions, header) {
 		header.classList.remove('has-combat-tabs');
 		editor.flush();
 		editor.destroy();
+		recoveryEditor.destroy();
 	};
 }

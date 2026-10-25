@@ -282,3 +282,50 @@
 .auto-layout [data-normal-attack] {
 	margin-bottom: 10px;
 }
+
+.recovery-panel {
+ --recovery-border: #52606d;
+ --recovery-card: #18212b;
+ --recovery-muted: #bac4cd;
+ position: relative;
+ display: flex;
+ flex-direction: column;
+ flex: 1;
+ min-height: 0;
+ overflow: auto;
+ font-size: 12px;
+}
+.recovery-panel[hidden], .recovery-panel [hidden] { display: none !important; }
+.recovery-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; flex: 1; min-height: 240px; grid-template-rows: minmax(0, 1fr); }
+.recovery-section { display: flex; flex-direction: column; min-height: 0; min-width: 0; padding: 12px; border: 1px solid var(--recovery-border); border-radius: 8px; background: var(--recovery-card); }
+.recovery-section > .auto-teleport-toggle { min-height: 36px; padding-bottom: 10px; border-bottom: 1px solid var(--recovery-border); }
+.recovery-thresholds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; flex-shrink: 0; padding: 12px 0; border-bottom: 1px solid var(--recovery-border); }
+.recovery-threshold-field { display: flex; flex-direction: column; min-width: 0; gap: 5px; }
+.recovery-stepper { display: flex; align-items: stretch; min-width: 0; height: var(--recovery-control-height, 32px); }
+.recovery-percentage { display: flex; flex: 1; align-items: stretch; min-width: 0; overflow: hidden; border-block: 1px solid var(--recovery-border); background: var(--recovery-card); }
+.recovery-panel .recovery-stepper .recovery-percentage input { box-sizing: border-box; width: 0; flex: 1; min-width: 0; height: calc(var(--recovery-control-height, 32px) - 2px); min-height: calc(var(--recovery-control-height, 32px) - 2px); max-height: calc(var(--recovery-control-height, 32px) - 2px); padding: 4px 2px; text-align: center; font: inherit; color: inherit; background: transparent; border: 0; border-radius: 0; appearance: textfield; }
+.recovery-panel .recovery-stepper > button { box-sizing: border-box; flex: 0 0 28px; width: 28px; min-width: 0; height: var(--recovery-control-height, 32px); min-height: var(--recovery-control-height, 32px); padding: 0; border: 1px solid var(--recovery-border); border-radius: 0; font-size: 16px; }
+.recovery-panel .recovery-thresholds .recovery-stepper > button:is(:hover, :active, :disabled) { border-color: var(--recovery-border); }
+.recovery-panel .recovery-stepper > button:disabled { opacity: 1; cursor: default; }
+.recovery-panel .recovery-stepper > button:disabled > span { opacity: .4; }
+.recovery-panel .recovery-stepper > button:first-child { border-radius: 5px 0 0 5px; }
+.recovery-panel .recovery-stepper > button:last-child { border-radius: 0 5px 5px 0; }
+.recovery-percentage:focus-within { outline: 2px solid var(--recovery-border); outline-offset: -2px; }
+.recovery-percentage input::-webkit-inner-spin-button, .recovery-percentage input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.recovery-items-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 0 4px; }
+.recovery-items-heading h4 { margin: 0; font-size: inherit; }
+.recovery-select { min-height: 32px; padding: 5px 10px; }
+.recovery-items { margin-top: 0; min-height: 0; overflow-y: auto; overflow-anchor: none; scrollbar-gutter: stable; overscroll-behavior-y: contain; }
+.recovery-section > :not(.recovery-items) { flex-shrink: 0; }
+.recovery-section > .auto-teleport-toggle strong, .recovery-items-heading h4 { color: var(--assist-heading, #f6d9a5); }
+.recovery-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--recovery-border); }
+.recovery-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.recovery-item-details { display: flex; flex: 1; min-width: 0; align-items: baseline; gap: 5px; }
+.recovery-item-details > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.recovery-item-details > small { flex-shrink: 0; white-space: nowrap; color: var(--recovery-muted); font-variant-numeric: tabular-nums; }
+.recovery-item-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.recovery-item-actions button { min-width: 28px; min-height: 30px; padding: 4px 6px; }
+.recovery-status { color: #ff9b8d; }
+@media (max-width: 600px) {
+ .recovery-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); min-height: 520px; gap: 12px; }
+}

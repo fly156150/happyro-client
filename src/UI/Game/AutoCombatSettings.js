@@ -1,3 +1,4 @@
+import { defaultRecoverySettings, validRecoverySettings } from './RecoverySettings.js';
 import { AUTO_COMBAT_RANGE_LIMITS, validAutoCombatTeleport } from './AutoCombatController.js';
 
 /** Only preferences are persisted, never an active battle or a temporary target. */
@@ -24,7 +25,9 @@ export function loadAutoCombatSettings(key) {
 		)
 			return;
 		if (saved.teleport !== undefined && !validAutoCombatTeleport(saved.teleport)) return;
+		if (saved.recovery !== undefined && !validRecoverySettings(saved.recovery)) return;
 		return {
+			recovery: saved.recovery || defaultRecoverySettings(),
 			species: saved.species,
 			skills: saved.skills,
 			ranges: { search, activity },

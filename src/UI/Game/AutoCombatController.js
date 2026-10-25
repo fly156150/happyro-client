@@ -1,3 +1,4 @@
+import { defaultRecoverySettings, validRecoverySettings } from './RecoverySettings.js';
 import { createAutoCombatSkillState, AUTO_COMBAT_SKILL_TIMING } from './AutoCombatSkillState.js';
 import { chooseCombatSkill } from './CombatSkillAffinity.js';
 import { getClientDefaults } from 'Core/ClientDefaults.js';
@@ -31,6 +32,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		target = null,
 		nextAction = 0;
 	let teleport = { ...AUTO_COMBAT_TELEPORT_DEFAULTS, ...configuration.teleport };
+	let recovery = structuredClone(configuration.recovery || defaultRecoverySettings());
 	let idleSince = null;
 	let origin,
 		lastDistance = Infinity,
@@ -67,6 +69,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 	function snapshot() {
 		return {
 			active,
+			recovery: structuredClone(recovery),
 			ranges: { ...ranges },
 			teleport: { ...teleport },
 			pausedForMovement,
@@ -264,7 +267,8 @@ export function createAutoCombatController(data, configuration = { species: [], 
 			tick();
 			return true;
 		},
-		configure(nextSpecies, ids, nextRanges, nextTeleport = teleport) {
+		configure(nextSpecies, ids, nextRanges, nextTeleport = teleport, nextRecovery = recovery) {
+			if (!validRecoverySettings(nextRecovery)) return false;
 			if (!validAutoCombatTeleport(nextTeleport)) return false;
 			const limits = AUTO_COMBAT_RANGE_LIMITS;
 			if (
@@ -277,6 +281,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 			)
 				return false;
 			const next = {
+				recovery: structuredClone(nextRecovery),
 				ranges: { ...nextRanges },
 				teleport: { ...nextTeleport },
 				species: [
@@ -285,7 +290,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 				skills: [...new Set(ids)].filter(id => data.skills().some(skill => skill.id === id))
 			};
 			if (data.saveSettings?.(next) === false) return false;
-			({ ranges, teleport, species, skills: selected } = next);
+			({ ranges, teleport, recovery, species, skills: selected } = next);
 			return true;
 		},
 		skills: () => data.skills(),

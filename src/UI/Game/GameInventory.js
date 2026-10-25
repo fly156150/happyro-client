@@ -1,3 +1,4 @@
+import { itemUseExecution } from 'Network/ItemUseExecution.js';
 import { PET_INCUBATOR_ID } from 'DB/Pets/PetRules.js';
 import EntityManager from 'Renderer/EntityManager.js';
 import { itemSubtypes } from './ItemSubtypes.js';
@@ -102,6 +103,8 @@ export function createGameInventory(canOperate) {
 			if (state.action !== action) return '穿戴状态已经变化，请重新选择操作';
 			if (action === 'use' && id === PET_INCUBATOR_ID && EntityManager.get(Session.petId))
 				return '请先收回当前宠物';
+			if (action === 'use' && !itemUseExecution.canUse(index)) return '上次用药结果未确认，请等待服务器响应或重新登录';
+			if (action === 'use' && itemUseExecution.busy()) return '请稍后再使用物品';
 			if (action === 'unequip') {
 				beginItemOperation(Session.Entity, action, index, feedback);
 				Equipment.getUI().onUnEquip(index);

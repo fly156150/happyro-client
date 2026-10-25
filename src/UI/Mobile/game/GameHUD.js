@@ -246,6 +246,9 @@ HUD.onAppend = function () {
 			snapshot();
 		},
 		autoCombat: {
+			recoveryItems: () => autoCombat.recoveryItems(),
+			loadRecoveryItemIcon: id => autoCombat.loadRecoveryItemIcon(id),
+			recoveryItemName: id => autoCombat.recoveryItemName(id),
 			snapshot: () => autoCombat.snapshot(),
 			mapSpecies: () => autoCombat.mapSpecies(),
 			skills: () => autoCombat.skills(),

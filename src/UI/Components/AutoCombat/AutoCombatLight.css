@@ -3,6 +3,7 @@
  --assist-surface: var(--desktop-surface);
  --assist-border: #d3d7db;
  --assist-accent: var(--desktop-success);
+ --assist-heading: var(--desktop-text);
  color: var(--desktop-text);
  color-scheme: light;
 }
@@ -64,9 +65,9 @@ button:focus-visible,
 .pickup-save-status[data-error='true'] { color: #a61d24; }
 .pickup-section input[aria-invalid='true'] { border-color: #a61d24; outline-color: #a61d24; }
 .pickup-item, .pickup-picker > footer { border-color: #d1d5d8; }
-.pickup-section .pickup-item input[type='checkbox'] { border-color: var(--desktop-border); border-radius: 4px; background: var(--desktop-card); }
-.pickup-section .pickup-item input[type='checkbox']:checked { background: var(--desktop-success); border-color: var(--desktop-success); }
-.pickup-section .pickup-item input[type='checkbox']:focus-visible { outline-color: #676e75; }
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox'] { border-color: var(--desktop-border); border-radius: 4px; background: var(--desktop-card); }
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox']:checked { background: var(--desktop-success); border-color: var(--desktop-success); }
+:is(.pickup-section, .recovery-panel) .pickup-item input[type='checkbox']:focus-visible { outline-color: #676e75; }
 .pickup-picker input[type='checkbox'] { accent-color: var(--desktop-success); }
 .combat-dialog .game-switch[role='switch'] { background: #d8dce0; border-color: #9da5ad; }
 .combat-dialog .game-switch[role='switch']::before { background: var(--desktop-card); }
@@ -89,7 +90,7 @@ button:focus-visible,
 /* The same title/close row as adventure tools; tabs remain a separate row. */
 .combat-dialog { padding: 0; gap: 0; overflow: hidden; }
 .combat-dialog > .combat-tabbar { flex: 0 0 auto; padding: 5px 10px 8px; border-bottom: 1px solid var(--desktop-divider); }
-.combat-dialog > :is(.desktop-combat-panel, .desktop-pickup-panel) { margin: 12px 16px 16px; min-height: 0; }
+.combat-dialog > :is(.desktop-combat-panel, .desktop-pickup-panel, .recovery-panel) { margin: 12px 16px 16px; min-height: 0; }
 
 /* An empty target list must not add another gap below the all-targets button. */
 .combat-dialog .auto-species-list:empty { display: none; }
@@ -107,3 +108,20 @@ button:focus-visible,
 .assist-feedback { position: absolute; bottom: 54px; right: 0; width: max-content; max-width: 280px; padding: 8px 12px; border-radius: 6px; background: #fff6e5; border: 1px solid #c6a76b; color: #704b21; pointer-events: none; }
 
 .combat-launcher svg.combat-swords-icon { stroke-width: 2; }
+
+.combat-dialog .recovery-panel { --recovery-border: var(--desktop-divider); --recovery-card: var(--desktop-card); --recovery-muted: var(--desktop-muted); }
+.desktop-pickup-scroll .pickup-excluded { min-height: 0; }
+.recovery-status { color: #a61d24; }
+
+/* Desktop settings use compact controls while touch layouts retain their sizing. */
+.combat-dialog .recovery-panel { --recovery-control-height: 28px; }
+.combat-dialog .recovery-select { box-sizing: border-box; min-height: 28px; height: 28px; padding: 3px 10px; }
+.combat-dialog .recovery-item-actions button { box-sizing: border-box; min-height: 26px; height: 26px; padding: 2px 6px; }
+.combat-dialog .auto-target-section > button { box-sizing: border-box; min-height: 32px; padding: 5px 10px; }
+.combat-dialog [data-normal-attack] { box-sizing: border-box; min-height: 30px; padding: 4px 10px; }
+.combat-dialog .auto-range-stepper button { box-sizing: border-box; width: 30px; height: 30px; min-height: 30px; }
+.combat-dialog .auto-species-card { box-sizing: border-box; min-height: 38px; padding: 6px; }
+.combat-dialog .auto-skill-card { box-sizing: border-box; min-height: 42px; padding: 6px; }
+
+/* Match the list's reserved scrollbar space, including when it is not overflowing. */
+.combat-dialog .recovery-items-heading { overflow: hidden; scrollbar-gutter: stable; }

@@ -5,7 +5,7 @@ import {createCombatSettingsPanel} from '../../src/UI/Mobile/game/CombatSettings
 afterEach(()=>{document.body.replaceChildren();vi.clearAllMocks();});
 it('switches tabs without resetting combat or pickup edits and flushes on close',()=>{
  const body=document.body.appendChild(document.createElement('div'));
- const actions={snapshot:()=>({species:[],skills:[],ranges:{search:20,activity:30}}),targets:()=>[],skills:()=>[],configure:vi.fn(()=>true)};
+ const actions={recoveryItems:()=>[], recoveryItemName:id=>String(id),snapshot:()=>({species:[],skills:[],ranges:{search:20,activity:30}}),targets:()=>[],skills:()=>[],configure:vi.fn(()=>true)};
  const header=document.body.appendChild(document.createElement('header'));
  const dispose=createCombatSettingsPanel(body,actions,header);
  expect(body.querySelector('[role=tablist]')).toBeNull();
@@ -16,5 +16,10 @@ it('switches tabs without resetting combat or pickup edits and flushes on close'
  const range=body.querySelector('[data-pickup=range]');range.value='12';range.dispatchEvent(new Event('input'));
  header.querySelector('[data-assist-tab=combat]').click();header.querySelector('[data-assist-tab=pickup]').click();
  expect(body.querySelector('[data-pickup=range]')).toBe(range);expect(range.value).toBe('12');
+ header.querySelector('[data-assist-tab=recovery]').click();
+ expect(body.querySelector('#mobile-recovery-settings').hidden).toBe(false);
+ const last = header.querySelector('[data-assist-tab=pickup]');
+ last.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));
+ expect(header.querySelector('[data-assist-tab=combat]').getAttribute('aria-selected')).toBe('true');
  expect(actions.configure).not.toHaveBeenCalled();dispose();expect(savePickupSettings).toHaveBeenCalledWith(expect.objectContaining({range:12}));
 });
