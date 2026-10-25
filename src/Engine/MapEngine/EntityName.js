@@ -1,4 +1,5 @@
 import DB from 'DB/DBManager.js';
+import MonsterServerNameTable from 'DB/Monsters/MonsterServerNameTable.js';
 
 // Keep overhead labels, combat messages and target panels on the same name.
 export function localizeEntityName(entity, serverName) {
@@ -8,7 +9,8 @@ export function localizeEntityName(entity, serverName) {
 	if ([type.TYPE_MOB, type.TYPE_NPC_ABR, type.TYPE_NPC_BIONIC].includes(entity.objecttype)) {
 		// Quest monsters can share a sprite but require different names.
 		if (serverName) entity.serverMonsterName = serverName;
-		name = entity.serverMonsterName || DB.getMonsterName(entity._job);
+		name = entity.serverMonsterName;
+		if (!name || name === MonsterServerNameTable[entity._job]) name = DB.getMonsterName(entity._job);
 		if (name === '未知') return false;
 		style = entity.display.STYLE.MOB;
 	} else if ([type.TYPE_NPC, type.TYPE_NPC2].includes(entity.objecttype)) {

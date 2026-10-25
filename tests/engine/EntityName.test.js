@@ -32,6 +32,30 @@ describe('monster display and message names', () => {
 		localizeEntityName(mob, '虫蛹');
 		expect(mob.display.name).toBe('虫蛹');
 	});
+	it('expands the current default server label without overriding a quest rename', () => {
+		const mob = entity(types.TYPE_MOB, 1708);
+		localizeEntityName(mob, '达纳托斯之忆');
+		expect(mob.display.name).toBe('魔剑士 达纳托斯的记忆');
+		expect(mob.serverMonsterName).toBe('达纳托斯之忆');
+		localizeEntityName(mob);
+		expect(mob.display.name).toBe('魔剑士 达纳托斯的记忆');
+		localizeEntityName(mob, '转职怪物');
+		localizeEntityName(mob);
+		expect(mob.display.name).toBe('转职怪物');
+	});
+	it('matches a default label by appearance ID and exact wire text', () => {
+		const other = entity();
+		localizeEntityName(other, '达纳托斯之忆');
+		expect(other.display.name).toBe('达纳托斯之忆');
+		const mob = entity(types.TYPE_MOB, 1708);
+		localizeEntityName(mob, '达纳托斯之忆·任务');
+		expect(mob.display.name).toBe('达纳托斯之忆·任务');
+	});
+	it('restores a name cut at the UTF-8 boundary of the fixed packet', () => {
+		const mob = entity(types.TYPE_MOB, 2047);
+		localizeEntityName(mob, '沉醉于魔力的纳');
+		expect(mob.display.name).toBe('沉醉于魔力的纳迦');
+	});
 	it('preserves player names even when they use a monster appearance', () => {
 		const player = entity(types.TYPE_PC);
 		expect(localizeEntityName(player)).toBe(false);
