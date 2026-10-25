@@ -159,10 +159,6 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 	batchSeconds.required = true;
 	numeric(batchSeconds);
 	limits.append(label('每轮拾取最长时间（秒）', batchSeconds));
-	const batchHelp = document.createElement('p');
-	batchHelp.className = 'pickup-note';
-	batchHelp.textContent = '自动战斗时，打完当前目标再拾取本轮物品；达到时限后重新找怪，没有怪物则继续拾取。';
-	rules.append(batchHelp);
 	const categories = document.createElement('div');
 	categories.className = 'pickup-categories';
 	categories.setAttribute('role', 'group');
@@ -268,12 +264,8 @@ export function createPickupSettingsPanel(section, draft, persist = savePickupSe
 		for (const [node, top] of scrollPositions) node.scrollTop = top;
 	}
 	renderExcluded();
-	const note = document.createElement('p');
-	note.className = 'pickup-note';
-	note.textContent =
-		'自动走向并拾取符合配置的地面物品，包括自己丢弃的物品。手动拾取不受这些配置影响。设置保存在当前浏览器，按角色区分。';
 	feedback.append(status, retry);
-	section.append(controls, note, feedback);
+	section.append(controls, feedback);
 	return {
 		flush: () => {
 			if (timer) save();

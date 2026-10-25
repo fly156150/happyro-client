@@ -58,7 +58,7 @@ button:focus-visible,
 .combat-dialog :is(input[type='number'], input[type='search']),
 .pickup-picker .pickup-search input { background: var(--desktop-card); border-color: var(--desktop-border); border-radius: 4px; color: var(--desktop-text); }
 .combat-dialog :is(.auto-help, .auto-skill-card small, [data-skill-count], [data-auto-save-status], .combat-subtitle),
-.pickup-note, .pickup-search-status, .pickup-save-status { color: var(--desktop-muted); }
+.pickup-search-status, .pickup-save-status { color: var(--desktop-muted); }
 .combat-dialog :is([data-range-summary], [data-auto-feedback]) { color: #376a47; }
 .combat-dialog [data-auto-save-status][data-error='true'],
 .pickup-save-status[data-error='true'] { color: #a61d24; }

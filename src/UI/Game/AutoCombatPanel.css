@@ -260,9 +260,6 @@
 	flex-shrink: 0;
 	accent-color: #ceaa70;
 }
-.auto-teleport-settings .auto-help {
-	margin-bottom: 0;
-}
 
 .auto-skill-card .auto-skill-icon {
 	flex: 0 0 24px;

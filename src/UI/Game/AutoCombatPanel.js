@@ -11,25 +11,20 @@ export function createAutoCombatPanel(body, actions) {
 			<section class="auto-target-section" aria-labelledby="auto-target-title">
 				<h3 id="auto-target-title">攻击目标</h3>
 				<button type="button" data-all-species>全部魔物</button>
-				<!-- <p class="auto-help">可多选种类；未勾选时攻击全部魔物。</p> -->
 				<div class="auto-species-list" data-auto-species aria-label="自动战斗目标"></div>
 				<section class="auto-range-settings" aria-labelledby="auto-range-title">
 					<h4 id="auto-range-title">范围设置 <span data-range-summary></span></h4>
 					<div data-range-controls></div>
-					<p class="auto-help">搜怪：角色周围的搜索距离。活动：距本轮起点的最大距离；手动移动或瞬移后重设起点。</p>
 				</section>
 				<section class="auto-teleport-settings" aria-labelledby="auto-teleport-title">
 					<h4 id="auto-teleport-title">自动瞬移</h4>
 					<label class="auto-teleport-toggle"><span>无目标时随机瞬移</span><input type="checkbox" class="game-switch" role="switch" data-auto-teleport></label>
 					<div data-teleport-controls></div>
-					<p class="auto-help">使用冒险工具能力。没有战斗目标和可拾取物品时，等待后随机瞬移。</p>
-					<p class="auto-help">仍受地图限制和服务器冷却约束。</p>
 				</section>
 			</section>
 			<section class="auto-skill-section" aria-labelledby="auto-skills-title">
 				<div class="auto-section-heading"><h3 id="auto-skills-title">攻击方式</h3><span data-skill-count></span></div>
 				<button type="button" data-normal-attack>普通攻击</button>
-				<!-- <p class="auto-help">勾选技能后随机释放，使用已学最高等级；均不可用时使用普攻。</p> -->
 				<div class="auto-skill-list" data-auto-skills></div>
 			</section>
 		</div>

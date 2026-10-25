@@ -33,11 +33,6 @@
 	min-width: 0;
 	overflow-wrap: anywhere;
 }
-.pickup-note {
-	font-size: 12px;
-	color: #b8c4cf;
-	line-height: 1.6;
-}
 .pickup-excluded {
 	color: #d7dfeb;
 }
@@ -365,9 +360,6 @@
 :is(.panel, .combat-dialog) .pickup-section .pickup-limits .settings-field {
 	padding-block: 8px;
 	gap: 8px;
-}
-.pickup-section > .pickup-note {
-	margin-block: 12px;
 }
 
 /* Group wrappers are layout-neutral outside phone portrait. */
