@@ -240,6 +240,11 @@ button.surface,
 [data-auto-toggle] {
 	font-weight: 600;
 }
+[data-auto-toggle][aria-pressed='true'] {
+	color: #ecce94;
+	border-color: #ecce94;
+	background: #483a25b8;
+}
 .combat {
 	grid-column: 1 / -1;
 	display: grid;

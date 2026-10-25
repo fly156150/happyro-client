@@ -9,6 +9,7 @@ import { createMobileViewport } from './MobileViewport.js';
 import AdventureTools from './AdventureTools.js';
 import CombatDiagnostics from 'Core/CombatDiagnostics.js';
 import { createGameAutoCombatRuntime } from 'UI/Game/GameAutoCombatRuntime.js';
+import { isAutoCombatTeleportPending } from 'UI/Game/AutoCombatTeleport.js';
 import { openGameCompanions } from 'UI/Game/GameCompanions.js';
 import { openGamePet } from 'UI/Game/GamePet.js';
 import { openGameMail, gameMailUnread } from 'UI/Game/GameMail.js';
@@ -98,12 +99,18 @@ function setModal(value) {
 function snapshot() {
 	const entity = Session.Entity;
 	if (!entity) return;
+	const combatState = autoCombat.snapshot();
+	// Same-map teleport rebuilds the HUD before the runtime resumes on its next tick.
+	if (!combatState.active && isAutoCombatTeleportPending()) {
+		combatState.active = true;
+		combatState.status = '正在随机瞬移';
+	}
 	const diagnosticStart = CombatDiagnostics.begin();
 	view.updateShortcuts(shortcuts.snapshot());
 	view.update({
 		exam: isIdentificationExam(MapRenderer.currentMap) ? examTargets?.snapshot() : null,
 		death: gameDeathSnapshot(),
-		autoCombat: autoCombat.snapshot(),
+		autoCombat: combatState,
 		unreadMail: gameMailUnread(),
 		name: entity.display.name,
 		job: getJobDisplayName(entity._job),
@@ -237,7 +244,7 @@ HUD.onAppend = function () {
 			snapshot();
 		},
 		toggleAutoCombat: () => {
-			if (autoCombat.snapshot().active) autoCombat.stop();
+			if (autoCombat.snapshot().active || isAutoCombatTeleportPending()) autoCombat.stop();
 			else {
 				shortcuts.cancel();
 				controls.cancel();

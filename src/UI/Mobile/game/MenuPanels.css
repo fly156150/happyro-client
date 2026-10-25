@@ -181,6 +181,13 @@
 .panel .auto-range-settings {
 	background: #19212a;
 }
+/* Empty targets must align range settings with the first skill row. */
+.panel .auto-species-list:empty {
+	display: none;
+}
+.panel .auto-species-list:empty + .auto-range-settings {
+	margin-top: 0;
+}
 .panel .auto-range-stepper {
 	flex-shrink: 0;
 }
@@ -334,20 +341,9 @@
 :host(:not([data-menu-density='spacious'])) .panel .shortcut-selected img {
 	display: none;
 }
-:host(:not([data-menu-density='spacious'])) .panel .auto-skill-list {
-	gap: 4px;
-}
-:host(:not([data-menu-density='spacious'])) .panel .auto-skill-card {
-	min-height: 32px;
-	padding: 4px 6px;
-	gap: 5px;
-}
 :host(:not([data-menu-density='spacious'])) .panel .auto-skill-card .auto-species-check {
 	width: 16px;
 	height: 16px;
-}
-:host(:not([data-menu-density='spacious'])) .panel .auto-skill-card span {
-	gap: 2px 4px;
 }
 
 /* Point allocation and reset controls share the mobile dialog scale. */
