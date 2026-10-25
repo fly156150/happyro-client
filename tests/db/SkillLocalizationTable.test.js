@@ -161,8 +161,12 @@ describe('SkillLocalizationTable', () => {
 	});
 
 	it('contains Chinese names and descriptions without Korean text', () => {
-		const reviewedNames = Object.values(SkillLocalizationTable).map(entry => entry.name).sort((a, b) => b.length - a.length);
-		const proseOnly = text => reviewedNames.reduce((value, name) => value.split(name).join(''), text);
+		// Strip source-approved names in one pass instead of rescanning every description for every skill.
+		const reviewedNames = [...new Set(Object.values(SkillLocalizationTable).map(entry => entry.name))]
+			.sort((a, b) => b.length - a.length)
+			.map(name => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+		const reviewedNamePattern = new RegExp(reviewedNames.join('|'), 'gu');
+		const proseOnly = text => text.replace(reviewedNamePattern, '');
 		const allVisibleText = Object.values(SkillLocalizationTable)
 			.map(entry => `${entry.name}\n${entry.description}`)
 			.join('\n');
@@ -177,10 +181,11 @@ describe('SkillLocalizationTable', () => {
 			expect(entry.description).not.toContain('undefined');
 			expect(entry.description).not.toMatch(/^施放范围：-/mu);
 			expect(entry.description).not.toMatch(/官方技能效果数据已收录|尚未收录|相关技能效果/);
-			expect(proseOnly(entry.description)).not.toMatch(
+			const prose = proseOnly(entry.description);
+			expect(prose).not.toMatch(
 				/\b(?:Attack|Demolition|Endowed|Fire|Ground|MAX|Phantom|Poison|Random|Sign|Smoke Powder|Tear Gas|Water|Wind)\b/i
 			);
-			expect(proseOnly(entry.description)).not.toMatch(
+			expect(prose).not.toMatch(
 				/\bFlee\b|\bzeny\b|\d+z\b|\s[Xx](?=\s?\d)|受课程|按课程|施法者课程|课程和职业|教训|符咒修炼|灵道术修炼|神秘生物精通|战斗自学|独学·魔导学|自学巫术|天空精通|影子猎杀|冰闪炮|风魔手里剑－|苦无－|\(掌握等级/
 			);
 		}
