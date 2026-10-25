@@ -1,3 +1,4 @@
+import { reportSkillExecution } from 'Network/SkillExecution.js';
 import JobPropertyTable from 'DB/Jobs/JobPropertyTable.js';
 import { showOwnedVending } from 'UI/Game/GameVending.js';
 import { requestTalkieMessage, showTalkieMessage } from './TalkieBox.js';
@@ -144,6 +145,7 @@ function onEffect(pkt) {
  * @param {object} pkt - PACKET.ZC.NOTIFY_GROUNDSKILL
  */
 function onSkillToGround(pkt) {
+	if (pkt.AID === Session.Entity?.GID) reportSkillExecution(pkt.SKID, 'executed');
 	const position = new Array(3);
 	position[0] = pkt.xPos;
 	position[1] = pkt.yPos;
@@ -158,6 +160,7 @@ function onSkillToGround(pkt) {
  * @param {object} pkt - PACKET.ZC.ACK_TOUSESKILL
  */
 function onSkillResult(pkt) {
+	reportSkillExecution(pkt.SKID, pkt.result ? 'executed' : 'failed');
 	// Yeah success !
 	if (pkt.result) {
 		return;

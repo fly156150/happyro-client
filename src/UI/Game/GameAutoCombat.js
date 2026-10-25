@@ -1,3 +1,4 @@
+import { combatSkillPriority, isOffensiveSupportSkill } from './CombatSkillAffinity.js';
 import { loadAutoCombatMapSpecies } from './AutoCombatMapSpecies.js';
 import { getCurrentAdventureMap } from 'UI/Components/GameTools/AdventureActionService.js';
 import { takeAutomationPickupTurn, cancelAutomationPickup } from './GameAutomation.js';
@@ -42,10 +43,14 @@ export function createGameAutoCombat(enabled) {
 		});
 		return result;
 	}
-	function skills() {
+	function skills(target) {
 		return SkillWindow.getUI()
 			.getSkills()
-			.filter(skill => canExecuteSkill(skill) && skill.type & (SKILL_INF.ENEMY | SKILL_INF.PLACE))
+			.filter(
+				skill =>
+					canExecuteSkill(skill) &&
+					(skill.type & (SKILL_INF.ENEMY | SKILL_INF.PLACE) || isOffensiveSupportSkill(skill.SKID))
+			)
 			.map(skill => {
 				const reason =
 					remainingCooldown(skill.SKID) > 0
@@ -55,6 +60,7 @@ export function createGameAutoCombat(enabled) {
 							: '';
 				return {
 					id: skill.SKID,
+					priority: target ? combatSkillPriority({ id: skill.SKID, level: skill.level }, target) : undefined,
 					name: SkillInfo[skill.SKID]?.SkillName || `技能 ${skill.SKID}`,
 					loadIcon: callback => {
 						const name = SkillInfo[skill.SKID]?.Name;
@@ -108,6 +114,10 @@ export function createGameAutoCombat(enabled) {
 					document.querySelector('#MobileGameHUD')?.shadowRoot?.querySelector('.backdrop:not([hidden])') ||
 					document.activeElement?.matches('input, textarea')
 				),
+			clearExpiredCast: () => {
+				const cast = Session.Entity?.cast;
+				if (cast?.display && Date.now() > cast.tick + cast.delay + 1000) cast.remove();
+			},
 			chasing: () => Boolean(Session.moveAction),
 			busy: () =>
 				Boolean(
@@ -141,7 +151,9 @@ export function createGameAutoCombat(enabled) {
 					});
 					return true;
 				}
-				const current = skills().find(entry => entry.id === skill.id && entry.available);
+				const current = skills(target).find(
+					entry => entry.id === skill.id && entry.available && entry.priority !== null
+				);
 				if (!current) return false;
 				Commands.stopAttack();
 				let result;

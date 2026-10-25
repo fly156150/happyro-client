@@ -104,3 +104,23 @@ it('tracks replacement chase requests created by a server attack retry', () => {
  state.session.moveAction = { targetGID: 10 }; capture(); vi.clearAllMocks(); controller.stop();
  expect(state.session.moveAction).toBeNull(); expect(state.send).toHaveBeenCalledOnce();
 });
+
+it('prioritizes counters against the live target while keeping only selected available skills', () => {
+ state.skills = [{SKID:19,type:1,level:5,spcost:1},{SKID:20,type:1,level:5,spcost:1}];
+ const controller=createGameAutoCombat(()=>true);
+ controller.configure([],[19,20],{search:20,activity:30});
+ controller.start(); // Poring: Water 1, so lightning instead of fire.
+ expect(state.cast).toHaveBeenLastCalledWith(20,5,10);
+ controller.stop();state.cast.mockClear();
+ controller.configure([],[19],{search:20,activity:30});controller.start();
+ expect(state.cast).toHaveBeenLastCalledWith(19,5,10);
+});
+it('makes offensive healing selectable but never casts it on a living-element target', () => {
+ state.skills=[{SKID:28,type:16,level:5,spcost:1}];
+ const controller=createGameAutoCombat(()=>true);
+ expect(controller.skills().map(skill=>skill.id)).toContain(28);
+ controller.configure([],[28],{search:20,activity:30});controller.start();
+ expect(state.cast).not.toHaveBeenCalled();expect(state.attack).toHaveBeenCalledOnce();
+ controller.stop();state.cast.mockClear();state.entities[0].job=1015; // Zombie, Undead 1.
+ controller.start();expect(state.cast).toHaveBeenLastCalledWith(28,5,10);
+});

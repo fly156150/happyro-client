@@ -25,8 +25,8 @@ it('randomly chooses only configured available skills and falls back to normal a
 	skills = [{ id: 5, available: true }, { id: 6, available: false }, { id: 7, available: true }, { id: 8, available: true }];
 	controller.configure([], [5, 6, 7], { search: 20, activity: 30 }); controller.start();
 	expect(data.act.mock.calls[0][1].id).toBe(7);
-	data.random = () => 0; time = 1000; controller.tick(); expect(data.act.mock.calls[1][1].id).toBe(5);
-	skills.forEach(skill => skill.available = false); time = 2000; controller.tick(); expect(data.act.mock.calls[2][1]).toBeNull();
+	controller.skillFeedback({id:7,phase:'executed'}); data.random = () => 0; time = 1000; controller.tick(); expect(data.act.mock.calls[1][1].id).toBe(5);
+	controller.skillFeedback({id:5,phase:'executed'}); skills.forEach(skill => skill.available = false); time = 2000; controller.tick(); expect(data.act.mock.calls[2][1]).toBeNull();
 });
 it('throttles requests and never interrupts an in-flight cast or chase', () => {
 	controller.start(); controller.tick(); expect(data.act).toHaveBeenCalledTimes(1);
@@ -54,7 +54,7 @@ it('attacks only the tapped monster with configured skills and stops when it dis
  controller.configure([{ id: 1003, name: '土波利' }], [5], { search: 20, activity: 30 });
  expect(controller.attackTarget(1)).toBe(true);
  expect(data.act).toHaveBeenLastCalledWith(targets[0], skills[0]);
- time = 1000; controller.tick();
+ controller.skillFeedback({id:5,phase:'executed'}); time = 1000; controller.tick();
  expect(data.act).toHaveBeenCalledTimes(2);
  targets = targets.slice(1); controller.tick();
  expect(controller.snapshot().active).toBe(false);
@@ -136,4 +136,80 @@ it('persists configuration without stopping the active target and rejects storag
  expect(controller.configure([], [], { search: 30, activity: 40 })).toBe(false);
  expect(controller.snapshot().ranges).toEqual({ search: 25, activity: 35 });
  expect(data.stop).not.toHaveBeenCalled();
+});
+
+it('re-evaluates target priorities each turn and falls back after counter cooldown', () => {
+ skills=[{id:19,available:true},{id:20,available:true}];
+ data.skills=target=>skills.map(skill=>({...skill,priority:target ? [skill.id===(target.species===1002?20:19)?2:1,100,0] : undefined}));
+ controller.configure([],[19,20],{search:20,activity:30});
+ targets=[mob(1,1002)];controller.start();expect(data.act.mock.calls.at(-1)[1].id).toBe(20);
+ controller.skillFeedback({id:20,phase:'executed'});skills[1].available=false;time=1000;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(19);
+ skills[1].available=true;targets=[mob(2,1003)];time=2000;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(19);
+ controller.skillFeedback({id:19,phase:'executed'});data.skills=()=>skills.map(skill=>({...skill,priority:null}));time=3000;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+});
+
+it('tries another selected skill on synchronous rejection, then uses normal attacks', () => {
+ targets=[mob(1)];skills=[{id:5,available:true,priority:[2,150,0]},{id:6,available:true,priority:[1,100,0]}];
+ data.act.mockImplementation((target,skill)=>!skill);
+ controller.configure([],[5,6],{search:20,activity:30});controller.start();
+ expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+ time=200;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(6);
+ time=400;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+ expect(controller.snapshot().active).toBe(true);
+ time=11000;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+});
+it('backs off a matching server-rejected skill without abandoning its monster', () => {
+ targets=[mob(1)];skills=[{id:5,available:true}];
+ controller.configure([],[5],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:6,phase:'failed'});
+ time=1000;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+ controller.skillFeedback({id:5,phase:'failed'});time=1200;controller.tick();
+ expect(data.act.mock.calls.at(-1)).toEqual([targets[0],null]);
+ expect(controller.snapshot().active).toBe(true);
+ controller.stop();controller.skillFeedback({id:5,phase:'failed'});
+ controller.start();expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+});
+it('uses a bounded normal-attack window when a request receives no feedback', () => {
+ targets=[mob(1)];skills=[{id:5,available:true}];
+ controller.configure([],[5],{search:20,activity:30});controller.start();
+ for(time=1000;time<=8000;time+=1000)controller.tick();
+ time=8200;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+ expect(controller.snapshot().active).toBe(true);
+ time=18100;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+});
+it('waits for acknowledged long casts, and success cancels the watchdog', () => {
+ targets=[mob(1)];skills=[{id:5,available:true}];
+ controller.configure([],[5],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:5,phase:'casting',delay:20000});
+ time=10000;controller.tick();expect(data.act).toHaveBeenCalledTimes(1);
+ time=20000;controller.skillFeedback({id:5,phase:'executed'});controller.tick();
+ expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+ time=27000;controller.skillFeedback({id:5,phase:'executed'});controller.tick();
+ expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
+});
+it('recovers a stale busy cast after its acknowledged duration and grace period', () => {
+ targets=[mob(1)];skills=[{id:5,available:true}];data.clearExpiredCast=vi.fn(()=>busy=false);
+ controller.configure([],[5],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:5,phase:'casting',delay:10000});busy=true;
+ time=17000;controller.tick();expect(data.clearExpiredCast).not.toHaveBeenCalled();
+ time=18000;controller.tick();expect(data.clearExpiredCast).toHaveBeenCalledOnce();
+ time=18200;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+});
+
+it('keeps exactly one request in flight through delayed damage feedback', () => {
+ targets=[mob(1)];skills=[{id:19,available:true},{id:14,available:true}];
+ controller.configure([],[19,14],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:14,phase:'casting',delay:3500});
+ time=3600;controller.tick();time=4000;controller.tick();
+ expect(data.act).toHaveBeenCalledTimes(1);
+ controller.skillFeedback({id:14,phase:'executed'});controller.tick();
+ expect(data.act).toHaveBeenCalledTimes(2);
+});
+it('backs off an interrupted cast immediately instead of waiting out its full duration', () => {
+ targets=[mob(1)];skills=[{id:19,available:true}];
+ controller.configure([],[19],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:19,phase:'casting',delay:20000});
+ time=1000;controller.skillFeedback({phase:'cancelled'});
+ time=1200;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+ expect(controller.snapshot().active).toBe(true);
 });

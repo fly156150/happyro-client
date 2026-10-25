@@ -1,3 +1,4 @@
+import { subscribeSkillExecution } from 'Network/SkillExecution.js';
 import { isIdentificationExam } from './IdentificationExam.js';
 import { getCurrentAdventureMap } from 'UI/Components/GameTools/AdventureActionService.js';
 import { registerAutomationCombat } from './GameAutomation.js';
@@ -38,6 +39,7 @@ export function createGameAutoCombatRuntime({
 		);
 	const controller = createGameAutoCombat(canRun);
 	combatRuntimes.add(controller);
+	const unsubscribeSkills = subscribeSkillExecution(controller.skillFeedback);
 	const unregisterAutomation = registerAutomationCombat(controller);
 	const abort = new AbortController();
 	const stop = message => {
@@ -101,6 +103,7 @@ export function createGameAutoCombatRuntime({
 		clearInterval(timer);
 		abort.abort();
 		unsubscribeInput();
+		unsubscribeSkills();
 		unsubscribeConnection();
 		controller.stop();
 	}

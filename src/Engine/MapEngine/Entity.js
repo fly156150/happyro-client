@@ -1,3 +1,4 @@
+import { reportSkillExecution } from 'Network/SkillExecution.js';
 import MapRenderer from 'Renderer/MapRenderer.js';
 import { isIdentificationExam } from 'UI/Game/IdentificationExam.js';
 import { invalidateCompanionPrompts } from 'UI/Game/CompanionPrompt.js';
@@ -1379,6 +1380,7 @@ function onNPCViewChange(pkt) {
  * @param {object} pkt - PACKET.ZC.USE_SKILL
  */
 function onEntityUseSkill(pkt) {
+	if (pkt.srcAID === Session.Entity?.GID) reportSkillExecution(pkt.SKID, pkt.result ? 'executed' : 'failed');
 	const srcEntity = EntityManager.get(pkt.srcAID);
 	const dstEntity = EntityManager.get(pkt.targetAID);
 
@@ -1506,6 +1508,7 @@ function onSkillDisapear(pkt) {
  * @param {object} pkt - PACKET.ZC.NOTIFY_SKILL
  */
 function onEntityUseSkillToAttack(pkt) {
+	if (pkt.AID === Session.Entity?.GID) reportSkillExecution(pkt.SKID, 'executed');
 	if (CombatDiagnostics.enabled())
 		CombatDiagnostics.mark('combat.skill', {
 			self: pkt.AID === Session.Entity?.GID,
@@ -1663,6 +1666,7 @@ function onEntityUseSkillToAttack(pkt) {
  * @param {object} pkt - pkt PACKET.ZC.USESKILL_ACK
  */
 function onEntityCastSkill(pkt) {
+	if (pkt.AID === Session.Entity?.GID) reportSkillExecution(pkt.SKID, 'casting', pkt.delayTime);
 	// property:
 	//     0 = Yellow cast aura
 	//     1 = Water elemental cast aura
@@ -1850,6 +1854,7 @@ function onEntityCastSkill(pkt) {
  * @param {object} pkt - PACKET.ZC.DISPEL
  */
 function onEntityCastCancel(pkt) {
+	if (pkt.AID === Session.Entity?.GID) reportSkillExecution(undefined, 'cancelled');
 	const entity = EntityManager.get(pkt.AID);
 	if (entity) {
 		entity.cast.clean();

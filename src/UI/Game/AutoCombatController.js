@@ -1,3 +1,5 @@
+import { createAutoCombatSkillState, AUTO_COMBAT_SKILL_TIMING } from './AutoCombatSkillState.js';
+import { chooseCombatSkill } from './CombatSkillAffinity.js';
 import { getClientDefaults } from 'Core/ClientDefaults.js';
 
 export const AUTO_COMBAT_RANGE_LIMITS = { min: 1, searchMax: 50, activityMax: 100 };
@@ -18,10 +20,7 @@ export function validAutoCombatTeleport(value) {
 }
 
 /** Nearby combat policy. Runtime adapters own pathfinding, packets and live skill checks. */
-export function createAutoCombatController(
-	data,
-	configuration = { species: [], skills: [], ranges: defaults.ranges }
-) {
+export function createAutoCombatController(data, configuration = { species: [], skills: [], ranges: defaults.ranges }) {
 	let active = false,
 		pausedForMovement = false,
 		continuous = false,
@@ -38,8 +37,23 @@ export function createAutoCombatController(
 		progressAt = 0,
 		status = '自动战斗已停止';
 	const skipped = new Map();
+	const skillState = createAutoCombatSkillState();
+	function suppressSkill(id, now) {
+		skillState.suppress(id, target.id, now);
+		data.stop();
+		nextAction = now + AUTO_COMBAT_SKILL_TIMING.retry;
+	}
+	function skillFeedback(event) {
+		if (!active) return;
+		const now = data.now();
+		if (skillState.feedback(event, target?.id, now) === 'failed') {
+			data.stop();
+			nextAction = now + AUTO_COMBAT_SKILL_TIMING.retry;
+		}
+	}
 	const distance = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]));
 	function stop(message = '自动战斗已停止') {
+		skillState.reset();
 		data.cancelPickup?.();
 		idleSince = null;
 		if (active || target) data.stop();
@@ -94,6 +108,7 @@ export function createAutoCombatController(
 			}
 			preferred = null;
 			data.stop();
+			skillState.clearPending();
 			target = null;
 			nextAction = 0;
 		}
@@ -125,6 +140,7 @@ export function createAutoCombatController(
 		} else target = current;
 		idleSince = null;
 		const range = distance(player, target.position);
+		const timedOut = skillState.poll(target.id, now, data.chasing() && range < lastDistance);
 		if (range < lastDistance || !data.chasing()) {
 			progressAt = now;
 			lastDistance = range;
@@ -137,16 +153,37 @@ export function createAutoCombatController(
 			preferred = null;
 			skipped.set(target.id, now + 30000);
 			data.stop();
+			skillState.clearPending();
 			target = null;
 			nextAction = 0;
 			status = '目标无法接近，寻找其他目标';
 			return;
 		}
 		status = `${data.chasing() ? '接近' : '攻击'}：${target.name}`;
-		if (now < nextAction || data.busy()) return;
-		const skills = data.skills().filter(skill => selected.includes(skill.id) && skill.available);
-		const skill = skills.length ? skills[Math.floor(data.random() * skills.length)] : null;
+		if (timedOut) {
+			data.stop();
+			nextAction = now + AUTO_COMBAT_SKILL_TIMING.retry;
+			data.clearExpiredCast?.();
+			status = '技能未获确认，暂用普通攻击';
+		}
+		// Keep one request in flight until its result arrives, including the gap
+		// between the cast bar ending and the damage packet reaching the client.
+		if (now < nextAction || skillState.waiting() || data.busy()) return;
+		const skills = data
+			.skills(target)
+			.filter(
+				skill =>
+					selected.includes(skill.id) && skill.available && skillState.available(skill.id, target.id, now)
+			);
+		const skill = skillState.useNormalAttack(now) ? null : chooseCombatSkill(skills, data.random);
+		if (skill) skillState.begin(skill.id, target.id, now);
+		else skillState.clearPending();
 		if (data.act(target, skill) === false) {
+			if (skill) {
+				suppressSkill(skill.id, now);
+				status = '技能不可用，尝试其他技能或普攻';
+				return;
+			}
 			if (!continuous) {
 				stop('无法攻击目标');
 				return;
@@ -154,15 +191,18 @@ export function createAutoCombatController(
 			preferred = null;
 			skipped.set(target.id, now + 30000);
 			data.stop();
+			skillState.clearPending();
 			target = null;
 		}
 		nextAction = now + 900;
 	}
 	return {
 		snapshot,
+		skillFeedback,
 		tick,
 		stop,
 		pauseForMovement() {
+			skillState.clearPending();
 			data.cancelPickup?.();
 			if (!active || pausedForMovement) return;
 			if (!continuous) {
@@ -185,6 +225,7 @@ export function createAutoCombatController(
 			status = '寻找附近目标';
 		},
 		start() {
+			skillState.reset();
 			data.cancelPickup?.();
 			idleSince = null;
 			if (!data.enabled()) return false;
@@ -202,6 +243,7 @@ export function createAutoCombatController(
 			return true;
 		},
 		attackTarget(id) {
+			skillState.clearPending();
 			data.cancelPickup?.();
 			if (!data.enabled()) return false;
 			const choice = data.targets().find(entity => entity.id === id);

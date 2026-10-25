@@ -1,15 +1,16 @@
+import { reportSkillExecution } from '../../src/Network/SkillExecution.js';
 vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({ getCurrentAdventureMap: () => state.map, normalizeAdventureMap: value => value, getAdventureActionState: () => ({ allowed: false }), teleportToCoordinate: vi.fn() }));
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-const state = vi.hoisted(() => ({ map: 'izlude', session: {}, act: vi.fn(), stop: vi.fn() }));
+const state = vi.hoisted(() => ({ map: 'izlude', session: {}, act: vi.fn(), stop: vi.fn(), feedback: vi.fn() }));
 vi.mock('Engine/SessionStorage.js', () => ({ default: state.session }));
 vi.mock('UI/Game/GameAutoCombat.js', async () => {
 	const { createAutoCombatController } = await import('../../src/UI/Game/AutoCombatController.js');
-	return { createGameAutoCombat: enabled => createAutoCombatController({
+	return { createGameAutoCombat: enabled => ({...createAutoCombatController({
 		enabled, position: () => [0, 0], now: () => performance.now(), random: () => 0,
 		targets: () => [{ id: 1, species: 1002, name: '波利', position: [1, 0] }],
 		skills: () => [], reachable: () => true, chasing: () => false, busy: () => false,
 		select: vi.fn(), act: state.act, stop: state.stop
-	}) };
+	}), skillFeedback: state.feedback}) };
 });
 import { createGameAutoCombatRuntime } from '../../src/UI/Game/GameAutoCombatRuntime.js';
 import { notifyGameInput } from '../../src/Controls/GameInputIntent.js';
@@ -79,4 +80,14 @@ it.each(['in_moc_16', 'job_hunte', 'job3_rang02'])('stops auto-combat in %s with
  state.map = 'prontera'; vi.advanceTimersByTime(1000);
  expect(runtime.snapshot().active).toBe(false); expect(state.act).toHaveBeenCalledOnce();
  expect(runtime.start()).toBe(true);
+});
+
+it('subscribes skill feedback only for the live runtime', () => {
+ runtime=createGameAutoCombatRuntime();
+ reportSkillExecution(19,'failed');
+ expect(state.feedback).toHaveBeenCalledExactlyOnceWith({id:19,phase:'failed',delay:0});
+ runtime.destroy();state.feedback.mockClear();reportSkillExecution(19,'failed');
+ expect(state.feedback).not.toHaveBeenCalled();
+ runtime=createGameAutoCombatRuntime();endConnection();state.feedback.mockClear();
+ reportSkillExecution(19,'casting',10000);expect(state.feedback).not.toHaveBeenCalled();
 });
