@@ -13,6 +13,13 @@ const undeadSupport = { ...undeadAttack, offensiveSupport: true, convertsDamage:
 const raceBonus = (...races) => ({ bonus: ({ monster }) => races.includes(monster.race) });
 
 export const COMBAT_SKILL_RULES = Object.freeze({
+	WL_CHAINLIGHTNING: { convertsDamage: true, element: 'Wind' },
+	WL_TETRAVORTEX: { dynamic: true },
+	KN_BRANDISHSPEAR: { convertsDamage: true },
+	SR_TIGERCANNON: { convertsDamage: true },
+	GN_CRAZYWEED: { convertsDamage: true },
+	AS_SPLASHER: { convertsDamage: true },
+	TR_SOUNDBLEND: { convertsDamage: true },
 	AL_HEAL: undeadSupport,
 	ALL_RESURRECTION: undeadSupport,
 	AB_HIGHNESSHEAL: undeadSupport,
@@ -40,5 +47,10 @@ export const COMBAT_SKILL_RULES = Object.freeze({
 	IQ_MASSIVE_F_BLASTER: raceBonus('Brute', 'Demon'),
 	AG_ASTRAL_STRIKE: raceBonus('Undead', 'Dragon'),
 	WH_HAWKBOOMERANG: raceBonus('Brute', 'Fish'),
-	ABC_ABYSS_STRIKE: raceBonus('Demon', 'Angel')
+	ABC_ABYSS_STRIKE: raceBonus('Demon', 'Angel'),
+	DK_DRAGONIC_AURA: raceBonus('DemiHuman', 'Angel'),
+	IG_GRAND_JUDGEMENT: raceBonus('Plant', 'Insect'),
+	IG_JUDGEMENT_CROSS: raceBonus('Plant', 'Insect'),
+	SHC_FATAL_SHADOW_CROW: raceBonus('DemiHuman', 'Dragon'),
+	MT_RUSH_QUAKE: raceBonus('Formless', 'Insect')
 });

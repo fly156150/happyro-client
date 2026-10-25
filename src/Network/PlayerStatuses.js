@@ -24,6 +24,9 @@ export function createPlayerStatuses(now = () => performance.now()) {
 			}
 			return true;
 		},
+		values(index) {
+			return this.has(index) ? effects.get(index).values : undefined;
+		},
 		clear() {
 			effects.clear();
 		}

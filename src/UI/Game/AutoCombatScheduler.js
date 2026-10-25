@@ -22,11 +22,15 @@ export function createAutoCombatScheduler() {
 				id => (nextBuff.get(id) || 0) <= now && execution.available(id, 'self', now)
 			);
 		},
-		beginBuff(skill, now) {
+		beginBuff(skill, now, selfId) {
 			consecutiveBuffs++;
 			// A continuously dispelled effect must not consume every action opportunity.
 			nextBuff.set(skill.id, now + 10000);
-			execution.begin(skill.id, 'self', now, { kind: 'buff', effect: buffRule(skill.id).status });
+			execution.begin(skill.id, 'self', now, {
+				kind: 'buff',
+				effect: buffRule(skill.id).status,
+				wireTarget: selfId
+			});
 		},
 		attack() {
 			consecutiveBuffs = 0;

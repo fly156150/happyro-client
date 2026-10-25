@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import yaml from 'js-yaml';
+import Status from '../src/DB/Status/StatusConst.js';
 import { COMBAT_SKILL_RULES } from '../src/UI/Game/CombatSkillRules.js';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -32,6 +33,55 @@ async function read(file) {
 	return text;
 }
 const skillRows = yaml.load(await read('db/re/skill_db.yml')).Body;
+const statusRows = yaml.load(await read('db/re/status.yml')).Body;
+const statusIcons = Object.fromEntries(statusRows.map(row => [row.Status, Status[row.Icon?.replace(/^EFST_/, '')]]));
+const itemRows = [];
+for (const file of ['item_db_usable.yml', 'item_db_equip.yml', 'item_db_etc.yml']) {
+	itemRows.push(
+		...yaml.load(
+			(await read(`db/re/${file}`))
+				.split(/\r?\n/)
+				.filter(line => /^Body:|^ {2}- Id:|^ {4}(?:AegisName|Type|SubType):/.test(line))
+				.join('\n')
+		).Body
+	);
+}
+const itemIds = Object.fromEntries(itemRows.map(row => [row.AegisName, row.Id]));
+const weapons = Object.fromEntries(itemRows.filter(row => row.Type === 'Weapon').map(row => [row.Id, row.SubType]));
+const ammunition = Object.fromEntries(itemRows.filter(row => row.Type === 'Ammo').map(row => [row.Id, row.SubType]));
+const requirements = row => {
+	const req = { ...row.Requires };
+	if (['NC_PILEBUNKER', 'RL_P_ALTER'].includes(row.Name)) req.equippedRequired = true;
+	if (req.Status)
+		req.Status = Object.keys(req.Status)
+			.filter(key => req.Status[key])
+			.map(key => {
+				return { name: key, icon: statusIcons[key] };
+			});
+	if (req.ItemCost)
+		req.ItemCost = req.ItemCost.map(item => {
+			if (!itemIds[item.Item]) throw Error(`Unknown required item: ${item.Item}`);
+			return {
+				...item,
+				Item: itemIds[item.Item],
+				...(item.Item.includes('Gemstone') || item.Item === 'Magic_Gear_Fuel' ? { variable: true } : {}),
+				...(row.Name.startsWith('HT_') && item.Item === 'Booby_Trap'
+					? {
+							alternative: itemIds.Special_Alloy_Trap,
+							requiresSkill: skillRows.find(skill => skill.Name === 'RA_RESEARCHTRAP').Id
+						}
+					: {})
+			};
+		});
+	if (req.Equipment)
+		req.Equipment = Object.keys(req.Equipment)
+			.filter(key => req.Equipment[key])
+			.map(key => {
+				if (!itemIds[key]) throw Error(`Unknown required equipment: ${key}`);
+				return itemIds[key];
+			});
+	return req;
+};
 const monsterSource = await read('db/re/mob_db.yml');
 // Read only combat traits; unrelated upstream drop/race-group sections can repeat keys.
 const monsterRows = yaml.load(
@@ -45,7 +95,7 @@ const monsterRows = yaml.load(
 		.join('\n')
 ).Body;
 const attributes = yaml.load(await read('db/re/attr_fix.yml')).Body;
-for (const file of ['skill_db.yml', 'mob_db.yml', 'attr_fix.yml']) {
+for (const file of ['skill_db.yml', 'mob_db.yml', 'attr_fix.yml', 'item_db.yml', 'status.yml']) {
 	const overrides = yaml.load(await read(`db/import/${file}`));
 	if (overrides?.Body?.length || overrides?.Footer)
 		throw Error(`Combat overrides in db/import/${file} require review before generating affinities`);
@@ -90,7 +140,14 @@ for (const file of [
 	'mage/astralstrike',
 	'mage/stonecurse',
 	'archer/hawkboomerang',
-	'thief/omegaabyssstrike'
+	'thief/omegaabyssstrike',
+	'swordman/dragonicaura',
+	'swordman/grandjudgement',
+	'swordman/judgementcross',
+	'thief/fatalshadowcrow',
+	'merchant/rushquake',
+	'mage/chainlightning',
+	'mage/tetravortex'
 ]) {
 	await read(`src/map/skills/${file}.cpp`);
 }
@@ -103,13 +160,21 @@ const skills = Object.fromEntries(
 		row.Id,
 		{
 			name: row.Name,
-			element: row.Element ?? 'Neutral',
+			element: COMBAT_SKILL_RULES[row.Name]?.element ?? row.Element ?? 'Neutral',
+			targetType: row.TargetType,
+			damage: ['Weapon', 'Magic', 'Misc'].includes(row.Type) && !row.DamageFlags?.NoDamage,
+			radius: row.SplashArea ?? row.Unit?.Range ?? 0,
+			unitRange: row.Unit?.Range ?? 0,
+			unitLayout: row.Unit?.Layout ?? 0,
+			noFootSet: Boolean(row.Unit?.Flag?.NoFootSet),
+			trap: Boolean(row.Flags?.IsTrap),
+			requires: requirements(row),
 			targetEmperium: Boolean(row.Flags?.TargetEmperium),
 			elemental:
 				(COMBAT_SKILL_RULES[row.Name]?.convertsDamage ||
 					(['Weapon', 'Magic', 'Misc'].includes(row.Type) && !row.DamageFlags?.NoDamage)) &&
 				!row.DamageFlags?.IgnoreElement,
-			dynamic: dynamic.has(row.Name)
+			dynamic: dynamic.has(row.Name) || Boolean(COMBAT_SKILL_RULES[row.Name]?.dynamic)
 		}
 	])
 );
@@ -128,7 +193,16 @@ const monsters = Object.fromEntries(
 	])
 );
 const elements = Object.fromEntries(attributes.map(({ Level, ...rates }) => [Level, rates]));
-const data = { schema: 'happyro-combat-affinities/v1', sources, undeadDetection, elements, skills, monsters };
+const data = {
+	schema: 'happyro-combat-affinities/v1',
+	sources,
+	undeadDetection,
+	elements,
+	skills,
+	monsters,
+	ammunition,
+	weapons
+};
 const text = JSON.stringify(data) + '\n';
 if (command === 'check') {
 	if ((await fs.readFile(output, 'utf8')) !== text)

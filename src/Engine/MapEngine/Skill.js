@@ -145,7 +145,7 @@ function onEffect(pkt) {
  * @param {object} pkt - PACKET.ZC.NOTIFY_GROUNDSKILL
  */
 function onSkillToGround(pkt) {
-	if (pkt.AID === Session.Entity?.GID) reportSkillExecution(pkt.SKID, 'executed');
+	if (pkt.AID === Session.Entity?.GID) reportSkillExecution(pkt.SKID, 'executed', 0, { position: [pkt.xPos, pkt.yPos], tick: pkt.startTime });
 	const position = new Array(3);
 	position[0] = pkt.xPos;
 	position[1] = pkt.yPos;
@@ -160,7 +160,7 @@ function onSkillToGround(pkt) {
  * @param {object} pkt - PACKET.ZC.ACK_TOUSESKILL
  */
 function onSkillResult(pkt) {
-	reportSkillExecution(pkt.SKID, pkt.result ? 'executed' : 'failed');
+	reportSkillExecution(pkt.SKID, pkt.result ? 'executed' : 'failed', 0, { unscoped: true, cause: pkt.cause });
 	// Yeah success !
 	if (pkt.result) {
 		return;
@@ -909,6 +909,7 @@ function onSpiritSphere(pkt) {
 	EffectManager.remove(null, pkt.AID, [228, 504, 629, 833]);
 	EffectManager.remove(null, pkt.AID, servantWeaponEffectIds);
 	const owner = EntityManager.get(pkt.AID);
+ if (owner) owner.spiritCount = pkt.num;
 	if (owner && isServantWeaponJob(owner._job)) {
 		const count = Math.max(0, Math.min(servantWeaponEffectIds.length, pkt.num));
 		for (let index = 0; index < count; index++) {

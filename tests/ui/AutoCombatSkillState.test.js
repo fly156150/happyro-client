@@ -47,3 +47,29 @@ it('times out missing effects without repeated party replies extending the deadl
  expect(state.available(34,'self',1601)).toBe(false);
  expect(state.useNormalAttack(1601)).toBe(false);
 });
+
+it('accepts audited child results only for the requested target',()=>{
+ const state=createAutoCombatSkillState();state.begin(2214,7,0);
+ expect(state.feedback({id:2215,phase:'executed',target:8},100)).toBeNull();expect(state.waiting()).toBe(true);
+ expect(state.feedback({id:2215,phase:'executed',target:7},101)).toBe('executed');expect(state.waiting()).toBe(false);
+});
+it('rejects old-target results and ambiguous cancellation after replacing a request',()=>{
+ const state=createAutoCombatSkillState();state.begin(19,1,0);state.clearPending();state.begin(19,2,100);
+ expect(state.feedback({id:19,phase:'executed',target:1},200)).toBeNull();
+ expect(state.feedback({phase:'cancelled'},201)).toBeNull();
+ expect(state.feedback({id:19,phase:'failed',unscoped:true},202)).toBeNull();expect(state.waiting()).toBe(true);
+ expect(state.feedback({id:19,phase:'executed',target:2},203)).toBe('executed');
+});
+it('correlates ground cells and scopes resource failures across targets',()=>{
+ const state=createAutoCombatSkillState();state.begin(18,1,0,{position:[10,20]});
+ expect(state.feedback({id:18,phase:'executed',position:[11,20]},100)).toBeNull();
+ expect(state.feedback({id:18,phase:'failed',unscoped:true},101)).toBe('failed');
+ expect(state.available(18,999,102)).toBe(false);expect(state.available(19,999,102)).toBe(true);
+});
+it('drains delayed chain children before permitting another chain on any target',()=>{
+ const state=createAutoCombatSkillState();state.begin(2214,1,0,{level:5});
+ state.feedback({id:2215,phase:'executed',target:1},100);
+ expect(state.available(2214,2,200)).toBe(false);expect(state.available(19,2,200)).toBe(true);
+ state.feedback({id:2215,phase:'executed',target:2},750);
+ expect(state.available(2214,2,5299)).toBe(false);expect(state.available(2214,2,5300)).toBe(true);
+});

@@ -40,6 +40,9 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		progressAt = 0,
 		status = '自动战斗已停止';
 	const skipped = new Map();
+	const utilityAttempts = new Map();
+	let utilityTurn = false,
+		castsWithoutDamage = 0;
 	const scheduler = createAutoCombatScheduler();
 	const skillState = scheduler.execution;
 	function suppressSkill(id, now) {
@@ -50,7 +53,11 @@ export function createAutoCombatController(data, configuration = { species: [], 
 	function skillFeedback(event) {
 		if (!active) return;
 		const now = data.now();
-		if (skillState.feedback(event, now) === 'failed') {
+		const maintaining = skillState.maintaining();
+		const feedback = skillState.feedback(event, now);
+		if (event.phase === 'executed' && event.damage > 0 && event.target === target?.id) castsWithoutDamage = 0;
+		else if (feedback === 'executed' && !maintaining) castsWithoutDamage++;
+		if (feedback === 'failed') {
 			data.stop();
 			nextAction = now + AUTO_COMBAT_SKILL_TIMING.retry;
 		}
@@ -58,6 +65,9 @@ export function createAutoCombatController(data, configuration = { species: [], 
 	const distance = (a, b) => Math.max(Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]));
 	function stop(message = '自动战斗已停止') {
 		scheduler.reset();
+		utilityAttempts.clear();
+		utilityTurn = false;
+		castsWithoutDamage = 0;
 		data.cancelPickup?.();
 		idleSince = null;
 		if (active || target) data.stop();
@@ -94,6 +104,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		}
 		const now = data.now(),
 			player = data.position();
+		for (const [key, until] of utilityAttempts) if (until <= now) utilityAttempts.delete(key);
 		for (const [id, until] of skipped) if (until <= now) skipped.delete(id);
 		const targets = data
 			.targets()
@@ -122,7 +133,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 				targets.some(candidate => data.reachable(candidate))
 			);
 			if (buff) {
-				scheduler.beginBuff(buff, now);
+				scheduler.beginBuff(buff, now, data.selfId?.());
 				status = `补充增益：${buff.name}`;
 				if (data.buff(buff) === false) skillState.suppress(buff.id, 'self', now);
 				nextAction = now + 900;
@@ -205,11 +216,39 @@ export function createAutoCombatController(data, configuration = { species: [], 
 					skill.kind !== 'buff' &&
 					selected.includes(skill.id) &&
 					skill.available &&
-					skillState.available(skill.id, target.id, now)
+					skillState.available(skill.id, target.id, now) &&
+					(!(skill.kind === 'utility' || skill.aim === 'trap') ||
+						(!utilityTurn && (utilityAttempts.get(`${target.id}:${skill.id}`) || 0) <= now))
 			);
-		const skill = skillState.useNormalAttack(now) ? null : chooseCombatSkill(skills, data.random);
-		if (skill) skillState.begin(skill.id, target.id, now);
-		else skillState.clearPending();
+		const skill =
+			skillState.useNormalAttack(now) || castsWithoutDamage >= 2 ? null : chooseCombatSkill(skills, data.random);
+		if (skill) {
+			const prepared = data.prepare?.(target, skill);
+			if (prepared === 'approaching') {
+				nextAction = now + 900;
+				return;
+			}
+			if (prepared === false) {
+				suppressSkill(skill.id, now);
+				return;
+			}
+			skillState.begin(skill.id, target.id, now, {
+				kind: skill.kind,
+				level: skill.level,
+				wireTarget: skill.aim === 'self' ? data.selfId?.() : target.id,
+				area: skill.aim === 'self',
+				position:
+					skill.position || (skill.aim === 'ground' ? target.position.slice(0, 2).map(Math.floor) : undefined)
+			});
+			if (skill.kind === 'utility' || skill.aim === 'trap') {
+				utilityTurn = true;
+				utilityAttempts.set(`${target.id}:${skill.id}`, now + 30000);
+			} else utilityTurn = false;
+		} else {
+			skillState.clearPending();
+			utilityTurn = false;
+			castsWithoutDamage = 0;
+		}
 		if (data.act(target, skill) === false) {
 			if (skill) {
 				suppressSkill(skill.id, now);
@@ -259,6 +298,9 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		},
 		start() {
 			scheduler.reset();
+			utilityAttempts.clear();
+			utilityTurn = false;
+			castsWithoutDamage = 0;
 			data.cancelPickup?.();
 			idleSince = null;
 			if (!data.enabled()) return false;
@@ -276,11 +318,11 @@ export function createAutoCombatController(data, configuration = { species: [], 
 			return true;
 		},
 		attackTarget(id) {
-			skillState.clearPending();
-			data.cancelPickup?.();
 			if (!data.enabled()) return false;
 			const choice = data.targets().find(entity => entity.id === id);
 			if (!choice || !data.reachable(choice)) return false;
+			skillState.clearPending();
+			data.cancelPickup?.();
 			// Keep automatic searching only if it was already enabled before this tap.
 			continuous = active && continuous;
 			data.stop();

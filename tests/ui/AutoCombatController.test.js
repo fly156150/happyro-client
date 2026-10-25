@@ -182,9 +182,9 @@ it('waits for acknowledged long casts, and success cancels the watchdog', () => 
  controller.configure([],[5],{search:20,activity:30});controller.start();
  controller.skillFeedback({id:5,phase:'casting',delay:20000});
  time=10000;controller.tick();expect(data.act).toHaveBeenCalledTimes(1);
- time=20000;controller.skillFeedback({id:5,phase:'executed'});controller.tick();
+ time=20000;controller.skillFeedback({id:5,phase:'executed',target:1,damage:50});controller.tick();
  expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
- time=27000;controller.skillFeedback({id:5,phase:'executed'});controller.tick();
+ time=27000;controller.skillFeedback({id:5,phase:'executed',target:1,damage:50});controller.tick();
  expect(data.act.mock.calls.at(-1)[1].id).toBe(5);
 });
 it('recovers a stale busy cast after its acknowledged duration and grace period', () => {
@@ -263,4 +263,27 @@ it('does not exhaust the buff allowance on unreachable monsters',()=>{
  effects.add(10);controller.skillFeedback({id:34,phase:'executed'});time=1000;controller.tick();
  effects.add(12);controller.skillFeedback({id:29,phase:'executed'});time=2000;controller.tick();
  expect(data.buff).toHaveBeenCalledTimes(3);expect(data.act).not.toHaveBeenCalled();
+});
+
+it('guarantees attacks between utilities and suppresses repeated successful utility casts',()=>{
+ targets=[mob(1)];skills=[{id:6,kind:'utility',available:true}];controller.configure([],[6],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:6,phase:'executed',target:1});time=1000;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+ time=2000;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+ expect(data.act.mock.calls.filter(([,skill])=>skill?.id===6)).toHaveLength(1);
+});
+it('does not start a self-area request until approach completes',()=>{
+ targets=[mob(1)];skills=[{id:7,kind:'attack',aim:'self',radius:2,available:true}];data.prepare=vi.fn(()=> 'approaching');
+ controller.configure([],[7],{search:20,activity:30});controller.start();expect(data.act).not.toHaveBeenCalled();
+ data.prepare.mockReturnValue(true);time=1000;controller.tick();expect(data.act).toHaveBeenCalledOnce();
+});
+it('preserves pending casts when a manual target switch is invalid',()=>{
+ targets=[mob(1)];skills=[{id:19,available:true}];controller.configure([],[19],{search:20,activity:30});controller.start();
+ expect(controller.attackTarget(999)).toBe(false);time=1000;controller.tick();expect(data.act).toHaveBeenCalledOnce();
+ controller.skillFeedback({id:19,phase:'executed',target:1});controller.tick();expect(data.act).toHaveBeenCalledTimes(2);
+});
+it('provides a normal attack even when a damage-labelled skill only acknowledges empty effects',()=>{
+ targets=[mob(1)];skills=[{id:19,available:true}];controller.configure([],[19],{search:20,activity:30});controller.start();
+ controller.skillFeedback({id:19,phase:'executed',target:1,damage:-1});time=1000;controller.tick();
+ controller.skillFeedback({id:19,phase:'executed',target:1,damage:0});time=2000;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
+ time=3000;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(19);
 });

@@ -8,7 +8,7 @@ vi.mock('Renderer/EntityManager.js', () => ({ default: {
 } }));
 vi.mock('Renderer/Renderer.js', () => ({ default: { tick: 1000 } }));
 vi.mock('Controls/MapControl.js', () => ({ default: { onRequestStopWalk: vi.fn() } }));
-vi.mock('Utils/PathFinding.js', () => ({ default: { search: () => state.path } }));
+vi.mock('Utils/PathFinding.js', () => ({ default: { search: (...args) => { if(state.pathPoints) args[5].push(...state.pathPoints); return state.path; } } }));
 vi.mock('Renderer/Map/Altitude.js', () => ({ default: { TYPE: { WALKABLE: 1 } } }));
 vi.mock('UI/Components/SkillList/SkillList.js', () => ({ default: { getUI: () => ({ getSkills: () => state.skills }) } }));
 vi.mock('UI/Components/SkillTargetSelection/SkillTargetSelection.js', () => ({ default: { remove: vi.fn(), onUseSkillToId: state.cast, onUseSkillToPos: state.ground } }));
@@ -17,13 +17,15 @@ vi.mock('DB/DBManager.js', () => ({ default: { getMonsterName: () => '波利' } 
 vi.mock('Network/SkillCooldowns.js', () => ({ remainingCooldown: () => state.cooldown }));
 vi.mock('UI/Components/Navigation/Navigation.js', () => ({ default: { stopAutoWalk: vi.fn() } }));
 vi.mock('Network/NetworkManager.js', () => ({ default: { sendPacket: state.send } }));
-vi.mock('Network/PacketStructure.js', () => ({ default: { CZ: { HAPPYRO_STOP_MOVE: class {} } } }));
+vi.mock('Network/PacketStructure.js', () => ({ default: { CZ: { HAPPYRO_STOP_MOVE: class {}, REQUEST_MOVE2: class { constructor(){this.dest=[];} } } } }));
 vi.mock('UI/Game/GameCommands.js', () => ({ attackSelected: (moving, onRequest) => { state.attack(moving, onRequest); onRequest?.(); }, stopAttack: () => { state.stop(); state.session.moveAction = null; } }));
+vi.mock('UI/Components/Inventory/Inventory.js',()=>({default:{getUI:()=>({list:[]})}}));
+vi.mock('UI/Components/Equipment/Equipment.js',()=>({default:{getUI:()=>({getItems:()=>[]})}}));
 import PACKET from '../../src/Network/PacketStructure.js';
 import { createGameAutoCombat } from '../../src/UI/Game/GameAutoCombat.js';
 beforeEach(() => {
 	localStorage.clear();
-	vi.clearAllMocks(); state.focus = null; state.cooldown = 0; state.path = 1;
+	vi.clearAllMocks(); state.focus = null; state.cooldown = 0; state.path = 1; state.pathPoints = null;
 	state.session.Playing = true; state.session.moveAction = null;
 	state.session.Entity = { position: [0, 0], life: { sp: 20 }, action: 0, ACTION: { DIE: 9, SIT: 2 }, cast: { display: false }, amotionTick: 0 };
 	state.entities = [{ GID: 10, job: 1002, objecttype: 1, constructor: { TYPE_MOB: 1 }, action: 0, ACTION: { DIE: 9 }, remove_tick: 0, display: { name: '波利' }, position: [2, 0], onFocus: vi.fn(), onFocusEnd: vi.fn() }];
@@ -34,9 +36,9 @@ it('selects real monsters and casts the learned level at the live GID', () => {
 	expect(state.focus).toBe(state.entities[0]); expect(state.cast).toHaveBeenCalledExactlyOnceWith(5, 3, 10);
 });
 it('casts ground skills at the target position and excludes passive and friendly-only skills', () => {
-	state.skills = [{ SKID: 20, type: 2, level: 2, spcost: 5 }, { SKID: 21, type: 0, level: 2 }, { SKID: 22, type: 16, level: 2 }];
+	state.skills = [{ SKID: 18, type: 2, level: 2, spcost: 5 }, { SKID: 21, type: 0, level: 2 }, { SKID: 22, type: 16, level: 2 }];
 	const controller = createGameAutoCombat(() => true); expect(controller.skills()).toHaveLength(1);
-	controller.configure([], [20], { search: 20, activity: 30 }); controller.start(); expect(state.ground).toHaveBeenCalledExactlyOnceWith(20, 2, 2, 0);
+	controller.configure([], [18], { search: 20, activity: 30 }); controller.start(); expect(state.ground).toHaveBeenCalledExactlyOnceWith(18, 2, 2, 0);
 });
 it.each(['cooldown', 'sp'])('falls back to ordinary attacks when blocked by %s', reason => {
 	if (reason === 'cooldown') state.cooldown = 1000; else state.session.Entity.life.sp = 1;
@@ -147,4 +149,16 @@ it('preserves existing buffs and blocks unsafe undead self buffs or insufficient
  controller.configure([],[34],{search:20,activity:30});controller.start();
  expect(state.cast).not.toHaveBeenCalled();expect(state.attack).toHaveBeenCalledOnce();
  controller.stop();playerStatuses.clear();
+});
+
+it('approaches the actual self-area radius before sending the skill to the player',()=>{
+ const now=vi.spyOn(performance,'now').mockReturnValue(0);
+ try {
+  state.session.Entity.GID=99;state.session.Entity.life.sp=100;state.entities[0].position=[10,0];
+  state.skills=[{SKID:7,type:4,level:10,spcost:30}];state.path=3;state.pathPoints=[0,0,4,0,8,0];
+  const controller=createGameAutoCombat(()=>true);controller.configure([],[7],{search:20,activity:30});controller.start();
+  expect(state.cast).not.toHaveBeenCalled();expect(state.send.mock.calls.at(-1)[0].dest).toEqual([8,0]);
+  state.session.Entity.position=[8,0];state.path=1;state.pathPoints=null;now.mockReturnValue(1000);controller.tick();
+  expect(state.cast).toHaveBeenCalledExactlyOnceWith(7,10,99);
+ } finally {now.mockRestore();}
 });

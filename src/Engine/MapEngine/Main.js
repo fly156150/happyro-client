@@ -397,6 +397,7 @@ function onParameterChange(pkt) {
 			break;
 
 		case StatusProperty.MONEY:
+ Session.zeny = amount;
 			BasicInfo.getUI().update('zeny', amount);
 			break;
 
