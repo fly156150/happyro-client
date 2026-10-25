@@ -239,16 +239,22 @@
 :host([data-menu-density='spacious']) .skill small {
 	font-size: 12px;
 }
-:host([data-menu-density='spacious']) .battle-status {
-	--target-action-height: 44px;
+:host([data-menu-density='spacious']) .battle-dock {
+	--battle-action-height: 44px;
+}
+:host([data-menu-density='spacious']) .target-actions {
 	--target-action-padding: 6px var(--battle-button-padding);
+	font-size: 14px;
+}
+:host([data-menu-density='spacious']) .battle-status {
 	min-height: 40px;
 	font-size: 14px;
 	padding: 7px 10px;
 }
 :host([data-menu-density='spacious']) .battle-tools button,
-:host([data-menu-density='spacious']) .battle-status button {
-	min-height: 44px;
+:host([data-menu-density='spacious']) .battle-status button,
+:host([data-menu-density='spacious']) .target-actions button {
+	min-height: var(--battle-action-height);
 	font-size: 14px;
 	padding: 6px var(--battle-button-padding);
 }

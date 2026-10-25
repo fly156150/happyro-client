@@ -168,6 +168,7 @@ button.surface,
 }
 .battle-dock {
 	--battle-gap: 6px;
+	--battle-action-height: 32px;
 	--battle-button-padding: 5px;
 	pointer-events: none;
 	touch-action: manipulation;
@@ -189,8 +190,6 @@ button.surface,
 	pointer-events: auto;
 }
 .battle-status {
-	--target-action-height: 30px;
-	--target-action-padding: 4px 2px;
 	display: flex;
 	align-items: center;
 	gap: 6px;
@@ -212,20 +211,23 @@ button.surface,
 .battle-dock button {
 	pointer-events: auto;
 }
-.battle-status button {
+.battle-status button, .target-actions button {
 	flex-shrink: 0;
-	min-height: 30px;
+	height: var(--battle-action-height);
+	min-height: var(--battle-action-height);
 	border: 1px solid #ecce94;
 	border-radius: 6px;
 	background: #483a25b8;
 }
 .battle-tools {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-columns: minmax(44px, .7fr) repeat(2, minmax(0, 1fr));
 	gap: 6px;
 }
 .battle-tools button {
-	min-height: 32px;
+	min-width: 0;
+	height: var(--battle-action-height);
+	min-height: var(--battle-action-height);
 	padding: 4px var(--battle-button-padding);
 	font-size: 11px;
 	overflow: hidden;
@@ -1019,13 +1021,14 @@ dd {
 	--gauge-color: #ff0000;
 }
 
-.battle-status.has-player-actions { flex-wrap: wrap; }
+.target-actions { --target-action-height: var(--battle-action-height); --target-action-padding: 4px 2px; font-size: 11px; min-width: 0; }
+.target-actions[hidden] { display: none; }
 .player-actions, .pet-actions, .mercenary-actions, .homunculus-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: 100%; }
 .player-actions[hidden], .pet-actions[hidden], .mercenary-actions[hidden], .homunculus-actions[hidden], .battle-status [data-target][hidden] { display: none; }
 .player-actions button, .pet-actions button, .mercenary-actions button, .homunculus-actions button { min-width: 0; padding: 4px 2px; white-space: nowrap; }
 .player-actions button:disabled, .pet-actions button:disabled, .mercenary-actions button:disabled, .homunculus-actions button:disabled { opacity: .5; }
 
-[data-auto-toggle].clear-selection {
+[data-self-actions].clear-selection {
 	color: #ecce94; border-color: #ecce94; background: #483a25b8;
 }
 
@@ -1067,3 +1070,5 @@ dd {
 .exam-targets button { border: 1px solid #ecce94; border-radius: 6px; padding: 8px; background: #483a25b8; text-align: left; overflow-wrap: anywhere; }
 .exam-targets button[aria-pressed="true"] { background: #78603b; }
 .battle-status.exam-status [data-target] { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+
+.battle-tools:has([data-auto-target][hidden]) [data-auto-toggle] { grid-column: 2 / -1; }

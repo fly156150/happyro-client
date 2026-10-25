@@ -217,6 +217,12 @@ HUD.onAppend = function () {
 			autoCombat.stop();
 			Commands.interactSelected();
 		},
+		showSelfActions: () => {
+			if (autoCombat.snapshot().active) autoCombat.stop();
+			cancelSceneInput();
+			EntityManager.setFocusEntity(Session.Entity);
+			snapshot();
+		},
 		clearPlayerSelection: () => {
 			cancelSceneInput();
 			EntityManager.setFocusEntity(null);
@@ -300,7 +306,7 @@ HUD.onAppend = function () {
 		chatEmotionImages: () => import('UI/Game/ChatEmotionImages.js').then(module => module.loadChatEmotionImages()),
 		returnToCharacters: () => HUD.actions.returnToCharacters()
 	});
-	selfActions = createSelfActions(HUD.getRoot().querySelector('.battle-status'), cancelSceneInput);
+	selfActions = createSelfActions(HUD.getRoot().querySelector('.target-actions'), cancelSceneInput);
 	unsubscribeInteraction = subscribeInteraction(state => view.showInteraction(state));
 	controls = bindPointerControls(HUD.getRoot(), Renderer.canvas, {
 		enabled,

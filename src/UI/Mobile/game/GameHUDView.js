@@ -196,9 +196,12 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 	listen(root, 'pointerdown', event => {
 		if (!event.target.closest('.combat, .battle-dock')) actions.cancelSceneInput();
 	});
+	listen($('[data-self-actions]'), 'click', () => {
+		if (snapshot.target?.self || snapshot.target?.player || snapshot.target?.pet || snapshot.target?.mercenary || snapshot.target?.homunculus) actions.clearPlayerSelection();
+		else actions.showSelfActions();
+	});
 	listen($('[data-auto-toggle]'), 'click', () => {
-		if (snapshot.target?.player || snapshot.target?.pet || snapshot.target?.mercenary || snapshot.target?.homunculus) actions.clearPlayerSelection();
-		else if (snapshot.exam) actions.attackExamTarget();
+		if (snapshot.exam) actions.attackExamTarget();
 		else actions.toggleAutoCombat();
 	});
 	listen($('[data-exam-targets]'), 'click', event => {
@@ -877,8 +880,14 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			if (next.death?.dead || performance.now() >= noticeUntil) text('[data-target]', next.death?.dead ? '已倒下' : next.autoCombat?.status || '自动战斗已停止');
 			const species = next.autoCombat?.species || [];
 			const targetLabel = species.length > 1 ? `${species.length} 种魔物` : species[0]?.name || '全部魔物';
-			text('[data-auto-target]', `${targetLabel} ▾`);
-			$('[data-auto-target]').title = species.map(entry => entry.name).join('、') || '全部魔物';
+			const targetDescription = `目标：${species.map(entry => entry.name).join('、') || '全部魔物'}`;
+			$('[data-auto-target]').title = targetDescription;
+			$('[data-auto-target]').setAttribute('aria-label', `战斗设置，${targetDescription}`);
+			if (!next.death?.dead && performance.now() >= noticeUntil && !next.exam) {
+				const status = next.autoCombat?.status;
+				text('[data-target]', !status || status === '自动战斗已停止' ? `目标：${targetLabel}` : `${status} · 目标：${targetLabel}`);
+			}
+			$('[data-target]').title = $('[data-target]').textContent;
 			const target = next.death?.dead ? null : next.target;
 			const player = target?.player, pet = target?.pet, mercenary = target?.mercenary, homunculus = target?.homunculus;
 			const hasActions = Boolean(player || pet || mercenary || homunculus);
@@ -899,18 +908,23 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 				}));
 			}
 			$('[data-auto-target]').hidden = Boolean(next.exam);
-			$('[data-auto-toggle]').disabled = Boolean(next.exam && !hasActions && !exam?.canAttack);
+			$('[data-auto-toggle]').disabled = Boolean(next.exam && !exam?.canAttack);
+			const cancelSelection = hasActions || Boolean(target?.self);
+			text('[data-self-actions]', cancelSelection ? '取消' : '动作');
+			$('[data-self-actions]').disabled = Boolean(next.death?.dead);
+			$('[data-self-actions]').setAttribute('aria-expanded', String(Boolean(target?.self)));
+			$('[data-self-actions]').setAttribute('aria-label', cancelSelection ? '取消选择' : '展开角色动作');
+			$('[data-self-actions]').classList.toggle('clear-selection', cancelSelection);
 			if (exam && !hasActions) text('[data-target]', exam.name || '点击魔物选择目标');
 			$('.battle-status').classList.toggle('exam-status', Boolean(exam));
-			text('[data-auto-toggle]', hasActions ? '取消选择' : next.exam ? '攻击' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
-			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!hasActions && Boolean(next.autoCombat?.active)));
-			$('[data-auto-toggle]').classList.toggle('clear-selection', hasActions);
+			text('[data-auto-toggle]', next.exam ? '攻击' : next.autoCombat?.active ? '停止战斗' : '自动战斗');
+			$('[data-auto-toggle]').setAttribute('aria-pressed', String(!next.exam && Boolean(next.autoCombat?.active)));
 			$('[data-player-actions]').hidden = !player;
 			$('[data-pet-actions]').hidden = !pet;
 			$('[data-mercenary-actions]').hidden = !mercenary;
 			$('[data-homunculus-actions]').hidden = !homunculus;
-			$('[data-target]').hidden = hasActions || Boolean(target?.self);
-			$('.battle-status').classList.toggle('has-player-actions', hasActions);
+			$('.target-actions').hidden = !cancelSelection || !$('.skill-prompt').hidden;
+			$('.battle-status').hidden = cancelSelection || !$('.skill-prompt').hidden;
 			for (const button of root.querySelectorAll('[data-mercenary-action]')) button.disabled = !mercenary?.canOperate;
 			text('[data-mercenary-action=aggressive]', mercenary?.aggressive ? '主动' : '被动');
 			$('[data-mercenary-action=aggressive]').dataset.mode = mercenary?.aggressive ? 'active' : 'passive';
@@ -1058,7 +1072,10 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 					}
 				}
 			}
-			$('.battle-status').hidden = Boolean(state.pending);
+			const target = snapshot.death?.dead ? null : snapshot.target;
+			const hasActions = Boolean(target?.self || target?.player || target?.pet || target?.mercenary || target?.homunculus);
+			$('.battle-status').hidden = Boolean(state.pending) || hasActions;
+			$('.target-actions').hidden = Boolean(state.pending) || !hasActions;
 			$('.skill-prompt').hidden = !state.pending;
 			$('.skill-actions').hidden = !state.pending;
 			$('.shortcut-tools').hidden = Boolean(state.pending);

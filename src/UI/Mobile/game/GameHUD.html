@@ -48,6 +48,9 @@
 			<div class="exam-targets surface" data-exam-targets hidden aria-label="选择魔物"></div>
 			<div class="battle-status surface">
 				<span data-target role="status">自动战斗已停止</span>
+				<button data-interact hidden></button>
+			</div>
+			<div class="target-actions" hidden>
 				<div class="player-actions" data-player-actions hidden>
 					<button data-player-action="private">私聊</button>
 					<button data-player-action="equipment">装备</button>
@@ -72,13 +75,13 @@
 					<button data-homunculus-action="return">返回</button>
 					<button data-homunculus-action="aggressive">被动</button>
 				</div>
-				<button data-interact hidden></button>
 			</div>
 			<div class="skill-prompt surface" hidden>
 				<span data-skill-prompt role="status"></span>
 			</div>
 			<div class="battle-tools">
-				<button class="surface" data-panel="autoCombat" data-auto-target>目标：全部魔物</button>
+				<button class="surface" data-self-actions aria-expanded="false">动作</button>
+				<button class="surface" data-panel="autoCombat" data-auto-target>战斗设置</button>
 				<button class="surface" data-auto-toggle aria-pressed="false">自动战斗</button>
 			</div>
 			<div class="shortcut-tools surface">

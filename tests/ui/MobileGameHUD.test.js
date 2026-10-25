@@ -118,7 +118,9 @@ it('groups six skills and combat controls at the bottom right and highlights onl
  expect(root.querySelectorAll('.battle-dock [data-shortcut]')).toHaveLength(6);
  expect(root.querySelector('.battle-dock [data-auto-toggle]')).not.toBeNull();
  view.update({ ...state, autoCombat: { active: true, species: [{ id: 1002, name: '波利' }], status: '攻击：波利' } });
- expect(root.querySelector('[data-auto-target]').textContent).toContain('波利');
+ expect(root.querySelector('[data-auto-target]').textContent).toBe('战斗设置');
+ expect(root.querySelector('[data-auto-target]').title).toContain('波利');
+ expect(root.querySelector('[data-target]').textContent).toContain('目标：波利');
  expect(root.querySelector('[data-auto-toggle]').getAttribute('aria-pressed')).toBe('true');
  expect(root.querySelector('[data-auto-toggle]').textContent).toBe('停止战斗');
  view.updateShortcuts({ page: 0, pages: 6, slots: Array.from({ length: 6 }, (_, index) => ({ index, name: '技能', available: true, empty: true })), pending: { index: 2, name: '狂击' } });
@@ -357,9 +359,12 @@ it('classifies item icons separately and clears the classification when a slot c
  update(null);expect(slot.dataset.shortcutKind).toBe('empty');
 });
 
-it('shows ordered player actions instead of combat status only for player targets',()=>{
+it('shows player actions separately and hides combat status',()=>{
  actions.playerAction=vi.fn();view.update({...state,target:{interaction:'交易',player:{id:42,name:'玩家',friend:false}}});
- expect(root.querySelector('[data-target]').hidden).toBe(true);expect(root.querySelector('[data-interact]').hidden).toBe(true);
+ expect(root.querySelector('[data-target]').hidden).toBe(false);expect(root.querySelector('[data-interact]').hidden).toBe(true);
+ expect(root.querySelector('.target-actions').hidden).toBe(false);
+ expect(root.querySelector('[data-player-actions]').closest('.battle-status')).toBeNull();
+ expect(root.querySelector('.target-actions').classList.contains('surface')).toBe(false);
  expect([...root.querySelectorAll('[data-player-action]')].map(el=>el.textContent)).toEqual(['私聊','装备','好友','交易']);
  click('[data-player-action=private]');expect(actions.playerAction).toHaveBeenCalledWith('private',42);
  actions.playerAction.mockReturnValue('目标已离开');click('[data-player-action=equipment]');expect(document.querySelector('.ui-toast').textContent).toBe('目标已离开');
@@ -381,16 +386,23 @@ it('confirms a trade once with the captured player identity and acknowledges fri
  expect(root.querySelector('dialog')).toBeNull();
 });
 
-it('replaces auto combat with cancel selection for another player',()=>{
- actions.clearPlayerSelection=vi.fn();actions.toggleAutoCombat=vi.fn();
- view.update({...state,target:{player:{id:42,name:'玩家'}},autoCombat:{active:true}});
- expect(root.querySelector('[data-auto-toggle]').textContent).toBe('取消选择');
- expect(root.querySelector('[data-auto-toggle]').classList.contains('clear-selection')).toBe(true);
- expect(root.querySelector('[data-auto-toggle]').getAttribute('aria-pressed')).toBe('false');
- click('[data-auto-toggle]');expect(actions.clearPlayerSelection).toHaveBeenCalledOnce();expect(actions.toggleAutoCombat).not.toHaveBeenCalled();
- view.update(state);expect(root.querySelector('[data-auto-toggle]').textContent).toBe('自动战斗');
- expect(root.querySelector('[data-auto-toggle]').classList.contains('clear-selection')).toBe(false);
+it('keeps combat controls independent of actions and cancellation',()=>{
+ actions.clearPlayerSelection=vi.fn();actions.toggleAutoCombat=vi.fn();actions.showSelfActions=vi.fn();
+ click('[data-self-actions]'); expect(actions.showSelfActions).toHaveBeenCalledOnce();
+ for (const target of [{self:true},{player:{id:42,name:'玩家'}},{pet:{id:43}},{mercenary:{id:44}},{homunculus:{id:45}}]) {
+  view.update({...state,target,autoCombat:{active:true}});
+  expect(root.querySelector('[data-self-actions]').textContent).toBe('取消');
+  expect(root.querySelector('[data-self-actions]').getAttribute('aria-expanded')).toBe(String(Boolean(target.self)));
+  expect(root.querySelector('[data-auto-toggle]').textContent).toBe('停止战斗');
+  expect(root.querySelector('[data-auto-toggle]').getAttribute('aria-pressed')).toBe('true');
+  click('[data-self-actions]');
+ }
+ expect(actions.clearPlayerSelection).toHaveBeenCalledTimes(5);
+ expect(actions.toggleAutoCombat).not.toHaveBeenCalled();
  click('[data-auto-toggle]');expect(actions.toggleAutoCombat).toHaveBeenCalledOnce();
+ view.update(state);expect(root.querySelector('[data-self-actions]').textContent).toBe('动作');
+ expect(root.querySelector('[data-auto-toggle]').textContent).toBe('自动战斗');
+ view.update({...state,death:{dead:true}});expect(root.querySelector('[data-self-actions]').disabled).toBe(true);
 });
 
 it('dismisses the chat modal after sending an emotion command', () => {
@@ -458,7 +470,7 @@ it('places the waiting entry in battle status and clears it after revival', () =
  view.update(state);
  expect(prompt.querySelector('dialog').open).toBe(false);
  expect(reopen.hidden).toBe(true);
- expect(root.querySelector('[data-target]').textContent).toBe('自动战斗已停止');
+ expect(root.querySelector('[data-target]').textContent).toBe('目标：全部魔物');
 });
 
 it('shows instance names and explicit attack in exams, retaining candidate buttons during polling', () => {
@@ -480,4 +492,32 @@ it('shows instance names and explicit attack in exams, retaining candidate butto
  view.update(state); expect(root.querySelector('[data-auto-toggle]').disabled).toBe(false);
  expect(root.querySelector('[data-auto-target]').hidden).toBe(false);
  click('[data-auto-toggle]'); expect(actions.toggleAutoCombat).toHaveBeenCalledOnce();
+});
+
+it('keeps the separate action row out of skill targeting and death states', () => {
+ view.update({...state,target:{self:true}});
+ expect(root.querySelector('.target-actions').hidden).toBe(false);
+ expect(root.querySelector('[data-target]').hidden).toBe(false);
+ view.updateShortcuts({page:0,pages:1,slots:[],pending:{name:'狂击',message:'点击有效目标'}});
+ expect(root.querySelector('.target-actions').hidden).toBe(true);
+ view.update({...state,target:{self:true}});
+ expect(root.querySelector('.target-actions').hidden).toBe(true);
+ view.updateShortcuts({page:0,pages:1,slots:[]});
+ expect(root.querySelector('.target-actions').hidden).toBe(false);
+ view.update({...state,death:{dead:true},target:{self:true}});
+ expect(root.querySelector('.target-actions').hidden).toBe(true);
+});
+
+it.each(['self', 'player', 'pet', 'mercenary', 'homunculus'])('hides combat hints during %s actions and restores them on cancellation', kind => {
+ const target = {[kind]: kind === 'self' ? true : {id:42,name:'目标',canOperate:true}};
+ view.update({...state,target});
+ expect(root.querySelector('.battle-status').hidden).toBe(true);
+ expect(root.querySelector('.target-actions').hidden).toBe(false);
+ view.updateShortcuts({page:0,pages:1,slots:[]});
+ expect(root.querySelector('.battle-status').hidden).toBe(true);
+ view.update({...state,target:null});
+ expect(root.querySelector('.battle-status').hidden).toBe(false);
+ expect(root.querySelector('.target-actions').hidden).toBe(true);
+ view.updateShortcuts({page:0,pages:1,slots:[]});
+ expect(root.querySelector('.battle-status').hidden).toBe(false);
 });
