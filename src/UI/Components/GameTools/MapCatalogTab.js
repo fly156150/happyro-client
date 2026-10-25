@@ -1,3 +1,4 @@
+import { bindMapDetailScroll } from './MapDetailScroll.js';
 import { createMapMonsterTable } from './MapMonsterTable.js';
 import { requestArrivalPreview } from './ArrivalPreviewService.js';
 import DB from 'DB/DBManager.js';
@@ -108,7 +109,7 @@ function mount(container, context = {}) {
 		};
 	};
 	const destroyBrowser = mountRemoteCatalogBrowser(container, {
-		placeholder: '搜索地图名称或代码',
+		placeholder: '搜索地图名称',
 		searchLabel: '搜索地图',
 		initialQuery: context.initialMap?.id,
 		emptyDetail: '选择一个地图查看详情',
@@ -277,15 +278,15 @@ function mount(container, context = {}) {
 			const selectionLabel = selectedNpc
 				? `${selectedNpc.name} · ${selectedNpc.x}, ${selectedNpc.y}`
 				: selectedCoordinate?.automatic
-					? '自动选择安全落点'
+					? ''
 					: selectedCoordinate
 						? `${selectedCoordinate.x}, ${selectedCoordinate.y}`
 						: '点击地图选择位置';
-			detail.innerHTML = `<div class="map-heading"><div><h3>${escapeCatalogHtml(map.name)}</h3><p>${escapeCatalogHtml(map.id)}</p><small class="map-current-position">角色位置：${escapeCatalogHtml(currentMapName)} (${currentPosition.x}, ${currentPosition.y})</small></div><strong>${escapeCatalogHtml(selectionLabel)}</strong></div>
+			detail.innerHTML = `<div class="map-heading"><div><h3>${escapeCatalogHtml(map.name)}</h3><div class="map-heading-meta"><p>${escapeCatalogHtml(map.id)}</p><small class="map-current-position">角色位置：${escapeCatalogHtml(currentMapName)} (${currentPosition.x}, ${currentPosition.y})</small></div></div>${selectionLabel ? `<strong>${escapeCatalogHtml(selectionLabel)}</strong>` : ''}</div>
 					<div class="map-detail-body">
 					<button class="catalog-map-picker" type="button" aria-label="在${escapeCatalogHtml(map.name)}选择坐标"><canvas class="catalog-map" width="480" height="360"></canvas></button>
 					<section class="map-npc-list" aria-label="${escapeCatalogHtml(map.name)}的 NPC">
-						<h4>NPC${mapNpcs.length ? `（${mapNpcs.length}）` : ''}</h4>
+						<h4><span>NPC</span><button type="button" class="map-monsters-jump" disabled>地图魔物 ↓</button></h4>
 						${
 							mapNpcs.length
 								? `<div class="map-npc-scroll"><ul>${mapNpcs
@@ -307,7 +308,9 @@ function mount(container, context = {}) {
 					<button class="catalog-teleport" type="button" ${canTeleportHere ? '' : 'disabled'}>${actionState.npcPending && selectedNpc ? '正在传送...' : '传送到这里'}</button>
 					<span class="catalog-status error">${escapeCatalogHtml(mapStatus)}</span>
 				</div>`;
-			monsterTable.render(detail.querySelector('.map-monsters'), map.mapName);
+			const monsterJump = detail.querySelector('.map-monsters-jump');
+			monsterTable.render(detail.querySelector('.map-monsters'), map.mapName, available => { monsterJump.disabled = !available; });
+			bindMapDetailScroll(detail.querySelector('.map-detail-body'));
 			const canvas = detail.querySelector('.catalog-map');
 			const picker = detail.querySelector('.catalog-map-picker');
 			let lastPositionKey = '';

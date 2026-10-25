@@ -237,3 +237,20 @@
  grid-template-rows: 100% auto;
  overflow: auto;
 }
+
+/* Portrait tablets reserve room for monster rows below the map and NPC list. */
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .map-detail-body {
+ grid-template-rows: clamp(220px, 55%, 360px) auto;
+ align-content: start;
+}
+/* Map monster names align with their header instead of tablet action-button insets. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='maps'] .map-monster-table .item-source-monster {
+ padding: 0;
+ margin: 0;
+ min-height: 0;
+ height: auto;
+ text-align: left;
+ justify-content: flex-start;
+}

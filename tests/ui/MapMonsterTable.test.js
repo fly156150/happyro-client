@@ -16,7 +16,7 @@ it('renders HP and both experience values safely and switches maps without anoth
  expect([...region.querySelector('tbody tr').children].map(e=>e.textContent)).toEqual(['<波利>','1','50','水 1','20 / 10']);
  expect(region.querySelector('波利')).toBeNull();
  region.querySelector('[data-monster-id="1"]').click();expect(openMonster).toHaveBeenCalledWith(1);
- view.render(region,'town');expect(region.textContent).toContain('暂无魔物刷新信息');
+ view.render(region,'town');expect(region.textContent).toBe('地图魔物（0）');
  expect(loadMonsterCatalog).toHaveBeenCalledTimes(1);view.destroy();
 });
 it('supports retry and does not populate a removed region with late results',async()=>{
@@ -33,4 +33,15 @@ it('shows a dash for missing or non-finite stats', async()=>{
  const view=createMapMonsterTable({openMonster:vi.fn()});view.render(region,'forest');await Promise.resolve();
  expect([...region.querySelector('tbody tr').children].map(e=>e.textContent)).toEqual(['绿棉虫','-','-','地 -','-']);
  view.destroy();
+});
+
+it('enables the jump only for loaded maps with monsters and preserves that rule on retry',async()=>{
+ const region=document.body.appendChild(document.createElement('section'));
+ const available=vi.fn();const view=createMapMonsterTable({openMonster:vi.fn()});
+ loadMonsterCatalog.mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce({monsters});
+ view.render(region,'forest',available);expect(available).toHaveBeenLastCalledWith(false);
+ await Promise.resolve();await Promise.resolve();expect(available).toHaveBeenLastCalledWith(false);
+ region.querySelector('button').click();await Promise.resolve();expect(available).toHaveBeenLastCalledWith(true);
+ view.render(region,'town',available);expect(available).toHaveBeenLastCalledWith(false);
+ view.render(region,'forest',available);expect(available).toHaveBeenLastCalledWith(true);view.destroy();
 });

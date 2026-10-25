@@ -678,7 +678,7 @@
  :is(.inventory-list, .equipment-slots, .shortcut-choices, .mail-rows, .mail-item-list,
      .mail-attachment-list, .interaction-column-content, .chat-filters, .chat-contact-list, .chat-emotions),
 :host([data-menu-density][data-menu-arrangement]) .mobile-adventure
- :is(.catalog-list, .monster-list, .character-job-list, .map-npc-scroll) {
+ :is(.catalog-list, .monster-list, .character-job-list) {
  overscroll-behavior-y: none;
 }
 

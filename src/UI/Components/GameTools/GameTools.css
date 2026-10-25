@@ -1105,9 +1105,14 @@
 .map-heading > strong {
 	color: #5f666d;
 }
+.map-heading-meta {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+}
 .map-current-position {
 	display: block;
-	margin-top: 4px;
+	margin-top: 0;
 	color: #4f6479;
 }
 .map-detail-body {
@@ -1589,7 +1594,6 @@
 	cursor: not-allowed;
 }
 
-.character-appearance-mount { margin: 8px 0 0; font-size: 12px; }
 .character-riding-list { display: grid; gap: 8px; }
 .character-riding-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--desktop-border, #465461); border-radius: var(--desktop-radius, 6px); }
 .character-riding-row p { margin: 4px 0 0; }
@@ -1613,3 +1617,12 @@
 .map-monster-table :is(th, td):nth-child(5) { width: 28%; }
 
 .game-tools-window .map-monsters.item-source-group > h5 { margin: 8px 0 10px; }
+
+/* Native touch chaining and explicit wheel transfer share the same detail scroller. */
+.map-catalog-tab .map-detail-body { overscroll-behavior-y: contain; touch-action: pan-y pinch-zoom; }
+.map-catalog-tab .map-npc-scroll { overscroll-behavior-y: auto; touch-action: pan-y pinch-zoom; }
+.map-catalog-tab :is(.catalog-map-picker, .catalog-map) { touch-action: pan-y pinch-zoom; }
+.map-catalog-tab .map-npc-list h4 { display: flex; align-items: center; justify-content: space-between; gap: 4px; flex-wrap: wrap; }
+.map-catalog-tab .map-npc-list .map-monsters-jump { min-height: 24px; height: auto; padding: 2px 4px; font-size: 11px; white-space: nowrap; }
+
+.map-catalog-tab .map-npc-list .map-monsters-jump:disabled { opacity: .45; cursor: default; }
