@@ -21,20 +21,21 @@ it('renders server allowed options without any riding data or fixed ID range', (
  expect(root.querySelectorAll('[role=option]')).toHaveLength(2);
  expect(root.querySelector('.character-appearance-mount')).toBeNull();
 });
-it('uses the selected server mount label and keeps fallback selection visible', () => {
+it('omits appearance captions and keeps fallback selection visible', () => {
  render({ ...appearance, options: [defaults, { ...appearance.options[1], mountLabel: '战狼', fallbackOnMount: false }] });
- expect(document.querySelector('.character-appearance-mount').textContent).toBe('骑乘外观：战狼');
+ expect(document.querySelector('.character-appearance-mount')).toBeNull();
+ expect(document.querySelector('.character-appearance h4')).toBeNull();
  expect(document.querySelector('.character-appearance-hint')).toBeNull();
  render({ ...appearance, options: [defaults, { ...appearance.options[1], fallbackOnMount: true }] });
  expect(document.querySelector('.character-appearance-hint')).toBeNull();
  expect(document.querySelector('.game-select-value').value).toBe('42');
 });
-it('escapes server names, mount labels and unknown reason text', () => {
+it('escapes server names and unknown reason text without rendering mount labels', () => {
  const attack = '<img src=x onerror=alert(1)>';
  const root = render({ ...appearance, reason: attack, options: [defaults, { ...appearance.options[1], name: attack, mountLabel: attack }] });
  expect(root.querySelector('img')).toBeNull();
  expect(root.querySelector('.game-select-trigger').textContent).toBe(attack);
- expect(root.querySelector('.character-appearance-mount').textContent).toBe(`骑乘外观：${attack}`);
+ expect(root.querySelector('.character-appearance-mount')).toBeNull();
  expect(root.querySelector('.character-appearance-reason').textContent).toBe(attack);
 });
 it.each(['appearance_busy', 'appearance_job_required'])('disables blocked appearance with a readable reason: %s', reason => {
