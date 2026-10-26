@@ -31221,7 +31221,10 @@
     "repos/happyro-server/src/map/npc.hpp": "3b0f0f6747074e5d8ee554f53660b6232dfe6b82ad2bf6e3c659cc811d56ddcc",
     "repos/happyro-server/src/map/path.cpp": "61232a958b740c40cb7c13c9df00f90c476d19092ed3d0863ff5556864945233",
     "repos/happyro-server/src/map/pc.cpp": "440c077c06ccf4901a2d58d30bfa7fc69b68c7399040a64e27e51b0d6d2e910a",
-    "tools/navi-review/review.py": "04d96ed1f8fda45c3bbbd1812f85ed88db283c2d62b9f93f808b492749f34e58"
+    "tools/resources/navigation/policy.py": "17838c4c3332fd3fe5e791be2698a8ba0420a033a50ae62deec05596d3cea9c5",
+    "tools/resources/navigation/review.py": "96414ce86de8987f5dedde85b690f2f8c3d5830dc20b0b8964bbd82dc4e95e5d",
+    "tools/resources/navigation/syntax.py": "28da05b47fe138afa3b21590e19a11f07ef812d52fb94465bf534186dd94a495",
+    "tools/resources/navigation/terrain.py": "6537d71302ac1c4ce8f30efb933f817d9626a437ff37590bab79a8ea608ab75a"
   },
-  "version": "a187447fa38c563ebbe87a6d741fa06946dcee782b53f36e987f9bd6165cf22a"
+  "version": "62f5e036393b8840ddddc1d28a24c7fc18179e6aa2f9c9f04a782a1c286376d0"
 }
