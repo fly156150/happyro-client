@@ -68,7 +68,7 @@ it.each(['melee', 'bow', 'projectile', 'spawn'])('still renders damage and the b
 it('keeps the connection and automatic combat running after a vanished target, then attacks a new target', () => {
 	const f = fixture('melee', true), act = vi.fn(() => true);
 	let targets = [{ id: 88, species: 1002, name: '旧目标', position: [11, 10] }];
-	const combat = createAutoCombatController({ enabled: () => true, now: () => 0, random: () => 0,
+	const combat = createAutoCombatController({ searchLimit: () => 50, enabled: () => true, now: () => 0, random: () => 0,
 		position: () => [10, 10], targets: () => targets, skills: () => [], busy: () => false,
 		chasing: () => false, reachable: () => true, select: vi.fn(), stop: vi.fn(), act });
 	combat.start(); f.entities.delete(88); targets = [];
@@ -83,4 +83,18 @@ it('keeps the connection and automatic combat running after a vanished target, t
 	targets = [{ id: 90, species: 1002, name: '新目标', position: [12, 10] }];
 	combat.tick(); expect(combat.snapshot()).toMatchObject({ active: true, target: '新目标' });
 	expect(act).toHaveBeenLastCalledWith(targets[0], null); combat.stop();
+});
+
+it('decodes fragmented combat limits without disconnecting or losing following packets', () => {
+ const limits = vi.fn(); const following = vi.fn();
+ Network.hookPacket(PACKET.ZC.HAPPYRO_COMBAT_LIMITS, limits);
+ Network.hookPacket(PACKET.ZC.ATTACK_RANGE, following);
+ const bytes = new Uint8Array([0x10,0x0d,20,0,0x3a,0x01,1,0]);
+ socket.onMessage(bytes.slice(0,3).buffer);
+ expect(limits).not.toHaveBeenCalled();
+ socket.onMessage(bytes.slice(3).buffer);
+ expect(limits).toHaveBeenCalledWith(expect.objectContaining({searchRadius:20}));
+ expect(following).toHaveBeenCalledOnce();
+ expect(disconnected).not.toHaveBeenCalled();
+ expect(console.error).not.toHaveBeenCalled();
 });

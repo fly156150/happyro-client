@@ -9,7 +9,7 @@ beforeEach(() => {
  time = 0; mobs = [mob(1), mob(2)]; items = []; busy = false;
  io = { now: () => time, settings: () => ({ enabled: true, range: 15, batchSeconds: 5, excluded: [], categories: [] }), available: () => true, position: () => [0,0], items: () => items, matches: () => true, reachable: () => true, busy: () => busy, chasing: () => true, pick: vi.fn(), cancel: vi.fn() };
  pickup = createAutoPickupController(io); unregisterPickup = registerAutomationPickup(pickup);
- data = { enabled: () => true, now: () => time, position: () => [0,0], random: () => 0, targets: () => mobs, skills: () => [], busy: () => busy, chasing: () => false, reachable: () => true, select: vi.fn(), act: vi.fn(), stop: vi.fn(), pickupTurn: takeAutomationPickupTurn, cancelPickup: cancelAutomationPickup, teleport: vi.fn(() => '正在随机瞬移') };
+ data = { searchLimit: () => 50, enabled: () => true, now: () => time, position: () => [0,0], random: () => 0, targets: () => mobs, skills: () => [], busy: () => busy, chasing: () => false, reachable: () => true, select: vi.fn(), act: vi.fn(), stop: vi.fn(), pickupTurn: takeAutomationPickupTurn, cancelPickup: cancelAutomationPickup, teleport: vi.fn(() => '正在随机瞬移') };
  combat = createAutoCombatController(data); unregisterCombat = registerAutomationCombat(combat);
  combat.configure([], [], { search: 20, activity: 30 }, { enabled: true, waitSeconds: 1, intervalSeconds: 2 });
 });

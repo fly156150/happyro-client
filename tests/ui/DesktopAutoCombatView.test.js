@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { updateCombatLimits } from '../../src/Network/CombatLimits.js';
 vi.mock('../../src/UI/Components/GameTools/AdventureControlService.js', () => ({ searchAdventureItems: vi.fn() }));
 import { pickupDefaults, validPickupSettings } from '../../src/UI/Game/PickupSettings.js';
 import { createAutoCombatView } from '../../src/UI/Components/AutoCombat/AutoCombatView.js';
 let view, root, state, actions, pickup, saved;
 beforeEach(() => {
+ updateCombatLimits({searchRadius:50});
 	const host = document.createElement('div'); document.body.append(host);
 	root = host.attachShadow({ mode: 'open' });
 	state = { active: false, status: '自动战斗已停止', species: [], skills: [], ranges: { search: 20, activity: 30 } };
@@ -116,4 +118,16 @@ it('opens skill details on desktop right-click without changing combat selection
  expect(skill.getAttribute('aria-checked')).toBe('false');
  skill.click();
  expect(skill.getAttribute('aria-checked')).toBe('true');
+});
+
+
+it('updates an already open shadow-root editor when the server search radius arrives', () => {
+ updateCombatLimits({searchRadius:null});click('[data-settings]');
+ const increase=root.querySelector('[data-range="search"][data-delta="1"]');
+ expect(increase.disabled).toBe(true);
+ updateCombatLimits({searchRadius:12});
+ expect(root.querySelector('[data-range-summary]').textContent).toBe('12 / 30 格');
+ expect(increase.disabled).toBe(true);
+ updateCombatLimits({searchRadius:24});increase.click();
+ expect(actions.configure.mock.lastCall[2]).toEqual({search:13,activity:30});
 });

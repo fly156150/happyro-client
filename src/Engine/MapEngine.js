@@ -1,3 +1,4 @@
+import { updateCombatLimits } from 'Network/CombatLimits.js';
 import { playerStatuses } from 'Network/PlayerStatuses.js';
 import { recoveryDefinition } from 'DB/Items/RecoveryItems.js';
 import { itemUseExecution } from 'Network/ItemUseExecution.js';
@@ -371,6 +372,7 @@ class MapEngine {
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_TELEPORT_RESULT, onNpcTeleportResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_TELEPORT_RESULT, onMapTeleportResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_LOAD_CONTEXT, onMapLoadContext);
+			Network.hookPacket(PACKET.ZC.HAPPYRO_COMBAT_LIMITS, updateCombatLimits);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_RECOVERY_RESULT, onMapRecoveryResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_ARRIVAL_PREVIEW, handleArrivalPreview);
 			Network.hookPacket(PACKET.ZC.REFUSE_ENTER, onConnectionRefused);

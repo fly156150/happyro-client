@@ -1,5 +1,14 @@
-import { expect, it, vi } from 'vitest';
+import { beforeEach, expect, it, vi } from 'vitest';
+import { getClientDefaults } from '../../src/Core/ClientDefaults.js';
 import { createAutoCombatPanel } from '../../src/UI/Game/AutoCombatPanel.js';
+const limitsState = vi.hoisted(() => ({ value: 50, listeners: new Set() }));
+vi.mock('../../src/Network/CombatLimits.js', () => ({
+ getCombatSearchLimit: () => limitsState.value,
+ onCombatLimitsChange: callback => { limitsState.listeners.add(callback); return () => limitsState.listeners.delete(callback); }
+}));
+beforeEach(() => { limitsState.value=50; limitsState.listeners.clear(); });
+const publishLimit = value => { limitsState.value=value; for(const callback of limitsState.listeners) callback(); };
+
 it('loads map species and preserves configured choices while saving skills independently', async () => {
 	const body = document.body.appendChild(document.createElement('div'));
 	const actions = { snapshot: () => ({ species: [{ id: 1002, name: '波利' }], skills: [5], ranges: { search: 20, activity: 30 } }), mapSpecies: () => [{ id: 1003, name: '土波利' }], skills: () => [{ id: 5, name: '狂击', level: 3 }, { id: 19, name: '火箭术', level: 2, reason: 'SP 不足' }], configure: vi.fn(), close: vi.fn() };
@@ -178,4 +187,44 @@ it('handles empty dynamic skill sets and focuses normal attack inside a shadow r
  host.remove();
  expect(configure).not.toHaveBeenCalled();
  panel.destroy();body.remove();vi.useRealTimers();
+});
+
+
+it('waits for server range limits and clamps existing values without losing other edits', () => {
+ limitsState.value=null;
+ const body=document.body.appendChild(document.createElement('div'));
+ const configure=vi.fn();
+ const panel=createAutoCombatPanel(body,{snapshot:()=>({species:[],skills:[46],ranges:{search:40,activity:80}}),skills:()=>[{id:46,name:'二连矢',level:10}],mapSpecies:()=>[],configure});
+ const search=body.querySelector('[data-range="search"][data-delta="1"]');
+ expect(search.disabled).toBe(true);
+ expect(body.querySelector('[data-range="search"][data-delta="-1"]').disabled).toBe(true);
+ expect(body.querySelector('[data-range-value="search"]').value).toBe('正在获取范围');
+ body.querySelector('[data-range="activity"][data-delta="1"]').click();
+ publishLimit(17);
+ expect(body.querySelector('[data-range-summary]').textContent).toBe('17 / 81 格');
+ expect(search.disabled).toBe(true);
+ expect(body.querySelector('[data-skill="46"]').getAttribute('aria-checked')).toBe('true');
+ publishLimit(25);expect(search.disabled).toBe(false);search.click();
+ expect(configure.mock.lastCall[2]).toEqual({search:18,activity:81});
+ publishLimit(8);body.querySelector('[data-auto-teleport]').click();
+ expect(configure.mock.lastCall[2]).toEqual({search:8,activity:81});
+ expect(body.querySelector('[data-range-summary]').textContent).toBe('8 / 81 格');
+ panel.destroy();expect(limitsState.listeners.size).toBe(0);
+ publishLimit(4);expect(body.querySelector('[data-range-summary]').textContent).toBe('8 / 81 格');body.remove();
+});
+
+it('uses 14/30 defaults, permits activity up to 100 and saves using the latest server limit', () => {
+ limitsState.value=31;
+ const body=document.body.appendChild(document.createElement('div'));
+ const configure=vi.fn();
+ const panel=createAutoCombatPanel(body,{snapshot:()=>({species:[],skills:[],ranges:getClientDefaults('autoCombat').ranges}),skills:()=>[],mapSpecies:()=>[],configure});
+ expect(body.querySelector('[data-range-summary]').textContent).toBe('14 / 30 格');
+ const activity=body.querySelector('[data-range="activity"][data-delta="1"]');
+ for(let n=0;n<90;n++)activity.click();
+ expect(body.querySelector('[data-range-value="activity"]').value).toBe('100 格');
+ expect(activity.disabled).toBe(true);
+ limitsState.value=7;
+ body.querySelector('[data-all-species]').click();
+ expect(configure.mock.lastCall[2]).toEqual({search:7,activity:100});
+ panel.destroy();body.remove();
 });

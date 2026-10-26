@@ -1,3 +1,4 @@
+import { getCombatSearchLimit } from 'Network/CombatLimits.js';
 import { playerStatuses } from 'Network/PlayerStatuses.js';
 import { targetMarkReason } from './CombatSkillRules.js';
 import { buffRule } from './CombatBuffRules.js';
@@ -168,6 +169,7 @@ export function createGameAutoCombat(enabled) {
 	const controller = createAutoCombatController(
 		{
 			saveSettings: settings => saveAutoCombatSettings(settingsKey, settings),
+			searchLimit: getCombatSearchLimit,
 			enabled: () =>
 				enabled() && !Session.Entity?.isOverWeight && Session.Entity?.action !== Session.Entity?.ACTION.SIT,
 			now: () => performance.now(),

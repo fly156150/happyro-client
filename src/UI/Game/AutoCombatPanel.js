@@ -1,3 +1,4 @@
+import { getCombatSearchLimit, onCombatLimitsChange } from 'Network/CombatLimits.js';
 import { AUTO_COMBAT_RANGE_LIMITS, AUTO_COMBAT_TELEPORT_DEFAULTS } from 'UI/Game/AutoCombatController.js';
 
 /** Auto combat configuration is independent of the manual shortcut slots. */
@@ -31,9 +32,14 @@ export function createAutoCombatPanel(body, actions) {
 		<div class="auto-save-error" hidden><span data-auto-save-status role="status"></span></div>`;
 	const $ = selector => body.querySelector(selector);
 	const limits = AUTO_COMBAT_RANGE_LIMITS;
-	for (const [key, title, maximum] of [
-		['search', '搜怪范围', limits.searchMax],
-		['activity', '活动范围', limits.activityMax]
+	function clampRanges() {
+		const maximum = getCombatSearchLimit();
+		ranges.activity = Math.max(limits.min, Math.min(limits.activityMax, ranges.activity));
+		ranges.search = Math.max(limits.min, Math.min(ranges.activity, ranges.search, maximum ?? limits.activityMax));
+	}
+	for (const [key, title] of [
+		['search', '搜怪范围'],
+		['activity', '活动范围']
 	]) {
 		const row = document.createElement('div');
 		row.className = 'auto-range-row';
@@ -54,6 +60,8 @@ export function createAutoCombatPanel(body, actions) {
 			button.dataset.delta = String(delta);
 			button.setAttribute('aria-label', `${delta < 0 ? '减小' : '增大'}${title}`);
 			button.onclick = () => {
+				const maximum = key === 'search' ? getCombatSearchLimit() : limits.activityMax;
+				if (maximum === null) return;
 				ranges[key] = Math.max(limits.min, Math.min(maximum, ranges[key] + delta));
 				if (key === 'search') ranges.activity = Math.max(ranges.activity, ranges.search);
 				else ranges.search = Math.min(ranges.search, ranges.activity);
@@ -251,16 +259,23 @@ export function createAutoCombatPanel(body, actions) {
 	if (!entries.length) $('[data-auto-skills]').textContent = '暂无可自动释放的技能，使用普通攻击。';
 	const selectedSkills = () => entries.filter(skill => chosenSkills.has(skill.id)).map(skill => skill.id);
 	function updateSummary(persist = true) {
+		clampRanges();
+		const searchLimit = getCombatSearchLimit();
 		if (ready && persist) save();
-		$('[data-range-summary]').textContent = `${ranges.search} / ${ranges.activity} 格`;
+		$('[data-range-summary]').textContent =
+			searchLimit === null ? `正在获取范围 / ${ranges.activity} 格` : `${ranges.search} / ${ranges.activity} 格`;
 		for (const output of body.querySelectorAll('[data-range-value]'))
-			output.value = `${ranges[output.dataset.rangeValue]} 格`;
+			output.value =
+				output.dataset.rangeValue === 'search' && searchLimit === null
+					? '正在获取范围'
+					: `${ranges[output.dataset.rangeValue]} 格`;
 		for (const button of body.querySelectorAll('[data-range]')) {
 			const key = button.dataset.range;
 			button.disabled =
-				Number(button.dataset.delta) < 0
+				(key === 'search' && searchLimit === null) ||
+				(Number(button.dataset.delta) < 0
 					? ranges[key] <= limits.min
-					: ranges[key] >= (key === 'search' ? limits.searchMax : limits.activityMax);
+					: ranges[key] >= (key === 'search' ? searchLimit : limits.activityMax));
 		}
 		for (const button of body.querySelectorAll('[data-auto-skills] [data-skill]'))
 			button.setAttribute('aria-checked', String(chosenSkills.has(Number(button.dataset.skill))));
@@ -284,6 +299,7 @@ export function createAutoCombatPanel(body, actions) {
 		updateSummary();
 	};
 	function save() {
+		clampRanges();
 		const ok = actions.configure(selectedSpecies(), selectedSkills(), { ...ranges }, { ...teleport }) !== false;
 		$('[data-auto-save-status]').textContent = ok ? '' : '保存失败，请重试';
 		$('[data-auto-save-status]').dataset.error = String(!ok);
@@ -363,5 +379,11 @@ export function createAutoCombatPanel(body, actions) {
 			list.scrollTop = scrollTop;
 		}
 	}, 200);
-	return { destroy: () => window.clearInterval(refreshTimer) };
+	const stopLimits = onCombatLimitsChange(() => updateSummary(false));
+	return {
+		destroy: () => {
+			window.clearInterval(refreshTimer);
+			stopLimits();
+		}
+	};
 }

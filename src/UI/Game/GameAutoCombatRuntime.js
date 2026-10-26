@@ -1,3 +1,4 @@
+import { onCombatLimitsChange } from 'Network/CombatLimits.js';
 import { publishRecoveryStatus } from './RecoveryStatus.js';
 import { createGameAutoRecovery, recoveryItems, recoveryItemName, loadRecoveryItemIcon } from './GameAutoRecovery.js';
 import { subscribeSkillExecution } from 'Network/SkillExecution.js';
@@ -45,6 +46,7 @@ export function createGameAutoCombatRuntime({
 	combatRuntimes.add(controller);
 	const recovery = createGameAutoRecovery(canRun);
 	const unsubscribeSkills = subscribeSkillExecution(controller.skillFeedback);
+	const unsubscribeLimits = onCombatLimitsChange(() => update(controller.snapshot()));
 	const unregisterAutomation = registerAutomationCombat(controller);
 	const abort = new AbortController();
 	const stop = message => {
@@ -114,6 +116,7 @@ export function createGameAutoCombatRuntime({
 		abort.abort();
 		unsubscribeInput();
 		unsubscribeSkills();
+		unsubscribeLimits();
 		unsubscribeConnection();
 		recovery.reset();
 		publishRecoveryStatus('');

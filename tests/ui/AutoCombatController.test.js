@@ -4,7 +4,7 @@ let data, controller, time, targets, skills, enabled, busy, chasing;
 const mob = (id, species = 1002, x = 2) => ({ id, species, name: `魔物${species}`, position: [x, 0] });
 beforeEach(() => {
 	time = 0; enabled = true; busy = false; chasing = false; targets = [mob(1), mob(2, 1002, 4), mob(3, 1003, 1)]; skills = [];
-	data = { now: () => time, random: () => 0.75, enabled: () => enabled, position: () => [0, 0], targets: () => targets, skills: () => skills, busy: () => busy, chasing: () => chasing, reachable: () => true, select: vi.fn(), stop: vi.fn(), act: vi.fn(() => true) };
+	data = { searchLimit: () => 50, now: () => time, random: () => 0.75, enabled: () => enabled, position: () => [0, 0], targets: () => targets, skills: () => skills, busy: () => busy, chasing: () => chasing, reachable: () => true, select: vi.fn(), stop: vi.fn(), act: vi.fn(() => true) };
 	controller = createAutoCombatController(data);
 });
 it('selects the nearest of the chosen species, replaces dead targets and waits for new spawns', () => {
@@ -286,4 +286,27 @@ it('provides a normal attack even when a damage-labelled skill only acknowledges
  controller.skillFeedback({id:19,phase:'executed',target:1,damage:-1});time=1000;controller.tick();
  controller.skillFeedback({id:19,phase:'executed',target:1,damage:0});time=2000;controller.tick();expect(data.act.mock.calls.at(-1)[1]).toBeNull();
  time=3000;controller.tick();expect(data.act.mock.calls.at(-1)[1].id).toBe(19);
+});
+
+it('clamps saved and configured search radii to live server limits without changing activity', () => {
+ let limit = 20; data.searchLimit = () => limit;
+ controller = createAutoCombatController(data, { species: [], skills: [], ranges: { search: 40, activity: 50 } });
+ expect(controller.snapshot().ranges).toEqual({ search: 20, activity: 50 });
+ data.saveSettings = vi.fn(() => true);
+ expect(controller.configure([], [], { search: 40, activity: 50 })).toBe(true);
+ expect(data.saveSettings.mock.calls[0][0].ranges).toEqual({ search: 20, activity: 50 });
+ limit = 12; expect(controller.snapshot().ranges).toEqual({ search: 12, activity: 50 });
+ limit = 25; expect(controller.snapshot().ranges).toEqual({ search: 12, activity: 50 });
+ limit = 12;
+ targets = [mob(1,1002,15),mob(2,1002,10)]; controller.start();
+ expect(data.act).toHaveBeenLastCalledWith(targets[1], null);
+ limit = 8; controller.tick(); expect(controller.snapshot().target).toBe('');
+});
+it('waits for server limits and cannot cast, chase or teleport while they are unknown', () => {
+ data.searchLimit = () => null; data.teleport = vi.fn();
+ controller.start(); time = 10000; controller.tick();
+ expect(controller.snapshot().status).toBe('正在获取搜怪范围');
+ expect(data.act).not.toHaveBeenCalled(); expect(data.teleport).not.toHaveBeenCalled();
+ expect(controller.configure([],[],{search:20,activity:30})).toBe(false);
+ data.searchLimit = () => 20; controller.tick(); expect(data.act).toHaveBeenCalled();
 });

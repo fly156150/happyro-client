@@ -6,7 +6,7 @@ const state = vi.hoisted(() => ({ skills: [], buff: vi.fn(), recoveryTick: vi.fn
 vi.mock('Engine/SessionStorage.js', () => ({ default: state.session }));
 vi.mock('UI/Game/GameAutoCombat.js', async () => {
 	const { createAutoCombatController } = await import('../../src/UI/Game/AutoCombatController.js');
-	return { createGameAutoCombat: enabled => ({...createAutoCombatController({
+	return { createGameAutoCombat: enabled => ({...createAutoCombatController({ searchLimit: () => 50,
 		enabled, position: () => [0, 0], now: () => performance.now(), random: () => 0,
 		targets: () => [{ id: 1, species: 1002, name: '波利', position: [1, 0] }],
 		skills: () => state.skills, hasStatus: () => false, buff: state.buff, reachable: () => true, chasing: () => false, busy: () => false,

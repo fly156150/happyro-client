@@ -78,11 +78,16 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		target = null;
 		status = message;
 	}
+	function effectiveRanges() {
+		const limit = data.searchLimit();
+		if (limit !== null) ranges.search = Math.min(ranges.search, limit);
+		return { ...ranges };
+	}
 	function snapshot() {
 		return {
 			active,
 			recovery: structuredClone(recovery),
-			ranges: { ...ranges },
+			ranges: effectiveRanges(),
 			teleport: { ...teleport },
 			pausedForMovement,
 			species: species.map(entry => ({ ...entry })),
@@ -95,6 +100,11 @@ export function createAutoCombatController(data, configuration = { species: [], 
 		if (!active) return;
 		if (!data.enabled()) {
 			stop('自动战斗已停止');
+			return;
+		}
+		if (data.searchLimit() === null) {
+			if (target) { data.stop(); target = null; }
+			status = '正在获取搜怪范围';
 			return;
 		}
 		if (pausedForMovement) return;
@@ -112,7 +122,7 @@ export function createAutoCombatController(data, configuration = { species: [], 
 				entity =>
 					(entity.id === preferred ||
 						(continuous && (!species.length || species.some(entry => entity.species === entry.id)))) &&
-					distance(player, entity.position) <= ranges.search &&
+					distance(player, entity.position) <= effectiveRanges().search &&
 					distance(origin, entity.position) <= ranges.activity &&
 					(skipped.get(entity.id) || 0) <= now
 			);
@@ -352,9 +362,11 @@ export function createAutoCombatController(data, configuration = { species: [], 
 				nextRanges.activity > limits.activityMax
 			)
 				return false;
+			const searchLimit = data.searchLimit();
+			if (searchLimit === null) return false;
 			const next = {
 				recovery: structuredClone(nextRecovery),
-				ranges: { ...nextRanges },
+				ranges: { ...nextRanges, search: Math.min(nextRanges.search, searchLimit) },
 				teleport: { ...nextTeleport },
 				species: [
 					...new Map(nextSpecies.map(entry => [entry.id, { id: entry.id, name: entry.name }])).values()

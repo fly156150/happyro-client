@@ -65,11 +65,11 @@ it('preserves saved personal settings and resets to deployment defaults', async 
 it('applies combat and pickup defaults while retaining character preferences', async () => {
 	configure({ autoCombat: { ranges: { search: 25, activity: 40 }, teleport: { enabled: false, waitSeconds: 4, intervalSeconds: 8 } }, pickup: { enabled: true, range: 9, batchSeconds: 7, categories: ['card'] } });
 	const { createAutoCombatController } = await import('../../src/UI/Game/AutoCombatController.js');
-	expect(createAutoCombatController({}).snapshot()).toMatchObject({ active: false, ranges: { search: 25, activity: 40 }, teleport: { enabled: false, waitSeconds: 4, intervalSeconds: 8 } });
+	expect(createAutoCombatController({ searchLimit: () => 50 }).snapshot()).toMatchObject({ active: false, ranges: { search: 25, activity: 40 }, teleport: { enabled: false, waitSeconds: 4, intervalSeconds: 8 } });
 	const { loadAutoCombatSettings } = await import('../../src/UI/Game/AutoCombatSettings.js');
 	const saved = { species: [], skills: [], ranges: { search: 10, activity: 20 }, teleport: { enabled: true, waitSeconds: 6, intervalSeconds: 9 } };
 	localStorage.setItem('combat-test', JSON.stringify(saved));
-	expect(createAutoCombatController({}, loadAutoCombatSettings('combat-test')).snapshot()).toMatchObject(saved);
+	expect(createAutoCombatController({ searchLimit: () => 50 }, loadAutoCombatSettings('combat-test')).snapshot()).toMatchObject(saved);
 	const pickup = await import('../../src/UI/Game/PickupSettings.js');
 	expect(pickup.loadPickupSettings()).toEqual({ enabled: true, range: 9, batchSeconds: 7, categories: ['card'], excluded: [] });
 	const personal = { enabled: false, range: 3, batchSeconds: 10, categories: ['equipment'], excluded: [{ id: 501, name: '红色药水' }] };

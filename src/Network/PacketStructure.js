@@ -16022,3 +16022,9 @@ PACKET.ZC.HAPPYRO_FRIEND_DETAIL = function (fp) {
 };
 PACKET.ZC.HAPPYRO_FRIEND_DETAIL.size = 28;
 export default PACKET;
+
+// Authoritative map-server entity synchronization radius.
+PACKET.ZC.HAPPYRO_COMBAT_LIMITS = function PACKET_ZC_HAPPYRO_COMBAT_LIMITS(fp) {
+ this.searchRadius = fp.readUShort();
+};
+PACKET.ZC.HAPPYRO_COMBAT_LIMITS.size = 4;

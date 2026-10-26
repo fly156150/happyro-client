@@ -1,3 +1,4 @@
+import { updateCombatLimits } from '../../src/Network/CombatLimits.js';
 vi.mock('UI/Components/GameTools/AdventureActionService.js', () => ({ getCurrentAdventureMap: () => 'izlude', normalizeAdventureMap: value => value, getAdventureActionState: () => ({ allowed: false }), teleportToCoordinate: vi.fn() }));
 import { beforeEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({ session: {}, entities: [], skills: [], equipment: [], inventory: [], focus: null, cast: vi.fn(), ground: vi.fn(), attack: vi.fn(), stop: vi.fn(), send: vi.fn(), cooldown: 0, path: 1 }));
@@ -25,6 +26,7 @@ import PACKET from '../../src/Network/PacketStructure.js';
 import { playerStatuses } from '../../src/Network/PlayerStatuses.js';
 import { createGameAutoCombat } from '../../src/UI/Game/GameAutoCombat.js';
 beforeEach(() => {
+ updateCombatLimits({ searchRadius: 50 });
 	localStorage.clear();
 	vi.clearAllMocks(); state.focus = null; state.cooldown = 0; state.path = 1; state.pathPoints = null;
 	state.equipment = []; state.inventory = [];
