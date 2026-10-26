@@ -117,11 +117,12 @@ SOFTWARE.
 
 	const restorePosition = bindDesktopDialogDrag($('.combat-dialog'), $('.desktop-window-header'), 'DesktopDialog.Position.AutoCombat', abort.signal);
 
-	let pickupEditor, recoveryEditor;
+	let pickupEditor, recoveryEditor, combatEditor;
 	function finishClose() {
 		pickupEditor?.flush();
 		pickupEditor?.destroy();
 		recoveryEditor?.destroy();
+		combatEditor?.destroy();
 		backdrop.hidden = true;
 		root.getRootNode().host?.removeAttribute('data-settings-open');
 
@@ -147,7 +148,7 @@ SOFTWARE.
 	}
 	function open() {
 		if (!backdrop.hidden) return;
-		createAutoCombatPanel($('.auto-config-body'), actions);
+		combatEditor = createAutoCombatPanel($('.auto-config-body'), actions);
 		recoveryEditor = createRecoveryPanel($('#recovery-panel'), actions);
 		pickupEditor = createPickupSettingsPanel(
 			$('.desktop-pickup-scroll'),
@@ -252,7 +253,8 @@ SOFTWARE.
 			naviControls.destroy();
 			root.getRootNode().host?.removeAttribute('data-settings-open');
 			pickupEditor?.destroy();
-		recoveryEditor?.destroy();
+			recoveryEditor?.destroy();
+			combatEditor?.destroy();
 			clearTimeout(feedbackTimer);
 			abort.abort();
 			root.replaceChildren();

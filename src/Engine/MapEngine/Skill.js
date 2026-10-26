@@ -905,6 +905,11 @@ SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos(id, level, x, y,
 	Network.sendPacket(pkt);
 };
 
+function onSoulEnergy(pkt) {
+	const owner = EntityManager.get(pkt.AID);
+	if (owner) owner.soulCount = pkt.num;
+}
+
 function onSpiritSphere(pkt) {
 	EffectManager.remove(null, pkt.AID, [228, 504, 629, 833]);
 	EffectManager.remove(null, pkt.AID, servantWeaponEffectIds);
@@ -1040,6 +1045,7 @@ export default function SkillEngine() {
 	Network.hookPacket(PACKET.ZC.REPAIRITEMLIST2, onRepairList);
 	Network.hookPacket(PACKET.ZC.SPIRITS, onSpiritSphere);
 	Network.hookPacket(PACKET.ZC.SPIRITS2, onSpiritSphere);
+	Network.hookPacket(PACKET.ZC.SOULENERGY, onSoulEnergy);
 	Network.hookPacket(PACKET.ZC.MILLENNIUMSHIELD, onMillenniumShield);
 	Network.hookPacket(PACKET.ZC.SKILL_POSTDELAY, onSetSkillDelay);
 	Network.hookPacket(PACKET.ZC.STARSKILL, onTaekwonMission);

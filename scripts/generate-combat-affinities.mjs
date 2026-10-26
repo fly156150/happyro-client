@@ -51,7 +51,7 @@ const weapons = Object.fromEntries(itemRows.filter(row => row.Type === 'Weapon')
 const ammunition = Object.fromEntries(itemRows.filter(row => row.Type === 'Ammo').map(row => [row.Id, row.SubType]));
 const requirements = row => {
 	const req = { ...row.Requires };
-	if (['NC_PILEBUNKER', 'RL_P_ALTER'].includes(row.Name)) req.equippedRequired = true;
+	if (['NC_PILEBUNKER', 'NC_HOVERING', 'RL_P_ALTER'].includes(row.Name)) req.equippedRequired = true;
 	if (req.Status)
 		req.Status = Object.keys(req.Status)
 			.filter(key => req.Status[key])
@@ -142,6 +142,10 @@ for (const file of [
 	'archer/hawkboomerang',
 	'thief/omegaabyssstrike',
 	'swordman/dragonicaura',
+	'swordman/traumaticblow',
+	'thief/venomsplasher',
+	'thief/steal',
+	'thief/mug',
 	'swordman/grandjudgement',
 	'swordman/judgementcross',
 	'thief/fatalshadowcrow',
@@ -152,6 +156,8 @@ for (const file of [
 	await read(`src/map/skills/${file}.cpp`);
 }
 await read('src/map/skill.cpp');
+await read('src/map/pc.cpp');
+await read('src/map/status.cpp');
 // These no-damage entry points explicitly dispatch damage on eligible targets
 // or from their ground units in skill.cpp. Other control/support spells must
 // not inherit damage multipliers merely because their database has an element.
@@ -186,6 +192,7 @@ const monsters = Object.fromEntries(
 			element: row.Element ?? 'Neutral',
 			elementLevel: row.ElementLevel ?? 1,
 			race: row.Race ?? 'Formless',
+			class: row.Class ?? 'Normal',
 			size: row.Size ?? 'Small',
 			statusImmune: Boolean(row.Modes?.StatusImmune || ['Boss', 'Guardian', 'Battlefield'].includes(row.Class)),
 			skillImmune: Boolean(row.Modes?.SkillImmune || row.Class === 'Battlefield')

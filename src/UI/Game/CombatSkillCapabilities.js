@@ -1,6 +1,7 @@
 import catalog from '../../../applications/pwa/data/combat/affinities.json';
 import Skill from 'DB/Skills/SkillConst.js';
 import Status from 'DB/Status/StatusConst.js';
+import StatusState from 'DB/Status/StatusState.js';
 import { buffRule } from './CombatBuffRules.js';
 import { COMBAT_SKILL_RULES } from './CombatSkillRules.js';
 
@@ -40,7 +41,7 @@ const requiredAnyStatus = {
 export function levelValue(value, level, field = 'Amount') {
 	return Array.isArray(value) ? (value.find(row => row.Level === level)?.[field] ?? 0) : (value ?? 0);
 }
-export function combatCapability(id, level) {
+export function combatCapability(id, level, actor) {
 	const entry = catalog.skills[id];
 	if (!entry || excluded.has(entry.name)) return null;
 	const buff = buffRule(id);
@@ -51,6 +52,10 @@ export function combatCapability(id, level) {
 		const radius = levelValue(entry.radius, level, 'Area') || levelValue(entry.radius, level, 'Size');
 		return radius > 0 ? { kind: 'attack', aim: 'self', radius, entry } : null;
 	}
+	if (
+		['AG_ALL_BLOOM', 'AG_VIOLENT_QUAKE'].includes(entry.name) &&
+		actor?.hasStatus(Status.CLIMAX) && actor.statusValue(Status.CLIMAX, 0) === 4
+	) return { kind: 'utility', aim: 'ground', entry };
 	if (utilities.has(entry.name)) return { kind: 'utility', aim: 'enemy', entry };
 	if (entry.trap && entry.noFootSet) return { kind: damage ? 'attack' : 'utility', aim: 'trap', entry };
 	if (!damage) return null;
@@ -64,11 +69,14 @@ export function specialSkillReason(entry, context, target) {
 	const required = requiredAnyStatus[entry.name];
 	if (required && !required.some(context.hasStatus)) return '需要信仰前置状态';
 	if (
-		['AG_CRYSTAL_IMPACT', 'AG_DESTRUCTIVE_HURRICANE'].includes(entry.name) &&
 		context.hasStatus(Status.CLIMAX) &&
-		context.statusValue(Status.CLIMAX, 0) === 2
+		((entry.name === 'AG_CRYSTAL_IMPACT' && context.statusValue(Status.CLIMAX, 0) === 1) ||
+			(entry.name === 'AG_DESTRUCTIVE_HURRICANE' && context.statusValue(Status.CLIMAX, 0) === 4))
 	)
 		return '当前巅峰状态将技能转为增益';
+	if (entry.name === 'RA_WUGSTRIKE' && !(context.effects & (StatusState.EffectState.WUG | StatusState.EffectState.WUGRIDER)))
+		return '需要猎狼或骑乘猎狼';
+	if (entry.name === 'EM_PSYCHIC_STREAM' && context.hasStatus(Status.ENERGYCOAT)) return '能量外套期间无法使用';
 	if (entry.name === 'WL_TETRAVORTEX' && context.spheres < 4) return '需要四颗属性球';
 	if (entry.name === 'SA_SPELLBREAKER' && target && !target.casting) return '目标未在施法';
 	if (entry.name === 'PR_LEXDIVINA' && target && (!Number.isInteger(target.healthState) || target.healthState & 4))

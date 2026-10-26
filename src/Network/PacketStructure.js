@@ -6947,6 +6947,13 @@ PACKET.ZC.SPIRITS = function PACKET_ZC_SPIRITS(fp, end) {
 };
 PACKET.ZC.SPIRITS.size = 8;
 
+// 0x0b73, PACKETVER 20211103 soul energy (separate from spirit spheres).
+PACKET.ZC.SOULENERGY = function PACKET_ZC_SOULENERGY(fp, end) {
+	this.AID = fp.readULong();
+	this.num = fp.readUShort();
+};
+PACKET.ZC.SOULENERGY.size = 8;
+
 // 0x1d1
 PACKET.ZC.BLADESTOP = function PACKET_ZC_BLADESTOP(fp, end) {
 	this.srcAID = fp.readULong();

@@ -1,4 +1,5 @@
 import { playerStatuses } from 'Network/PlayerStatuses.js';
+import { targetMarkReason } from './CombatSkillRules.js';
 import { buffRule } from './CombatBuffRules.js';
 import { combatCapability, specialSkillReason } from './CombatSkillCapabilities.js';
 import { skillRequirementReason } from './CombatSkillRequirements.js';
@@ -6,6 +7,8 @@ import { cellDistance, trapPosition } from './CombatSkillPlacement.js';
 import catalog from '../../../applications/pwa/data/combat/affinities.json';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import Equipment from 'UI/Components/Equipment/Equipment.js';
+import ItemType from 'DB/Items/ItemType.js';
+import EquipLocation from 'DB/Items/EquipmentLocation.js';
 import { itemQuantity } from './InventoryItems.js';
 import { combatSkillPriority } from './CombatSkillAffinity.js';
 import { loadAutoCombatMapSpecies } from './AutoCombatMapSpecies.js';
@@ -49,7 +52,8 @@ export function createGameAutoCombat(enabled) {
 				name: entity.display.name,
 				position: [...entity.position],
 				healthState: entity._healthState,
-				casting: Boolean(entity.cast?.display)
+				casting: Boolean(entity.cast?.display),
+				statuses: entity.combatStatuses
 			});
 		});
 		return result;
@@ -57,18 +61,23 @@ export function createGameAutoCombat(enabled) {
 	function actorContext() {
 		const entity = Session.Entity;
 		const equipment = Equipment.getUI().getItems();
-		const inventory = [...Inventory.getUI().list, ...equipment];
-		const weapon = equipment.find(item => item.type === 4 && item.equipped & 2);
-		const ammo = equipment.find(item => item.type === 10);
+		const inventory = [
+			...new Map([...Inventory.getUI().list, ...equipment].map(item => [item.index, item])).values()
+		];
+		const weapons = equipment.filter(
+			item => item.type === ItemType.WEAPON && item.equipped & (EquipLocation.WEAPON | EquipLocation.SHIELD)
+		);
+		const ammo = equipment.find(item => item.type === ItemType.AMMO && item.equipped & EquipLocation.AMMO);
 		return {
 			hp: entity.life.hp,
 			hpMax: entity.life.hp_max,
 			ap: entity.life.ap,
 			effects: entity._effectState || 0,
 			spiritCount: entity.spiritCount || 0,
+			soulCount: entity.soulCount || 0,
 			zeny: Session.zeny,
-			weapon: weapon ? catalog.weapons[weapon.ITID] : 'Fist',
-			shield: equipment.some(item => item.type === 5 && item.location & 32),
+			weapons: weapons.length ? weapons.map(item => catalog.weapons[item.ITID]) : ['Fist'],
+			shield: equipment.some(item => item.type === ItemType.ARMOR && item.equipped & EquipLocation.SHIELD),
 			ammoType: catalog.ammunition[ammo?.ITID],
 			ammoCount: itemQuantity(ammo),
 			hasSkill: id =>
@@ -89,20 +98,30 @@ export function createGameAutoCombat(enabled) {
 			.getSkills()
 			.filter(canExecuteSkill)
 			.flatMap(skill => {
-				const capability = combatCapability(skill.SKID, skill.level);
+				const capability = combatCapability(skill.SKID, skill.level, actor);
 				if (!capability) return [];
 				const rule = buffRule(skill.SKID);
+				// The skill-list SP cost is a base value; server-only discounts can lower it.
+				// Without the final cost, do not label or block the skill as SP-insufficient.
 				const reason =
 					remainingCooldown(skill.SKID) > 0
 						? '冷却中'
-						: skill.spcost > Session.Entity.life.sp
-							? 'SP 不足'
-							: rule?.hpCost && Session.Entity.life.hp <= rule.hpCost
-								? 'HP 不足'
-								: rule?.blockedBy?.some(actor.hasStatus)
-									? '当前状态无法使用'
-									: skillRequirementReason(capability.entry.requires, skill.level, actor) ||
-										specialSkillReason(capability.entry, actor, target);
+						: rule?.hpCost && Session.Entity.life.hp <= rule.hpCost
+							? 'HP 不足'
+							: rule?.blockedBy?.some(actor.hasStatus)
+								? '当前状态无法使用'
+								: skillRequirementReason(
+										capability.entry.requires,
+										skill.level,
+										actor,
+										capability.entry.name
+									) ||
+									specialSkillReason(capability.entry, actor, target) ||
+									targetMarkReason(
+										capability.entry.name,
+										Session.Entity.GID ?? Session.AID,
+										target ? [target] : targets()
+									);
 				return [
 					{
 						id: skill.SKID,

@@ -186,9 +186,10 @@ export function createAutoCombatPanel(body, actions) {
 		}
 	}
 	const selectedSpecies = () => [...chosenSpecies].map(id => ({ id, name: species.get(id) }));
-	const entries = actions.skills();
+	let entries = actions.skills();
 	const chosenSkills = new Set(state.skills);
-	for (const skill of entries) {
+	const skillDetails = new Map();
+	function createSkillCard(skill) {
 		const label = document.createElement('button');
 		label.type = 'button';
 		label.className = 'auto-skill-card';
@@ -204,12 +205,11 @@ export function createAutoCombatPanel(body, actions) {
 		const level = document.createElement('small');
 		level.textContent = `Lv.${skill.level}`;
 		detail.append(name, level);
-		if (skill.reason) {
-			const reason = document.createElement('small');
-			reason.className = 'auto-skill-reason';
-			reason.textContent = skill.reason;
-			detail.append(reason);
-		}
+		const reason = document.createElement('small');
+		reason.className = 'auto-skill-reason';
+		reason.textContent = skill.reason || '';
+		if (skill.reason) detail.append(reason);
+		skillDetails.set(skill.id, { label, detail, name, level, reason });
 		const icon = document.createElement('img');
 		icon.className = 'auto-skill-icon';
 		icon.alt = '';
@@ -245,12 +245,13 @@ export function createAutoCombatPanel(body, actions) {
 			else chosenSkills.add(skill.id);
 			updateSummary();
 		};
-		$('[data-auto-skills]').append(label);
+		return label;
 	}
+	for (const skill of entries) $('[data-auto-skills]').append(createSkillCard(skill));
 	if (!entries.length) $('[data-auto-skills]').textContent = '暂无可自动释放的技能，使用普通攻击。';
 	const selectedSkills = () => entries.filter(skill => chosenSkills.has(skill.id)).map(skill => skill.id);
-	function updateSummary() {
-		if (ready) save();
+	function updateSummary(persist = true) {
+		if (ready && persist) save();
 		$('[data-range-summary]').textContent = `${ranges.search} / ${ranges.activity} 格`;
 		for (const output of body.querySelectorAll('[data-range-value]'))
 			output.value = `${ranges[output.dataset.rangeValue]} 格`;
@@ -322,4 +323,45 @@ export function createAutoCombatPanel(body, actions) {
 		}
 	}
 	loadSpecies();
+	// Reconcile temporary skills in place for both desktop and mobile settings.
+	const refreshTimer = window.setInterval(() => {
+		if (!body.isConnected || !body.getClientRects().length) return;
+		const list = $('[data-auto-skills]');
+		const scrollTop = list.scrollTop;
+		const root = body.getRootNode();
+		const focused = root.activeElement;
+		const next = actions.skills();
+		const ids = new Set(next.map(skill => skill.id));
+		const changed = next.length !== entries.length || next.some((skill, index) => skill.id !== entries[index].id);
+		for (const [id, view] of skillDetails) {
+			if (!ids.has(id)) {
+				view.label.remove();
+				skillDetails.delete(id);
+			}
+		}
+		if (next.length && !entries.length) list.textContent = '';
+		entries = next;
+		for (const [index, skill] of entries.entries()) {
+			if (!skillDetails.has(skill.id)) createSkillCard(skill);
+			const view = skillDetails.get(skill.id);
+			if (list.children[index] !== view.label) list.insertBefore(view.label, list.children[index] || null);
+			const levelText = `Lv.${skill.level}`;
+			if (view.name.textContent !== skill.name) view.name.textContent = skill.name;
+			if (view.level.textContent !== levelText) view.level.textContent = levelText;
+			const reasonText = skill.reason || '';
+			if (view.reason.textContent !== reasonText) view.reason.textContent = reasonText;
+			if (reasonText && !view.reason.parentNode) view.detail.append(view.reason);
+			else if (!reasonText && view.reason.parentNode) view.reason.remove();
+		}
+		if (changed) {
+			if (!entries.length) list.textContent = '暂无可自动释放的技能，使用普通攻击。';
+			updateSummary(false);
+			if (focused?.dataset.skill && !focused.isConnected)
+				$('[data-normal-attack]').focus({ preventScroll: true });
+			else if (focused && list.contains(focused) && root.activeElement !== focused)
+				focused.focus({ preventScroll: true });
+			list.scrollTop = scrollTop;
+		}
+	}, 200);
+	return { destroy: () => window.clearInterval(refreshTimer) };
 }

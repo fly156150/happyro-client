@@ -19,7 +19,7 @@ export function createCombatSettingsPanel(body, actions, header) {
 	header.classList.add('has-combat-tabs');
 	const combat = body.querySelector('#mobile-combat-settings');
 	const pickup = body.querySelector('#mobile-pickup-settings');
-	createAutoCombatPanel(combat, actions);
+	const combatEditor = createAutoCombatPanel(combat, actions);
 	const recovery = body.querySelector('#mobile-recovery-settings');
 	const recoveryEditor = createRecoveryPanel(recovery, actions);
 	const editor = createPickupSettingsPanel(pickup.querySelector('section'), loadPickupSettings());
@@ -53,5 +53,6 @@ export function createCombatSettingsPanel(body, actions, header) {
 		editor.flush();
 		editor.destroy();
 		recoveryEditor.destroy();
+		combatEditor.destroy();
 	};
 }

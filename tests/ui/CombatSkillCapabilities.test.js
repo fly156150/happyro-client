@@ -14,7 +14,7 @@ it('retains damage skills with no-damage entry packets and validates alias ident
  expect(cap('KN_BRANDISHSPEAR').kind).toBe('attack');expect(cap('WL_CHAINLIGHTNING').kind).toBe('attack');
  for(const ids of Object.values(COMBAT_EXECUTION_IDS))expect(ids.every(Number.isInteger)).toBe(true);
 });
-const actor=()=>({hp:100,ap:200,weapon:'1hAxe',effects:0,shield:true,spiritCount:10,zeny:10000,ammoType:'Arrow',ammoCount:100,itemCount:()=>10,hasStatus:()=>true,statusValue:()=>0,spheres:4});
+const actor=()=>({hp:100,ap:200,weapons:['1hAxe'],effects:0,shield:true,spiritCount:10,soulCount:10,zeny:10000,ammoType:'Arrow',ammoCount:100,itemCount:()=>10,hasStatus:()=>true,statusValue:()=>0,spheres:4});
 it.each(['IG_OVERSLASH','GC_CROSSRIPPERSLASHER','BO_DUST_EXPLOSION'])('checks generated prerequisites for %s',name=>{
  const a=actor();a.hasStatus=()=>false;expect(skillRequirementReason(find(name)[1].requires,5,a)).toBe('缺少前置状态');
 });
@@ -31,7 +31,7 @@ it('blocks silent faith failures, unsafe climax modes, unknown or already silenc
  const a=actor();a.hasStatus=()=>false;
  expect(specialSkillReason(find('IQ_SECOND_FAITH')[1],a)).toContain('信仰');
  expect(specialSkillReason(find('IQ_SECOND_FAITH')[1],{...a,hasStatus:id=>id===Status.FIRST_FAITH_POWER})).toBe('');
- expect(specialSkillReason(find('AG_CRYSTAL_IMPACT')[1],{...a,hasStatus:()=>true,statusValue:()=>2})).toContain('增益');
+ expect(specialSkillReason(find('AG_CRYSTAL_IMPACT')[1],{...a,hasStatus:()=>true,statusValue:()=>1})).toContain('增益');
  for(const healthState of [undefined,4])expect(specialSkillReason(find('PR_LEXDIVINA')[1],a,{healthState})).not.toBe('');
  expect(specialSkillReason(find('PR_LEXDIVINA')[1],a,{healthState:0})).toBe('');
  expect(specialSkillReason(find('SA_SPELLBREAKER')[1],a,{casting:false})).not.toBe('');

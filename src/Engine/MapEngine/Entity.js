@@ -1,3 +1,4 @@
+import { createTargetStatuses } from 'Network/TargetStatuses.js';
 import { playerStatuses } from 'Network/PlayerStatuses.js';
 import { reportSkillExecution } from 'Network/SkillExecution.js';
 import MapRenderer from 'Renderer/MapRenderer.js';
@@ -1890,6 +1891,10 @@ function onEntityCastCancel(pkt) {
 function onEntityStatusChange(pkt) {
 	if (pkt.AID === Session.AID || pkt.AID === Session.Entity?.GID) playerStatuses.update(pkt);
 	const entity = EntityManager.get(pkt.AID);
+	if (entity) {
+		entity.combatStatuses ??= createTargetStatuses();
+		entity.combatStatuses.update(pkt);
+	}
 
 	// Monster/Active monster transformations - special handling
 	if (pkt.index === StatusConst.MONSTER_TRANSFORM || pkt.index === StatusConst.ACTIVE_MONSTER_TRANSFORM) {
