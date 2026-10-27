@@ -10,6 +10,7 @@ export function createAutoCombatPanel(body, actions) {
 	body.innerHTML = `
 		<div class="auto-layout" data-menu-layout="form">
 			<section class="auto-target-section" aria-labelledby="auto-target-title">
+				<div class="auto-target-content">
 				<h3 id="auto-target-title">攻击目标</h3>
 				<button type="button" data-all-species>全部魔物</button>
 				<div class="auto-species-list" data-auto-species aria-label="自动战斗目标"></div>
@@ -22,6 +23,7 @@ export function createAutoCombatPanel(body, actions) {
 					<label class="auto-teleport-toggle"><span>无目标时随机瞬移</span><input type="checkbox" class="game-switch" role="switch" data-auto-teleport></label>
 					<div data-teleport-controls></div>
 				</section>
+				</div>
 			</section>
 			<section class="auto-skill-section" aria-labelledby="auto-skills-title">
 				<div class="auto-section-heading"><h3 id="auto-skills-title">攻击方式</h3><span data-skill-count></span></div>
@@ -141,6 +143,7 @@ export function createAutoCombatPanel(body, actions) {
 			check.setAttribute('aria-hidden', 'true');
 			const title = document.createElement('span');
 			title.textContent = name;
+			button.title = name;
 			button.append(check, title);
 			const toggle = () => {
 				if (chosenSpecies.has(id)) chosenSpecies.delete(id);
@@ -255,8 +258,15 @@ export function createAutoCombatPanel(body, actions) {
 		};
 		return label;
 	}
+	function showEmptySkills(list) {
+		const hint = document.createElement('span');
+		hint.className = 'auto-skill-empty';
+		hint.textContent = '暂无可自动释放的技能，使用普通攻击。';
+		hint.title = hint.textContent;
+		list.replaceChildren(hint);
+	}
 	for (const skill of entries) $('[data-auto-skills]').append(createSkillCard(skill));
-	if (!entries.length) $('[data-auto-skills]').textContent = '暂无可自动释放的技能，使用普通攻击。';
+	if (!entries.length) showEmptySkills($('[data-auto-skills]'));
 	const selectedSkills = () => entries.filter(skill => chosenSkills.has(skill.id)).map(skill => skill.id);
 	function updateSummary(persist = true) {
 		clampRanges();
@@ -370,7 +380,7 @@ export function createAutoCombatPanel(body, actions) {
 			else if (!reasonText && view.reason.parentNode) view.reason.remove();
 		}
 		if (changed) {
-			if (!entries.length) list.textContent = '暂无可自动释放的技能，使用普通攻击。';
+			if (!entries.length) showEmptySkills(list);
 			updateSummary(false);
 			if (focused?.dataset.skill && !focused.isConnected)
 				$('[data-normal-attack]').focus({ preventScroll: true });

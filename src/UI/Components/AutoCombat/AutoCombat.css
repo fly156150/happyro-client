@@ -229,8 +229,23 @@ button:disabled {
 .combat-dialog .auto-range-stepper button {
 	padding: 0;
 }
+.combat-dialog .auto-layout > section {
+	border: 1px solid var(--desktop-divider);
+	border-radius: 6px;
+	padding: 8px;
+}
 .combat-dialog .auto-target-section {
-	padding-right: 8px;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
+}
+.combat-dialog .auto-target-content {
+	display: block;
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	overscroll-behavior-y: none;
 }
 
 :host([data-settings-open]) {

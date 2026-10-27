@@ -163,12 +163,13 @@
 }
 
 
-/* Frame each phone combat pane independently, including while its content scrolls. */
+/* Frame portrait phone and landscape touch combat panes independently. */
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel .auto-layout[data-menu-layout='form'] {
  grid-template-rows: repeat(2, minmax(0, 1fr));
- row-gap: 10px;
+ row-gap: 6px;
 }
-:host([data-phone-screen][data-menu-arrangement='stacked']) .panel .auto-layout > section {
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel .auto-layout > section,
+:host([data-menu-density][data-menu-arrangement='wide']) .panel .auto-layout > section {
  box-sizing: border-box;
  border: 1px solid #52606d;
  border-radius: 10px;
@@ -252,10 +253,10 @@
 }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel .pickup-section > .pickup-enabled {
  box-sizing: border-box;
- margin: 0 0 10px; padding: 8px;
+ margin: 0 0 6px; padding: 8px;
  border: 1px solid #52606d; border-radius: 10px;
 }
-:host([data-phone-screen][data-menu-arrangement='stacked']) .panel .pickup-controls { gap: 10px; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel .pickup-controls { gap: 6px; }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel :is(.pickup-rules-group, .pickup-exclusions-group) {
  display: flex; flex-direction: column; gap: 8px;
  box-sizing: border-box;
@@ -878,4 +879,42 @@
 :host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel .pickup-picker .pickup-item input[type='checkbox']:checked::after {
  left: 7px;
  top: 4px;
+}
+
+/* Keep framed target panes inset outside their scrolling content. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel .auto-target-section,
+:host([data-menu-density][data-menu-arrangement='wide']) .panel .auto-target-section {
+ overflow: hidden;
+ display: flex;
+ flex-direction: column;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel .auto-target-content,
+:host([data-menu-density][data-menu-arrangement='wide']) .panel .auto-target-content {
+ display: block;
+ flex: 1;
+ min-height: 0;
+ overflow-y: auto;
+ overscroll-behavior-y: none;
+}
+
+/* Fixed frame padding stays visible while portrait inventory contents scroll. */
+.inventory-list-frame, .inventory-description-frame { display: contents; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='inventory'] :is(.inventory-list-frame, .inventory-description-frame) {
+ display: flex; flex-direction: column; min-width: 0; min-height: 0;
+ box-sizing: border-box; overflow: hidden;
+ border: 1px solid #52606d; border-radius: 10px;
+ padding: 8px; background: #19212a;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='inventory'] .inventory-list-frame { grid-row: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='inventory'] .inventory-description-frame { grid-row: 1; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='inventory'] :is(.inventory-list-frame > .inventory-list, .inventory-description-frame > .inventory-item-description) {
+ flex: 1; min-height: 0; overflow-y: auto;
+ border: 0; border-radius: 0; padding: 0;
+}
+
+/* Keep target rows stable on rotation. */
+:host([data-menu-density]) .panel .auto-species-card > span:last-child {
+ overflow: hidden;
+ white-space: nowrap;
+ text-overflow: ellipsis;
 }

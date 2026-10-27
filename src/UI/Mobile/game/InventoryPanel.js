@@ -19,7 +19,7 @@ const itemTypes = {
 /** Touch-only inventory presentation. Actions receive inventory indices, never DOM-derived item data. */
 export function createInventoryPanel(body, actions) {
 	body.innerHTML =
-		'<div class="inventory-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="物品列表"></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
+		'<div class="inventory-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list-frame"><div class="inventory-list" aria-label="物品列表"></div></div><section class="inventory-detail inventory-item-detail" aria-label="物品详情"></section></div>';
 	const $ = selector => body.querySelector(selector);
 	const list = $('.inventory-list'),
 		detail = $('.inventory-detail');
@@ -130,7 +130,10 @@ export function createInventoryPanel(body, actions) {
 		if (!item.worn) ops.append(button('丢弃', () => chooseDrop(item)));
 		else ops.append(disabledAction('丢弃'));
 		const content = createInventoryDescription(item, actions.preview);
-		detail.replaceChildren(content, ops);
+		const frame = document.createElement('div');
+		frame.className = 'inventory-description-frame';
+		frame.append(content);
+		detail.replaceChildren(frame, ops);
 		ensureReadableText(content);
 
 	}

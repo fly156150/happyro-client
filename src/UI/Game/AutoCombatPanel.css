@@ -71,7 +71,7 @@
 [data-all-species] {
 	margin-top: 10px;
 }
-.auto-target-section > button {
+.auto-target-content > button {
 	width: 100%;
 	min-height: 36px;
 }
@@ -329,3 +329,18 @@
 @media (max-width: 600px) {
  .recovery-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); min-height: 520px; gap: 12px; }
 }
+
+.auto-target-content {
+	display: contents;
+}
+
+.auto-skill-empty {
+ grid-column: 1 / -1;
+ min-width: 0;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+}
+
+/* Shared pane gutter across combat-assist tabs and screen layouts. */
+.auto-layout, .recovery-layout { column-gap: 8px; }
