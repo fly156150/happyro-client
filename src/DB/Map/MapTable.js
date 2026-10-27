@@ -2527,10 +2527,10 @@ const MapInfo = {
 	'iz_int03.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "新手地图"
+			mainTitle: "搁浅渡轮"
 		},
 		notifyEnter: true,
-		displayName: "新手地图"
+		displayName: "搁浅渡轮"
 	},
 	'1@jorchs.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -3612,10 +3612,10 @@ const MapInfo = {
 	'iz_int01.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "新手地图"
+			mainTitle: "搁浅渡轮"
 		},
 		notifyEnter: true,
-		displayName: "新手地图"
+		displayName: "搁浅渡轮"
 	},
 	'force_2-3.rsw': {
 		displayName: "限时激斗模式"
@@ -4346,10 +4346,10 @@ const MapInfo = {
 	'int_land.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: "偏僻岛"
+			mainTitle: "孤岛"
 		},
 		notifyEnter: true,
-		displayName: "偏僻岛"
+		displayName: "孤岛"
 	},
 	'aldeba_in.rsw': {
 		displayName: '艾尔帕兰内部'
@@ -4545,10 +4545,10 @@ const MapInfo = {
 	'iz_int02.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "新手地图"
+			mainTitle: "搁浅渡轮"
 		},
 		notifyEnter: true,
-		displayName: "新手地图"
+		displayName: "搁浅渡轮"
 	},
 	'yuno_fild01.rsw': {
 		backgroundBmp: 'field_s2',
@@ -5012,10 +5012,10 @@ const MapInfo = {
 	'int_land03.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: "偏僻岛"
+			mainTitle: "孤岛"
 		},
 		notifyEnter: true,
-		displayName: "偏僻岛"
+		displayName: "孤岛"
 	},
 	'1@uns.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -5039,10 +5039,10 @@ const MapInfo = {
 	'int_land04.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: "偏僻岛"
+			mainTitle: "孤岛"
 		},
 		notifyEnter: true,
-		displayName: "偏僻岛"
+		displayName: "孤岛"
 	},
 	'ice_dun01.rsw': {
 		backgroundBmp: 'dungeon_s2',
@@ -5614,10 +5614,10 @@ const MapInfo = {
 	'iz_int.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "新手地图"
+			mainTitle: "搁浅渡轮"
 		},
 		notifyEnter: true,
-		displayName: "新手地图"
+		displayName: "搁浅渡轮"
 	},
 	'aldeg_cas04.rsw': {
 		backgroundBmp: 'siege',
@@ -5699,10 +5699,10 @@ const MapInfo = {
 	'iz_int04.rsw': {
 		backgroundBmp: 'noname_s2',
 		signName: {
-			mainTitle: "新手地图"
+			mainTitle: "搁浅渡轮"
 		},
 		notifyEnter: true,
-		displayName: "新手地图"
+		displayName: "搁浅渡轮"
 	},
 	'yuno_in04.rsw': {
 		backgroundBmp: 'noname_s2',
@@ -6439,10 +6439,10 @@ const MapInfo = {
 	'int_land02.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: "偏僻岛"
+			mainTitle: "孤岛"
 		},
 		notifyEnter: true,
-		displayName: "偏僻岛"
+		displayName: "孤岛"
 	},
 	'knight_1-1.rsw': {
 		displayName: "骑士转职所"
@@ -7896,10 +7896,10 @@ const MapInfo = {
 	'int_land01.rsw': {
 		backgroundBmp: 'field_s2',
 		signName: {
-			mainTitle: "偏僻岛"
+			mainTitle: "孤岛"
 		},
 		notifyEnter: true,
-		displayName: "偏僻岛"
+		displayName: "孤岛"
 	},
 	'ra_in01.rsw': {
 		displayName: "拉赫内部"

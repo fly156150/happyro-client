@@ -105,8 +105,8 @@ export function searchNavigationRows(npcRows, mobRows, query, type, localizers, 
 	);
 	const matchRank = result => {
 		const name = result.name.toLocaleLowerCase();
-		if (name === normalizedQuery) return 0;
-		if (name.startsWith(normalizedQuery)) return 1;
+		if (name === normalizedQuery || result.mapName.toLocaleLowerCase() === normalizedQuery) return 0;
+		if (name.startsWith(normalizedQuery) || result.mapName.toLocaleLowerCase().startsWith(normalizedQuery)) return 1;
 		return 2;
 	};
 	return results
@@ -183,12 +183,12 @@ export function searchNavigationMaps(mapCatalogEntries, query, type, options = {
 	if (!normalizedQuery) return [];
 	if (type !== 'ALL' && type !== 'MAP') return [];
 	const results = listSharedMaps(mapCatalogEntries, options).filter(
-		result => result.name.toLocaleLowerCase().includes(normalizedQuery)
+		result => result.name.toLocaleLowerCase().includes(normalizedQuery) || result.mapName.toLocaleLowerCase().includes(normalizedQuery)
 	);
 	const matchRank = result => {
 		const name = result.name.toLocaleLowerCase();
-		if (name === normalizedQuery) return 0;
-		if (name.startsWith(normalizedQuery)) return 1;
+		if (name === normalizedQuery || result.mapName.toLocaleLowerCase() === normalizedQuery) return 0;
+		if (name.startsWith(normalizedQuery) || result.mapName.toLocaleLowerCase().startsWith(normalizedQuery)) return 1;
 		return 2;
 	};
 	return results

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
 	listNavigationMaps,
@@ -196,7 +197,7 @@ describe('navigation data', () => {
 	});
 });
 
-it('excludes old names and codes while preserving channel filtering', () => {
+it('excludes old names while preserving channel filtering', () => {
  const entries = [
   {map:'prontera',name:'普隆德拉',supported:true,aliases:['卢恩·米德加兹王国 首都普隆德拉']},
   {map:'prt_fild08',name:'普隆德拉南门',supported:true,aliases:['南门','普隆德拉野外']},
@@ -218,6 +219,38 @@ it('excludes resource-only maps from player navigation even for exact/current-ma
 it('matches only visible map names when a former city alias exists',()=>{
  const entries=[{map:'alde_gld',name:'艾尔帕兰 露依纳',supported:true},{map:'aldeg_cas01',name:'娜易修潘斯塔引',supported:true,aliases:['露依纳 公会 01 (艾尔帕兰)']}];
  expect(searchNavigationMaps(entries,'艾尔帕兰','MAP').map(row=>row.id)).toEqual(['alde_gld']);
- expect(searchNavigationMaps(entries,'alde_gld','MAP')).toEqual([]);
+ expect(searchNavigationMaps(entries,' ALDE_GLD ','MAP').map(row=>row.id)).toEqual(['alde_gld']);
  expect(searchNavigationMaps(entries,'卫星都市','MAP')).toEqual([]);
 });
+
+it('hides non-gameplay maps in the shipped catalog without hiding playable maps', () => {
+ const { entries } = JSON.parse(readFileSync('applications/pwa/data/navigation/map-catalog.json', 'utf8'));
+ for (const channelsEnabled of [false, true]) {
+  const visible = listSharedMaps(entries, { channelsEnabled }).map(row => row.mapName);
+  for (const map of ['alde_tt02', 'ordeal_a00', 'ordeal_a02', 'job_sword1', 'quiz_01', 'que_job02', 'que_job03']) {
+   expect(visible).not.toContain(map);
+   const entry = entries.find(row => row.map === map);
+   expect(entry.supported).toBe(true);
+   expect(searchNavigationMaps(entries, entry.name, 'MAP', { channelsEnabled }).some(row => row.mapName === map)).toBe(false);
+  }
+  for (const map of ['turbo_n_1', 'ordeal_1-1', 'ordeal_1-2', 'airport', 'lhz_airport', 'y_airport']) {
+   expect(visible).toContain(map);
+  }
+  for (let i = 1; i <= 4; i++) {
+   expect(visible).not.toContain(`new_zone0${i}`);
+   expect(visible).toContain(`new_1-${i}`);
+   expect(visible.includes(`new_2-${i}`)).toBe(channelsEnabled);
+  }
+  expect(searchNavigationMaps(entries, '初心者修炼场', 'MAP', { channelsEnabled }).some(row => /^new_zone0[1-4]$/.test(row.mapName))).toBe(false);
+ }
+});
+
+ it('ranks exact map codes before prefixes and substrings without revealing hidden maps', () => {
+  const entries = [
+   {map:'x_town',name:'甲',supported:true},
+   {map:'town_more',name:'乙',supported:true},
+   {map:'town',name:'丙',supported:true},
+   {map:'town_hidden',name:'丁',supported:true,player_hidden:true}
+  ];
+  expect(searchNavigationMaps(entries,' TOWN ','MAP').map(row=>row.id)).toEqual(['town','town_more','x_town']);
+ });

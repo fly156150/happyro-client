@@ -125,7 +125,7 @@ function mount(container, context = {}) {
 	const onOpenMap = event => openTarget(event.detail);
 	container.addEventListener('game-tools-open-map', onOpenMap);
 	const destroyBrowser = mountRemoteCatalogBrowser(container, {
-		placeholder: '搜索地图名称',
+		placeholder: '搜索地图名称或地图代码',
 		searchLabel: '搜索地图',
 		initialQuery: context.initialMap?.id,
 		emptyDetail: '选择一个地图查看详情',
