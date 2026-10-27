@@ -12,7 +12,7 @@
 
 ## 中文资源
 
-散装覆盖由 Gateway `DATA_OVERRIDE_PATH` 提供。卡片前缀以 UTF-8 读取。物品显示名来自运行目录 LUB。完整链路见根仓库 `docs/localization/client-resources.md`。
+散装覆盖由 Gateway `HAPPYRO_GATEWAY_RESOURCE_OVERRIDE_DIRS` 提供。卡片前缀以 UTF-8 读取。物品显示名来自运行目录 LUB。完整链路见根仓库 `docs/localization/client-resources.md`。
 
 ## 部署默认值
 

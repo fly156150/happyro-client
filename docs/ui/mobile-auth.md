@@ -23,7 +23,7 @@
 - 从启动页进入：`/applications/pwa/index.html?debug=1`，点击「进入游戏」会传递调试开关。
 - 直接进入游戏：`/applications/pwa/api.html?app=ONLINE&debug=1`。
 
-启用后，页面最右侧中部「日志」按钮打开调试侧栏。「记录日志」复选框只暂停或恢复本页记录；移除地址中的 `debug` 参数并刷新即可完全关闭，不受以前保存的开关状态影响。带参数刷新会重新启用，侧栏记录保存在页面内存中，刷新清空；若 Gateway 配置了 `CLIENT_DIAGNOSTICS_DIR`，还会批量回传到同源 `/api/client-diagnostics`。上传容量、去重与退避以 Client 的 debug-upload 和 Gateway 接收器为准，日志不是只留在浏览器内。
+启用后，页面最右侧中部「日志」按钮打开调试侧栏。「记录日志」复选框只暂停或恢复本页记录；移除地址中的 `debug` 参数并刷新即可完全关闭，不受以前保存的开关状态影响。带参数刷新会重新启用，侧栏记录保存在页面内存中，刷新清空；若 Gateway 配置了 `HAPPYRO_GATEWAY_CLIENT_DIAGNOSTICS_DIR`，还会批量回传到同源 `/api/client-diagnostics`。上传容量、去重与退避以 Client 的 debug-upload 和 Gateway 接收器为准，日志不是只留在浏览器内。
 
 覆盖应用模块加载前的错误、未处理 Promise 异常、控制台 log/info/warn/error、HTTP 请求状态和耗时、资源加载、WebSocket 创建/打开/错误/关闭和收发字节数、界面切换、视口与页面生命周期，每 5 秒追加状态快照。可复制、下载或手动记录当前状态；HTTP 下自动使用选区复制全文；两种复制方式均被浏览器拒绝时保留全文选区，可长按复制或下载文本文件。
 
