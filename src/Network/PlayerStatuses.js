@@ -3,8 +3,10 @@ import { onConnectionEnd } from './ConnectionLifecycle.js';
 /** Authoritative local-player effects, independent of icon availability and rendering. */
 export function createPlayerStatuses(now = () => performance.now()) {
 	const effects = new Map();
+	let revision = 0;
 	return {
 		update({ index, state, RemainMS, val }) {
+			revision++;
 			if (state === 0) {
 				effects.delete(index);
 				return;
@@ -20,6 +22,7 @@ export function createPlayerStatuses(now = () => performance.now()) {
 			if (!effect) return false;
 			if (effect.expiresAt <= now()) {
 				effects.delete(index);
+				revision++;
 				return false;
 			}
 			return true;
@@ -27,7 +30,12 @@ export function createPlayerStatuses(now = () => performance.now()) {
 		values(index) {
 			return this.has(index) ? effects.get(index).values : undefined;
 		},
+		get revision() {
+			for (const index of effects.keys()) this.has(index);
+			return revision;
+		},
 		clear() {
+			revision++;
 			effects.clear();
 		}
 	};

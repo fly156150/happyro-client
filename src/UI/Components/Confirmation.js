@@ -32,9 +32,9 @@ export function confirmAction(container, message, action, { content, bounds, can
 	function fitBounds() {
 		if (!bounds && !desktopOwner) return;
 		const rect = (bounds || desktopOwner).getBoundingClientRect();
+		dialog.style.setProperty('--confirm-center-x', `${rect.left + rect.width / 2}px`);
+		dialog.style.setProperty('--confirm-center-y', `${rect.top + rect.height / 2}px`);
 		if (desktopOwner) {
-			dialog.style.setProperty('--confirm-center-x', `${rect.left + rect.width / 2}px`);
-			dialog.style.setProperty('--confirm-center-y', `${rect.top + rect.height / 2}px`);
 			dialog.style.setProperty(
 				'--confirm-owner-clip',
 				`inset(${rect.top}px ${Math.max(0, window.innerWidth - rect.right)}px ${Math.max(0, window.innerHeight - rect.bottom)}px ${rect.left}px)`

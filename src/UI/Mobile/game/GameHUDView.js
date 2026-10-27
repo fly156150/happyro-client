@@ -809,6 +809,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 		if (panel === 'equipment')
 			equipmentPanel = createEquipmentPanel(body, serverState?.kind === 'equipment' ? serverState.service : {
 				snapshot: actions.equipmentSnapshot,
+				checkCandidates: actions.equipmentCheckCandidates,
 				removeAttachment: actions.equipmentRemoveAttachment,
 				preview: actions.inventoryPreview,
 				act: actions.equipmentAct

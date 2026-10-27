@@ -1,3 +1,4 @@
+import SkillWindow from 'UI/Components/SkillList/SkillList.js';
 import { acquireInputFreeze, releaseInputFreeze, isInputFrozenExcept } from 'UI/InputFreeze.js';
 import { isIdentificationExam, createExamTargets } from 'UI/Game/IdentificationExam.js';
 import { createSelfActions } from 'UI/Game/SelfActions.js';
@@ -183,7 +184,8 @@ HUD.onAppend = function () {
 	quests = createGameQuests(() => modal && !isInputFrozenExcept(HUD));
 	attributes = createGameAttributes(() => modal && !isInputFrozenExcept(HUD));
 	skills = createGameSkills(() => modal && !isInputFrozenExcept(HUD), shortcuts);
-	equipment = createEquipmentController(inventory, () => characterStats(Session.Entity), () => modal && !isInputFrozenExcept(HUD));
+	equipment = createEquipmentController(inventory, () => characterStats(Session.Entity),
+		() => modal && !isInputFrozenExcept(HUD), () => SkillWindow.getUI().getSkillRevision());
 	view = createGameHUDView(HUD.getRoot(), {
 		cancelSceneInput,
 		deathSnapshot: gameDeathSnapshot,
@@ -290,6 +292,7 @@ HUD.onAppend = function () {
 		skillsLearn: (...args) => skills.learn(...args),
 		skillsBind: (...args) => skills.bind(...args),
 		equipmentSnapshot: () => equipment.snapshot(),
+		equipmentCheckCandidates: (...args) => equipment.checkCandidates(...args),
 		equipmentRemoveAttachment: mask => equipment.removeAttachment(mask),
 		equipmentAct: (...args) => equipment.act(...args),
 		inventorySnapshot: () => inventory.snapshot(),

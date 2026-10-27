@@ -15511,6 +15511,43 @@ PACKET.ZC.HAPPYRO_MAP_RECOVERY_RESULT = function PACKET_ZC_HAPPYRO_MAP_RECOVERY_
 };
 PACKET.ZC.HAPPYRO_MAP_RECOVERY_RESULT.size = 8;
 
+// HappyRO read-only equipment eligibility, using live inventory identities.
+PACKET.CZ.HAPPYRO_EQUIPMENT_AVAILABILITY = function () {
+ this.requestId = 0;
+ this.position = 0;
+ this.items = [];
+};
+PACKET.CZ.HAPPYRO_EQUIPMENT_AVAILABILITY.prototype.build = function () {
+ const count = this.items.length;
+ if (!count || count > 100) throw new Error('Invalid equipment query count');
+ const writer = new BinaryWriter(14 + count * 6);
+ writer.writeUShort(0xd11);
+ writer.writeUShort(14 + count * 6);
+ writer.writeULong(this.requestId);
+ writer.writeULong(this.position);
+ writer.writeUShort(count);
+ for (const item of this.items) {
+  writer.writeUShort(item.index);
+  writer.writeULong(item.ID);
+ }
+ return writer;
+};
+PACKET.ZC.HAPPYRO_EQUIPMENT_AVAILABILITY = function (fp, end) {
+ if (end - fp.tell() < 7) throw new Error('Truncated equipment query result');
+ this.requestId = fp.readULong();
+ const count = fp.readUShort();
+ const blocked = fp.readUChar();
+ if (!count || count > 100 || blocked > 1 || end - fp.tell() !== count) throw new Error('Invalid equipment query result');
+ this.blocked = Boolean(blocked);
+ this.available = [];
+ for (let i = 0; i < count; i++) {
+  const value = fp.readUChar();
+  if (value > 1) throw new Error('Invalid equipment eligibility');
+  this.available.push(Boolean(value));
+ }
+};
+PACKET.ZC.HAPPYRO_EQUIPMENT_AVAILABILITY.size = -1;
+
 // 0xcfa - HappyRO live NPC availability request
 PACKET.CZ.HAPPYRO_NPC_AVAILABILITY = function PACKET_CZ_HAPPYRO_NPC_AVAILABILITY() {
 	this.requestId = 0;

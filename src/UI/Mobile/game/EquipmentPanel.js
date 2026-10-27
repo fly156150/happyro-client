@@ -1,3 +1,4 @@
+import { createEquipmentPicker } from './EquipmentPicker.js';
 import { ensureReadableText } from 'Utils/ReadableText.js';
 import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
 import { handleNaviClick, prepareNaviLinks } from 'UI/Components/Navigation/NaviActionService.js';
@@ -16,7 +17,7 @@ export function createEquipmentPanel(body, actions) {
 		selected = 'HEAD_TOP',
 		dismiss,
 		detailKey = '';
-	let state;
+	let state, picker;
 	const slots = new Map(),
 		statNodes = new Map();
 	function button(text, fn) {
@@ -75,14 +76,13 @@ export function createEquipmentPanel(body, actions) {
 		tab.dataset.group = key;
 		$('.equipment-tabs').append(tab);
 	}
-	function itemDetails(item) {
+	function itemDetails(item, slot, candidate = false) {
 		const title = document.createElement('h3');
 		title.textContent = item.name;
 		const description = document.createElement('p');
 		description.className = 'item-description';
 		description.innerHTML = formatRagnarokMarkup(item.descriptionMarkup || item.description || '暂无装备说明');
-		const status = document.createElement('p');
-		status.textContent = `数量：${item.count}${item.worn ? ' · 已穿戴' : ''}${!item.identified ? ' · 未鉴定' : ''}${item.damaged ? ' · 已损坏' : ''}`;
+
 		const overview = document.createElement('div');
 		overview.className = 'inventory-item-overview';
 		const media = document.createElement('div');
@@ -94,8 +94,20 @@ export function createEquipmentPanel(body, actions) {
 		if (item.icon) picture.src = item.icon;
 		const metadata = document.createElement('div');
 		metadata.className = 'inventory-item-metadata';
-		metadata.append(status);
-		media.append(picture, metadata);
+		for (const [text, status] of [
+			[slot.key === 'AMMO' && `数量：${item.count}`, false],
+			[candidate && item.worn && '已穿戴', true],
+			[!item.identified && '未鉴定', true],
+			[item.damaged && '已损坏', true]
+		]) {
+			if (!text) continue;
+			const line = document.createElement('p');
+			if (status) line.className = 'equipment-item-status';
+			line.textContent = text;
+			metadata.append(line);
+		}
+		media.append(picture);
+		if (metadata.childElementCount) media.append(metadata);
 		const summary = document.createElement('div');
 		summary.className = 'inventory-item-summary';
 		summary.append(title, description);
@@ -140,51 +152,12 @@ export function createEquipmentPanel(body, actions) {
 		update();
 	}
 	function chooseEquipment(slot) {
-		const content = document.createElement('div');
-		content.className = 'equipment-picker-layout';
-		const preview = document.createElement('div');
-		preview.className = 'equipment-picker-preview';
-		preview.setAttribute('aria-label', '装备说明');
-		preview.textContent = '选择装备查看说明';
-		const list = document.createElement('div');
-		list.className = 'equipment-picker-list';
-		list.dataset.slot = slot.key;
-		list.setAttribute('aria-label', '可更换装备');
-		content.append(list);
-		let choice = null;
-		if (!slot.candidates.length) list.textContent = '背包中没有此部位的装备';
-		for (const item of slot.candidates) {
-			const candidate = button(item.name, () => {
-				choice = item;
-				preview.replaceChildren(...itemDetails(item));
-				preview.scrollTop = 0;
-				for (const node of content.querySelectorAll('.equipment-candidate'))
-					node.setAttribute('aria-pressed', String(node === candidate));
-				content.closest('dialog').querySelector('[data-confirm]').disabled = Boolean(item.reason);
-			});
-			candidate.className = 'equipment-candidate';
-			candidate.dataset.index = item.index;
-			candidate.dataset.id = item.ID;
-			const icon = document.createElement('img');
-			icon.alt = '';
-			icon.hidden = !item.icon;
-			if (item.icon) icon.src = item.icon;
-			const label = document.createElement('span');
-			label.textContent = item.name;
-			candidate.replaceChildren(icon, label);
-			list.append(candidate);
-		}
-		content.append(preview);
-		dismiss = confirmAction(
-			body,
-			`选择${slot.label}装备`,
-			() => {
-				if (choice) perform(slot, choice, 'equip');
-			},
-			{ content, bounds: body.closest('.panel') }
-		);
-		content.closest('dialog').querySelector('[data-confirm]').disabled = true;
+		picker?.close();
+		picker = createEquipmentPicker(body, slot, actions, itemDetails,
+			item => perform(slot, item, 'equip'), state);
+		dismiss = () => picker?.close();
 	}
+
 	function renderDetail() {
 		const slot = state.slots.find(entry => entry.key === selected);
 		if (!slot) return;
@@ -193,20 +166,17 @@ export function createEquipmentPanel(body, actions) {
 		detailKey = key;
 		const content = document.createElement('div');
 		content.className = 'inventory-item-description';
-		const heading = document.createElement('h3');
-		heading.textContent = slot.label;
-		content.append(heading);
 		const ops = $('.equipment-actions');
 		ops.replaceChildren();
 		if (actions.readOnly) {
 			ops.hidden = true;
-			if (slot.item) content.append(...itemDetails(slot.item));
+			if (slot.item) content.append(...itemDetails(slot.item, slot));
 			else content.append(document.createTextNode('此部位未穿戴装备'));
 			detail.replaceChildren(content);
 			return;
 		}
 		if (slot.item) {
-			content.append(...itemDetails(slot.item));
+			content.append(...itemDetails(slot.item, slot));
 			const remove = button('卸下', () => perform(slot, slot.item, 'unequip'));
 			remove.disabled = group === 'stats' || Boolean(slot.item.reason);
 			ops.append(remove);
@@ -269,19 +239,7 @@ export function createEquipmentPanel(body, actions) {
 			}
 			statNodes.get(stat.key).textContent = stat.value;
 		}
-		const picker = body.querySelector('.equipment-picker-list');
-		if (picker) {
-			const candidates = state.slots.find(slot => slot.key === picker.dataset.slot)?.candidates || [];
-			for (const node of picker.querySelectorAll('.equipment-candidate')) {
-				const item = candidates.find(
-					candidate =>
-						String(candidate.index) === node.dataset.index && String(candidate.ID) === node.dataset.id
-				);
-				const icon = node.querySelector('img');
-				icon.hidden = !item?.icon;
-				if (item?.icon && icon.getAttribute('src') !== item.icon) icon.src = item.icon;
-			}
-		}
+		picker?.refresh(state);
 		renderDetail();
 		if (actions.readOnly) return;
 		removeAttachment.textContent = state.attachment.label;

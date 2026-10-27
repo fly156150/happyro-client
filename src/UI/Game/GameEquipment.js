@@ -1,3 +1,5 @@
+import { requestEquipmentAvailability } from './EquipmentAvailability.js';
+import { playerStatuses } from 'Network/PlayerStatuses.js';
 import Location from 'DB/Items/EquipmentLocation.js';
 import Session from 'Engine/SessionStorage.js';
 import Network from 'Network/NetworkManager.js';
@@ -33,7 +35,7 @@ export const equipmentSlots = [
 	['SHADOW_L_ACCESSORY_SHADOW', '影子饰品（左）', 'shadow']
 ].map(([key, label, group]) => ({ key, label, group, location: Location[key] }));
 
-export function createEquipmentController(inventory, stats, canOperate) {
+export function createEquipmentController(inventory, stats, canOperate, skillRevision = () => 0) {
 	let removal = null;
 	function attachment() {
 		const owner = Session.Entity;
@@ -51,11 +53,16 @@ export function createEquipmentController(inventory, stats, canOperate) {
 		const items = inventory.snapshot();
 		return {
 			attachment: attachment(),
+			eligibilityKey: JSON.stringify([Session.GID, Session.Entity?._job, Session.Entity?.clevel,
+				Session.Entity?.sex, Session.Entity?.effectState, Session.UserLevel, Session.hasCart,
+				playerStatuses.revision, skillRevision(),
+				items.filter(item => item.worn).map(item => [item.index, item.ID, item.wearLocation])]),
 			slots: equipmentSlots.map(slot => ({
 				...slot,
 				item: items.find(item => item.worn && item.wearLocation & slot.location),
 				candidates: items.filter(
-					item => !item.worn && item.category === 'equipment' && item.location & slot.location
+					item => !item.worn && item.identified && !item.damaged && !item.reason &&
+						item.category === 'equipment' && item.location & slot.location
 				)
 			})),
 			stats: stats()
@@ -63,6 +70,10 @@ export function createEquipmentController(inventory, stats, canOperate) {
 	}
 	return {
 		snapshot,
+		checkCandidates(slotKey, candidates, signal) {
+			const slot = equipmentSlots.find(slot => slot.key === slotKey);
+			return requestEquipmentAvailability(slot.location, candidates, signal);
+		},
 		removeAttachment(expectedMask) {
 			if (!canOperate() || !Session.Playing || !Session.Entity || Session.Entity.action === Session.Entity.ACTION.DIE)
 				return '当前无法操作';

@@ -595,3 +595,16 @@ it('keeps a suspended item description intact across modal permission changes an
  expect(root.querySelector('[data-index="1"]').textContent).toContain('×1');
  next.restore();expect(root.querySelector('[data-index="1"]').textContent).toContain('×2');expect(list.scrollTop).toBe(180);
 });
+
+it('wires equipment eligibility through the real menu actions', async () => {
+ const item={index:2,ID:2301,name:'棉衬衫',identified:true};
+ actions.equipmentSnapshot=()=>({slots:[{key:'HEAD_TOP',label:'头饰',group:'normal',candidates:[item]}],stats:[],attachment:{mask:0,removal:null}});
+ actions.equipmentCheckCandidates=vi.fn(async()=>({available:[false],blocked:false}));
+ actions.inventoryPreview=async()=>null;
+ click('[data-panel="menu"]');
+ [...root.querySelectorAll('.menu-grid button')].find(button=>button.textContent==='装备').click();
+ [...root.querySelectorAll('button')].find(button=>button.textContent==='选择装备').click();
+ await Promise.resolve();await Promise.resolve();
+ expect(actions.equipmentCheckCandidates).toHaveBeenCalledWith('HEAD_TOP',[item],expect.any(AbortSignal));
+ expect(root.querySelector('.equipment-picker-message').textContent).toBe('没有符合穿戴条件的装备');
+});

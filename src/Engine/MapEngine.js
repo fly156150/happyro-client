@@ -1,3 +1,4 @@
+import { handleEquipmentAvailability } from 'UI/Game/EquipmentAvailability.js';
 import { updateCombatLimits } from 'Network/CombatLimits.js';
 import { playerStatuses } from 'Network/PlayerStatuses.js';
 import { recoveryDefinition } from 'DB/Items/RecoveryItems.js';
@@ -369,6 +370,7 @@ class MapEngine {
 			Network.hookPacket(PACKET.ZC.CONFIG, onConfig);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MONSTER_SPAWN_RESULT, onMonsterSpawnResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_AVAILABILITY_RESULT, onNpcAvailabilityResult);
+			Network.hookPacket(PACKET.ZC.HAPPYRO_EQUIPMENT_AVAILABILITY, handleEquipmentAvailability);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_NPC_TELEPORT_RESULT, onNpcTeleportResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_TELEPORT_RESULT, onMapTeleportResult);
 			Network.hookPacket(PACKET.ZC.HAPPYRO_MAP_LOAD_CONTEXT, onMapLoadContext);
