@@ -77,8 +77,9 @@ export function createShortcutPanel(body, actions) {
 			const button = picker.querySelector(`[data-index="${slot.index}"]`);
 			if (button) {
 				button.setAttribute('aria-label', `位置 ${slot.index + 1}：${slot.name}`);
-				button.querySelector(':scope > span').textContent =
-					`${slot.name}${slot.binding?.isSkill ? ` · Lv.${slot.binding.count}` : ''}`;
+				const label = button.querySelector(':scope > span');
+				const text = `${slot.name}${slot.binding?.isSkill ? ` · Lv.${slot.binding.count}` : ''}`;
+				if (label.textContent !== text) label.textContent = text;
 				button.setAttribute('aria-pressed', String(slot.index === index));
 			}
 			if (slot.index === index) {
@@ -175,6 +176,7 @@ export function createShortcutPanel(body, actions) {
 		button.append(img, label);
 		setListItemText(button, entry.name, String(entry.amount));
 		button.onclick = () => {
+			const scrollTop = choices.scrollTop;
 			selected = entry;
 			$('[data-choice-detail]').hidden = false;
 			$('[data-choice-hint]').hidden = true;
@@ -204,6 +206,7 @@ export function createShortcutPanel(body, actions) {
 			resetSaveFeedback();
 			highlightChoices();
 			status('');
+			choices.scrollTop = scrollTop;
 		};
 		choices.append(button);
 	}

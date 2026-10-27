@@ -81,3 +81,8 @@
 :host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='shortcuts'] .shortcut-filters {
 	margin-top: auto;
 }
+
+/* Match inventory: async content must not move the candidate-list viewport. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-choices {
+ overflow-anchor: none;
+}

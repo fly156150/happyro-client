@@ -211,3 +211,13 @@ it('keeps the skill empty hint and footer stable while the skill list refreshes'
  for(let i=0;i<20;i++)panel.update();
  expect(detail.firstChild).toBe(hint);expect(body.querySelector('.skills-action-slot').firstChild).toBe(footer);expect(list.scrollTop).toBe(1000);
 });
+
+it('does not replace unchanged slot text during repeated icon refreshes', () => {
+ const label=body.querySelector('.slot-picker button > span');
+ const textNode=label.firstChild;
+ for(let i=0;i<10;i++)panel.updateIcons([entry,item]);
+ expect(label.firstChild).toBe(textNode);
+ body.querySelector('.shortcut-choices').scrollTop=350;
+ body.querySelectorAll('.shortcut-choice')[1].click();
+ expect(body.querySelector('.shortcut-choices').scrollTop).toBe(350);
+});
