@@ -100,3 +100,12 @@
  border-top: 1px solid var(--desktop-divider);
 }
 .ui-confirm .ui-confirm-body > p:last-child { margin-bottom: 0; }
+
+.game-tools-window[data-feedback-theme="desktop"] .ui-confirm > .ui-confirm-actions {
+ padding-top: 0;
+ border-top: 0;
+}
+
+.game-tools-window[data-feedback-theme="desktop"] .ui-confirm-body > :is(.quantity-stepper, .ui-confirm-field):last-child {
+ margin-bottom: 0;
+}
