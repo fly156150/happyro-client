@@ -95,3 +95,8 @@
  font-size: var(--panel-label);
  line-height: 1.5;
 }
+
+/* Slot captions determine the row height; paging arrows follow that height. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-pages {
+ --menu-pager-height: auto;
+}

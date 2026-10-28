@@ -1,11 +1,12 @@
 /* One owner for pane clearance, list rhythm and compact separators in all tabs. */
 :host {
  --adventure-pane-inset: 6px;
+ --adventure-section-gap: 8px;
  --adventure-row-gap: 4px;
  --adventure-divider-size: 1px;
  --adventure-controls-divider-size: calc(1px + var(--adventure-pane-inset));
 }
-:host(:not([data-phone-screen])[data-menu-density]) { --adventure-pane-inset: 8px; }
+:host(:not([data-phone-screen])[data-menu-density]) { --adventure-pane-inset: 8px; --adventure-section-gap: 12px; }
 
 :host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
  :is(.catalog-list, .monster-list, .character-job-list, .character-detail-scroll, .settings-scroll, .map-npc-scroll, .monster-locations-scroll) {
@@ -73,8 +74,8 @@
  margin-top: 0;
  gap: var(--adventure-pane-inset);
 }
-:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
- :is(.monster-detail, .monster-information) { gap: var(--adventure-pane-inset); }
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature='monsters']
+ :is(.monster-detail, .monster-information) { row-gap: var(--adventure-section-gap); }
 
 /* Only a pane wholly occupied by a state is centered. Retained rows stay at the top. */
 :host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
@@ -112,7 +113,7 @@
  --adventure-form-row-gap: 6px;
  --adventure-form-column-gap: 8px;
  --adventure-cell-inset: 4px;
- --adventure-catalog-min-height: 44px;
+ --adventure-catalog-min-height: 46px;
  --adventure-body-leading: 1.6;
  --adventure-label-leading: 1.5;
  --adventure-compact-leading: 1.35;
@@ -162,4 +163,23 @@
  height: auto;
  font: inherit;
  line-height: inherit;
+}
+
+/* Atlas images and two-line captions fit the shared catalog row height. */
+:host { --adventure-atlas-scale: .8; }
+:host(:not([data-phone-screen])[data-menu-density]) { --adventure-atlas-scale: 1; }
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.monster-thumb, .npc-catalog-tab .catalog-thumb) {
+ transform: scale(var(--adventure-atlas-scale));
+ margin: calc(20px * (var(--adventure-atlas-scale) - 1));
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.catalog-row-text, .monster-row-text) { gap: 0; }
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.catalog-row-text, .monster-row-text) > :is(strong, small) { line-height: inherit; }
+
+/* Item detail sections use the same outer gap as the monster overview/resources. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature='items']
+ :is(.item-description, .item-drop-sources, .item-source-group + .item-source-group) {
+ margin-top: var(--adventure-section-gap);
 }

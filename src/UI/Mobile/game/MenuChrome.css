@@ -189,3 +189,22 @@
  max-width: max(0px, calc(var(--confirm-max-width) - 24px));
  max-height: max(0px, calc(var(--confirm-max-height) - 24px));
 }
+
+/* Tablet navigation and sibling actions share spacing without changing footer sections. */
+:host(:not([data-phone-screen])[data-menu-density]) { --menu-button-gap: 8px; }
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .panel[data-view]
+ :is(.panel-navigation, .menu-action-group, .social-footer-actions, .mail-footer-actions,
+     .ui-confirm-actions, .pickup-picker-actions,
+     .menu-footer:has(> button + button)) {
+ column-gap: var(--menu-button-gap);
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure
+ :is(.adventure-header, .catalog-action-panel, .summon-panel, .character-actions,
+     .settings-footer, .management-form-actions, .ui-confirm-actions) {
+ column-gap: var(--menu-button-gap);
+}
+
+/* Phone navigation matches the compact footer action spacing. */
+:host([data-phone-screen][data-menu-density][data-menu-arrangement]) .panel[data-view] .panel-navigation {
+ column-gap: 6px;
+}
