@@ -2262,13 +2262,13 @@
 	overflow-wrap:anywhere;
 }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure .adventure-content:is([data-feature='monsters'], [data-feature='npcs']) :is(.summon-panel, .catalog-action-panel) {
-	padding-left:100px;
-	padding-right:6px;
+	padding-left:6px;
+	padding-right:100px;
 }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure .adventure-content:is([data-feature='monsters'], [data-feature='npcs']) .catalog-scope-option {
 	grid-column:1 / -1;
-	justify-self:start;
-	margin:0 0 0 6px;
+	justify-self:end;
+	margin:0 6px 0 0;
 }
 
 .mobile-adventure.game-tools-window .item-grant-quantity {

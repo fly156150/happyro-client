@@ -336,7 +336,7 @@ function mount(container, context = {}) {
 											</li>`;
 										})
 										.join('')}</ul></div>`
-								: `<p class="map-npc-empty">${context.mobile ? '该地图没有可显示的 NPC' : '无'}</p>`
+								: `<p class="map-npc-empty">无</p>`
 						}
 					</section>
 					<section class="map-monsters" aria-label="地图魔物"></section>

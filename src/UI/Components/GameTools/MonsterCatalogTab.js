@@ -268,6 +268,13 @@ function mount(container, context = {}) {
 	}
 
 	function renderDrops(drops, title) {
+		if (context.mobile) {
+			if (!drops?.length && title !== '普通掉落') return '';
+			const rows = drops?.length
+				? drops.map(drop => `<tr><td title="${escapeHtml(drop.nameEn || drop.Item)}">${escapeHtml(drop.name || drop.Item)}</td><td>${formatRate(drop.Rate)}</td></tr>`).join('')
+				: '<tr><td colspan="2">无</td></tr>';
+			return `<table class="monster-drop-table"><caption>${title}</caption><tbody>${rows}</tbody></table>`;
+		}
 		if (!drops?.length) return '';
 		return `<div class="drop-group"><h4>${title}</h4>${drops.map(drop => `<div><span title="${escapeHtml(drop.nameEn || drop.Item)}">${escapeHtml(drop.name || drop.Item)}</span><em>${formatRate(drop.Rate)}</em></div>`).join('')}</div>`;
 	}
@@ -346,9 +353,11 @@ function mount(container, context = {}) {
 				<div><span>体型</span><strong>${sizeNames[monster.size] || monster.size}</strong></div><div><span>经验</span><strong>${monster.baseExp} / ${monster.jobExp}</strong></div>
 			</div>
 			</div><div class="monster-resources">
-				<section class="monster-drops"><h4>掉落物品</h4>${
+				<section class="monster-drops" aria-label="掉落物品">${context.mobile ? '' : '<h4>掉落物品</h4>'}${
 					state.drops
-						? (renderDrops(state.drops[monster.id]?.mvpDrops, 'MVP 奖励') + renderDrops(state.drops[monster.id]?.drops, '普通掉落')) || '<p class="menu-hint">无掉落资料</p>'
+						? (context.mobile
+							? renderDrops(state.drops[monster.id]?.drops, '普通掉落') + renderDrops(state.drops[monster.id]?.mvpDrops, 'MVP 奖励')
+							: renderDrops(state.drops[monster.id]?.mvpDrops, 'MVP 奖励') + renderDrops(state.drops[monster.id]?.drops, '普通掉落')) || '<p class="menu-hint">无掉落资料</p>'
 						: state.dropsError
 							? '<p class="menu-hint error" role="status">掉落资料加载失败</p><button type="button" class="monster-drops-retry">重试</button>'
 							: '<p class="menu-hint" role="status">掉落资料加载中...</p>'

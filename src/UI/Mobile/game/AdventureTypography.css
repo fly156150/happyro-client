@@ -1,0 +1,42 @@
+/* One reading scale for every touch adventure tab; controls and headings own their scale. */
+:host([data-menu-density][data-menu-arrangement]) .game-tools-window.mobile-adventure {
+ font-size: var(--panel-label);
+}
+:host([data-menu-density][data-menu-arrangement]) .game-tools-window.mobile-adventure .adventure-content[data-feature]
+ :is(p, small, label, em, th, td, dt, dd, strong, b,
+ .catalog-row, .monster-row, .character-job-row, .catalog-row-text, .monster-row-text,
+ .map-npc-row, .map-npc-text, .monster-location, .map-thumb span,
+ .catalog-summary, .monster-summary, .catalog-status, .management-status, .summon-status,
+ .monster-stats > div, .catalog-metadata > div, .drop-group > div, .item-drop-sources,
+ .item-description, .monster-description, .settings-scroll, .character-traits-unavailable,
+ .setting-number em, .character-job-empty, .catalog-empty-state, .menu-hint):not(:where(.ui-confirm *, .game-select *, h1 *, h2 *, h3 *, h4 *, h5 *, h6 *)) {
+ font-size: var(--panel-label);
+}
+/* Ordinary adventure content stays regular; headings match the other menus. */
+:host([data-menu-density]) .game-tools-window.mobile-adventure,
+:host([data-menu-density]) .game-tools-window.mobile-adventure :is(h1, h2, h3, h4, h5, h6, strong, b, th, button, .title, .character-job-icon, .summon-status.success, .catalog-status.success, .management-status.success) {
+ font-weight: 400;
+}
+:host([data-menu-density]) .game-tools-window.mobile-adventure .adventure-tabs > button {
+ font-size: var(--panel-label);
+ font-weight: 400;
+}
+/* Yellow section titles follow the ordinary menu heading treatment. */
+:host([data-menu-density]) .game-tools-window.mobile-adventure .adventure-content[data-feature] :is(.character-detail-scroll > section > h4, .settings-scroll > section > h4, .item-source-group > h5) {
+ font-size: var(--panel-heading);
+ font-weight: 700;
+ color: #ffe1ae;
+}
+
+/* Item, monster and map names match inventory/equipment yellow main headings. */
+:host([data-menu-density]) .game-tools-window.mobile-adventure .adventure-content[data-feature] :is(.monster-heading h3, .catalog-heading h3, .map-heading h3) {
+ font-size: var(--panel-heading);
+ font-weight: 700;
+ color: #f6d9a5;
+}
+
+/* Tablet actions share the body reading scale without changing touch targets. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .game-tools-window.mobile-adventure
+ :is(.management-form-actions, .maintenance-actions, .catalog-action-panel, .summon-panel, .character-actions, .settings-footer, .ui-confirm-actions) button:not([hidden]):not(:where(.game-select *, .quantity-stepper *)) {
+ font-size: var(--panel-label);
+}

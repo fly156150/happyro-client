@@ -7,6 +7,7 @@ import css from './QuantityStepper.css?raw';
 export function createQuantityStepper({ label, value = 1, min = 1, max, stepMin, stepButtons = [-10, -1, 1, 10].map(delta => ({ delta })), beforeStep = () => true }) {
 	const element = document.createElement('div');
 	element.className = 'quantity-stepper';
+	element.classList.toggle('quantity-stepper--named', stepButtons.some(button => button.label));
 	const style = document.createElement('style');
 	style.textContent = css;
 	const input = document.createElement('input');

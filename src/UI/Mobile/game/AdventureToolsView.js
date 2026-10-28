@@ -1,3 +1,4 @@
+import { createAdventureScopeLayout } from './AdventureScopeLayout.js';
 import { clearToast } from 'UI/Components/Toast.js';
 import { trackTabView } from 'UI/Components/GameTools/TabViewState.js';
 
@@ -20,6 +21,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 		detail = false;
 	const host = root.getRootNode().host;
 	const windowElement = $('.mobile-adventure');
+	const disposeScopeLayout = createAdventureScopeLayout(content, host);
 	// Tablet wide layouts keep both panes even below the phone's catalog breakpoint.
 	const showsBothPanes = () =>
 		(!host.hasAttribute('data-phone-screen') && host.dataset.menuArrangement === 'wide') ||
@@ -170,6 +172,7 @@ export function createAdventureToolsView(root, { tabs, context, close, backToMen
 			abort.abort();
 			resize.disconnect();
 			layout.disconnect();
+			disposeScopeLayout();
 			disposeTab();
 			discardSavedSource();
 			root.replaceChildren();

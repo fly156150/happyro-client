@@ -183,3 +183,233 @@
  :is(.item-description, .item-drop-sources, .item-source-group + .item-source-group) {
  margin-top: var(--adventure-section-gap);
 }
+
+/* Settings begin at the same content inset as the catalog toolbars. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature='settings'] .settings-scroll {
+ margin-top: var(--adventure-content-inline);
+}
+/* Wider navigation labels retain their common font and horizontal scrolling. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-tabs > button {
+ min-width: calc(4em + 16px);
+ padding-inline: 12px;
+}
+/* The NPC table jump is an inline heading action, not a full-height footer button. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .map-npc-list .map-monsters-jump {
+ height: 28px;
+ min-height: 28px;
+ padding: 2px 8px;
+ font-size: var(--panel-label);
+ line-height: 1.3;
+ white-space: nowrap;
+}
+
+/* NPC rows join the table heading and bottom edge without scroller gutters. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature='maps'] .map-npc-scroll {
+ margin-block: 0;
+ padding-block: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .map-npc-scroll > ul {
+ margin-block: 0;
+ padding-block: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .map-npc-row:last-child {
+ border-bottom: 0;
+}
+
+/* Drop headings sit close to their rows; spacing between groups remains separate. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.drop-group > h4, .item-source-group[data-method] > h5) {
+ padding-block: 3px;
+ margin-bottom: 0;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.drop-group > h4, .item-source-group[data-method] > h5) {
+ padding-block: 4px;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ .item-source-group[data-method] > h5 {
+ margin-bottom: 10px;
+}
+
+/* Each mobile monster drop type owns its heading and bordered item rows. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .monster-drops:has(.monster-drop-table) {
+ border: 0;
+ background: transparent;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .monster-drop-table {
+ width: 100%;
+ table-layout: fixed;
+ border-collapse: collapse;
+ border: 1px solid #65717b;
+ background: #242e38;
+ font-size: var(--panel-label);
+}
+.mobile-adventure .monster-drop-table + .monster-drop-table { margin-top: var(--adventure-section-gap); }
+:host([data-menu-density]) .mobile-adventure.game-tools-window .monster-drop-table > caption {
+ padding: 5px 6px;
+ border: 1px solid #65717b;
+ border-bottom: 0;
+ background: #19212a;
+ text-align: left;
+ font-size: var(--panel-heading);
+ font-weight: 700;
+ color: #f5f2e9;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .monster-drop-table td {
+ padding: var(--adventure-cell-inset) 6px;
+ border-bottom: 1px solid #465461;
+ line-height: var(--adventure-label-leading);
+ overflow-wrap: anywhere;
+ vertical-align: middle;
+}
+.mobile-adventure .monster-drop-table td:last-child:not([colspan]) {
+ width: 32%;
+ text-align: right;
+ white-space: nowrap;
+}
+.mobile-adventure .monster-drop-table tr:last-child td { border-bottom: 0; }
+
+/* Wide detail scrollers keep the same permanent gutters as their neighbouring lists. */
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs'], [data-feature='character'])
+ :is(.monster-detail, .catalog-detail, .character-detail) {
+ margin-block: var(--adventure-pane-inset);
+ padding-block: 0;
+ min-height: 0;
+}
+/* The outer detail gutter owns this space; do not double it on nested scrollers. */
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='items'], [data-feature='character'])
+ :is(.item-detail-content, .character-detail-scroll) {
+ margin-block: 0;
+ padding-block: 0;
+}
+/* Phone portrait detail containers occupy their own grid cells. */
+:host([data-phone-screen][data-menu-density][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs'], [data-feature='character'])
+ :is(.monster-information, .item-detail-content, .npc-detail-body, .character-detail-scroll) {
+ margin-block: var(--adventure-pane-inset);
+ padding-block: 0;
+ min-height: 0;
+}
+
+/* Portrait scope switches stay against the toolbar's trailing edge. */
+:host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature] .catalog-scope-option {
+ margin-inline-start: auto;
+}
+
+/* Portrait switches flow immediately before the existing trailing actions. */
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='npcs']) :is(.summon-panel, .catalog-action-panel) {
+ padding-inline: var(--adventure-content-inline);
+ gap: var(--panel-gap);
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='npcs']) :is(.summon-panel, .catalog-action-panel) > .catalog-scope-option {
+ flex: 0 0 auto;
+ margin: 0;
+}
+/* Item filters use the same outer inset as search, pagination and footer actions. */
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .catalog-toolbar > .game-select:first-of-type {
+ margin-left: var(--adventure-content-inline);
+ width: calc(100% - var(--adventure-content-inline));
+}
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .catalog-toolbar > .item-drop-filter {
+ margin-right: var(--adventure-content-inline);
+ width: calc(100% - var(--adventure-content-inline));
+}
+
+/* Tablet detail gutters belong to the scroller, never to the footer's outer box. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs'])
+ :is(.monster-detail, .catalog-detail) {
+ margin-block: 0;
+ padding-block: 0;
+ overflow: hidden;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs'])
+ :is(.monster-information, .item-detail-content, .npc-detail-body) {
+ flex: 1 1 0;
+ min-height: 0;
+ margin-block: var(--adventure-pane-inset);
+ padding-block: 0;
+ overflow: auto;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='monsters'] .monster-information {
+ display: flex;
+ flex-direction: column;
+ gap: var(--adventure-section-gap);
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs'])
+ :is(.summon-panel, .catalog-action-panel) {
+ position: static;
+ margin-block: 0;
+ flex: 0 0 auto;
+}
+
+/* Match the monster filter row's 4px clearance before the action divider. */
+:host([data-phone-screen][data-orientation='portrait'][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='items'] .game-tools-tab {
+ grid-template-rows: minmax(0, 1.15fr) var(--adventure-divider-size) minmax(0, .85fr) var(--adventure-controls-divider-size) var(--panel-control) 6px 32px 4px auto;
+}
+
+/* The gap is a layout track outside the scrollport, so it never scrolls away. */
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature]:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) .game-tools-tab
+ :is(.monster-detail, .catalog-detail) {
+ display: grid;
+ grid-template-rows: minmax(0, 1fr) auto;
+ row-gap: var(--adventure-pane-inset);
+ margin-block: 0;
+ padding-top: var(--adventure-pane-inset);
+ padding-bottom: 0;
+ overflow: hidden;
+}
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature]:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) .game-tools-tab
+ :is(.monster-information, .item-detail-content, .npc-detail-body) {
+ grid-row: 1;
+ min-height: 0;
+ margin-block: 0;
+ padding-block: 0;
+ overflow: auto;
+}
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature='monsters'] .game-tools-tab .monster-information {
+ display: flex;
+ flex-direction: column;
+ gap: var(--adventure-section-gap);
+}
+:host([data-menu-density][data-menu-arrangement='wide']) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature]:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) .game-tools-tab
+ :is(.summon-panel, .catalog-action-panel) {
+ grid-row: 2;
+ position: static;
+ margin-block: 0;
+}
+
+/* Bound iPad panes to the available height; only their content owns scrolling. */
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature]:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) > .game-tools-tab {
+ height: 100%;
+ min-height: 0;
+ overflow: hidden;
+}
+:host(:not([data-phone-screen])[data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature]:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) .game-tools-tab
+ :is(.monster-layout, .catalog-layout, .monster-detail, .catalog-detail) {
+ min-height: 0;
+ max-height: 100%;
+ overflow: clip;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content[data-feature]:is([data-feature='monsters'], [data-feature='items'], [data-feature='npcs']) .game-tools-tab
+ :is(.monster-information, .item-detail-content, .npc-detail-body) {
+ overscroll-behavior-y: contain;
+}
