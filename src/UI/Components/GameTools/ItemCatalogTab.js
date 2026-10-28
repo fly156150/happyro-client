@@ -40,12 +40,12 @@ function subtypeOptions(type, available = []) {
 					? cardSubtypeNames
 					: null;
 	if (!names || !available.length) {
-		return { disabled: true, options: [{ value: '', label: type ? '无子类' : '全部子类' }] };
+		return { disabled: true, options: [{ value: '', label: type ? '无子类' : '子类' }] };
 	}
 	return {
 		disabled: false,
 		options: [
-			{ value: '', label: '全部子类' },
+			{ value: '', label: '子类' },
 			...Object.entries(names).filter(([value]) => available.includes(value)).map(([value, label]) => ({ value, label }))
 		]
 	};

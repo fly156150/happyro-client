@@ -19,7 +19,7 @@ export function createItemSubtypeFilter(changed) {
 			previous = signature;
 			const value = select.value;
 			select.replaceChildren(
-				new Option(keys.length || category === 'all' ? '全部子类' : '无子类', ''),
+				new Option(keys.length || category === 'all' ? '子类' : '无子类', ''),
 				...keys.map(key => new Option(itemSubtypeNames[key], key))
 			);
 			select.disabled = !keys.length;

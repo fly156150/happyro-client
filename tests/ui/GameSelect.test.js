@@ -68,7 +68,7 @@ describe('game select', () => {
 		mountGameSelect(root);
 		setGameSelectOptions(root, {
 			options: [
-				{ value: '', label: '全部子类' },
+				{ value: '', label: '子类' },
 				{ value: 'Head_Top', label: '头上' }
 			],
 			value: '',
