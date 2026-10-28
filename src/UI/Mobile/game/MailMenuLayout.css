@@ -38,3 +38,32 @@
  grid-template-columns: repeat(2, minmax(0, 1fr));
  gap: 6px;
 }
+
+/* Empty attachments are guidance, not an attachment card. */
+:host([data-menu-density]) .panel[data-view='mail'] .mail-attachment-list:has(> .mail-empty) {
+ border: 0;
+ border-radius: 0;
+}
+
+/* Frame padding remains visible while inbox, compose fields and attachments scroll. */
+
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-detail-frame > .mail-detail,
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] .mail-compose-frame > :is(.mail-form, .mail-attachments) {
+ flex: 1;
+ min-width: 0;
+ min-height: 0;
+ max-height: none;
+ margin: 0;
+ padding: 0;
+ border: 0;
+ border-radius: 0;
+ overflow-y: auto;
+ overscroll-behavior-y: none;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-detail-frame > .mail-detail {
+ overflow: hidden;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='mail'] .mail-detail-frame {
+ grid-row: 1;
+ grid-column: 1 / -1;
+}

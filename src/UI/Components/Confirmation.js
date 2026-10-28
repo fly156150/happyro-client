@@ -1,3 +1,4 @@
+import { bindDialogBounds } from './DialogBounds.js';
 import mobileInputCSS from '../Mobile/game/MobileModalInput.css?raw';
 import backdropCSS from '../Mobile/game/MobileModalBackdrop.css?raw';
 import css from './Confirmation.css?raw';
@@ -13,8 +14,10 @@ export function confirmAction(container, message, action, { content, bounds, can
 	dialog.setAttribute('aria-label', '操作确认');
 	const style = document.createElement('style');
 	const desktopOwner = container.closest('[data-feedback-theme="desktop"]');
+
 	style.textContent = desktopOwner ? desktopCSS : css + backdropCSS + mobileInputCSS;
 	const text = document.createElement('p');
+	text.className = 'ui-confirm-message';
 	text.textContent = message;
 	text.tabIndex = -1;
 	text.autofocus = true;
@@ -28,27 +31,13 @@ export function confirmAction(container, message, action, { content, bounds, can
 	confirm.type = 'button';
 	confirm.dataset.confirm = '';
 	confirm.textContent = '确认';
-	const resize = bounds || desktopOwner ? new ResizeObserver(() => fitBounds()) : null;
-	function fitBounds() {
-		if (!bounds && !desktopOwner) return;
-		const rect = (bounds || desktopOwner).getBoundingClientRect();
-		dialog.style.setProperty('--confirm-center-x', `${rect.left + rect.width / 2}px`);
-		dialog.style.setProperty('--confirm-center-y', `${rect.top + rect.height / 2}px`);
-		if (desktopOwner) {
-			dialog.style.setProperty(
-				'--confirm-owner-clip',
-				`inset(${rect.top}px ${Math.max(0, window.innerWidth - rect.right)}px ${Math.max(0, window.innerHeight - rect.bottom)}px ${rect.left}px)`
-			);
-		}
-		dialog.style.setProperty('--confirm-max-width', `${rect.width}px`);
-		dialog.style.setProperty('--confirm-max-height', `${rect.height}px`);
-	}
+	let disposeBounds = () => {};
 	let finished = false;
 	const finish = accepted => {
 		if (finished) return;
 		finished = true;
 		observer.disconnect();
-		resize?.disconnect();
+		disposeBounds();
 		dialog.close();
 		dialog.remove();
 		if (active.get(container) === dismiss) active.delete(container);
@@ -88,8 +77,8 @@ export function confirmAction(container, message, action, { content, bounds, can
 	observer.observe(document.body, options);
 	const root = container.getRootNode();
 	if (root instanceof ShadowRoot) observer.observe(root, options);
-	fitBounds();
-	if (bounds || desktopOwner) resize.observe(bounds || desktopOwner);
+	disposeBounds = bindDialogBounds(dialog, container, { bounds, desktopOwner });
+
 	dialog.showModal();
 	return dismiss;
 }

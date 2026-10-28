@@ -75,7 +75,7 @@ function mount(container, context = {}) {
 			const style = npcAtlasStyle(manifest, npc.spriteId, context.mobile ? 40 : 48);
 			return `<button class="catalog-row${key(selected || {}) === key(npc) ? ' selected' : ''}" type="button" data-catalog-key="${escapeCatalogHtml(key(npc))}">
 				<span class="catalog-thumb${style ? '' : ' no-image'}" style="${style}"></span>
-				<span class="catalog-row-text"><strong>${escapeCatalogHtml(npc.name)}</strong><small>${escapeCatalogHtml(npc.mapDisplayName)} · ${npc.x},${npc.y}</small></span>
+				<span class="catalog-row-text"><strong>${escapeCatalogHtml(npc.name)}</strong><small>${escapeCatalogHtml(npc.mapDisplayName)}</small></span>
 			</button>`;
 		},
 		renderDetail(detail, npc, api) {

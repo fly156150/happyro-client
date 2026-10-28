@@ -47,3 +47,11 @@
 :host([data-menu-density]) .panel .settings-form > .settings-tabs {
  margin-bottom: 4px;
 }
+
+/* The page and switch row already supply the top inset. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .mobile-pickup-settings > .pickup-section {
+ padding-top: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .pickup-section > .pickup-enabled {
+ margin-top: 0;
+}

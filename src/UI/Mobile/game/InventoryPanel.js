@@ -103,7 +103,10 @@ export function createInventoryPanel(body, actions) {
 			const ops = document.createElement('div');
 			ops.className = 'inventory-actions inventory-empty-actions menu-footer menu-footer--trailing';
 			ops.append(...['使用', '设置快捷键', '丢弃'].map(disabledAction));
-			detail.replaceChildren(hint, ops);
+			const frame = document.createElement('div');
+			frame.className = 'inventory-description-frame';
+			frame.append(hint);
+			detail.replaceChildren(frame, ops);
 			return;
 		}
 		const key = JSON.stringify(item);

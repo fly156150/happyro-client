@@ -107,3 +107,10 @@
  padding-inline: 0;
  white-space: nowrap;
 }
+
+/* List navigation has longer labels than the menu back/close actions. */
+:host([data-phone-screen]) .adventure-header > button[data-back] {
+ width: auto;
+ flex-basis: auto;
+ padding-inline: 8px;
+}

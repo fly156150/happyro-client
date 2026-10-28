@@ -1,3 +1,4 @@
+import { frameMenuSplit } from './MenuScrollPane.js';
 import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createEquipmentFilters } from 'UI/Game/EquipmentFilters.js';
@@ -7,6 +8,7 @@ import { createFeedback } from 'UI/Components/Feedback.js';
 export function createSelectionPanel(body, service) {
 	body.innerHTML =
 		'<p data-warning></p><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="可选列表"></div><section class="inventory-detail" aria-label="选项详情"></section></div>';
+	frameMenuSplit(body);
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),
@@ -73,6 +75,7 @@ export function createSelectionPanel(body, service) {
 			editingId === selected ? [...detail.querySelectorAll('select')].map(select => select.value) : [];
 		editingId = selected;
 		detail.replaceChildren();
+		detail.classList.toggle('menu-hint', !entry);
 		footer.querySelector('button')?.remove();
 		if (!entry) {
 			detail.textContent = state.entries.length ? '点选条目后确认' : '没有可选条目';

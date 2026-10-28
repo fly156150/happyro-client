@@ -1,0 +1,86 @@
+/* Ordinary guidance is distinct from error, warning and success feedback. */
+:host([data-menu-density][data-menu-arrangement]) .panel :is(
+ .menu-description-hint, .container-empty, .inventory-empty-message,
+ .inventory-list-empty, .skills-empty-message, .mail-empty, .mail-note,
+ .shop-empty, [data-filter-empty], [data-choice-hint], .auto-help, .auto-skill-empty,
+ .equipment-picker-message
+) {
+ font-size: var(--panel-label);
+ color: var(--menu-hint-color);
+ line-height: 1.5;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel :is(
+ .menu-description-hint, .container-empty, .inventory-empty-message,
+ .inventory-list-empty, .skills-empty-message, .mail-empty, .shop-empty, [data-filter-empty]
+) { margin: 0; }
+
+/* The containing frame already supplies the inset; don't indent the message again. */
+:host([data-menu-density][data-menu-arrangement]) .panel :is(
+ .inventory-list > .container-empty, .inventory-list > .inventory-list-empty,
+ .mail-item-list > .mail-empty, .mail-attachment-list > .mail-empty
+) { padding: 0; }
+
+/* Text-only detail placeholders and companion empty states have no item markup. */
+:host([data-menu-density][data-menu-arrangement]) .panel :is(
+ .inventory-detail, .inventory-list, .material-order, .quest-detail-content, .inventory-item-description,
+ [data-evolution], [data-skills]
+):not(:has(*)),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='status'] .inventory-detail > h3[hidden] ~ .item-description,
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='companions'] [data-skills] > p {
+ color: var(--menu-hint-color);
+ font-size: var(--panel-label);
+ line-height: 1.5;
+}
+
+/* Shared picker and independently mounted adventure views use the same guidance. */
+:host([data-menu-density][data-menu-arrangement]) :is(.panel, .mobile-adventure) :is(
+ .menu-hint, .pickup-search-status, .pickup-save-status,
+ .empty-detail, .catalog-empty-state, .character-job-empty,
+ .map-npc-empty, .monster-locations-empty, .item-sources-empty
+),
+:host([data-menu-density][data-menu-arrangement]) .panel .inventory-list > [data-empty] {
+ font-size: var(--panel-label);
+ color: var(--menu-hint-color);
+ line-height: 1.5;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel :is(.menu-hint, .inventory-list > [data-empty]) { margin: 0; padding: 0; }
+:host([data-menu-density][data-menu-arrangement]) .panel :is(.pickup-search-status, .pickup-save-status)[data-error='true'] { color: #ffb7b7; }
+
+/* Management tabs share touch hint sizing while retaining error semantics. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure :is(.management-loading, .management-error) {
+ font-size: var(--panel-label);
+ line-height: 1.5;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure .management-loading {
+ color: var(--menu-hint-color);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure .management-error {
+ color: #ffb5aa;
+}
+
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure .menu-hint.error {
+ color: #ffb5aa;
+}
+
+/* Instructions beside actions remain left aligned and use ordinary hint tokens. */
+:host([data-menu-density][data-menu-arrangement]) .panel .interaction-status {
+ font-size: var(--panel-label);
+ line-height: 1.5;
+ color: var(--menu-hint-color);
+}
+:host([data-menu-density][data-menu-arrangement]) .panel .equipment-picker-message[data-kind='error'] {
+ color: #ffb7b7;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel .pickup-results:has(> .pickup-loading:only-child) {
+ display: flex;
+ flex-direction: column;
+ opacity: 1;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel .pickup-results > .pickup-loading:only-child {
+ flex: 1 0 auto;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ padding: var(--menu-pane-inset);
+ text-align: center;
+}

@@ -1,3 +1,4 @@
+import { frameMenuSplit } from './MenuScrollPane.js';
 import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { createItemSubtypeFilter } from './ItemSubtypeFilter.js';
@@ -20,6 +21,7 @@ const labels = { inventory: '背包', storage: '仓库', cart: '手推车' };
 export function createContainerPanel(body, actions, initialSource) {
 	body.innerHTML =
 		'<div class="container-toolbar menu-form-row"></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list"></div><section class="inventory-detail"></section></div>';
+	frameMenuSplit(body);
 	const primary = initialSource;
 	const isCart = primary === 'cart';
 	let storagePeer = 'inventory';
@@ -142,7 +144,7 @@ export function createContainerPanel(body, actions, initialSource) {
 			.querySelectorAll('button, .container-quantity, .container-transfer-target')
 			.forEach(node => node.remove());
 		transferDestination = null;
-		$('.inventory-detail').textContent = '点击物品查看详情和选择数量';
+		$('.inventory-detail').innerHTML = '<p class="menu-description-hint">点击物品查看详情和选择数量</p>';
 		const amount = createMenuField('input', 'segment');
 		amount.type = 'number';
 		amount.value = '1';

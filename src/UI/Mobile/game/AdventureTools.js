@@ -1,3 +1,6 @@
+import adventureSpacingCSS from './AdventureSpacing.css?raw';
+import menuThemeCSS from './MenuTheme.css?raw';
+import menuHintsCSS from './MenuHints.css?raw';
 import { replaceNavigationClose } from 'UI/Game/NavigationVisit.js';
 import { acquireInputFreeze, releaseInputFreeze } from 'UI/InputFreeze.js';
 import menuNarrowTabletCSS from './MenuNarrowTablet.css?raw';
@@ -40,7 +43,7 @@ const Tools = new GUIComponent(
 		menuPortraitCSS +
 		menuContentLayoutCSS +
 		menuContentComponentsCSS +
-		menuNavigationCSS + menuChromeCSS + adventureMenuLayoutCSS + menuFormControlsCSS + menuButtonSizingCSS + menuNarrowTabletCSS
+		menuNavigationCSS + menuChromeCSS + adventureMenuLayoutCSS + menuFormControlsCSS + menuButtonSizingCSS + menuNarrowTabletCSS + adventureSpacingCSS + menuThemeCSS + menuHintsCSS
 );
 Tools.render = () => '<div class="adventure-mount mobile-menu-viewport"></div>';
 Tools.needFocus = false;

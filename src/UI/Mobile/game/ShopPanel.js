@@ -1,3 +1,4 @@
+import { frameMenuScroll } from './MenuScrollPane.js';
 import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createQuantityStepper } from 'UI/Components/QuantityStepper.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
@@ -8,6 +9,7 @@ import { setListItemText } from './ListItemText.js';
 export function createShopPanel(body, service) {
 	body.innerHTML =
 		'<div class="shop-layout" data-menu-layout="shop"><section class="shop-catalog"><h3>商品列表</h3><div class="inventory-list shop-catalog-list" aria-label="商店物品"></div></section><div class="shop-transfer"></div><section class="shop-order"><h3>待购买物品</h3><div class="inventory-list shop-order-list" aria-label="待交易物品"></div></section><section class="inventory-detail" aria-label="物品详情">请选择物品查看说明</section></div><div class="shop-footer menu-footer"><span class="shop-summary"><span data-balance></span><span class="shop-summary-separator"> · </span><span data-total></span></span><div class="shop-actions"></div></div>';
+	frameMenuScroll(body.querySelector('.inventory-detail'), { kind: 'detail' });
 	const $ = selector => body.querySelector(selector);
 	const feedback = createFeedback(body);
 	const lists = [new Map(), new Map()];
@@ -81,6 +83,12 @@ export function createShopPanel(body, service) {
 	const remove = button('←', () => transfer(-1));
 	remove.setAttribute('aria-label', '移回商品列表');
 	remove.title = '移回商品列表';
+	for (const control of [add, remove]) {
+		const arrow = document.createElement('span');
+		arrow.textContent = control.textContent;
+		arrow.setAttribute('aria-hidden', 'true');
+		control.replaceChildren(arrow);
+	}
 	$('.shop-transfer').append(add, remove);
 	const submit = button('购买', () => {
 		update();
@@ -162,6 +170,7 @@ export function createShopPanel(body, service) {
 		add.disabled = !state.allowed || !item || !capacity(item, 1) || Boolean(quantityDialog);
 		remove.disabled = !state.allowed || !item || !capacity(item, -1) || Boolean(quantityDialog);
 		const detail = $('.inventory-detail');
+		detail.classList.toggle('menu-hint', !item);
 		if (!item) {
 			if (detail.textContent !== '请选择物品查看说明') detail.textContent = '请选择物品查看说明';
 		}

@@ -9,7 +9,7 @@ export function createEquipmentPanel(body, actions) {
 	body.addEventListener('click', handleNaviClick);
 	body.addEventListener('keydown', handleNaviClick);
 	body.innerHTML =
-		'<nav class="equipment-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--stacked" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots" aria-label="装备部位"></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><div class="equipment-stats" hidden></div><div class="equipment-actions inventory-actions menu-footer menu-footer--trailing"></div>';
+		'<nav class="equipment-tabs menu-tabs menu-bottom-tabs menu-bottom-tabs--stacked" aria-label="装备分类"></nav><div class="equipment-layout" data-menu-layout="split"><div class="equipment-slots-frame"><div class="equipment-slots" aria-label="装备部位"></div></div><section class="equipment-detail inventory-item-detail" aria-label="装备详情"></section></div><div class="equipment-stats" hidden></div><div class="equipment-actions inventory-actions menu-footer menu-footer--trailing"></div>';
 	const $ = selector => body.querySelector(selector);
 	const slotsRoot = $('.equipment-slots'),
 		detail = $('.equipment-detail');

@@ -1,5 +1,6 @@
 .game-tools-window {
 	--game-tools-footer-height: 36px;
+	--game-tools-info-cell-inset: 6px;
 	position: relative;
 	isolation: isolate;
 	width: min(820px, calc(100vw - 24px));
@@ -695,7 +696,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 8px;
-	padding: 6px;
+	padding: var(--game-tools-info-cell-inset);
 	background: #fafafa;
 }
 .monster-stats span {
@@ -1626,3 +1627,13 @@
 .map-catalog-tab .map-npc-list .map-monsters-jump { min-height: 24px; height: auto; padding: 2px 4px; font-size: 11px; white-space: nowrap; }
 
 .map-catalog-tab .map-npc-list .map-monsters-jump:disabled { opacity: .45; cursor: default; }
+
+/* Item and monster information share row spacing without image-driven stretch. */
+.monster-stats,
+.item-overview .catalog-metadata {
+	align-self: start;
+	align-content: start;
+}
+.item-overview .catalog-metadata > div {
+	padding-block: var(--game-tools-info-cell-inset);
+}

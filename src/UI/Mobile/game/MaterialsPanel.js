@@ -100,6 +100,7 @@ export function createMaterialsPanel(body, service) {
 	function update() {
 		state = service.snapshot();
 		const order = $('.material-order');
+		order.classList.toggle('menu-hint', !state.order.length);
 		const orderKey = JSON.stringify([state.order, state.allowed, state.items.map(item => item.icon)]);
 		if (order.dataset.key !== orderKey) {
 			order.dataset.key = orderKey;

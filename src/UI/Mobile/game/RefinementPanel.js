@@ -83,6 +83,7 @@ export function createRefinementPanel(body, service) {
 				: {};
 		editingId = identity;
 		detail.replaceChildren();
+		detail.classList.toggle('menu-hint', !state.offer);
 		footer.querySelector('button')?.remove();
 		if (!state.offer) {
 			detail.textContent = '请选择装备';

@@ -1,3 +1,4 @@
+import { renderCatalogEmptyState } from './CatalogEmptyState.js';
 import { resetTabScroll } from './TabViewState.js';
 import { mountGameSelects } from './GameSelect.js';
 
@@ -5,6 +6,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 	const state = { items: [], selected: null, page: 1, total: 0, loading: false, error: '' };
 	let requestToken = 0;
 	let searchTimer;
+	let failedRequest;
 	container.innerHTML = `
 		<div class="catalog-toolbar">
 			<input class="catalog-search" type="search" placeholder="${options.placeholder}" aria-label="${options.searchLabel}">
@@ -13,7 +15,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 		</div>
 		<div class="catalog-layout" data-menu-layout="split">
 			<section class="catalog-browser">
-				<div class="catalog-summary">正在加载资料...</div><div class="catalog-list"></div>
+				<div class="catalog-summary"></div><div class="catalog-list"></div>
 				<div class="catalog-pagination" data-menu-pagination><button class="catalog-prev" type="button" aria-label="上一页"><span aria-hidden="true">‹</span></button><span class="catalog-page"></span><button class="catalog-next" type="button" aria-label="下一页"><span aria-hidden="true">›</span></button></div>
 			</section>
 			<section class="catalog-detail"><div class="empty-detail">${options.emptyDetail}</div></section>
@@ -49,14 +51,33 @@ export function mountRemoteCatalogBrowser(container, options) {
 
 	function renderList() {
 		const pageCount = Math.max(1, Math.ceil(state.total / options.pageSize));
-		container.querySelector('.catalog-summary').textContent = state.loading
-			? '正在加载资料...'
-			: state.error;
+		container.querySelector('.catalog-summary').textContent = '';
 		container.querySelector('.catalog-page').textContent = `${state.page} / ${pageCount}`;
 		container.querySelector('.catalog-prev').disabled = state.loading || state.page <= 1;
 		container.querySelector('.catalog-next').disabled = state.loading || state.page >= pageCount;
 		list.innerHTML = state.items.map(item => options.renderRow(item, state.selected)).join('');
-		if (!state.loading && !state.error && !state.items.length) options.renderEmptyList?.(list, search.value.trim());
+		if (state.loading || state.error) {
+			const status = document.createElement('div');
+			status.className = 'catalog-empty-state';
+			const message = status.appendChild(document.createElement('p'));
+			message.className = `menu-hint${state.error ? ' error' : ''}`;
+			message.setAttribute('role', 'status');
+			message.textContent = state.loading ? '正在加载资料...' : `资料加载失败：${state.error}`;
+			if (state.error) {
+				const retry = status.appendChild(document.createElement('button'));
+				retry.type = 'button';
+				retry.className = 'catalog-retry';
+				retry.textContent = '重试';
+				retry.addEventListener('click', () => {
+					if (!state.loading) void loadPage(failedRequest);
+				});
+			}
+			list.prepend(status);
+		}
+		if (!state.loading && !state.error && !state.items.length) {
+			if (options.renderEmptyList) options.renderEmptyList(list, search.value.trim());
+			else renderCatalogEmptyState(list, search.value.trim() ? '没有匹配结果' : '暂无资料');
+		}
 		list.querySelectorAll('[data-catalog-key]').forEach(button => {
 			button.disabled = state.loading;
 			button.addEventListener('click', () => {
@@ -72,7 +93,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 		options.onListRendered?.(list, state.items);
 	}
 
-	async function loadPage({ selectFirst = false } = {}) {
+	async function loadPage({ selectFirst = false, page = state.page } = {}) {
 		const token = ++requestToken;
 		state.loading = true;
 		state.error = '';
@@ -84,10 +105,12 @@ export function mountRemoteCatalogBrowser(container, options) {
 				filters: Object.fromEntries(
 					filters.filter(input => input.name).map(input => [input.name, input.value])
 				),
-				page: state.page,
+				page,
 				perPage: options.pageSize
 			});
 			if (token !== requestToken) return;
+			state.page = page;
+			failedRequest = null;
 			state.items = result.items;
 			state.total = result.total;
 			if (state.selected && !selectFirst) {
@@ -97,9 +120,8 @@ export function mountRemoteCatalogBrowser(container, options) {
 			}
 		} catch (error) {
 			if (token !== requestToken) return;
-			state.items = [];
-			state.total = 0;
-			state.error = error.message;
+			failedRequest = { page, selectFirst };
+			state.error = error.message || '请稍后重试';
 		} finally {
 			if (token === requestToken) {
 				state.loading = false;
@@ -111,6 +133,7 @@ export function mountRemoteCatalogBrowser(container, options) {
 
 	function resetAndLoad() {
 		state.items = [];
+		state.total = 0;
 		state.selected = null;
 		renderDetail();
 		state.page = 1;
@@ -153,14 +176,12 @@ export function mountRemoteCatalogBrowser(container, options) {
 		refreshDetail: renderDetail
 	});
 	container.querySelector('.catalog-prev').addEventListener('click', () => {
-		state.page -= 1;
 		resetTabScroll(container, list);
-		void loadPage({ selectFirst: true });
+		void loadPage({ selectFirst: true, page: state.page - 1 });
 	});
 	container.querySelector('.catalog-next').addEventListener('click', () => {
-		state.page += 1;
 		resetTabScroll(container, list);
-		void loadPage({ selectFirst: true });
+		void loadPage({ selectFirst: true, page: state.page + 1 });
 	});
 	if (!state.selected) void loadPage();
 

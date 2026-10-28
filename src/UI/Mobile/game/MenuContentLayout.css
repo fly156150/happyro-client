@@ -34,6 +34,6 @@
 		overscroll-behavior: contain;
 	}
 	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel [data-menu-layout='shop'] {
-		grid-template-rows: minmax(180px, 1fr) auto minmax(180px, 1fr) minmax(180px, 1fr);
+		grid-template-rows: minmax(180px, 1fr) minmax(180px, 1fr) auto minmax(180px, 1fr);
 	}
 }

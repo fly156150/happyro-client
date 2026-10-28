@@ -1,3 +1,4 @@
+import { frameMenuSplit } from './MenuScrollPane.js';
 import { ensureReadableText } from 'Utils/ReadableText.js';
 import { formatRagnarokMarkup } from 'Utils/RagnarokText.js';
 import { activateNavi, isNaviAvailable, prepareNaviLinks, handleNaviClick } from 'UI/Components/Navigation/NaviActionService.js';
@@ -8,6 +9,7 @@ import { setListItemText } from './ListItemText.js';
 export function createQuestsPanel(body, actions) {
 	body.innerHTML =
 		'<div class="skills-toolbar menu-form-row"><select aria-label="任务分类"><option value="all">全部任务</option><option value="1">进行中</option><option value="0">已暂停</option><option value="2">已完成</option></select></div><div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="任务列表"></div><section class="inventory-detail" aria-label="任务详情"></section></div><div class="quest-actions menu-footer menu-footer--trailing"></div>';
+	frameMenuSplit(body);
 	const feedback = createFeedback(body);
 	body.addEventListener('click', handleNaviClick);
 	body.addEventListener('keydown', handleNaviClick);
@@ -70,7 +72,7 @@ export function createQuestsPanel(body, actions) {
 		if (key === detailKey) return;
 		detailKey = key;
 		const content = document.createElement('div');
-		content.className = 'quest-detail-content';
+		content.className = q ? 'quest-detail-content' : 'quest-detail-content menu-hint';
 		const operations = $('.quest-actions');
 		operations.replaceChildren();
 		detail.replaceChildren(content);

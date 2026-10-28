@@ -1,3 +1,4 @@
+import { frameMenuScroll } from './MenuScrollPane.js';
 /** Shared touch presentation for pets, homunculi and mercenaries. */
 export function createCompanionLayout(
 	body,
@@ -10,4 +11,5 @@ export function createCompanionLayout(
   <label class="companion-name menu-form-row"><input data-menu-control="field" ${nameAttribute} maxlength="23" aria-label="${nameLabel}" placeholder="${nameLabel}"></label>
   <div class="inventory-actions menu-action-group" data-actions>${refresh ? '<button type="button" data-refresh>刷新状态</button>' : ''}</div>
  </div>`;
+	for (const area of body.querySelectorAll('.companion-info, .companion-content')) frameMenuScroll(area, { kind: area.className });
 }

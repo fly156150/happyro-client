@@ -1,3 +1,5 @@
+import { acquireInputFreeze, releaseInputFreeze } from '../../src/UI/InputFreeze.js';
+const externalFreeze = Symbol('external dialog');
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({
  session: { Playing: true }, bootstrap: vi.fn(), create: vi.fn(), intent: vi.fn(),
@@ -25,7 +27,7 @@ beforeEach(() => {
  state.bootstrap.mockResolvedValue({characterMaintenanceAllowed:true});
  Tools.root.innerHTML = Tools.render(); document.body.append(Tools._host);
 });
-afterEach(() => Tools.remove());
+afterEach(() => { Tools.remove(); releaseInputFreeze(externalFreeze); });
 it('unsubscribes and destroys the view on disconnect, including repeated opening', async () => {
  await Tools.onAppend(); await Tools.onAppend();
  expect(view.destroy).toHaveBeenCalledOnce();
@@ -59,6 +61,6 @@ it('offers the available catalogs without a global backend error banner', async 
 it('owns the input freeze while open and restores an existing freeze', async () => {
  await Tools.onAppend(); expect(state.session.FreezeUI).toBe(true);
  Tools.remove(); expect(state.session.FreezeUI).toBe(false);
- state.session.FreezeUI=true;
+ acquireInputFreeze(externalFreeze);
  await Tools.onAppend(); Tools.remove(); expect(state.session.FreezeUI).toBe(true);
 });

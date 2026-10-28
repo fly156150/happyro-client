@@ -28,7 +28,11 @@
 	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel :is(.shop-transfer, .bank-transfer) {
 		flex-direction: row-reverse;
 	}
-	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel :is(.shop-transfer, .bank-transfer) button {
+	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel .bank-transfer button {
+		transform: rotate(90deg);
+	}
+	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel .shop-transfer button > span {
+		display: inline-block;
 		transform: rotate(90deg);
 	}
 	:host([data-menu-arrangement='stacked'][data-menu-density]) .panel .bank-layout {
@@ -735,7 +739,7 @@
 
 /* Only the trade confirmation uses two independently scrollable offer columns. */
 :host([data-menu-density]) .panel[data-view='trade'] .ui-confirm:has(.trade-confirm-columns) {
- width: min(640px, calc(100% - var(--menu-dialog-inset, 32px)));
+ --menu-dialog-width: 640px;
 }
 :host([data-menu-density]) .panel[data-view='trade'] .ui-confirm:has(.trade-confirm-columns) .ui-confirm-body {
  display: flex;

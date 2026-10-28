@@ -1,0 +1,165 @@
+/* One owner for pane clearance, list rhythm and compact separators in all tabs. */
+:host {
+ --adventure-pane-inset: 6px;
+ --adventure-row-gap: 4px;
+ --adventure-divider-size: 1px;
+ --adventure-controls-divider-size: calc(1px + var(--adventure-pane-inset));
+}
+:host(:not([data-phone-screen])[data-menu-density]) { --adventure-pane-inset: 8px; }
+
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-list, .monster-list, .character-job-list, .character-detail-scroll, .settings-scroll, .map-npc-scroll, .monster-locations-scroll) {
+ margin-block: var(--adventure-pane-inset);
+ padding-block: 0;
+ min-height: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-list, .monster-list, .character-job-list) {
+ padding-inline: var(--adventure-content-inline);
+ row-gap: var(--adventure-row-gap);
+ align-content: start;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.map-detail-body, .npc-detail-body, .monster-information, .item-detail-content) {
+ margin-block: var(--adventure-pane-inset);
+ padding-block: 0;
+ min-height: 0;
+}
+/* All four portrait catalogs already have a fixed divider outside the scroller. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-list, .monster-list) { border-top: 0; }
+
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .catalog-empty-state {
+ grid-column: 1 / -1;
+ padding: 0;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: var(--adventure-pane-inset);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .catalog-empty-state > p { margin: 0; }
+
+/* Direct status children have no list wrapper to supply their own inset. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .map-npc-list > :is(.menu-hint, .map-npc-empty) {
+ margin: var(--adventure-pane-inset);
+ padding: 0;
+ overflow-wrap: anywhere;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .map-npcs-retry {
+ margin: 0 var(--adventure-pane-inset) var(--adventure-pane-inset);
+}
+
+/* Section padding must not double the outer scroller's top and bottom inset. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.character-detail-scroll, .settings-scroll) > section {
+ padding-block: var(--adventure-pane-inset);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.character-detail-scroll, .settings-scroll) > section:first-child { padding-top: 0; }
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.character-detail-scroll, .settings-scroll) > section:last-child { padding-bottom: 0; }
+
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.monster-drops, .map-monsters, .item-source-list) > .menu-hint {
+ margin: var(--adventure-pane-inset);
+ overflow-wrap: anywhere;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .monster-drops-retry {
+ margin-inline: var(--adventure-pane-inset);
+}
+
+/* Overview and resource panes use one gap; discard the desktop resource margin. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .monster-resources {
+ margin-top: 0;
+ gap: var(--adventure-pane-inset);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.monster-detail, .monster-information) { gap: var(--adventure-pane-inset); }
+
+/* Only a pane wholly occupied by a state is centered. Retained rows stay at the top. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.catalog-list, .monster-list, .character-job-list):has(> :is(.catalog-empty-state, .character-job-empty):only-child),
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ .adventure-content:has(> .adventure-loading-message:only-child) {
+ display: flex;
+ flex-direction: column;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.catalog-empty-state:only-child, .character-job-empty, .adventure-loading-message, .management-loading, .management-error, .empty-detail) {
+ box-sizing: border-box;
+ display: flex;
+ flex-direction: column;
+ flex: 1 0 auto;
+ align-items: center;
+ justify-content: center;
+ min-width: 0;
+ min-height: 0;
+ height: auto;
+ margin: 0;
+ padding: var(--adventure-pane-inset) var(--adventure-content-inline);
+ text-align: center;
+ overflow-wrap: anywhere;
+ gap: var(--adventure-pane-inset);
+}
+/* A long state remains scrollable instead of clipping outside the list pane. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
+ :is(.catalog-list, .monster-list, .character-job-list):has(> :is(.catalog-empty-state, .character-job-empty):only-child) {
+ overflow: auto;
+}
+
+/* Rhythm is shared by content role, not by forcing every component to one height. */
+:host {
+ --adventure-form-row-gap: 6px;
+ --adventure-form-column-gap: 8px;
+ --adventure-cell-inset: 4px;
+ --adventure-catalog-min-height: 44px;
+ --adventure-body-leading: 1.6;
+ --adventure-label-leading: 1.5;
+ --adventure-compact-leading: 1.35;
+}
+:host(:not([data-phone-screen])[data-menu-density]) {
+ --adventure-form-row-gap: 12px;
+ --adventure-form-column-gap: 12px;
+ --adventure-cell-inset: 6px;
+ --adventure-catalog-min-height: 60px;
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.management-form, .settings-grid, .settings-rate-columns, .settings-rate-list) {
+ row-gap: var(--adventure-form-row-gap);
+ column-gap: var(--adventure-form-column-gap);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.catalog-row, .monster-row, .character-job-row) {
+ height: auto;
+ min-height: var(--adventure-catalog-min-height);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.monster-stats > div, .catalog-metadata > div, .drop-group > div, .item-source-table th, .item-source-table td) {
+ padding-block: var(--adventure-cell-inset);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.management-form label, .settings-grid label, .settings-rate-list label, .drop-group > div, .item-source-table th, .item-source-table td) {
+ line-height: var(--adventure-label-leading);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.monster-stats > div, .catalog-metadata > div, .catalog-row-text, .monster-row-text) {
+ line-height: var(--adventure-compact-leading);
+}
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.item-description, .monster-description) {
+ line-height: var(--adventure-body-leading);
+}
+
+/* Drop-source tables use the same text rhythm as monster drop rows. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature]
+ :is(.drop-group > div, .item-source-table th, .item-source-table td) {
+ font-size: var(--panel-text);
+}
+/* Inline table navigation must not inherit the minimum height of action buttons. */
+:host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window .adventure-content[data-feature='items'] .item-source-monster {
+ display: block;
+ min-height: 0;
+ height: auto;
+ font: inherit;
+ line-height: inherit;
+}

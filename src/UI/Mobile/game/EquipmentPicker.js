@@ -1,3 +1,4 @@
+import { frameMenuScroll } from './MenuScrollPane.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 
 /** One query lifecycle per dialog; obsolete responses cannot restore stale choices. */
@@ -11,6 +12,8 @@ export function createEquipmentPicker(body, slot, actions, describe, equip, init
  preview.className = 'equipment-picker-preview';
  preview.setAttribute('aria-label', '装备说明');
  content.append(list, preview);
+ frameMenuScroll(list);
+ frameMenuScroll(preview);
  let choice = null, blocked = false, closed = false, generation = 0, controller, timer;
  let state = initialState, signature = null;
  const dismiss = confirmAction(body, `选择${slot.label}装备`, () => {
@@ -36,9 +39,10 @@ export function createEquipmentPicker(body, slot, actions, describe, equip, init
   clearTimeout(timer);
   controller?.abort();
  }
- function message(text, retry = false, target = preview) {
+ function message(text, retry = false, target = preview, kind = 'info') {
   const label = document.createElement('p');
   label.className = 'equipment-picker-message';
+  label.dataset.kind = kind;
   label.setAttribute('role', 'status');
   label.textContent = text;
   target.replaceChildren(label);
@@ -96,7 +100,7 @@ export function createEquipmentPicker(body, slot, actions, describe, equip, init
    if (closed || generation !== version || !dialog.isConnected) return;
    content.setAttribute('aria-busy', 'false');
    list.replaceChildren();
-   message('查询失败，请重试', true);
+   message('查询失败，请重试', true, preview, 'error');
   }
  }
  function candidates(snapshot) {

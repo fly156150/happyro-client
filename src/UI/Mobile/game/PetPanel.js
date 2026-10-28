@@ -127,6 +127,7 @@ export function createPetPanel(body, service) {
 			if (!state.evolutions.length) {
 				const empty = document.createElement('p');
 				empty.textContent = '暂无可用进化';
+				empty.className = 'menu-hint';
 				$('[data-evolution]').append(empty);
 				const button = document.createElement('button');
 				button.type = 'button';

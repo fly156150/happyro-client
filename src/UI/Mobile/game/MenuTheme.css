@@ -1,0 +1,9 @@
+/* Shared touch-menu geometry and ordinary guidance tokens. */
+:host {
+ --menu-hint-color: #f5f2e9;
+ --menu-pane-border: #52606d;
+ --menu-pane-radius: 10px;
+ --menu-pane-background: #19212a;
+ --menu-pane-inset: 8px;
+}
+:host(:not([data-phone-screen])[data-menu-density]) { --menu-pane-inset: 12px; }

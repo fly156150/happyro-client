@@ -1,3 +1,5 @@
+import { acquireInputFreeze, releaseInputFreeze } from '../../src/UI/InputFreeze.js';
+const externalFreeze = Symbol('external dialog');
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({ config: null, end: new Set() }));
 vi.mock('UI/GUIComponent.js', () => ({ default: class {
@@ -23,8 +25,8 @@ vi.mock('../../src/UI/Mobile/game/AdventureToolsView.js', () => ({ createAdventu
 } }));
 import tools from '../../src/UI/Mobile/game/AdventureTools.js';
 import Session from 'Engine/SessionStorage.js';
-beforeEach(() => { state.config = null; Session.FreezeUI = true; });
-afterEach(() => { tools.remove(); state.end.clear(); document.body.replaceChildren(); });
+beforeEach(() => { state.config = null; acquireInputFreeze(externalFreeze); });
+afterEach(() => { tools.remove(); releaseInputFreeze(externalFreeze); state.end.clear(); document.body.replaceChildren(); });
 it('opens the chosen map without closing the NPC and restores the prior freeze state before its close callback', async () => {
  const target = { mapName: 'alberta', x: 98, y: 154 }, close = vi.fn(() => {
   expect(tools.__active).toBe(false); expect(Session.FreezeUI).toBe(true);

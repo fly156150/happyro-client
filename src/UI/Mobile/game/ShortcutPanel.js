@@ -22,7 +22,7 @@ export function createShortcutPanel(body, actions) {
 			</section>
 			<section class="shortcut-editor inventory-item-detail" aria-label="快捷键说明">
 				<div class="shortcut-current"><strong data-slot-title></strong></div>
-				<p data-choice-hint>从列表选择技能或道具，查看说明并保存到当前位置。</p>
+				<p data-choice-hint></p>
 				<div data-choice-detail hidden></div>
 			</section>
 		</div>
@@ -108,6 +108,7 @@ export function createShortcutPanel(body, actions) {
 		const level = $('.shortcut-level select');
 		level.replaceChildren(new Option('不适用', ''));
 		level.disabled = true;
+		$('[data-choice-hint]').textContent = `选择技能或道具，保存到位置${index + 1}。`;
 		$('[data-choice-hint]').hidden = false;
 		highlightChoices();
 	}

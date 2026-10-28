@@ -167,3 +167,25 @@
 :host(:not([data-phone-screen])[data-menu-density]) .ui-confirm .ui-confirm-body > p {
  font-size: 16px;
 }
+
+/* Picker headings are titles; confirmation questions remain body copy. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .pickup-picker .item-picker-title {
+ font-size: var(--panel-title);
+ line-height: 1.4;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] dialog.pickup-picker > footer,
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] dialog.pickup-picker .pickup-picker-actions {
+ padding-block: var(--menu-footer-padding);
+ min-height: var(--menu-footer-height);
+}
+
+/* Independent item pickers share confirmation geometry and keep their own layout. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] dialog.pickup-picker[data-mobile-bounded] {
+ inset: var(--confirm-center-y) auto auto var(--confirm-center-x);
+ margin: 0;
+ transform: translate(-50%, -50%);
+ width: min(640px, max(0px, calc(var(--confirm-max-width) - 24px)));
+ height: min(560px, max(0px, calc(var(--confirm-max-height) - 24px)));
+ max-width: max(0px, calc(var(--confirm-max-width) - 24px));
+ max-height: max(0px, calc(var(--confirm-max-height) - 24px));
+}

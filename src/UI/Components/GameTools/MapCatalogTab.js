@@ -64,6 +64,7 @@ function mount(container, context = {}) {
 	let redrawPreview = () => {};
 	let previewResizeObserver = null;
 	let mapNpcs = [];
+	let mapNpcsStatus = 'loading';
 	let mapNpcsToken = 0;
 	let npcAvailability = {};
 	let npcAvailabilityToken = 0;
@@ -92,6 +93,23 @@ function mount(container, context = {}) {
 				api.refreshDetail();
 			});
 	};
+	async function loadMapNpcs(mapName, api) {
+		const token = ++mapNpcsToken;
+		mapNpcs = [];
+		mapNpcsStatus = 'loading';
+		try {
+			const rows = await loadAdventureMapNpcs(mapName);
+			if (token !== mapNpcsToken) return;
+			mapNpcs = toCatalogNpcs(rows);
+			mapNpcsStatus = 'ready';
+			checkNpcAvailability(mapNpcs, api);
+		} catch {
+			if (token !== mapNpcsToken) return;
+			mapNpcsStatus = 'error';
+		}
+		if (token === mapNpcsToken) api.refreshDetail();
+	}
+
 	/** Adapt one adventure-tools map row, resolving the channel the character is on. */
 	const toCatalogMap = row => {
 		const currentMap = normalizeAdventureMap(getCurrentAdventureMap());
@@ -240,20 +258,7 @@ function mount(container, context = {}) {
 					mapLoadError = true;
 					api.refreshDetail();
 				});
-				mapNpcs = [];
-				const npcsToken = ++mapNpcsToken;
-				loadAdventureMapNpcs(map.mapName)
-					.then(rows => {
-						if (npcsToken !== mapNpcsToken) return;
-						mapNpcs = toCatalogNpcs(rows);
-						api.refreshDetail();
-						checkNpcAvailability(mapNpcs, api);
-					})
-					.catch(() => {
-						if (npcsToken !== mapNpcsToken) return;
-						mapNpcs = [];
-						api.refreshDetail();
-					});
+				void loadMapNpcs(map.mapName, api);
 			}
 			const selectedNpc = mapNpcs.find(entry => npcCatalogKey(entry) === selectedNpcKey);
 			if (selectedNpc) {
@@ -317,13 +322,17 @@ function mount(container, context = {}) {
 					<section class="map-npc-list" aria-label="${escapeCatalogHtml(map.name)}的 NPC">
 						<h4><span>NPC</span><button type="button" class="map-monsters-jump" disabled>地图魔物 ↓</button></h4>
 						${
-							mapNpcs.length
+							mapNpcsStatus === 'loading'
+								? '<p class="menu-hint" role="status">NPC 加载中…</p>'
+								: mapNpcsStatus === 'error'
+									? '<p class="menu-hint error" role="status">NPC 加载失败</p><button type="button" class="map-npcs-retry">重试</button>'
+									: mapNpcs.length
 								? `<div class="map-npc-scroll"><ul>${mapNpcs
 										.map(npc => {
 											const npcKey = npcCatalogKey(npc);
 											const available = npcAvailability[npcKey];
 											return `<li class="map-npc-row${selectedNpcKey === npcKey ? ' selected' : ''}" data-npc-key="${escapeCatalogHtml(npcKey)}">
-												<span class="map-npc-text"><strong>${escapeCatalogHtml(npc.name)}</strong><small>${npc.x}, ${npc.y}${context.mobile ? '' : ` · ${escapeCatalogHtml(npcAvailabilityLabel(available))}`}</small></span>
+												<span class="map-npc-text"><strong>${escapeCatalogHtml(npc.name)}</strong>${context.mobile ? '' : `<small>${escapeCatalogHtml(npcAvailabilityLabel(available))}</small>`}</span>
 											</li>`;
 										})
 										.join('')}</ul></div>`
@@ -337,6 +346,10 @@ function mount(container, context = {}) {
 					<button class="catalog-teleport" type="button" ${canTeleportHere ? '' : 'disabled'}>${actionState.npcPending && selectedNpc ? '正在传送...' : '传送到这里'}</button>
 					<span class="catalog-status error">${escapeCatalogHtml(mapStatus)}</span>
 				</div>`;
+			detail.querySelector('.map-npcs-retry')?.addEventListener('click', () => {
+				void loadMapNpcs(map.mapName, api);
+				api.refreshDetail();
+			});
 			const monsterJump = detail.querySelector('.map-monsters-jump');
 			monsterTable.render(detail.querySelector('.map-monsters'), map.mapName, available => { monsterJump.disabled = !available; });
 			bindMapDetailScroll(detail.querySelector('.map-detail-body'));

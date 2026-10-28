@@ -68,6 +68,7 @@ export function createEnchantPanel(body, service) {
 		renderDescriptionMarkup(description, selectedItem?.descriptionMarkup || selectedItem?.description || '');
 		result.append(title, description);
 		detail.replaceChildren();
+		detail.classList.toggle('menu-hint', !state.selected);
 		footer.querySelector('button')?.remove();
 		if (!state.selected) {
 			detail.textContent = '请选择装备';

@@ -10,8 +10,8 @@ beforeEach(()=>{
 });
 afterEach(()=>document.body.replaceChildren());
 const select=()=>body.querySelector('.shop-catalog-list .inventory-item').click();
-it('moves entered quantities in both directions and keeps the description below the order',()=>{
- select();expect(body.querySelector('.shop-layout > .inventory-detail').textContent).toContain('恢复 HP');
+it('moves entered quantities in both directions and preserves the framed description',()=>{
+ select();expect(body.querySelector('.shop-layout > .menu-scroll-frame > .inventory-detail').textContent).toContain('恢复 HP');
  click('→');const input=body.querySelector('input');expect(input.max).toBe('8');input.value='3';click('确认');
  expect(service.set).toHaveBeenLastCalledWith(0,501,5);expect(body.querySelector('.shop-order-list').textContent).toContain('× 5');
  click('←');body.querySelector('input').value='2';click('确认');expect(service.set).toHaveBeenLastCalledWith(0,501,3);

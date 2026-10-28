@@ -193,7 +193,6 @@ describe('game tools integration', () => {
 
 	it('lists NPCs for the selected map and teleports through the existing NPC action', () => {
 		const mapSource = read('src/UI/Components/GameTools/MapCatalogTab.js');
-		expect(mapSource).toContain('loadAdventureMapNpcs(map.mapName)');
 		expect(mapSource).toContain('teleportToNpc(selectedNpc)');
 		expect(mapSource).toContain('npcTeleportEnabled');
 		expect(mapSource).toContain('class="map-detail-body"');

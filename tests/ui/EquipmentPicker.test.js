@@ -25,6 +25,7 @@ it('shows loading then only accepted candidates and equips only after confirmati
 it('keeps failure distinct from empty and supports retry', async()=>{
  const f=fixture(()=>Promise.reject(new Error('timeout')));await flush();
  expect(f.body.querySelector('.equipment-picker-preview .equipment-picker-message').textContent).toBe('查询失败，请重试');
+ expect(f.body.querySelector('.equipment-picker-message').dataset.kind).toBe('error');
  expect(f.body.querySelector('.equipment-picker-list').childElementCount).toBe(0);
  expect(f.body.querySelector('.ui-confirm-actions .equipment-picker-retry').hidden).toBe(false);
  f.actions.checkCandidates.mockResolvedValue({available:[false,false],blocked:false});

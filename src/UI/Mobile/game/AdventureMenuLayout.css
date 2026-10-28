@@ -62,7 +62,7 @@
  --adventure-content-inline: 8px;
 }
 :host([data-menu-density='spacious']) .mobile-adventure.game-tools-window {
- --adventure-content-inline: 16px;
+ --adventure-content-inline: 12px;
 }
 :host([data-menu-density][data-menu-arrangement]) .mobile-adventure.game-tools-window
  :is(.adventure-header, .catalog-toolbar, .monster-toolbar) {
@@ -102,7 +102,7 @@
 }
 :host([data-phone-screen][data-menu-arrangement='stacked']) .mobile-adventure.game-tools-window
  .adventure-content[data-feature='character'] .character-detail-scroll {
- padding-left: 6px;
+ padding-left: var(--adventure-content-inline);
 }
 
 /* The phone character divider already separates panes; avoid doubling its inset. */

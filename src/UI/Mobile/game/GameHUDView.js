@@ -1,3 +1,4 @@
+import menuThemeCSS from './MenuTheme.css?raw';
 import { bindNpcNaviControls } from 'UI/Game/NpcNaviPrompt.js';
 import { createBattleStatusDetails } from './BattleStatusDetails.js';
 import { createDeathPrompt } from './DeathPrompt.js';
@@ -7,6 +8,8 @@ import { bindChatPreviewLayout } from './ChatPreviewLayout.js';
 import menuNarrowTabletCSS from './MenuNarrowTablet.css?raw';
 import menuButtonSizingCSS from './MenuButtonSizing.css?raw';
 import menuBottomTabsCSS from './MenuBottomTabs.css?raw';
+import menuHintsCSS from './MenuHints.css?raw';
+import menuPaneLayoutCSS from './MenuPaneLayout.css?raw';
 import menuFeatureStyles from './MenuFeatureStyles.js';
 import menuFormControlsCSS from './MenuFormControls.css?raw';
 import menuChromeCSS from './MenuChrome.css?raw';
@@ -95,7 +98,7 @@ ${menuContentComponentsCSS}
 ${companionLayoutCSS}
 ${menuNavigationCSS}
 ${menuActionButtonsCSS}
-${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}${menuListFlushCSS}</style>${html}`;
+${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}${menuListFlushCSS}${menuThemeCSS}${menuPaneLayoutCSS}${menuHintsCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const chatPreview = createChatPreview(root);

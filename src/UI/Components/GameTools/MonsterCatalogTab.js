@@ -78,6 +78,7 @@ function mount(container, context = {}) {
 	let showReturnToCatalog = Boolean(requestedMonsterId);
 	const state = {
 		catalog: null,
+		catalogLoading: false,
 		drops: null,
 		dropsLoading: false,
 		dropsError: false,
@@ -142,7 +143,7 @@ function mount(container, context = {}) {
 		</div>
 		<div class="monster-layout" data-menu-layout="split">
 			<section class="monster-browser">
-				<div class="monster-summary">正在加载魔物资料...</div>
+				<div class="monster-summary"></div>
 				<div class="monster-list"></div>
 				<div class="monster-pagination" data-menu-pagination>
 					<button class="page-prev" type="button" aria-label="上一页"><span aria-hidden="true">‹</span></button>
@@ -179,6 +180,7 @@ function mount(container, context = {}) {
 	}
 
 	function applyFilter() {
+		if (!state.catalog || destroyed) return;
 		resetTabScroll(container, list);
 		state.filtered = filterMonsters(state.monsters, search.value, filter.value, {
 			scope: getScope(),
@@ -258,6 +260,7 @@ function mount(container, context = {}) {
 	}
 
 	function changePage(delta) {
+		if (!state.catalog || destroyed) return;
 		const page = paginateMonsters(state.filtered, state.page + delta, pageSize);
 		state.page = page.page;
 		resetTabScroll(container, list);
@@ -345,10 +348,10 @@ function mount(container, context = {}) {
 			</div><div class="monster-resources">
 				<section class="monster-drops"><h4>掉落物品</h4>${
 					state.drops
-						? `${renderDrops(state.drops[monster.id]?.mvpDrops, 'MVP 奖励')}${renderDrops(state.drops[monster.id]?.drops, '普通掉落') || '<p>无掉落资料</p>'}`
+						? (renderDrops(state.drops[monster.id]?.mvpDrops, 'MVP 奖励') + renderDrops(state.drops[monster.id]?.drops, '普通掉落')) || '<p class="menu-hint">无掉落资料</p>'
 						: state.dropsError
-							? '<p>掉落资料加载失败</p><button type="button" class="monster-drops-retry">重试</button>'
-							: '<p>掉落资料加载中...</p>'
+							? '<p class="menu-hint error" role="status">掉落资料加载失败</p><button type="button" class="monster-drops-retry">重试</button>'
+							: '<p class="menu-hint" role="status">掉落资料加载中...</p>'
 				}</section>
 				<section class="monster-locations">
 					<h4>出现地图</h4>
@@ -418,19 +421,39 @@ function mount(container, context = {}) {
 	container.querySelector('.page-prev').addEventListener('click', () => changePage(-1));
 	container.querySelector('.page-next').addEventListener('click', () => changePage(1));
 
-	Promise.all([loadMonsterCatalog(), DB.listNavigation('MAP', { channelsEnabled: Session.NavigationMapChannelsEnabled })])
-		.then(([catalog, navigationMaps]) => {
+	function renderCatalogStatus(failed = false) {
+		list.innerHTML = `<div class="catalog-empty-state"><p class="menu-hint${failed ? ' error' : ''}" role="status">${failed ? '魔物资料加载失败' : '正在加载魔物资料...'}</p>${failed ? '<button type="button" class="monster-catalog-retry">重试</button>' : ''}</div>`;
+		pageLabel.textContent = '';
+		container.querySelector('.page-prev').disabled = true;
+		container.querySelector('.page-next').disabled = true;
+	}
+	async function loadCatalog() {
+		if (destroyed || state.catalogLoading) return;
+		state.catalogLoading = true;
+		renderCatalogStatus();
+		try {
+			const [catalog, navigationMaps] = await Promise.all([
+				loadMonsterCatalog(),
+				DB.listNavigation('MAP', { channelsEnabled: Session.NavigationMapChannelsEnabled })
+			]);
+			if (destroyed) return;
 			state.catalog = catalog;
 			state.navigationMaps = navigationMaps;
 			state.monsters = catalog.monsters;
 			applyFilter();
 			openRequestedMonster();
-		})
-		.catch(error => {
-			console.error(error);
-			summary.textContent = '魔物资料加载失败';
-		});
+		} catch {
+			if (!destroyed) renderCatalogStatus(true);
+		} finally {
+			state.catalogLoading = false;
+		}
+	}
+	void loadCatalog();
 	container.addEventListener('click', event => {
+		if (event.target.closest('.monster-catalog-retry')) {
+			void loadCatalog();
+			return;
+		}
 		if (event.target.closest('.monster-return-catalog')) {
 			showReturnToCatalog = false;
 			context.returnToCatalog?.();

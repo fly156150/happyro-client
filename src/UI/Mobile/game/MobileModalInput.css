@@ -50,3 +50,17 @@
  max-height: var(--modal-input-height);
  padding-block: 3px;
 }
+
+/* Numeric edits share one reading scale, including older quantity layouts. */
+:host([data-menu-density]) .panel[data-view] .ui-confirm[open] .ui-confirm-body
+ :is(.drop-quantity > input, .drop-quantity-buttons button, .quantity-stepper .quantity-stepper-control) {
+ font-size: var(--panel-text);
+ line-height: 1.4;
+}
+:host([data-menu-density]) .ui-confirm[data-mobile-bounded] {
+ inset: var(--confirm-center-y) auto auto var(--confirm-center-x);
+ margin: 0;
+ transform: translate(-50%, -50%);
+ width: min(var(--menu-dialog-width, 380px), max(0px, calc(var(--confirm-max-width) - 24px)));
+ max-height: max(0px, calc(var(--confirm-max-height) - 24px));
+}

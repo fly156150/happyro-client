@@ -53,7 +53,7 @@ export function createItemDropSources(context) {
 	function render(region, itemId) {
 		const entry = cache.get(itemId);
 		if (!entry) {
-			region.innerHTML = '<p role="status">加载中…</p>';
+			region.innerHTML = '<p class="menu-hint" role="status">加载中…</p>';
 			const request = loadSources(itemId).then(
 				sources => ({ sources }),
 				() => ({ error: true })
@@ -67,7 +67,7 @@ export function createItemDropSources(context) {
 			return;
 		}
 		if (entry.request) {
-			region.innerHTML = '<p role="status">加载中…</p>';
+			region.innerHTML = '<p class="menu-hint" role="status">加载中…</p>';
 			void entry.request.then(() => {
 				if (active && region.isConnected) render(region, itemId);
 			});
@@ -75,7 +75,7 @@ export function createItemDropSources(context) {
 		}
 		if (entry.error) {
 			region.innerHTML =
-				'<p role="status">加载失败</p><button type="button" class="item-sources-retry">重试</button>';
+				'<p class="menu-hint error" role="status">加载失败</p><button type="button" class="item-sources-retry">重试</button>';
 			region.querySelector('button').onclick = () => {
 				cache.delete(itemId);
 				render(region, itemId);

@@ -86,3 +86,12 @@
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-choices {
  overflow-anchor: none;
 }
+
+/* Match the other filter-to-list seams and scale the unselected hint by device. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-browser {
+ gap: 6px;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] [data-choice-hint] {
+ font-size: var(--panel-label);
+ line-height: 1.5;
+}

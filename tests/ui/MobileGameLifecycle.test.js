@@ -1,9 +1,13 @@
+vi.mock('UI/Components/SkillList/SkillList.js', () => ({ default: { append: vi.fn() } }));
+vi.mock('Renderer/Entity/Entity.js', () => ({ default: { TYPE_PC: 0 } }));
+import { acquireInputFreeze, releaseInputFreeze } from '../../src/UI/InputFreeze.js';
+const externalFreeze = Symbol('external dialog');
 vi.mock('UI/Game/GameAutoRecovery.js', () => ({ loadRecoveryItemIcon: vi.fn(), recoveryItems: () => [], recoveryItemName: id => String(id), createGameAutoRecovery: () => ({ tick: vi.fn(), reset: vi.fn(), snapshot: () => ({status: ''}) }) }));
 vi.mock('UI/Game/SelfActions.js', () => ({ createSelfActions: () => ({ update: vi.fn(), destroy: vi.fn() }) }));
 vi.mock('UI/Components/Inventory/Inventory.js', () => ({ default: { getUI: () => ({ getItemById: () => null }) } }));
 vi.mock('Renderer/EntityManager.js', () => ({ default: {get:vi.fn(),forEach:vi.fn()} }));
 vi.mock('UI/Components/MiniMap/MiniMapImage.js', () => ({ hasVisiblePixels: () => true, createAltitudeFallback: () => null }));
-vi.mock('UI/Game/AutoCombatTeleport.js', () => ({ cancelAutoCombatTeleport: vi.fn(), consumeAutoCombatTeleport: () => false }));
+vi.mock('UI/Game/AutoCombatTeleport.js', () => ({ isAutoCombatTeleportPending: () => false, cancelAutoCombatTeleport: vi.fn(), consumeAutoCombatTeleport: () => false }));
 vi.mock('UI/Components/GameTools/WorldAssetService.js', () => ({ loadCatalogMapImage: vi.fn(async () => null) }));
 vi.mock('UI/Mobile/game/AdventureTools.js', () => ({ default: { append: vi.fn(), openMap: vi.fn() } }));
 vi.mock('UI/Game/GameAttributes.js', () => ({ createGameAttributes: () => ({}) }));
@@ -55,7 +59,7 @@ beforeEach(() => {
 	state.view.close.mockImplementation(() => state.actions.setModal(false));
 	state.view.destroy.mockImplementation(() => state.actions.setModal(false));
 });
-afterEach(() => { HUD.onRemove(); vi.useRealTimers(); vi.restoreAllMocks(); });
+afterEach(() => { HUD.onRemove(); releaseInputFreeze(externalFreeze); vi.useRealTimers(); vi.restoreAllMocks(); });
 it('replaces subscriptions and timers on repeat mounting and releases all on map removal', () => {
 	// Application-wide cache cleanup subscriptions outlive the map-scoped HUD.
 	const connections = new Set(state.connection);
@@ -86,7 +90,7 @@ it('allows inventory actions only while its own modal is open, without bypassing
  HUD.onAppend(); expect(state.inventoryAllowed()).toBe(false);
  state.actions.setModal(true); expect(state.inventoryAllowed()).toBe(true);
  state.actions.setModal(false); expect(state.inventoryAllowed()).toBe(false);
- state.Session.FreezeUI = true; state.actions.setModal(true); expect(state.inventoryAllowed()).toBe(false);
+ acquireInputFreeze(externalFreeze); state.actions.setModal(true); expect(state.inventoryAllowed()).toBe(false);
  state.actions.setModal(false); expect(state.Session.FreezeUI).toBe(true);
 });
 

@@ -21,7 +21,7 @@ export function createTradePanel(body, service) {
 	for (const side of ['own', 'peer']) {
 		const money = document.createElement('span');
 		money.dataset.tradeMoney = side;
-		layout.querySelector(`[data-${side}]`).previousElementSibling.append(money);
+		layout.querySelector(`[data-${side}]`).closest('.interaction-column').querySelector('.interaction-column-title').append(money);
 	}
 	const toolbar = document.createElement('div');
 	toolbar.className = 'trade-money-toolbar';

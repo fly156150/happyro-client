@@ -33,7 +33,8 @@ export function createMailPanel(body, service) {
 	layout.dataset.menuLayout = 'split';
 	const list = node(layout, 'section', 'mail-browser');
 	const pane = node(layout, 'section', 'mail-pane');
-	const detail = node(pane, 'div', 'mail-detail');
+	const detailFrame = node(pane, 'div', 'mail-detail-frame');
+	const detail = node(detailFrame, 'div', 'mail-detail');
 	const footer = node(body, 'div', 'mail-footer menu-footer');
 	const pagination = node(footer, 'div', 'mail-pagination menu-action-group');
 	pagination.setAttribute('data-menu-pagination', '');
@@ -186,7 +187,8 @@ export function createMailPanel(body, service) {
 			setListItemText(row, item.name, `×${item.count}`);
 		}
 		if (!items.length) para(inventory, query ? '没有匹配的物品' : '该分类暂无可添加物品', 'mail-empty');
-		const form = node(detail, 'div', 'mail-form');
+		const formFrame = node(detail, 'div', 'mail-compose-frame');
+		const form = node(formFrame, 'div', 'mail-form');
 		field(form, '收件人', state.draft.receiver, value => service.change('receiver', value));
 		button(form.lastElementChild, '校验', () => service.validate());
 		field(form, '标题', state.draft.title, value => service.change('title', value));
@@ -195,7 +197,8 @@ export function createMailPanel(body, service) {
 		amount.min = 0;
 		amount.max = 2147483647;
 		amount.inputMode = 'numeric';
-		const attachments = node(detail, 'section', 'mail-attachments');
+		const attachmentsFrame = node(detail, 'div', 'mail-compose-frame');
+		const attachments = node(attachmentsFrame, 'section', 'mail-attachments');
 		heading(attachments, `附件（${state.attachments.length}）`).classList.add('mail-detail-heading');
 		const attachmentList = node(attachments, 'div', 'mail-attachment-list');
 		for (const item of state.attachments) {

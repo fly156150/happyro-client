@@ -80,3 +80,23 @@
 }
 .panel .shortcut-fields .game-select-option { width: max-content; min-width: 100%; }
 .panel .shortcut-fields .game-select-menu { overflow-x: auto; }
+
+/* Keep the search field and frame stationary; only the options scroll. */
+:host([data-menu-density][data-menu-arrangement]) :is(.panel, .mobile-adventure) .game-select-menu:not([hidden]) {
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+ padding: var(--menu-pane-inset);
+}
+:host([data-menu-density][data-menu-arrangement]) :is(.panel, .mobile-adventure) .game-select-options {
+ flex: 1 1 auto;
+ min-height: 0;
+ max-height: none;
+ overflow: auto;
+ overscroll-behavior: none;
+}
+:host([data-menu-density][data-menu-arrangement]) :is(.panel, .mobile-adventure) :is(.game-select-search, .game-select-empty) { flex-shrink: 0; }
+:host([data-menu-density][data-menu-arrangement]) :is(.panel, .mobile-adventure) .game-select-empty {
+ color: var(--menu-hint-color);
+ font-size: var(--panel-label);
+}

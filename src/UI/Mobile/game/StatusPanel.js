@@ -1,7 +1,9 @@
+import { frameMenuSplit } from './MenuScrollPane.js';
 /** Keep selection and scroll positions while remaining durations update. */
 export function createStatusPanel(body) {
 	body.innerHTML =
 		'<div class="inventory-layout" data-menu-layout="split"><div class="inventory-list" aria-label="状态列表"></div><section class="inventory-detail" aria-label="状态说明"><h3 class="menu-detail-heading" hidden></h3><p class="status-detail-duration" hidden></p><p class="item-description"></p></section></div>';
+	frameMenuSplit(body);
 	const list = body.querySelector('.inventory-list');
 	const description = body.querySelector('.item-description');
 	const heading = body.querySelector('.menu-detail-heading');

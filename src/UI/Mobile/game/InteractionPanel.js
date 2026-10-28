@@ -1,3 +1,5 @@
+import { frameMenuScroll } from './MenuScrollPane.js';
+
 /** UI helpers shared by server-driven flows; device layouts are defined separately. */
 export function interactionReview(lines, summary, warning = '') {
 	const content = document.createElement('div');
@@ -71,6 +73,7 @@ export function interactionColumns(body, columns) {
 		area.className = `interaction-column-content ${className || ''}`;
 		if (content) area.innerHTML = content;
 		column.append(heading, area);
+		frameMenuScroll(area, { borderless: true });
 		layout.append(column);
 	}
 	body.replaceChildren(layout);

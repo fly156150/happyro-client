@@ -52,3 +52,28 @@ it('selects the original desktop card only for desktop adventure tools', async (
   await expect(mobile).resolves.toBe(false);
  } finally { globalThis.ResizeObserver = original; }
 });
+
+it('keeps a mobile confirmation within its owner as the viewport changes', async () => {
+ const original = globalThis.ResizeObserver;
+ globalThis.ResizeObserver = class { observe() {} disconnect() {} };
+ const host = document.body.appendChild(document.createElement('div'));
+ host.dataset.menuDensity = 'compact';
+ const root = host.attachShadow({ mode: 'open' });
+ root.innerHTML = '<section class="panel"><div></div></section>';
+ const owner = root.querySelector('section'), container = owner.firstElementChild;
+ let rect = { left: 20, top: 40, right: 320, bottom: 400, width: 300, height: 360 };
+ owner.getBoundingClientRect = () => rect;
+ try {
+  const answer = requestConfirmation(container, '确认操作？');
+  const dialog = container.querySelector('dialog');
+  expect(dialog.style.getPropertyValue('--confirm-max-height')).toBe('360px');
+  rect = { left: 20, top: 20, right: 600, bottom: 250, width: 580, height: 230 };
+  window.dispatchEvent(new Event('resize'));
+  expect(dialog.style.getPropertyValue('--confirm-max-height')).toBe('230px');
+  dialog.querySelector('[data-cancel]').click();
+  await expect(answer).resolves.toBe(false);
+  rect.bottom = 200;
+  window.dispatchEvent(new Event('resize'));
+  expect(dialog.style.getPropertyValue('--confirm-max-height')).toBe('230px');
+ } finally { host.remove(); globalThis.ResizeObserver = original; }
+});

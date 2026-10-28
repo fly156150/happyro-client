@@ -24,7 +24,7 @@ export function createMapMonsterTable(context) {
 	function render(region, mapName, onAvailability = () => {}) {
 		if (!catalog) {
 			onAvailability(false);
-			region.innerHTML = '<h5>地图魔物</h5><p role="status">加载中…</p>';
+			region.innerHTML = '<h5>地图魔物</h5><p class="menu-hint" role="status">加载中…</p>';
 			loadMonsterCatalog()
 				.then(data => {
 					if (!active) return;
@@ -34,7 +34,7 @@ export function createMapMonsterTable(context) {
 				.catch(() => {
 					if (!active || !region.isConnected) return;
 					region.innerHTML =
-						'<h5>地图魔物</h5><p role="status">魔物信息加载失败</p><button type="button">重试</button>';
+						'<h5>地图魔物</h5><p class="menu-hint error" role="status">魔物信息加载失败</p><button type="button">重试</button>';
 					region.querySelector('button').onclick = () => render(region, mapName, onAvailability);
 				});
 			return;

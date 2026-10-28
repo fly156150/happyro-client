@@ -1,0 +1,114 @@
+/* Keep pane insets outside the scrolling area on every touch layout. */
+
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] :is(.inventory-list-frame > .inventory-list, .inventory-description-frame > *),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='equipment'] :is(.equipment-slots-frame > .equipment-slots, .equipment-detail > .inventory-item-description),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='skills'] .skills-layout > section > :is(.inventory-list, .inventory-item-description, .skills-empty-message) {
+ flex: 1;
+ min-width: 0;
+ min-height: 0;
+ overflow-y: auto;
+ overscroll-behavior-y: none;
+ border: 0;
+ border-radius: 0;
+ padding: 0;
+ margin: 0;
+}
+
+/* The toolbar and the two equally sized inventory panes share outer edges. */
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-layout {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ column-gap: 6px;
+ padding: 0;
+}
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-list-frame { grid-column: 1; grid-row: 1; }
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-description-frame { grid-column: 2; grid-row: 1; }
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='inventory'] .inventory-detail { padding: 0; border: 0; }
+
+/* Phone portrait keeps details above lists, with filters and actions outside. */
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='equipment'] .equipment-slots-frame { grid-row: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='skills'] .skills-layout > .skills-browser { grid-row: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view='skills'] .skills-layout > .inventory-detail { grid-row: 1; }
+
+/* Skills retain equal columns even when a long description changes intrinsic sizes. */
+:host([data-menu-density][data-menu-arrangement='wide']) .panel[data-view='skills'] .skills-layout {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ column-gap: 6px;
+}
+
+/* Shared scroll panes retain the original content node and its event handlers. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='inventory'] :is(.inventory-list-frame, .inventory-description-frame),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='equipment'] :is(.equipment-slots-frame, .equipment-detail),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='skills'] .skills-layout > section,
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] :is(.mail-browser, .mail-detail-frame, .mail-compose-frame),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-scroll-frame {
+ display: flex;
+ flex-direction: column;
+ flex: 1;
+ box-sizing: border-box;
+ min-width: 0;
+ min-height: 0;
+ overflow: hidden;
+ padding: var(--menu-pane-inset);
+ border: 1px solid var(--menu-pane-border);
+ border-radius: var(--menu-pane-radius);
+ background: var(--menu-pane-background);
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-scroll-frame--inset {
+ border: 0;
+ border-radius: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-scroll-frame > .menu-scroll-area {
+ flex: 1;
+ box-sizing: border-box;
+ min-width: 0;
+ min-height: 0;
+ max-height: none;
+ margin: 0;
+ padding: 0;
+ border: 0;
+ border-radius: 0;
+ overflow: auto;
+ overscroll-behavior: none;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-scroll-frame > :is(.inventory-detail, .equipment-picker-preview) {
+ display: block;
+}
+/* Quest details have a single scroller, including the portrait layout. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='quests'] .menu-scroll-area > .quest-detail-content {
+ overflow: visible;
+ padding: 0;
+ border: 0;
+ border-radius: 0;
+}
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .menu-scroll-frame:is([data-pane-kind='list'], [data-pane-kind='attribute-editor']) { grid-row: 2; }
+:host([data-phone-screen][data-menu-arrangement='stacked']) .panel[data-view] .menu-scroll-frame:is([data-pane-kind='detail'], [data-pane-kind='attribute-results']) { grid-row: 1; }
+/* Trade keeps its two independent item lists beneath their fixed headings. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .menu-scroll-frame > .trade-offers { overflow: hidden; }
+
+/* Existing fixed frames use the same inset and primary frame appearance. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] :is(
+ .shop-catalog, .shop-order, .shortcut-browser, .auto-target-section, .auto-skill-section
+),
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] #mobile-recovery-settings .recovery-section {
+ padding: var(--menu-pane-inset);
+ border: 1px solid var(--menu-pane-border);
+ border-radius: var(--menu-pane-radius);
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='shortcuts'] .shortcut-choices { padding: 0; }
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] .interaction-column { border-radius: var(--menu-pane-radius); }
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] :is(.interaction-columns, .equipment-picker-layout) { gap: 6px; }
+/* Compose already has two framed panes; a third surrounding border adds no hierarchy. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='mail'] [data-mail-writing='true'] .mail-detail-frame {
+ padding: 0;
+ border: 0;
+ border-radius: 0;
+ background: transparent;
+}
+/* Chat already has an outer frame: keep channel navigation compact inside it. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='chat'] .chat-conversation {
+ padding: var(--menu-pane-inset);
+ border-color: var(--menu-pane-border);
+ border-radius: var(--menu-pane-radius);
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='chat'] .chat-log { padding-block: 0; }
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view] :is(.inventory-layout, .attribute-layout, .shop-layout) { column-gap: 6px; }

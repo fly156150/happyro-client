@@ -1,3 +1,5 @@
+import { acquireInputFreeze, releaseInputFreeze } from '../../src/UI/InputFreeze.js';
+const npcOwner = {};
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
 	network: { close: vi.fn(), requestPing: vi.fn(() => true) },
@@ -24,9 +26,9 @@ beforeEach(() => {
 	mocks.camera.zoomFinal = 140; mocks.camera.angleFinal.set([230, 35]);
 	rememberCharServer(server); gameRecoveryReady(cleanup);
 });
-afterEach(() => { recovery.cancel(); vi.useRealTimers(); });
+afterEach(() => { releaseInputFreeze(npcOwner); recovery.cancel(); vi.useRealTimers(); });
 it('blocks input while checking and restores the existing NPC freeze state on pong', () => {
-	mocks.session.FreezeUI = true;
+	acquireInputFreeze(npcOwner);
 	window.dispatchEvent(new Event('online'));
 	expect(dialog().textContent).toContain('正在检查连接');
 	expect(mocks.network.requestPing).toHaveBeenCalledTimes(1);
