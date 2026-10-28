@@ -22,6 +22,7 @@ import menuContentLayoutCSS from './MenuContentLayout.css?raw';
 import { bindHUDNotificationInset } from './HUDNotificationInset.js';
 import menuPortraitCSS from './MenuPortrait.css?raw';
 import portraitCSS from './GameHUDPortrait.css?raw';
+import refinementCSS from './RefinementPanel.css?raw';
 import interactionCSS from './InteractionPanel.css?raw';
 import interactionPhoneCSS from './InteractionPhone.css?raw';
 import interactionTabletCSS from './InteractionTablet.css?raw';
@@ -98,7 +99,7 @@ ${menuContentComponentsCSS}
 ${companionLayoutCSS}
 ${menuNavigationCSS}
 ${menuActionButtonsCSS}
-${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}${menuListFlushCSS}${menuThemeCSS}${menuPaneLayoutCSS}${menuHintsCSS}</style>${html}`;
+${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormControlsCSS}${menuButtonSizingCSS}${menuNarrowTabletCSS}${menuListFlushCSS}${menuThemeCSS}${menuPaneLayoutCSS}${menuHintsCSS}${refinementCSS}</style>${html}`;
 	const $ = selector => root.querySelector(selector);
 	const abort = new AbortController();
 	const chatPreview = createChatPreview(root);
@@ -552,7 +553,7 @@ ${vendingCSS}${menuChromeCSS}${menuFeatureStyles}${menuBottomTabsCSS}${menuFormC
 			panel === 'npc';
 		$('[data-back]').disabled = serverState?.canClose === false;
 		body.replaceChildren();
-		body.classList.remove('equipment-selection');
+		body.classList.remove('equipment-selection', 'refinement-inventory');
 		statusPanel = null;
 		body.classList.toggle('settings-body', panel === 'settings');
 		$('.panel').classList.toggle('settings-panel', panel === 'settings');

@@ -48,17 +48,92 @@ it('renders grade percentages directly, including blessing bonuses and the 100 p
 it('does not send zero-base-chance grade requests which the server rejects silently',()=>{
  const service=ready('grade');
  updateRefinementMaterials('grade',{index:2,success_chance:0,blessing_info:{id:6635,amount:1,max_blessing:1,bonus:10},materialList:[{itemId:6635,amount:1,price:100}]});
- expect(service.confirm(0,1)).toBe('此装备当前无法评级');
+ expect(service.confirm(0,1)).toContain('不满足升阶条件');
  expect(state.send).toHaveBeenCalledTimes(1);expect(service.snapshot().pending).toBe(false);
 });
 
 it.each([
  ['refine',0,'精炼成功'],['refine',1,'精炼失败，装备损毁'],
  ['refine',2,'精炼失败，精炼等级降低'],['refine',3,'精炼失败，装备保留'],
- ['grade',0,'评级成功'],['grade',1,'评级失败'],['grade',2,'评级失败，精炼等级降低'],
- ['grade',3,'评级失败，装备损毁'],['grade',4,'装备受到保护']
+ ['grade',0,'升阶成功'],['grade',1,'升阶失败'],['grade',2,'升阶失败，精炼等级降低'],
+ ['grade',3,'升阶失败，装备损毁'],['grade',4,'装备受到保护']
 ])('maps %s result %i to its own protocol message', (kind,result,message)=>{
  const service=ready(kind);
  expect(finishRefinement(kind,{itemIndex:2,result})).toBe(true);
  expect(service.snapshot()).toMatchObject({message,pending:false,messageKind:result===0?'success':'error'});
+});
+
+it('shows the refine condition before submission even when materials are insufficient',()=>{
+ const service=ready('grade');
+ updateRefinementMaterials('grade',{index:2,success_chance:0,blessing_info:{id:6635,amount:3,max_blessing:10,bonus:1},materialList:[{itemId:1000326,amount:5,price:875000}]});
+ expect(service.snapshot().message).toContain('不满足升阶条件');
+ expect(service.confirm(0)).toContain('不满足升阶条件');
+ const body=document.createElement('div');document.body.append(body);createRefinementPanel(body,service);
+ expect(body.querySelector('.interaction-warning').textContent).toContain('先提高精炼等级');
+ expect([...body.querySelectorAll('button')].find(b=>b.textContent==='下一步').disabled).toBe(true);
+ body.remove();
+});
+
+it('distinguishes grade protection options without changing their shared success chance', () => {
+ const service=ready('grade');
+ updateRefinementMaterials('grade',{index:2,success_chance:70,blessing_info:{id:6635,amount:1,max_blessing:10,bonus:1},materialList:[{itemId:6635,amount:1,price:175000,breakable:1},{itemId:6635,amount:5,price:875000,breakable:0}]});
+ const body=document.createElement('div');document.body.append(body);createRefinementPanel(body,service);
+ const select=body.querySelector('select');
+ expect([...select.options].map(option=>option.textContent)).toEqual(['可能损毁 · 材料 × 1','装备保留 · 材料 × 5']);
+ expect(body.textContent).toContain('成功率：70%');
+ expect(body.textContent).toContain('失败时：可能损毁装备');
+ select.value='1';select.onchange();
+ expect(body.textContent).toContain('费用：875000 Z');
+ expect(body.textContent).toContain('成功率：70%');
+ expect(body.textContent).toContain('失败时：装备保留，精炼等级不变');
+ const blessing=body.querySelector('input');blessing.value='3';blessing.oninput();
+ expect(body.textContent).toContain('成功率：73%');
+ select.value='0';select.onchange();
+ expect(body.textContent).toContain('成功率：73%');
+ expect(body.textContent).toContain('费用：175000 Z');
+ body.remove();
+});
+
+it('updates refining chance by material and retains the separate protection checkbox', () => {
+ const service=ready();
+ updateRefinementMaterials('refine',{itemIndex:2,blacksmithBlessing:3,MaterialInfo:[{itemId:6635,chance:50,zeny:100},{itemId:984,chance:80,zeny:200}]});
+ const body=document.createElement('div');document.body.append(body);createRefinementPanel(body,service);
+ const select=body.querySelector('.refinement-material-field select');select.value='1';select.onchange();
+ expect(body.textContent).toContain('成功率：80%');
+ const blessing=body.querySelector('input[type="checkbox"]');blessing.checked=true;blessing.onchange();
+ expect(body.textContent).toContain('成功率：80%');
+ expect(body.textContent).toContain('效果：避免装备损毁');
+ expect(blessing.getAttribute('role')).toBe('switch');
+ expect(body.textContent).toContain('消耗：3 个');
+ expect(body.textContent).toContain('持有：3 个');
+ expect(body.textContent).toContain('材料：材料 × 1');
+ body.remove();
+});
+
+it('shows an explicit unavailable message instead of empty refining controls', () => {
+ const service=ready();
+ updateRefinementMaterials('refine',{itemIndex:2,blacksmithBlessing:0,MaterialInfo:[]});
+ const body=document.createElement('div');createRefinementPanel(body,service);
+ expect(body.querySelector('.inventory-detail').textContent).toContain('此装备无法精炼');
+ expect(body.querySelector('.inventory-detail select')).toBeNull();
+ expect(body.querySelector('.interaction-footer .refinement-material-field select').disabled).toBe(true);
+ expect([...body.querySelectorAll('button')].find(b=>b.textContent==='下一步').disabled).toBe(true);
+ expect(service.snapshot().message).toBe('此装备无法精炼');
+});
+it('disables blessing when stock is insufficient and refreshes when stock changes', () => {
+ const service=ready();state.items[1].count=2;
+ const body=document.createElement('div');const panel=createRefinementPanel(body,service);
+ expect(body.querySelector('[role="switch"]').disabled).toBe(true);
+ expect(body.textContent).toContain('铁匠的祝福不足');
+ state.items[1].count=4;panel.update();
+ expect(body.querySelector('[role="switch"]').disabled).toBe(false);
+ expect(body.textContent).toContain('持有：4 个');
+});
+it('keeps the unsupported protection switch disabled beside the next action', () => {
+ const service=ready();updateRefinementMaterials('refine',{itemIndex:2,blacksmithBlessing:0,MaterialInfo:[{itemId:984,chance:100,zeny:200}]});
+ const body=document.createElement('div');createRefinementPanel(body,service);
+ expect(body.querySelector('.interaction-footer [role="switch"]').disabled).toBe(true);
+ expect(body.querySelector('.interaction-status').hidden).toBe(true);
+ expect(body.querySelector('.inventory-detail').textContent).toContain('本次精炼不会失败');
+ expect(body.querySelector('.inventory-detail .inventory-item-description')).toBeNull();
 });

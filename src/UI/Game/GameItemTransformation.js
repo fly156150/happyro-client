@@ -79,7 +79,7 @@ export function openItemTransformation(kind, itemId) {
 		if (kind === 'reform') {
 			lines.push(
 				`改造结果：${DB.getItemName({ ITID: recipe.ResultItemId, IsIdentified: true })}`,
-				`精炼变化：${recipe.ChangeRefineValue}；保留评级：${recipe.PreserveGrade ? '是' : '否'}；保留插槽：${recipe.PreserveSocketItem ? '是' : '否'}`
+				`精炼变化：${recipe.ChangeRefineValue}；保留阶级：${recipe.PreserveGrade ? '是' : '否'}；保留插槽：${recipe.PreserveSocketItem ? '是' : '否'}`
 			);
 			lines.push(
 				...costs(recipe).map(row => `${DB.getItemName({ ITID: row.id, IsIdentified: true })} × ${row.count}`)

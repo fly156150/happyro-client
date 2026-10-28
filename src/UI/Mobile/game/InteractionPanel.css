@@ -429,3 +429,44 @@
 .interaction-panel .trade-money-toolbar .interaction-field { display:flex; align-items:center; gap:var(--panel-gap); flex:1; min-width:0; white-space:nowrap; margin:0; }
 .interaction-panel .trade-money-toolbar input { flex:1; min-width:0; width:0; }
 .interaction-panel .trade-money-toolbar .interaction-inline-actions { flex-shrink:0; }
+
+/* Shared refinement/grade configuration follows the active phone/tablet density. */
+.interaction-panel .refinement-config {
+	display: grid;
+	gap: var(--panel-gap);
+	min-width: 0;
+}
+.interaction-panel .interaction-columns .refinement-config .interaction-field,
+.interaction-panel .refinement-config p {
+	margin: 0;
+}
+.interaction-panel .refinement-config .interaction-field {
+	font: inherit;
+}
+.interaction-panel .refinement-blessing {
+	display: grid;
+	gap: 4px;
+	padding-top: var(--panel-gap);
+	border-top: 1px solid #52606d;
+}
+.interaction-panel .refinement-config input[type='number'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+.interaction-panel .refinement-config .refinement-hint {
+	font: inherit;
+	line-height: 1.5;
+	color: inherit;
+}
+.interaction-panel .refinement-chance {
+	white-space: pre-line;
+}
+.interaction-panel .interaction-columns .refinement-config .refinement-material-field {
+ display: grid;
+ grid-template-columns: auto minmax(0, 1fr);
+ align-items: center;
+ gap: 8px;
+}
+.interaction-panel .refinement-config .refinement-hint {
+ white-space: pre-line;
+}

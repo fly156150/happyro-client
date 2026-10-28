@@ -75,6 +75,7 @@ it('keeps refinement material and optional protection through refresh without re
 			kind: 'refine',
 			offer: { blacksmithBlessing: 2 },
 			zeny: 2000,
+			blessingOwned: 3,
 			materials: [
 				{ index: 0, name: '普通矿石', owned: 3, zeny: 100, chance: 70 },
 				{ index: 1, name: '高级矿石', owned: 4, zeny: 1000, chance: 90 }
@@ -82,13 +83,13 @@ it('keeps refinement material and optional protection through refresh without re
 		};
 	const service = { snapshot: () => state, confirm: vi.fn(() => ''), select: vi.fn() };
 	const panel = createRefinementPanel(body, service);
-	body.querySelector('select').value = '1';
-	body.querySelector('input').checked = true;
+	body.querySelector('.refinement-material-field select').value = '1';
+	body.querySelector('[role="switch"]').checked = true;
 	state.zeny = 3000;
 	panel.update();
-	expect(body.querySelector('select').value).toBe('1');
-	expect(body.querySelector('input').checked).toBe(true);
-	body.querySelector('input').checked = false;
+	expect(body.querySelector('.refinement-material-field select').value).toBe('1');
+	expect(body.querySelector('[role="switch"]').checked).toBe(true);
+	body.querySelector('[role="switch"]').checked = false;
 	button(body, '下一步').click();
 	expect(body.querySelector('dialog').textContent).toContain('1000 Z');
 	body.querySelector('[data-confirm]').click();
@@ -366,4 +367,39 @@ it('loads refinement list icons and announces every result once including repeat
  panel.update();
  expect(document.querySelector('.ui-toast').textContent).toBe('强化失败');
  expect(document.querySelector('.ui-toast').classList.contains('error')).toBe(true);
+});
+
+it('filters the refining equipment browser without losing the selected configuration', () => {
+ const body=mount();
+ const items=[{...item,index:1,ID:1201,name:'长剑',type:5,subtypes:[]},{...item,index:2,ID:2301,name:'棉衬衫',type:4,subtypes:[]}];
+ const state={kind:'refine',items,selected:{index:1,ID:1201},allowed:true,blessingOwned:5,offer:{blacksmithBlessing:2},materials:[{index:0,name:'矿石',owned:10,chance:80,zeny:100}]};
+ const panel=createRefinementPanel(body,{snapshot:()=>state});
+ expect(body.querySelectorAll('.inventory-item')).toHaveLength(2);
+ const search=body.querySelector('input[type=search]');search.value='2301';search.oninput();
+ expect([...body.querySelectorAll('.inventory-item')].map(node=>node.title)).toEqual(['棉衬衫']);
+ expect(body.querySelector('.inventory-detail h3').textContent).toBe('长剑');
+ search.value='';search.oninput();
+ const category=body.querySelector('[aria-label="装备分类"]');category.value='weapon';category.onchange();
+ expect([...body.querySelectorAll('.inventory-item')].map(node=>node.title)).toEqual(['长剑']);
+ const protection=body.querySelector('[role=switch]');protection.checked=true;protection.onchange();state.zeny=1000;panel.update();
+ expect(body.querySelector('.interaction-footer [role=switch]').checked).toBe(true);
+ expect(body.querySelector('.interaction-status').hidden).toBe(true);
+ expect(body.querySelector('.inventory-detail').textContent).not.toContain('说明');
+});
+
+it('moves the material control on rotation without losing the selected material or protection', () => {
+ const body=mount(),host=body.getRootNode().host;
+ host.dataset.orientation='landscape';
+ const state={kind:'refine',items:[item],selected:{index:1,ID:501},allowed:true,blessingOwned:5,offer:{blacksmithBlessing:2},materials:[{index:0,name:'矿石',owned:5,chance:70,zeny:100},{index:1,name:'浓缩矿石',owned:5,chance:80,zeny:200}]};
+ const panel=createRefinementPanel(body,{snapshot:()=>state});
+ const select=body.querySelector('.refinement-material-field select');select.value='1';select.onchange();
+ body.querySelector('[role=switch]').checked=true;
+ host.dataset.orientation='portrait';panel.update();
+ expect(body.querySelector('.interaction-footer .refinement-material-field select')).toBe(select);
+ state.zeny=1234;panel.update();
+ expect(body.querySelector('.interaction-footer select').value).toBe('1');
+ expect(body.querySelector('[role=switch]').checked).toBe(true);
+ host.dataset.orientation='landscape';panel.update();
+ expect(body.querySelector('.interaction-footer .refinement-material-field select').value).toBe('1');
+ expect(body.querySelector('.inventory-detail .refinement-material-field')).toBeNull();
 });

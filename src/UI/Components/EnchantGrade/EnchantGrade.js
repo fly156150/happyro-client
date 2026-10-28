@@ -1,3 +1,4 @@
+import { gradeRefineHint } from 'UI/Game/GradeFeedback.js';
 import Platform from 'UI/Platform.js';
 import { openGameRefinement, updateRefinementMaterials, finishRefinement } from 'UI/Game/GameRefinement.js';
 /**
@@ -55,8 +56,13 @@ let EnchantGrade_can_cont = true;
 let EnchantGrade_blessing_used = false;
 let EnchantGrade_currentBlessing = 0;
 let EnchantGrade_current_success = 0;
-let materialNormal, materialOver, materialPick, startNormal, startDisable;
+let materialNormal, materialOver, materialPick;
 let _materialSlotAbort = null;
+let gradePending = false;
+let currentOffer = null;
+let selectedEquipment = null;
+let effectTimer = null;
+const phaseTokens = {};
 EnchantGrade.imageLoopTimeout = {};
 
 /**
@@ -77,15 +83,15 @@ const GradeMapping = {
  */
 const scenarioMsgMapping = {
 	initial: [
-		{ id: 3870, color: '#de0808' },
-		{ id: 3871, color: '#00ef5a' },
-		{ id: 3872, color: '#00ef5a' }
+		{ text: '将装备拖入左侧栏', color: '#de0808' },
+		{ text: '选择升阶材料并核对费用', color: '#00ef5a' },
+		{ text: '升阶成功后精炼等级归零', color: '#00ef5a' }
 	],
-	waiting: [{ id: 3707, color: '#de0808' }],
-	cannot_proceed: [{ id: 3821, color: '#de0808' }],
-	insufficient: [{ id: 3708, color: '#de0808' }],
-	destroyable: [{ id: 3712, color: '#de0808' }],
-	non_destroyable: [{ id: 3822, color: '#00ef5a' }]
+	waiting: [{ text: '请选择升阶材料', color: '#de0808' }],
+	cannot_proceed: [{ text: '此装备当前无法升阶', color: '#de0808' }],
+	insufficient: [{ text: '材料或 Zeny 不足', color: '#de0808' }],
+	destroyable: [{ text: '升阶失败可能损毁装备', color: '#de0808' }],
+	non_destroyable: [{ text: '所选方案不会损毁装备', color: '#00ef5a' }]
 };
 
 /**
@@ -177,13 +183,6 @@ EnchantGrade.init = function init() {
 			slot.style.backgroundImage = `url(${d})`;
 		});
 	});
-	Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/btn_start_disable.bmp', d => {
-		startDisable = d;
-		const startBtn = root.querySelector('.start_grade');
-		if (startBtn) {
-			startBtn.style.backgroundImage = `url(${d})`;
-		}
-	});
 };
 
 /**
@@ -199,13 +198,14 @@ EnchantGrade.onAppend = function onAppend() {
 	}
 
 	setMessages('initial');
-	clearTimeout(EnchantGrade.imageLoopTimeout);
+	Object.keys(phaseTokens).forEach(stopPhase);
 };
 
 /**
  * Remove EnchantGrade Window (and so clean up items)
  */
 EnchantGrade.onRemove = function onRemove() {
+	gradePending = false;
 	onRemoveItem();
 	clearEnchantGradeStates();
 };
@@ -269,6 +269,7 @@ EnchantGrade.onOpenEnchantGradeUI = function onOpenEnchantGradeUI() {
  * Handles sending request to server to close EnchantGrade UI
  */
 function onEnchantGradeClose() {
+	if (gradePending) return;
 	EnchantGrade.remove();
 
 	const pkt = new PACKET.CZ.GRADE_ENCHANT_CLOSE_UI();
@@ -289,6 +290,8 @@ function controlPhase(phase, shouldLoop, interval, targetdiv, callback) {
 		EnchantGrade.imageLoopTimeout[phase] = null;
 	}
 
+	const token = Symbol(phase);
+	phaseTokens[phase] = token;
 	let currentImageIndex = 0;
 	const imageArray = images[phase];
 
@@ -299,6 +302,7 @@ function controlPhase(phase, shouldLoop, interval, targetdiv, callback) {
 
 	function showImages() {
 		Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/' + imageArray[currentImageIndex], function (data) {
+			if (phaseTokens[phase] !== token) return;
 			const root = _root();
 			const target = root.querySelector(targetdiv);
 			if (target) {
@@ -331,6 +335,7 @@ function controlPhase(phase, shouldLoop, interval, targetdiv, callback) {
  * @param {string} phase - The phase to stop the image loop for
  */
 function stopPhase(phase) {
+	delete phaseTokens[phase];
 	if (EnchantGrade.imageLoopTimeout[phase]) {
 		clearTimeout(EnchantGrade.imageLoopTimeout[phase]);
 		EnchantGrade.imageLoopTimeout[phase] = null;
@@ -366,6 +371,7 @@ function onItemDrop(event) {
  * Handles sending the server packet request to EnchantGrade an item
  */
 EnchantGrade.onRequestItemEnchantGrade = function onRequestItemEnchantGrade(item) {
+	if (gradePending) return;
 	const pkt = new PACKET.CZ.GRADE_ENCHANT_SELECT_EQUIPMENT();
 	pkt.index = item.index;
 	Network.sendPacket(pkt);
@@ -410,15 +416,21 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 		updateRefinementMaterials('grade', pkt);
 		return;
 	}
+	if (gradePending || !EnchantGrade.isEnchantGradeOpen()) return;
 	const root = _root();
+	onRemoveItem();
 
-	if (pkt && pkt.materialList.length > 0) {
+	if (pkt && pkt.index >= 0 && pkt.materialList.length > 0) {
+		const equipment = Inventory.getUI().getItemByIndex(pkt.index);
+		if (!equipment) return;
+		currentOffer = pkt;
+		selectedEquipment = {
+			index: equipment.index,
+			ITID: equipment.ITID,
+			refine: equipment.RefiningLevel,
+			grade: equipment.enchantgrade
+		};
 		disableDropProxy();
-
-		const existingItem = root.querySelector('.enchant_container .item');
-		if (existingItem) {
-			onRemoveItem();
-		}
 
 		EnchantGrade_item_index = pkt.index;
 		EnchantGrade_current_success = pkt.success_chance;
@@ -435,7 +447,11 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 		const content = root.querySelector('.enchant_container');
 
 		EnchantGrade_can_cont = EnchantGrade_current_success > 0;
-		setMessages(EnchantGrade_can_cont ? 'waiting' : 'cannot_proceed');
+		if (EnchantGrade_can_cont) setMessages('waiting');
+		else {
+			const notice = root.querySelector('.notification_container');
+			notice.textContent = gradeRefineHint(item.RefiningLevel);
+		}
 
 		const itemDiv = document.createElement('div');
 		itemDiv.className = 'item';
@@ -517,6 +533,7 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 			addBtn.parentNode.replaceChild(newAddBtn, addBtn);
 
 			newAddBtn.addEventListener('click', () => {
+				if (gradePending) return;
 				if (EnchantGrade_currentBlessing >= bless.max_blessing) {
 					return;
 				}
@@ -531,11 +548,11 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 			});
 
 			newAddBtn.addEventListener('mouseenter', e => {
-				showTooltip(DB.getMessage(3976).replace('%d', bless.amount), e, newAddBtn);
+				showTooltip(`每次祝福消耗 ${bless.amount} 个材料，提高 ${bless.bonus}% 成功率`, e, newAddBtn);
 			});
 
 			newAddBtn.addEventListener('mousemove', e => {
-				showTooltip(DB.getMessage(3976).replace('%d', bless.amount), e, newAddBtn);
+				showTooltip(`每次祝福消耗 ${bless.amount} 个材料，提高 ${bless.bonus}% 成功率`, e, newAddBtn);
 			});
 
 			newAddBtn.addEventListener('mouseleave', hideTooltip);
@@ -547,6 +564,7 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 			removeBtn.parentNode.replaceChild(newRemoveBtn, removeBtn);
 
 			newRemoveBtn.addEventListener('click', () => {
+				if (gradePending) return;
 				if (EnchantGrade_currentBlessing <= 0) {
 					EnchantGrade_blessing_used = false;
 					return;
@@ -660,8 +678,6 @@ function onPopulateMaterials() {
 	Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/btn_material.bmp', d => (materialNormal = d));
 	Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/btn_material_over.bmp', d => (materialOver = d));
 	Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/btn_material_pick.bmp', d => (materialPick = d));
-	Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/btn_start.bmp', d => (startNormal = d));
-	Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/btn_start_disable.bmp', d => (startDisable = d));
 
 	if (_materialSlotAbort) {
 		_materialSlotAbort.abort();
@@ -693,12 +709,13 @@ function onPopulateMaterials() {
 		slot.addEventListener(
 			'click',
 			function () {
+				if (gradePending) return;
 				if (!this.dataset.index) {
 					return;
 				}
 
 				if (EnchantGrade_blessing_used) {
-					UIManager.showMessageBox(DB.getMessage(3831), 'ok');
+					UIManager.showMessageBox('更换升阶材料后，祝福次数已重置', 'ok');
 					onResetBlessing();
 				}
 
@@ -743,22 +760,7 @@ function onPopulateMaterials() {
 					setMessages(...scenarios);
 				}
 
-				if (insufficent === false) {
-					const startButton = root.querySelector('.start_grade');
-					if (startButton) {
-						const newStartBtn = startButton.cloneNode(true);
-						startButton.parentNode.replaceChild(newStartBtn, startButton);
-
-						if (EnchantGrade_can_cont === true) {
-							newStartBtn.style.backgroundImage = `url(${startNormal})`;
-							newStartBtn.addEventListener('click', () => {
-								onRequestEnchantGrade();
-							});
-						} else {
-							newStartBtn.style.backgroundImage = `url(${startDisable})`;
-						}
-					}
-				}
+				setStartEnabled(!insufficent && EnchantGrade_can_cont);
 			},
 			{ signal: _slotSignal }
 		);
@@ -789,12 +791,24 @@ function onResetBlessing() {
  * Handles clearance of variables and UI components when changing Item
  */
 function onRemoveItem() {
+	if (gradePending) return;
 	const root = _root();
+	clearTimeout(effectTimer);
+	effectTimer = null;
+	currentOffer = null;
+	selectedEquipment = null;
+	EnchantGrade_item_index = 0;
+	EnchantGrade_item_mat = 0;
+	EnchantGrade_blessing_used = false;
+	EnchantGrade_currentBlessing = 0;
+	EnchantGrade_current_success = 0;
+	const wheel = root.querySelector('.grade-wheel');
+	if (wheel) wheel.style.visibility = 'hidden';
 
 	gradingMaterials = [];
 
 	if (EnchantGrade.imageLoopTimeout) {
-		Object.keys(EnchantGrade.imageLoopTimeout).forEach(stopPhase);
+		Object.keys(phaseTokens).forEach(stopPhase);
 	}
 
 	const tankContainer = root.querySelector('.grade_tank_container');
@@ -860,29 +874,75 @@ function onRemoveItem() {
 		}
 	});
 
-	const startBtn = root.querySelector('.start_grade');
-	if (startBtn) {
-		const newStartBtn = startBtn.cloneNode(true);
-		startBtn.parentNode.replaceChild(newStartBtn, startBtn);
-		newStartBtn.style.backgroundImage = `url(${startDisable})`;
-	}
-
+	setStartEnabled(false);
 	enableDropProxy();
 }
 
 /**
  * Send the server request to EnchantGrade the item
  */
+function setStartEnabled(enabled) {
+	const old = _root().querySelector('.start_grade');
+	if (!old) return;
+	const button = old.cloneNode(true);
+	old.replaceWith(button);
+	button.disabled = !enabled;
+	if (enabled) button.addEventListener('click', onRequestEnchantGrade);
+}
+
+function canSubmitGrade() {
+	if (gradePending || !currentOffer || !selectedEquipment || !EnchantGrade_can_cont) return false;
+	const inventory = Inventory.getUI();
+	const item = inventory.getItemByIndex(selectedEquipment.index);
+	if (
+		!item ||
+		item.ITID !== selectedEquipment.ITID ||
+		item.RefiningLevel !== selectedEquipment.refine ||
+		item.enchantgrade !== selectedEquipment.grade ||
+		!item.IsIdentified ||
+		item.IsDamaged ||
+		item.WearState
+	)
+		return false;
+	const material = gradingMaterials[EnchantGrade_item_mat];
+	if (!material || Session.zeny < material.price) return false;
+	const required = new Map([[material.itemId, material.amount]]);
+	const blessing = currentOffer.blessing_info;
+	if (EnchantGrade_currentBlessing) {
+		required.set(blessing.id, (required.get(blessing.id) || 0) + EnchantGrade_currentBlessing * blessing.amount);
+	}
+	return [...required].every(([id, count]) => (inventory.getItemById(id)?.count || 0) >= count);
+}
+
 function onRequestEnchantGrade() {
-	UIManager.showPromptBox(DB.getMessage(3823), 'ok', 'cancel', () => {
-		const pkt = new PACKET.CZ.GRADE_ENCHANT_REQ();
-		pkt.index = EnchantGrade_item_index;
-		pkt.material_index = EnchantGrade_item_mat;
-		pkt.blessing_flag = EnchantGrade_blessing_used ? 1 : 0;
-		pkt.blessing_amount = EnchantGrade_currentBlessing;
-		pkt.protect_flag = 0;
-		Network.sendPacket(pkt);
-	});
+	if (!canSubmitGrade()) return;
+	const equipment = selectedEquipment;
+	UIManager.showPromptBox(
+		'确认升阶？升阶会消耗材料和 Zeny，失败可能损毁装备；成功后精炼等级归零。',
+		'ok',
+		'cancel',
+		() => {
+			if (selectedEquipment !== equipment || !canSubmitGrade()) {
+				if (!gradePending) {
+					setStartEnabled(false);
+					setMessages('insufficient');
+				}
+				return;
+			}
+			const pkt = new PACKET.CZ.GRADE_ENCHANT_REQ();
+			pkt.index = EnchantGrade_item_index;
+			pkt.material_index = EnchantGrade_item_mat;
+			pkt.blessing_flag = EnchantGrade_currentBlessing > 0 ? 1 : 0;
+			pkt.blessing_amount = EnchantGrade_currentBlessing;
+			pkt.protect_flag = 0;
+			gradePending = true;
+			setStartEnabled(false);
+			if (Network.sendPacket(pkt) === false) {
+				gradePending = false;
+				setStartEnabled(true);
+			}
+		}
+	);
 }
 
 /**
@@ -908,6 +968,15 @@ function onEnchantGradeResult(pkt) {
 	}
 
 	if (pkt) {
+		const item = Inventory.getUI().removeItem(pkt.index, 1);
+		if (item) {
+			item.enchantgrade = pkt.grade;
+			item.RefiningLevel = pkt.result === 0 ? 0 : item.RefiningLevel;
+			Inventory.getUI().addItem(item);
+		}
+
+		if (!EnchantGrade.isEnchantGradeOpen()) return;
+		gradePending = true;
 		EnchantGrade_result = pkt.result;
 
 		controlPhase('process', true, 200, '.grade-wheel');
@@ -915,28 +984,23 @@ function onEnchantGradeResult(pkt) {
 		playEffect(EffectConst.EF_NEW_INTRO, 2000, () => {
 			stopPhase('process');
 
-			switch (EnchantGrade_result) {
-				case 0:
-					playEffect(EffectConst.EF_NEW_SUCCESS, 2000, () => {
-						onRemoveItem();
-					});
-					break;
-				case 1:
-					playEffect(EffectConst.EF_NEW_FAILURE, 2000, () => {
-						onRemoveItem();
-					});
-					break;
-				default:
-					break;
-			}
+			playEffect(
+				EnchantGrade_result === 0 ? EffectConst.EF_NEW_SUCCESS : EffectConst.EF_NEW_FAILURE,
+				2000,
+				() => {
+					gradePending = false;
+					onRemoveItem();
+					const message = [
+						'升阶成功',
+						'升阶失败',
+						'升阶失败，精炼等级降低',
+						'升阶失败，装备损毁',
+						'装备受到保护'
+					][pkt.result];
+					_root().querySelector('.notification_container').textContent = message;
+				}
+			);
 		});
-
-		const item = Inventory.getUI().removeItem(pkt.index, 1);
-		if (item) {
-			item.enchantgrade = pkt.grade;
-			item.RefiningLevel = pkt.result === 0 ? 0 : item.RefiningLevel;
-			Inventory.getUI().addItem(item);
-		}
 	}
 }
 
@@ -958,7 +1022,7 @@ function setMessages(...scenarioKeys) {
 	messages.slice(0, 3).forEach(msg => {
 		const line = document.createElement('div');
 		Client.loadFile(DB.INTERFACE_PATH + 'grade_enchant/caution.bmp', function (data) {
-			line.innerHTML = `<img src="${data}" style="margin-right: 2px;"><span style="color: ${msg.color};">${DB.getMessage(msg.id)}</span>`;
+			line.innerHTML = `<img src="${data}" style="margin-right: 2px;"><span style="color: ${msg.color};">${msg.text}</span>`;
 		});
 		notificationArea.appendChild(line);
 	});
@@ -1080,7 +1144,7 @@ function playEffect(effectId, duration, onEnd) {
 	EffectManager.spam(EF_Init_Par);
 
 	if (onEnd) {
-		setTimeout(onEnd, duration);
+		effectTimer = setTimeout(onEnd, duration);
 	}
 }
 

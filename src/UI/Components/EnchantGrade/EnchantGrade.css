@@ -4,6 +4,10 @@
 	width: 400px;
 }
 
+.ui-component-root {
+	height: 100%;
+}
+
 #EnchantGrade {
 	height: 100%;
 	width: 100%;
@@ -143,7 +147,9 @@
 	height: 45px;
 	top: 33px;
 	left: -2px;
-	font-size: 8.5px;
+	font-size: 12px;
+	line-height: 14px;
+	color: #fff;
 	width: 95%;
 	margin-left: 15px;
 }
@@ -601,4 +607,11 @@
 	color: white;
 	pointer-events: none;
 	font-weight: bold;
+}
+
+#EnchantGrade .start_grade:disabled {
+	opacity: 1;
+	color: #626862;
+	background: #e5e9e6 !important;
+	cursor: default;
 }

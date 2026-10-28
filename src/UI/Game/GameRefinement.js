@@ -1,3 +1,4 @@
+import { gradeRefineHint } from 'UI/Game/GradeFeedback.js';
 import Session from 'Engine/SessionStorage.js';
 import Inventory from 'UI/Components/Inventory/Inventory.js';
 import Network from 'Network/NetworkManager.js';
@@ -60,6 +61,7 @@ export function openGameRefinement(kind) {
 				resultId,
 				allowed: available(),
 				zeny: Session.zeny,
+				blessingOwned: count(6635),
 				materials:
 					(kind === 'refine' ? offer?.MaterialInfo : offer?.materialList)?.map((material, index) => ({
 						...material,
@@ -88,11 +90,19 @@ export function openGameRefinement(kind) {
 			return '';
 		},
 		materials(type, pkt) {
-			if (type === 'grade' && kind === 'grade' && current() && selected && pending && !offer && pkt.index === -1) {
+			if (
+				type === 'grade' &&
+				kind === 'grade' &&
+				current() &&
+				selected &&
+				pending &&
+				!offer &&
+				pkt.index === -1
+			) {
 				pending = false;
 				selected = null;
 				messageKind = 'error';
-				message = '此装备无法评级，请选择其他装备';
+				message = '此装备无法升阶，请选择其他装备';
 				return true;
 			}
 			if (type !== kind || !current() || !selected || (pkt.itemIndex ?? pkt.index) !== selected.index)
@@ -100,11 +110,20 @@ export function openGameRefinement(kind) {
 			offer = pkt;
 			pending = false;
 			messageKind = service.snapshot().materials.length ? 'info' : 'error';
-			message = service.snapshot().materials.length ? '请选择材料，核对费用与风险' : '此装备无法继续强化';
+			message = service.snapshot().materials.length
+				? '请选择材料，核对费用与风险'
+				: kind === 'refine'
+					? '此装备无法精炼'
+					: '此装备无法升阶';
+			if (kind === 'grade' && pkt.success_chance === 0) {
+				messageKind = 'error';
+				message = gradeRefineHint(selected.refine);
+			}
 			return true;
 		},
 		confirm(materialIndex, blessing = 0) {
 			if (!available() || !offer || !valid()) return '装备或状态已变化，请重新选择';
+			if (kind === 'grade' && offer.success_chance === 0) return gradeRefineHint(selected.refine);
 			const material = service.snapshot().materials.find(entry => entry.index === materialIndex);
 			if (!material) return '请选择材料';
 			if (Session.zeny < (material.zeny ?? material.price) || material.owned < (material.amount ?? 1))
@@ -115,7 +134,6 @@ export function openGameRefinement(kind) {
 				if (blessing + (material.itemId === 6635 ? (material.amount ?? 1) : 0) > count(6635))
 					return '铁匠的祝福不足';
 			} else {
-				if (!offer.success_chance) return '此装备当前无法评级';
 				const info = offer.blessing_info;
 				if (
 					blessing > (info?.max_blessing || 0) ||
@@ -152,15 +170,16 @@ export function openGameRefinement(kind) {
 			message =
 				(kind === 'refine'
 					? ['精炼成功', '精炼失败，装备损毁', '精炼失败，精炼等级降低', '精炼失败，装备保留']
-					: ['评级成功', '评级失败', '评级失败，精炼等级降低', '评级失败，装备损毁', '装备受到保护'])[pkt.result] ||
-				`强化结果：${pkt.result}`;
+					: ['升阶成功', '升阶失败', '升阶失败，精炼等级降低', '升阶失败，装备损毁', '装备受到保护'])[
+					pkt.result
+				] || `强化结果：${pkt.result}`;
 			return true;
 		}
 	};
 	activeService = service;
 	showInteraction({
 		kind: 'refinement',
-		title: kind === 'refine' ? '装备精炼' : '装备评级',
+		title: kind === 'refine' ? '装备精炼' : '装备升阶',
 		token,
 		service,
 		close() {
