@@ -157,3 +157,8 @@
 	box-sizing: border-box;
 	padding-bottom: max(8px, var(--panel-gap));
 }
+
+/* Match the tablet body inset when choices replace the action footer. */
+:host([data-menu-density='spacious']) .panel[data-view='npc'] .npc-content:has(.npc-options) {
+	padding-bottom: 16px;
+}
