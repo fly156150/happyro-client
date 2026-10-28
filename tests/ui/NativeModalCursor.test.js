@@ -27,3 +27,18 @@ it('does not hide the game cursor for ordinary nonmodal windows', () => {
 	document.querySelector('input').focus();
 	expect(getFocusedNativeModal()).toBe(null);
 });
+
+it('retains an open modal when disabling a paging button loses focus', () => {
+ const dialog = document.body.appendChild(document.createElement('dialog'));
+ const button = dialog.appendChild(document.createElement('button'));
+ dialog.showModal();
+ vi.spyOn(button, 'closest').mockImplementation(() => dialog.open ? dialog : null);
+ vi.spyOn(dialog, 'matches').mockImplementation(() => dialog.open);
+ button.focus();
+ expect(getFocusedNativeModal()).toBe(dialog);
+ button.disabled = true;
+ button.blur();
+ expect(getFocusedNativeModal()).toBe(dialog);
+ dialog.close();
+ expect(getFocusedNativeModal()).toBe(null);
+});

@@ -1,19 +1,20 @@
-/** Bind a dialog to its owner and, on touch layouts, the visible viewport. */
+/** Keep desktop and touch dialogs within their owner and visible viewport. */
 export function bindDialogBounds(dialog, container, { bounds, desktopOwner } = {}) {
  const mobileOwner = container.getRootNode().host?.hasAttribute('data-menu-density') ? container.closest('.panel, .mobile-adventure') : null;
  bounds ||= mobileOwner;
  if (mobileOwner) dialog.dataset.mobileBounded = '';
 	const owner = bounds || desktopOwner;
 	if (!owner) return () => {};
+ if (desktopOwner) dialog.dataset.desktopBounded = '';
 	const resize = new ResizeObserver(fitBounds);
 	function fitBounds() {
 		if (!bounds && !desktopOwner) return;
 		const ownerRect = (bounds || desktopOwner).getBoundingClientRect();
 		const visual = window.visualViewport;
-		const top = mobileOwner ? Math.max(ownerRect.top, visual?.offsetTop || 0) : ownerRect.top;
-		const left = mobileOwner ? Math.max(ownerRect.left, visual?.offsetLeft || 0) : ownerRect.left;
-		const bottom = mobileOwner ? Math.min(ownerRect.bottom, (visual?.offsetTop || 0) + (visual?.height || window.innerHeight)) : ownerRect.bottom;
-		const right = mobileOwner ? Math.min(ownerRect.right, (visual?.offsetLeft || 0) + (visual?.width || window.innerWidth)) : ownerRect.right;
+		const top = (mobileOwner || desktopOwner) ? Math.max(ownerRect.top, visual?.offsetTop || 0) : ownerRect.top;
+		const left = (mobileOwner || desktopOwner) ? Math.max(ownerRect.left, visual?.offsetLeft || 0) : ownerRect.left;
+		const bottom = (mobileOwner || desktopOwner) ? Math.min(ownerRect.bottom, (visual?.offsetTop || 0) + (visual?.height || window.innerHeight)) : ownerRect.bottom;
+		const right = (mobileOwner || desktopOwner) ? Math.min(ownerRect.right, (visual?.offsetLeft || 0) + (visual?.width || window.innerWidth)) : ownerRect.right;
 		const rect = { top, left, bottom, right, width: Math.max(0, right-left), height: Math.max(0, bottom-top) };
 		dialog.style.setProperty('--confirm-center-x', `${rect.left + rect.width / 2}px`);
 		dialog.style.setProperty('--confirm-center-y', `${rect.top + rect.height / 2}px`);
@@ -26,7 +27,7 @@ export function bindDialogBounds(dialog, container, { bounds, desktopOwner } = {
 		dialog.style.setProperty('--confirm-max-width', `${rect.width}px`);
 		dialog.style.setProperty('--confirm-max-height', `${rect.height}px`);
 	}
- if (mobileOwner) {
+ if (mobileOwner || desktopOwner) {
   window.addEventListener('resize', fitBounds);
   window.visualViewport?.addEventListener('resize', fitBounds);
   window.visualViewport?.addEventListener('scroll', fitBounds);

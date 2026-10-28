@@ -1,11 +1,17 @@
+const focusedModals = new WeakMap();
+
 /** Native top-layer dialogs own focus, including dialogs inside UI shadow roots. */
 export function getFocusedNativeModal(root = document) {
 	let element = root.activeElement;
 	while (element) {
 		const dialog = element.closest('dialog:modal');
-		if (dialog) return dialog;
+		if (dialog) { focusedModals.set(root, dialog); return dialog; }
 		element = element.shadowRoot?.activeElement;
 	}
+	// Disabling a focused paging button can move focus to body while the modal stays open.
+	const previous = focusedModals.get(root);
+	if (previous?.isConnected && previous.matches('dialog:modal')) return previous;
+	focusedModals.delete(root);
 	return null;
 }
 
@@ -13,7 +19,7 @@ let cursorDialog = null;
 
 /** A manual, noninteractive popover paints the existing cursor above the modal. */
 export function syncModalCursorLayer(cursor, dialog) {
-	if (dialog === cursorDialog) return;
+	if (dialog === cursorDialog && Boolean(dialog) === cursor.matches(':popover-open')) return;
 	if (cursor.matches(':popover-open')) cursor.hidePopover();
 	if (dialog) cursor.showPopover();
 	cursorDialog = dialog;

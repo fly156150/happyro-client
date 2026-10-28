@@ -58,7 +58,19 @@ const errorMessages = {
 	item_not_grantable: '该特殊物品暂不支持直接发放',
 	character_offline: '当前角色不在线'
 };
+function prepareImage(element) {
+ element.style.visibility = 'hidden';
+ element.onload = () => {
+  element.parentElement?.classList.remove('no-image');
+  element.style.visibility = 'visible';
+ };
+ element.onerror = () => {
+  element.style.visibility = 'hidden';
+  element.parentElement?.classList.add('no-image');
+ };
+}
 function loadImage(element, path, assetUrls) {
+	prepareImage(element);
 	const frame = element.parentElement;
 	if (!path) {
 		frame?.classList.add('no-image');
@@ -72,6 +84,7 @@ function loadImage(element, path, assetUrls) {
 	}
 	loadAdventureAsset(path.replace('/api/adventure-tools', ''))
 		.then(url => {
+			if (!url) return;
 			assetUrls.set(path, url);
 			if (element.isConnected) {
 				frame?.classList.remove('no-image');
@@ -107,6 +120,7 @@ function mount(container, context = {}) {
 	let browserApi;
 	const clearFeedback = () => browserApi?.refreshDetail();
 	function loadPortrait(element, item) {
+		prepareImage(element);
 		const ordinaryImage = () => {
 			if (active && element.isConnected) loadImage(element, item.illustration || item.icon, assetUrls);
 		};

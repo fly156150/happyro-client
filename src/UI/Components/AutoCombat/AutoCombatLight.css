@@ -123,8 +123,8 @@ button:focus-visible,
 .combat-dialog .auto-species-card { box-sizing: border-box; min-height: 38px; padding: 6px; }
 .combat-dialog .auto-skill-card { box-sizing: border-box; min-height: 42px; padding: 6px; }
 
-/* Match the list's reserved scrollbar space, including when it is not overflowing. */
-.combat-dialog .recovery-items-heading { overflow: hidden; scrollbar-gutter: stable; }
+/* Align the selector with the section content edge, without a phantom scrollbar. */
+.combat-dialog .recovery-items-heading { scrollbar-gutter: auto; }
 
 /* Floating navigation actions match the translucent desktop HUD, without hover changes. */
 .npc-navi-controls button,
@@ -137,3 +137,28 @@ button:focus-visible,
  box-shadow: none;
  transition: none;
 }
+
+/* Nested selectors follow their desktop owner just like confirmation dialogs. */
+.pickup-picker[data-desktop-bounded] {
+ inset: var(--confirm-center-y) auto auto var(--confirm-center-x);
+ margin: 0;
+ transform: translate(-50%, -50%);
+ width: min(640px, max(0px, calc(var(--confirm-max-width) - 24px)));
+ height: min(560px, max(0px, calc(var(--confirm-max-height) - 24px)));
+ max-height: max(0px, calc(var(--confirm-max-height) - 24px));
+}
+.pickup-picker[data-desktop-bounded]::backdrop { clip-path: var(--confirm-owner-clip); }
+.pickup-results:has(> .menu-hint:only-child) { display: flex; flex-direction: column; opacity: 1; }
+.pickup-results > .menu-hint:only-child {
+ display: flex;
+ flex: 1 0 auto;
+ align-items: center;
+ justify-content: center;
+ margin: 0;
+ padding: 8px;
+ text-align: center;
+}
+
+/* Keep the native scrollbar in the section inset, beyond the aligned action edge. */
+.combat-dialog .recovery-items { margin-right: calc(-1 * var(--recovery-scrollbar-width, 0px)); }
+.combat-dialog .recovery-item-details > small { font-size: inherit; }

@@ -44,9 +44,12 @@ export function openItemSelectionDialog(
 		total = 0,
 		closed = false;
 	let disposeBounds = () => {};
+	let searchTimer;
+	let composing = false;
 	function close() {
 		if (closed) return;
 		closed = true;
+		clearTimeout(searchTimer);
 		requestId++;
 		disposeBounds();
 		dialog.close();
@@ -58,6 +61,8 @@ export function openItemSelectionDialog(
 		$('[data-confirm]').disabled = !selected.size;
 	}
 	async function search(targetPage = 1) {
+		clearTimeout(searchTimer);
+		if (closed) return;
 		const query = input.value.trim(),
 			token = ++requestId;
 		if (!query && !allowEmptyQuery) {
@@ -131,6 +136,7 @@ export function openItemSelectionDialog(
 		}
 	}
 	input.oninput = () => {
+		clearTimeout(searchTimer);
 		requestId++;
 		clearImages();
 		results.replaceChildren();
@@ -141,9 +147,12 @@ export function openItemSelectionDialog(
 		total = 0;
 		$('[data-page]').textContent = '1 / 1';
 		previous.disabled = next.disabled = true;
+		if (!composing && (input.value.trim() || allowEmptyQuery)) searchTimer = setTimeout(() => void search(), 250);
 	};
+	input.addEventListener('compositionstart', () => { composing = true; clearTimeout(searchTimer); requestId++; });
+	input.addEventListener('compositionend', () => { composing = false; input.oninput(); });
 	input.onkeydown = event => {
-		if (event.key === 'Enter') {
+		if (event.key === 'Enter' && !event.isComposing && !composing) {
 			event.preventDefault();
 			void search();
 		}
@@ -163,7 +172,7 @@ export function openItemSelectionDialog(
 	});
 	dialog.addEventListener('keydown', event => event.stopPropagation());
 	container.append(dialog);
-	disposeBounds = bindDialogBounds(dialog, container);
+	disposeBounds = bindDialogBounds(dialog, container, { desktopOwner: container.closest('[data-feedback-theme="desktop"]') });
 	dialog.showModal();
 	if (allowEmptyQuery) void search();
 	return close;

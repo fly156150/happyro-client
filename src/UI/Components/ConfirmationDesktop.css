@@ -89,3 +89,14 @@
 .ui-confirm:has(.quantity-stepper) .ui-confirm-actions button {
 	border-radius: var(--desktop-radius, 4px);
 }
+
+/* Long confirmation text scrolls independently of the always-visible actions. */
+.ui-confirm[open] { display: flex; flex-direction: column; overflow: hidden; }
+.ui-confirm-body { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.ui-confirm > .ui-confirm-actions {
+ flex-shrink: 0;
+ margin-top: 12px;
+ padding-top: 12px;
+ border-top: 1px solid var(--desktop-divider);
+}
+.ui-confirm .ui-confirm-body > p:last-child { margin-bottom: 0; }

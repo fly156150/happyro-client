@@ -1,0 +1,10 @@
+/* Ordinary desktop guidance and error states share one reading scale. */
+[data-feedback-theme='desktop'] :is(.menu-hint, .map-npc-empty, .monster-locations-empty, .pickup-search-status, .catalog-empty-state, .empty-detail, .management-loading, .management-error) {
+ font-size: 12px;
+ line-height: 1.5;
+ color: var(--desktop-muted);
+ overflow-wrap: anywhere;
+}
+[data-feedback-theme='desktop'] :is(.menu-hint.error, .management-error, .pickup-search-status[data-error='true']) {
+ color: var(--desktop-error);
+}

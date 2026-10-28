@@ -68,3 +68,45 @@
  border-radius: var(--desktop-panel-radius); color: var(--desktop-muted);
 }
 .game-tools-window[data-feedback-theme='desktop'] :is(.tab-button, .close):focus-visible { outline: 2px solid #676e75; outline-offset: -2px; }
+
+/* Empty panes reserve their own inset; failures beside retained rows stay compact. */
+.game-tools-window[data-feedback-theme='desktop'] .catalog-empty-state { padding: 8px 12px; }
+.game-tools-window[data-feedback-theme='desktop'] .catalog-empty-state > p { margin: 0; }
+.game-tools-window[data-feedback-theme='desktop'] .catalog-empty-state > button { margin-top: 8px; }
+.game-tools-window[data-feedback-theme='desktop'] :is(.catalog-list, .monster-list):has(> .catalog-empty-state:only-child) {
+ display: flex;
+ flex-direction: column;
+ overflow: auto;
+}
+.game-tools-window[data-feedback-theme='desktop'] .catalog-empty-state:only-child {
+ display: flex;
+ flex: 1 0 auto;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ padding: 12px;
+ min-width: 0;
+ box-sizing: border-box;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.management-loading, .management-error, .empty-detail) {
+ box-sizing: border-box;
+ max-width: 100%;
+ padding: 12px;
+ text-align: center;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.map-monsters, .monster-drops, .map-npc-list, .item-source-list) > .menu-hint,
+.game-tools-window[data-feedback-theme='desktop'] :is(.map-npc-empty, .monster-locations-empty) {
+ margin: 0;
+ padding: 8px;
+ text-align: left;
+}
+.game-tools-window[data-feedback-theme='desktop'] :is(.map-npcs-retry, .monster-drops-retry, .item-sources-retry),
+.game-tools-window[data-feedback-theme='desktop'] .map-monsters > button { margin: 0 8px 8px; }
+
+/* Desktop monster information presents four attribute/value pairs per row. */
+.game-tools-window[data-feedback-theme='desktop'] .monster-stats {
+ grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.game-tools-window[data-feedback-theme='desktop'] .monster-stats > div { min-width: 0; align-items: center; }
+.game-tools-window[data-feedback-theme='desktop'] .monster-stats span { flex-shrink: 0; }
+.game-tools-window[data-feedback-theme='desktop'] .monster-stats strong { min-width: 0; overflow-wrap: anywhere; text-align: right; }

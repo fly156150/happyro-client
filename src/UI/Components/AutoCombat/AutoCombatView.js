@@ -85,7 +85,7 @@ SOFTWARE.
 		</div>
 		<div class="assist-feedback" role="status" hidden></div>
 		<div class="combat-backdrop" hidden>
-			<section class="combat-dialog" role="dialog" aria-modal="true" aria-label="战斗辅助配置">
+			<section class="combat-dialog" data-feedback-theme="desktop" role="dialog" aria-modal="true" aria-label="战斗辅助配置">
 				<header class="desktop-window-header"><h2 class="desktop-window-title">战斗辅助</h2><button type="button" class="desktop-window-close" data-close aria-label="关闭战斗辅助"></button></header>
 				<div class="combat-tabbar">
 				<div class="combat-tabs desktop-tab-group" role="tablist" aria-label="战斗辅助配置">

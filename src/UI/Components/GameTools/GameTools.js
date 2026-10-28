@@ -1,5 +1,6 @@
 import { replaceNavigationClose } from 'UI/Game/NavigationVisit.js';
 import headerCSS from '../DesktopWindowHeader.css?raw';
+import feedbackCSS from '../DesktopFeedback.css?raw';
 import { onConnectionEnd } from 'Network/ConnectionLifecycle.js';
 import { trackTabView } from './TabViewState.js';
 import { subscribeAdventureActions, clearAdventureActionFeedback } from './AdventureActionService.js';
@@ -22,7 +23,7 @@ import { loadAdventureControlBootstrap } from './AdventureControlService.js';
 import { notifyMonsterSpawnConfig, notifyMonsterSpawnResult } from './MonsterCatalogTab.js';
 
 const preferences = Preferences.get('GameTools', { tab: 'maps' }, 2.0);
-const GameTools = new GUIComponent('GameTools', cssText + itemCatalogCssText + gameSelectCssText + lightThemeCssText + buttonCssText + lightCssText + tabsCssText + headerCSS);
+const GameTools = new GUIComponent('GameTools', cssText + itemCatalogCssText + gameSelectCssText + lightThemeCssText + buttonCssText + lightCssText + tabsCssText + headerCSS + feedbackCSS);
 // Use the desktop theme scrollbars instead of the legacy RO image scrollbar.
 GameTools.nativeScrolling = true;
 const mountedTabs = new Map();

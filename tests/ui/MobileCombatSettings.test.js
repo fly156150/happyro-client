@@ -2,8 +2,9 @@ import {afterEach,expect,it,vi} from 'vitest';
 vi.mock('UI/Game/PickupSettings.js',async importOriginal=>({...await importOriginal(),loadPickupSettings:()=>({enabled:true,range:5,batchSeconds:5,categories:[],excluded:[]}),savePickupSettings:vi.fn(()=>true)}));
 import {savePickupSettings} from '../../src/UI/Game/PickupSettings.js';
 import {createCombatSettingsPanel} from '../../src/UI/Mobile/game/CombatSettingsPanel.js';
-afterEach(()=>{document.body.replaceChildren();vi.clearAllMocks();});
+afterEach(()=>{document.body.replaceChildren();vi.clearAllMocks();vi.unstubAllGlobals();});
 it('switches tabs without resetting combat or pickup edits and flushes on close',()=>{
+ vi.stubGlobal('ResizeObserver',class {observe(){} disconnect(){}});
  const body=document.body.appendChild(document.createElement('div'));
  const actions={recoveryItems:()=>[], recoveryItemName:id=>String(id),snapshot:()=>({species:[],skills:[],ranges:{search:20,activity:30}}),targets:()=>[],skills:()=>[],configure:vi.fn(()=>true)};
  const header=document.body.appendChild(document.createElement('header'));

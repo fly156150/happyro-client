@@ -8,6 +8,7 @@ import StatusState from 'DB/Status/StatusState.js';
 import { loadCurrentCharacter, maintainCurrentCharacter } from 'UI/Components/GameTools/AdventureControlService.js';
 import { chatEmotions } from './ChatEmotions.js';
 import css from './SelfActions.css?raw';
+import desktopThemeCSS from 'UI/Components/DesktopLightTheme.css?raw';
 import { ridingReason } from 'UI/Components/GameTools/CharacterRiding.js';
 
 const mountMask = ['RIDING', 'DRAGON1', 'DRAGON2', 'DRAGON3', 'DRAGON4', 'DRAGON5', 'WUGRIDER', 'MADOGEAR'].reduce((mask, name) => mask | StatusState.EffectState[name], 0);
@@ -27,7 +28,7 @@ export function createSelfActions(parent, stop, { desktop = false } = {}) {
  host.hidden = true;
  host.toggleAttribute('data-desktop', desktop);
  const root = host.attachShadow({ mode: 'open' });
- root.innerHTML = `<style>${css}</style><div class="actions"><button data-emotions aria-expanded="false">表情</button><button data-sit>坐下</button><button data-mount hidden>骑乘</button></div><div class="emotions" hidden aria-label="选择表情"><div class="emotion-list"></div></div>`;
+ root.innerHTML = `<style>${desktop ? desktopThemeCSS : ''}${css}</style><div class="actions"><button data-emotions aria-expanded="false">表情</button><button data-sit>坐下</button><button data-mount hidden>骑乘</button></div><div class="emotions" hidden aria-label="选择表情"><div class="emotion-list"></div></div>`;
  parent.append(host);
  const $ = selector => root.querySelector(selector);
  const abort = new AbortController();

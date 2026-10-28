@@ -223,3 +223,18 @@ it.each([false,true])('renders catalog NAVI safely and opens tool pages without 
  links[1].click();expect(openMap).toHaveBeenCalledOnce();
  links[2].dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));expect(openMonster).toHaveBeenCalledWith(expect.any(Number));expect(grantAdventureItem).not.toHaveBeenCalled();
 });
+
+it('keeps pending images invisible until the browser has loaded them', async () => {
+ let finish;
+ loadAdventureAsset.mockImplementation(() => new Promise(resolve => { finish = resolve; }));
+ searchAdventureItems.mockResolvedValue({data:[{Id:501,Type:'Healing',AegisName:'Potion',illustration:'/potion'}],total:1,subtypes:[]});
+ await mount();
+ const image=root.querySelector('.item-portrait img');
+ expect(image.style.visibility).toBe('hidden');
+ finish('data:image/png;base64,potion');await tick();
+ expect(image.style.visibility).toBe('hidden');
+ image.dispatchEvent(new Event('load'));
+ expect(image.style.visibility).toBe('visible');
+ image.dispatchEvent(new Event('error'));
+ expect(image.style.visibility).toBe('hidden');
+});

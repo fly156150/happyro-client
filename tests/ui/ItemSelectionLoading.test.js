@@ -33,14 +33,15 @@ it('clears the loading placeholder when the first request fails', async () => {
  expect(body.querySelector('.pickup-loading')).toBeNull();
  expect(body.querySelector('.pickup-search-status').hidden).toBe(false);
 });
-it('keeps tracking owner bounds after editing the search and stops when closed', () => {
+it.each(['mobile', 'desktop'])('keeps tracking %s owner bounds after editing the search and stops when closed', kind => {
  const original = globalThis.ResizeObserver;
  globalThis.ResizeObserver = class { observe() {} disconnect() {} };
  const host = body.appendChild(document.createElement('div'));
- host.dataset.menuDensity = 'compact';
+ if (kind === 'mobile') host.dataset.menuDensity = 'compact';
  const root = host.attachShadow({ mode: 'open' });
  root.innerHTML = '<section class="panel"><div></div></section>';
  const owner = root.querySelector('section'), container = owner.firstElementChild;
+ if (kind === 'desktop') owner.dataset.feedbackTheme = 'desktop';
  let rect = { left: 20, top: 40, right: 320, bottom: 400 };
  owner.getBoundingClientRect = () => rect;
  try {
@@ -59,4 +60,34 @@ it('keeps tracking owner bounds after editing the search and stops when closed',
   window.dispatchEvent(new Event('resize'));
   expect(dialog.style.getPropertyValue('--confirm-max-height')).toBe('230px');
  } finally { globalThis.ResizeObserver = original; }
+});
+
+it('searches after typing, respects composition, and cancels pending work on close', async () => {
+ vi.useFakeTimers();
+ try {
+  const search = vi.fn().mockResolvedValue({ data: [], total: 0 });
+  mount(search);
+  await vi.advanceTimersByTimeAsync(0);
+  search.mockClear();
+  const input = body.querySelector('input[type=search]');
+  input.value = '苹'; input.dispatchEvent(new Event('input'));
+  await vi.advanceTimersByTimeAsync(150);
+  input.value = '苹果'; input.dispatchEvent(new Event('input'));
+  await vi.advanceTimersByTimeAsync(249);
+  expect(search).not.toHaveBeenCalled();
+  await vi.advanceTimersByTimeAsync(1);
+  expect(search).toHaveBeenLastCalledWith({ query: '苹果', page: 1, perPage: 10 });
+  search.mockClear();
+  input.dispatchEvent(new CompositionEvent('compositionstart'));
+  input.value = '红色'; input.dispatchEvent(new Event('input'));
+  await vi.advanceTimersByTimeAsync(300);
+  expect(search).not.toHaveBeenCalled();
+  input.dispatchEvent(new CompositionEvent('compositionend'));
+  await vi.advanceTimersByTimeAsync(250);
+  expect(search).toHaveBeenCalledOnce();
+  input.value = '药水'; input.dispatchEvent(new Event('input'));
+  close();
+  await vi.advanceTimersByTimeAsync(300);
+  expect(search).toHaveBeenCalledOnce();
+ } finally { vi.useRealTimers(); }
 });

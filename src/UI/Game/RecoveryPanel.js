@@ -12,6 +12,14 @@ export function createRecoveryPanel(body, actions) {
 	let closePicker;
 	const settings = structuredClone(actions.snapshot().recovery || defaultRecoverySettings());
 	body.innerHTML = `<div class="recovery-layout" data-menu-layout="form"></div><p class="recovery-status" role="status" hidden></p><p class="recovery-runtime-status" role="status" hidden></p>`;
+	// Measure the native gutter so desktop actions align even with platform-specific scrollbars.
+	const gutterObserver = new ResizeObserver(entries => {
+		for (const { target } of entries) {
+			const width = `${target.offsetWidth - target.clientWidth}px`;
+			if (target.style.getPropertyValue('--recovery-scrollbar-width') !== width)
+				target.style.setProperty('--recovery-scrollbar-width', width);
+		}
+	});
 	const layout = body.querySelector('.recovery-layout'),
 		message = body.querySelector('.recovery-status');
 	function save() {
@@ -155,6 +163,7 @@ export function createRecoveryPanel(body, actions) {
 		section.append(headingRow, list);
 		selectedList(key, list);
 		layout.append(section);
+		gutterObserver.observe(list);
 	}
 	const unsubscribe = subscribeRecoveryStatus(status => {
 		const output = body.querySelector('.recovery-runtime-status');
@@ -174,6 +183,7 @@ export function createRecoveryPanel(body, actions) {
 	observer.observe(message, { attributes: true, attributeFilter: ['hidden'] });
 	return {
 		destroy() {
+			gutterObserver.disconnect();
 			closePicker?.();
 			images.hp.clear();
 			images.sp.clear();

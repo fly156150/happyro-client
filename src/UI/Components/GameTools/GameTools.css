@@ -696,7 +696,7 @@
 	display: flex;
 	justify-content: space-between;
 	gap: 8px;
-	padding: var(--game-tools-info-cell-inset);
+	padding: 6px;
 	background: #fafafa;
 }
 .monster-stats span {
@@ -1628,8 +1628,7 @@
 
 .map-catalog-tab .map-npc-list .map-monsters-jump:disabled { opacity: .45; cursor: default; }
 
-/* Item and monster information share row spacing without image-driven stretch. */
-.monster-stats,
+/* Item information uses compact spacing without image-driven stretch. */
 .item-overview .catalog-metadata {
 	align-self: start;
 	align-content: start;

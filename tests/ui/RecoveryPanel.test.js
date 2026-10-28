@@ -3,8 +3,10 @@ const data = vi.hoisted(() => ({ items: [{ id:501, hp:true, count:3 }, { id:505,
 import { createRecoveryPanel } from '../../src/UI/Game/RecoveryPanel.js';
 import { defaultRecoverySettings } from '../../src/UI/Game/RecoverySettings.js';
 import { publishRecoveryStatus } from '../../src/UI/Game/RecoveryStatus.js';
-let body, editor, actions, state;
+let body, editor, actions, state, resizeGutters, disconnectGutters;
 beforeEach(() => {
+ disconnectGutters = vi.fn();
+ vi.stubGlobal('ResizeObserver', class { constructor(callback) { resizeGutters = callback; } observe() {} disconnect() { disconnectGutters(); } });
  vi.spyOn(HTMLDialogElement.prototype,'showModal').mockImplementation(function(){this.open=true;});
  vi.spyOn(HTMLDialogElement.prototype,'close').mockImplementation(function(){this.open=false;});
  body = document.createElement('div'); document.body.append(body);
@@ -12,7 +14,7 @@ beforeEach(() => {
  actions = { loadRecoveryItemIcon: vi.fn(async () => 'blob:recovery-item'), recoveryItems: () => data.items, recoveryItemName: id => ({501: "红色药水",505:"蓝色药水"})[id],snapshot: () => structuredClone(state), configure: vi.fn((species, skills, ranges, teleport, recovery) => { state = structuredClone({species,skills,ranges,teleport,recovery}); return true; })};
  editor = createRecoveryPanel(body,actions);
 });
-afterEach(() => { editor.destroy(); body.remove(); publishRecoveryStatus(''); vi.restoreAllMocks(); });
+afterEach(() => { editor.destroy(); body.remove(); publishRecoveryStatus(''); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 it('saves independent thresholds and switches without starting combat', () => {
  body.querySelector('[aria-label="HP 恢复"]').click(); expect(state.recovery.hp.enabled).toBe(true); expect(state.recovery.sp.enabled).toBe(false);
  const input = body.querySelector('[aria-label="HP 低于百分比"]'); input.value = '55'; input.dispatchEvent(new Event('change')); expect(state.recovery.hp.trigger).toBe(55);
@@ -153,4 +155,14 @@ it('pages recovery items by ten and retains selection across the last page', asy
  await vi.waitFor(() => expect(body.querySelector('[data-item-id="501"]')?.checked).toBe(true));
  body.querySelector('[data-confirm]').click();
  expect(state.recovery.hp.items).toEqual([501,511]);
+});
+
+it('measures native list gutters and disconnects when the panel closes', () => {
+ const list=body.querySelector('.recovery-items');
+ Object.defineProperty(list,'offsetWidth',{value:210});
+ Object.defineProperty(list,'clientWidth',{value:200});
+ resizeGutters([{target:list}]);
+ expect(list.style.getPropertyValue('--recovery-scrollbar-width')).toBe('10px');
+ editor.destroy();
+ expect(disconnectGutters).toHaveBeenCalled();
 });

@@ -5,6 +5,7 @@ import { pickupDefaults, validPickupSettings } from '../../src/UI/Game/PickupSet
 import { createAutoCombatView } from '../../src/UI/Components/AutoCombat/AutoCombatView.js';
 let view, root, state, actions, pickup, saved;
 beforeEach(() => {
+ vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
  updateCombatLimits({searchRadius:50});
 	const host = document.createElement('div'); document.body.append(host);
 	root = host.attachShadow({ mode: 'open' });
@@ -20,7 +21,7 @@ beforeEach(() => {
  pickup = { load: () => structuredClone(saved), save: vi.fn(value => { if (!validPickupSettings(value)) return false; saved = structuredClone(value); return true; }) };
  view = createAutoCombatView(root, actions, pickup);
 });
-afterEach(() => { view.destroy(); document.body.replaceChildren(); });
+afterEach(() => { view.destroy(); document.body.replaceChildren(); vi.unstubAllGlobals(); });
 const click = selector => root.querySelector(selector).click();
 it('offers a visible start/stop control with accessible state', () => {
 	click('[data-combat-toggle]'); expect(view.isOpen()).toBe(false); expect(actions.start).toHaveBeenCalledOnce();
