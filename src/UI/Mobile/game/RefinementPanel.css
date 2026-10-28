@@ -1,4 +1,4 @@
-/* Refining uses inventory-sized panes; grading retains its own three-column flow. */
+/* Refining and grading share the inventory layout across mobile orientations. */
 :host([data-menu-density]) .panel .refinement-inventory .refinement-browser {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -332,10 +332,12 @@
 }
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .interaction-footer > .refinement-material-field {
  width: calc((100% - 6px) * 0.3);
+ flex: 0 0 calc((100% - 6px) * 0.3);
 }
-:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .refinement-material-field > .menu-select {
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .refinement-material-field > :is(select, .menu-select) {
  flex: 1;
  width: 0;
+ min-width: 0;
 }
 :host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .refinement-material-field .game-select-trigger {
  width: 100%;
@@ -346,7 +348,7 @@
  flex-wrap: nowrap;
 }
 :host([data-menu-density]:is([data-orientation='landscape'], :not([data-phone-screen]))) .panel[data-view='refinement'] .refinement-inventory .interaction-footer > .refinement-material-field {
- flex: 0 1 auto;
+ flex-shrink: 0;
 }
 :host([data-phone-screen][data-menu-density][data-orientation='portrait'][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .interaction-footer > .refinement-material-field {
  width: 100%;
@@ -374,4 +376,53 @@
 }
 :host(:not([data-phone-screen])[data-menu-density][data-orientation='portrait']) .panel[data-view='refinement'] .refinement-inventory .interaction-footer > .refinement-material-field {
  width: calc((100% - 6px) * 0.4);
+ flex-basis: calc((100% - 6px) * 0.4);
+}
+
+/* Joined grading blessing label and count use the material control's border seam. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .refinement-grade-blessing {
+ display: flex;
+ align-items: stretch;
+ gap: 0;
+ white-space: nowrap;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-grade-blessing > span {
+ display: flex;
+ align-items: center;
+ box-sizing: border-box;
+ height: var(--panel-control);
+ padding-inline: 8px;
+ border: 1px solid #657584;
+ border-radius: 6px 0 0 6px;
+ background: #24313d;
+ font-size: var(--panel-label);
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-grade-blessing > input {
+ box-sizing: border-box;
+ width: 4em;
+ min-width: 0;
+ height: var(--panel-control);
+ margin: 0;
+ border: 1px solid #657584;
+ border-left: 0;
+ border-radius: 0 6px 6px 0;
+ font-size: var(--panel-label);
+}
+:host([data-menu-density]) .panel .refinement-grade-blessing:has(> input:disabled) > span {
+ opacity: .5;
+}
+
+/* Empty and selected states share a definite footer and blessing width. */
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory > .interaction-footer {
+ width: 100%;
+ min-width: 0;
+ box-sizing: border-box;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .refinement-grade-blessing {
+ flex: 0 0 auto;
+ width: calc(6em + 18px);
+ min-width: 0;
+}
+:host([data-menu-density][data-menu-arrangement]) .panel[data-view='refinement'] .refinement-inventory .refinement-grade-blessing > input {
+ flex: 1 1 0;
 }

@@ -4,10 +4,9 @@ import { frameMenuScroll } from './MenuScrollPane.js';
 import ItemType from 'DB/Items/ItemType.js';
 
 /** Equipment filtering shares inventory subtype semantics and stable list nodes. */
-export function createRefinementEquipmentBrowser(body, changed) {
+export function createRefinementEquipmentBrowser(body, changed, operation = '精炼') {
 	body.classList.add('refinement-inventory');
-	body.innerHTML =
-		'<div class="refinement-browser"><div class="refinement-filters"></div><div class="refinement-search"></div><div class="inventory-list" aria-label="待精炼装备"></div><section class="inventory-detail" aria-label="精炼配置"></section></div>';
+	body.innerHTML = `<div class="refinement-browser"><div class="refinement-filters"></div><div class="refinement-search"></div><div class="inventory-list" aria-label="待${operation}装备"></div><section class="inventory-detail" aria-label="${operation}配置"></section></div>`;
 	const category = createMenuField('select');
 	category.setAttribute('aria-label', '装备分类');
 	for (const [value, label] of [
@@ -21,7 +20,7 @@ export function createRefinementEquipmentBrowser(body, changed) {
 	const search = createMenuField();
 	search.type = 'search';
 	search.placeholder = '搜索名称或物品 ID';
-	search.setAttribute('aria-label', '搜索精炼装备');
+	search.setAttribute('aria-label', `搜索${operation}装备`);
 	function refresh() {
 		changed();
 		body.querySelector('.inventory-list').scrollTop = 0;

@@ -61,7 +61,10 @@ export function openGameRefinement(kind) {
 				resultId,
 				allowed: available(),
 				zeny: Session.zeny,
-				blessingOwned: count(6635),
+				blessingOwned: count(kind === 'refine' ? 6635 : offer?.blessing_info?.id),
+				blessingName: offer?.blessing_info?.id
+					? DB.getItemInfo(offer.blessing_info.id).identifiedDisplayName
+					: '',
 				materials:
 					(kind === 'refine' ? offer?.MaterialInfo : offer?.materialList)?.map((material, index) => ({
 						...material,

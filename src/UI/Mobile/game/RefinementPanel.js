@@ -1,43 +1,48 @@
 import { createCompanionSwitch } from './CompanionSwitch.js';
 import { createRefinementEquipmentBrowser } from './RefinementEquipmentBrowser.js';
-import { renderDescriptionMarkup } from './DescriptionMarkup.js';
 import { createMenuField } from './MenuFormControls.js';
 import { setListItemText, setListItemIcon } from './ListItemText.js';
-import { interactionColumns, interactionReview, interactionFooter } from './InteractionPanel.js';
+import { interactionReview, interactionFooter } from './InteractionPanel.js';
 import { confirmAction } from 'UI/Components/Confirmation.js';
 import { createFeedback } from 'UI/Components/Feedback.js';
 export function createRefinementPanel(body, service) {
 	const operation = service.snapshot().kind === 'grade' ? '升阶' : '精炼';
 	const isRefine = service.snapshot().kind === 'refine';
-	const browser = isRefine ? createRefinementEquipmentBrowser(body, () => update()) : null;
-	if (!isRefine)
-		interactionColumns(body, [
-			{ title: `待${operation}装备`, className: 'inventory-list' },
-			{ title: `${operation}配置`, className: 'inventory-detail' },
-			{ title: '装备与结果', className: 'interaction-result' }
-		]);
+	const browser = createRefinementEquipmentBrowser(body, () => update(), operation);
 	const feedback = createFeedback(body);
 	const $ = selector => body.querySelector(selector),
 		list = $('.inventory-list'),
 		detail = $('.inventory-detail'),
 		nodes = new Map();
 	const { footer, status } = interactionFooter(body);
-	if (isRefine) status.hidden = true;
+	status.hidden = true;
+	// Keep the same material control mounted from the first empty state onward.
+	const materialField = document.createElement('label');
+	materialField.className = 'interaction-field refinement-material-field menu-labeled-select';
+	const materialCaption = document.createElement('span');
+	materialCaption.textContent = '材料';
+	const materials = createMenuField('select');
+	materials.setAttribute('aria-label', `${operation}材料`);
+	materialField.append(materialCaption, materials);
+	footer.append(materialField);
 	function appendDisabledActions() {
-		const unavailableProtection = createCompanionSwitch('祝福');
+		const unavailableProtection = isRefine ? createCompanionSwitch('祝福') : document.createElement('label');
+		if (!isRefine) {
+			const caption = document.createElement('span');
+			caption.textContent = '祝福';
+			unavailableProtection.append(caption);
+			const input = createMenuField('input', 'segment');
+			input.type = 'number';
+			input.value = '0';
+			input.setAttribute('aria-label', '祝福次数');
+			unavailableProtection.append(input);
+			unavailableProtection.classList.add('refinement-grade-blessing');
+		}
 		unavailableProtection.classList.add('refinement-protection');
 		unavailableProtection.querySelector('input').disabled = true;
-		footer.append(unavailableProtection);
-		const field = document.createElement('label');
-		field.className = 'interaction-field refinement-material-field menu-labeled-select';
-		const caption = document.createElement('span');
-		caption.textContent = '材料';
-		const select = createMenuField('select');
-		select.setAttribute('aria-label', '精炼材料');
-		select.add(new Option('无可用材料', ''));
-		select.disabled = true;
-		field.append(caption, select);
-		footer.append(field);
+		footer.insertBefore(unavailableProtection, materialField);
+		materials.replaceChildren(new Option('无可用材料', ''));
+		materials.disabled = true;
 		const disabledNext = document.createElement('button');
 		disabledNext.textContent = '下一步';
 		disabledNext.disabled = true;
@@ -46,18 +51,7 @@ export function createRefinementPanel(body, service) {
 	let lastResultId = 0;
 	let key = '',
 		editingId = '';
-	function placeResponsiveControls() {
-		if (!isRefine) return;
-
-		const field = body.querySelector('.refinement-material-field');
-		if (!field) return;
-		if (field.parentElement !== footer) {
-			const action = [...footer.children].find(child => child.tagName === 'BUTTON');
-			footer.insertBefore(field, action || null);
-		}
-	}
 	function update() {
-		placeResponsiveControls();
 		const state = service.snapshot();
 		if (state.resultId && state.resultId !== lastResultId) {
 			lastResultId = state.resultId;
@@ -65,7 +59,7 @@ export function createRefinementPanel(body, service) {
 		}
 
 		status.textContent = state.message || `余额：${state.zeny ?? 0} Z`;
-		const visibleItems = browser ? browser.filter(state.items) : state.items;
+		const visibleItems = browser.filter(state.items);
 		const ids = new Set(visibleItems.map(item => item.index));
 		for (const [id, node] of nodes)
 			if (!ids.has(id)) {
@@ -103,43 +97,32 @@ export function createRefinementPanel(body, service) {
 		]);
 		if (key === next) return;
 		key = next;
-		const result = isRefine ? detail : $('.interaction-result');
-		if (!isRefine) result.replaceChildren();
 		const selectedItem = state.items.find(item => item.index === state.selected?.index);
 		const title = document.createElement('h3');
 		title.textContent = selectedItem?.name || '请选择装备';
-		const description = document.createElement('p');
-		description.className = 'item-description';
-		if (!isRefine) {
-			renderDescriptionMarkup(description, selectedItem?.descriptionMarkup || selectedItem?.description || '');
-			result.append(title, description);
-		}
 		const identity = JSON.stringify(state.selected);
 		const previous =
 			identity === editingId
 				? {
-						material: (isRefine ? body.querySelector('.refinement-material-field') : detail)?.querySelector(
-							'select'
-						)?.value,
-						blessing: detail.querySelector('input')?.value,
-						checked: (isRefine ? footer : detail).querySelector('input')?.checked
+						material: body.querySelector('.refinement-material-field select')?.value,
+						blessing: footer.querySelector('.refinement-protection input')?.value,
+						checked: footer.querySelector('.refinement-protection input')?.checked
 					}
 				: {};
 		editingId = identity;
 		detail.replaceChildren();
 		detail.classList.toggle('menu-hint', !state.offer);
-		footer.querySelector('.refinement-material-field')?.remove();
 		[...footer.children].find(child => child.tagName === 'BUTTON')?.remove();
 		footer.querySelector('.refinement-protection')?.remove();
 		if (!state.offer) {
-			detail.textContent = state.pending ? `正在请求${operation}配置…` : '请选择装备';
-			if (isRefine) appendDisabledActions();
+			detail.textContent = state.pending ? `正在请求${operation}配置…` : state.message || '请选择装备';
+			appendDisabledActions();
 			return;
 		}
-		if (state.kind === 'refine' && !state.materials.length) {
+		if (!state.materials.length) {
 			detail.classList.add('menu-hint');
 			const hint = document.createElement('p');
-			hint.textContent = '此装备无法精炼';
+			hint.textContent = `此装备无法${operation}`;
 			detail.append(title, hint);
 			appendDisabledActions();
 			return;
@@ -148,21 +131,12 @@ export function createRefinementPanel(body, service) {
 		const warning = document.createElement('p');
 		warning.textContent = `${operation}会消耗材料与 Z，失败可能降低精炼等级或损毁装备。${state.kind === 'grade' ? '升阶成功后精炼等级归零。' : ''}`;
 		if (gradeBlocked) warning.textContent = state.message;
-		const materials = createMenuField('select');
-		materials.setAttribute('aria-label', `${operation}材料`);
+		materials.replaceChildren();
 		for (const material of state.materials) {
-			const risk = material.breakable ? '可能损毁' : material.downgrade ? '可能降级' : '装备保留';
 			const name =
-				state.kind === 'grade' ? `${risk} · ${material.name} × ${material.amount ?? 1}` : material.name;
+				state.kind === 'grade' ? `${material.name} × ${material.amount ?? 1}` : material.name;
 			materials.add(new Option(name, material.index));
 		}
-		const materialField = document.createElement('label');
-		materialField.className = 'interaction-field';
-		materialField.classList.toggle('refinement-material-field', state.kind === 'refine');
-		materialField.classList.toggle('menu-labeled-select', state.kind === 'refine');
-		const materialCaption = document.createElement('span');
-		materialCaption.textContent = state.kind === 'grade' ? '材料方案（成功率相同）' : '材料';
-		materialField.append(materialCaption, materials);
 		const cost = document.createElement('p');
 		cost.className = 'item-description';
 		if ([...materials.options].some(option => option.value === previous.material))
@@ -171,7 +145,7 @@ export function createRefinementPanel(body, service) {
 		const chance = document.createElement('p');
 		chance.className = 'refinement-chance';
 		const switchControl = isRefine ? createCompanionSwitch('祝福') : null;
-		const blessing = switchControl ? switchControl.querySelector('input') : createMenuField();
+		const blessing = switchControl ? switchControl.querySelector('input') : createMenuField('input', 'segment');
 		blessing.type = 'number';
 		blessing.min = '0';
 		blessing.step = '1';
@@ -193,20 +167,26 @@ export function createRefinementPanel(body, service) {
 			protection = '祝福';
 		} else {
 			blessing.max = state.offer.blessing_info?.max_blessing || 0;
-			blessing.disabled = !state.allowed;
-			protection = '祝福次数';
+			blessing.disabled =
+				!state.allowed || gradeBlocked || !Number(blessing.max) || state.offer.success_chance >= 100;
+			if (blessing.disabled) blessing.value = '0';
+			protection = '祝福';
 		}
 		const label = switchControl || document.createElement('label');
 		if (!isRefine) {
-			label.className = 'interaction-field';
-			label.textContent = protection;
-			label.append(blessing);
+			label.className = 'interaction-field refinement-grade-blessing';
+			const caption = document.createElement('span');
+			caption.textContent = protection;
+			label.append(caption, blessing);
 		}
 		const blessingHint = document.createElement('p');
 		blessingHint.className = 'refinement-hint';
 		blessingHint.textContent =
 			state.kind === 'grade'
-				? `每次消耗 ${state.offer.blessing_info?.amount || 0} 个祝福材料，成功率增加 ${state.offer.blessing_info?.bonus || 0} 个百分点。最多 ${state.offer.blessing_info?.max_blessing || 0} 次。`
+				? `祝福材料：${state.blessingName || '—'}
+持有：${state.blessingOwned} 个
+每次消耗：${state.offer.blessing_info?.amount || 0} 个
+每次增加：${state.offer.blessing_info?.bonus || 0} 个百分点（最多 ${state.offer.blessing_info?.max_blessing || 0} 次）`
 				: state.offer.blacksmithBlessing
 					? `消耗：${state.offer.blacksmithBlessing} 个\n持有：${state.blessingOwned} 个\n效果：避免装备损毁${state.blessingOwned < state.offer.blacksmithBlessing ? '\n铁匠的祝福不足' : ''}`
 					: '当前精炼不支持使用铁匠的祝福。';
@@ -225,11 +205,7 @@ export function createRefinementPanel(body, service) {
 		}
 		function details() {
 			const material = state.materials.find(row => row.index === Number(materials.value));
-			cost.textContent = `材料：${material?.name || '—'} × ${material?.amount ?? 1}\n${isRefine ? '拥有' : '持有'}：${material?.owned ?? 0}\n费用：${material?.zeny ?? material?.price ?? 0} Z`;
-			chance.textContent =
-				state.kind === 'refine'
-					? `成功率：${material?.chance ?? 0}%`
-					: `成功率：${Math.min(100, (state.offer.success_chance || 0) + Number(blessing.value) * (state.offer.blessing_info?.bonus || 0))}%\n失败时：${material?.breakable ? '可能损毁装备' : material?.downgrade ? '精炼等级可能降低' : '装备保留，精炼等级不变'}`;
+			cost.textContent = `材料：${material?.name || '—'} × ${material?.amount ?? 1}\n拥有：${material?.owned ?? 0}\n费用：${material?.zeny ?? material?.price ?? 0} Z`;
 			if (isRefine) {
 				const percentage = document.createElement('strong');
 				percentage.className = 'refinement-success-rate';
@@ -241,6 +217,17 @@ export function createRefinementPanel(body, service) {
 						: blessing.checked
 							? '铁匠祝福已启用，避免装备损毁。'
 							: '失败可能降低精炼等级或损毁装备。';
+			}
+			if (!isRefine) {
+				const percentage = document.createElement('strong');
+				percentage.className = 'refinement-success-rate';
+				percentage.textContent = `${Math.min(100, (state.offer.success_chance || 0) + Number(blessing.value) * (state.offer.blessing_info?.bonus || 0))}%`;
+				chance.replaceChildren('成功率：', percentage);
+				warning.textContent = gradeBlocked
+					? state.message
+					: parseFloat(percentage.textContent) >= 100
+						? '本次升阶不会失败，成功后精炼等级归零。'
+						: `升阶成功后精炼等级归零。失败时${material?.breakable ? '可能损毁装备' : material?.downgrade ? '精炼等级可能降低' : '装备保留，精炼等级不变'}。`;
 			}
 			confirm.textContent = '下一步';
 		}
@@ -290,23 +277,13 @@ export function createRefinementPanel(body, service) {
 		config.className = 'refinement-config';
 		const blessingSection = document.createElement('div');
 		blessingSection.className = 'refinement-blessing';
-		if (isRefine) {
-			label.classList.add('refinement-protection');
-			footer.append(label);
-		} else blessingSection.append(label);
+		label.classList.add('refinement-protection');
+		footer.insertBefore(label, materialField);
 		blessingSection.append(blessingHint);
-		config.append(materialField, cost, blessingSection);
+		config.append(cost, blessingSection, chance, warning);
 		warning.className = 'interaction-warning';
-		if (isRefine) {
-			config.append(chance, warning);
-			detail.append(title, config);
-		} else {
-			detail.append(config);
-			result.insertBefore(chance, description);
-			result.insertBefore(warning, description);
-		}
+		detail.append(title, config);
 		footer.append(confirm);
-		placeResponsiveControls();
 	}
 	update();
 	return { update };

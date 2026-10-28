@@ -11,8 +11,8 @@ const groups = [
 		keys: ['base_exp_rate', 'job_exp_rate']
 	},
 	{
-		title: '装备精炼',
-		keys: ['refine_chance_rate', 'refine_always_success']
+		title: '精炼/升阶',
+		keys: ['refine_chance_rate', 'refine_always_success', 'grade_chance_rate', 'grade_always_success']
 	},
 	{
 		title: '地图导航',
@@ -39,6 +39,8 @@ const dropKeys = dropTypes.flatMap(type => dropCategories.map(suffix => `item_ra
 const labels = {
 	refine_chance_rate: '精炼成功率倍率',
 	refine_always_success: '精炼必定成功',
+	grade_chance_rate: '升阶成功率倍率',
+	grade_always_success: '升阶必定成功',
 	base_exp_rate: '基础倍率',
 	job_exp_rate: '职业经验倍率',
 	item_rate_common: '普通物品',
@@ -65,7 +67,7 @@ const labels = {
 	game_tools_monster_spawn_duration: '魔物存在时间',
 	game_tools_monster_spawn_allow_boss: '允许召唤 Boss / MVP'
 };
-const rateKeys = new Set([...groups[0].keys, ...dropKeys, 'refine_chance_rate']);
+const rateKeys = new Set([...groups[0].keys, ...dropKeys, 'refine_chance_rate', 'grade_chance_rate']);
 const visibleKeys = new Set([...groups.flatMap(group => group.keys), ...dropKeys]);
 
 function displayValue(key, value) {
@@ -158,14 +160,18 @@ function mount(container, context = {}) {
 			</footer>
 		</form>`;
 		mountGameSelects(container);
-		const refineRate = container.querySelector('[name="refine_chance_rate"]');
-		const guaranteed = container.querySelector('[name="refine_always_success"]');
-		const syncRefineRate = () => {
-			refineRate.disabled = Number(guaranteed.value) === 1;
-			refineRate.closest('.setting-number').classList.toggle('is-disabled', refineRate.disabled);
+		const rateControls = ['refine', 'grade'].map(kind => ({
+			rate: container.querySelector(`[name="${kind}_chance_rate"]`),
+			guaranteed: container.querySelector(`[name="${kind}_always_success"]`)
+		}));
+		const syncRates = () => {
+			for (const { rate, guaranteed } of rateControls) {
+				rate.disabled = Number(guaranteed.value) === 1;
+				rate.closest('.setting-number').classList.toggle('is-disabled', rate.disabled);
+			}
 		};
-		guaranteed.addEventListener('change', syncRefineRate);
-		syncRefineRate();
+		for (const { guaranteed } of rateControls) guaranteed.addEventListener('change', syncRates);
+		syncRates();
 		container.querySelector('form').addEventListener('submit', async event => {
 			event.preventDefault();
 			const form = event.currentTarget;
@@ -173,7 +179,7 @@ function mount(container, context = {}) {
 			const changes = {};
 			for (const key of visibleKeys) {
 				// Disabled controls are omitted from FormData; retain the draft multiplier.
-				const raw = key === 'refine_chance_rate' ? refineRate.value : data.get(key);
+				const raw = rateControls.find(({ rate }) => rate.name === key)?.rate.value ?? data.get(key);
 				const value = serverValue(key, raw);
 				if (value !== settings.values[key]) changes[key] = value;
 			}
@@ -185,7 +191,7 @@ function mount(container, context = {}) {
 			form.querySelectorAll('button, input').forEach(element => (element.disabled = true));
 			if (!(await requestConfirmation(container, `确认将 ${Object.keys(changes).length} 项修改应用到全服？`))) {
 				form.querySelectorAll('button, input').forEach(element => (element.disabled = false));
-				syncRefineRate();
+				syncRates();
 				return;
 			}
 			try {
