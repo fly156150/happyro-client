@@ -1080,8 +1080,14 @@ dd {
 
 .battle-description { width: max-content; max-width: min(360px, calc(100vw - 16px)); }
 
-.npc-navi-dock { display: contents; }
-.battle-tools.npc-navi-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.battle-action-row { position: relative; min-width: 0; }
+.npc-navi-dock {
+ position: absolute;
+ right: calc(100% + var(--battle-gap));
+ bottom: 0;
+ width: max-content;
+}
+.battle-tools.npc-navi-controls { grid-template-columns: auto auto; gap: var(--battle-gap); }
 .npc-navi-controls[hidden] { display: none; }
 
 /* Contextual actions never share the battle information surface. */

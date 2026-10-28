@@ -7,6 +7,7 @@ import { createPickupSettingsPanel } from 'UI/Game/PickupSettingsPanel.js';
 /** Desktop presentation; gameplay and persistence remain in the shared services. */
 export function createAutoCombatView(root, actions, pickup, { showSkillDescription } = {}) {
 	root.innerHTML = `
+		<div class="combat-action-row">
 		<div class="npc-navi-dock"></div>
 		<div class="combat-toolbar" role="group" aria-label="战斗辅助快捷操作">
 		<button type="button" class="combat-launcher" data-combat-toggle role="switch" aria-checked="false" aria-label="开启自动战斗" data-tooltip="开启自动战斗">
@@ -82,6 +83,7 @@ SOFTWARE.
 		<button type="button" class="combat-launcher" data-settings aria-label="战斗辅助设置" data-tooltip="战斗辅助设置" aria-haspopup="dialog" aria-expanded="false">
 			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 3-.7 2.4-2 .9L4 5.7 2 9l1.8 1.8v2.4L2 15l2 3.3 2.3-.6 2 .9L9 21h6l.7-2.4 2-.9 2.3.6 2-3.3-1.8-1.8v-2.4L22 9l-2-3.3-2.3.6-2-.9L15 3Z"/><circle cx="12" cy="12" r="3.5"/></svg>
 		</button>
+		</div>
 		</div>
 		<div class="assist-feedback" role="status" hidden></div>
 		<div class="combat-backdrop" hidden>

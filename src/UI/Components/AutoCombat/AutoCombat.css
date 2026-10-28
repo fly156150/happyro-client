@@ -259,15 +259,18 @@ button:disabled {
 	font-weight: bold;
 }
 
+.combat-action-row { display: flex; align-items: center; justify-content: flex-end; gap: var(--combat-action-gap, 8px); }
+.npc-navi-dock { display: contents; }
+.self-actions-host { margin-left: auto; }
 .npc-navi-controls {
  display: grid;
  grid-template-columns: repeat(2, minmax(0, 1fr));
- width: calc(3 * var(--combat-action-size, 42px) + 2 * var(--combat-action-gap, 8px));
+ width: auto;
  gap: var(--combat-action-gap, 8px);
- margin-bottom: var(--combat-action-gap, 8px);
+ height: var(--combat-action-size, 42px);
  pointer-events: auto;
 }
-.npc-navi-controls button { min-width: 0; padding: 7px 4px; white-space: nowrap; }
+.npc-navi-controls button { min-width: 0; padding: 7px 10px; white-space: nowrap; }
 .npc-navi-controls[hidden] { display: none; }
 
-.npc-navi-dock:has(.npc-navi-controls:not([hidden])) ~ .assist-feedback { display: none; }
+.combat-action-row:has(.npc-navi-controls:not([hidden])) ~ .assist-feedback { display: none; }
