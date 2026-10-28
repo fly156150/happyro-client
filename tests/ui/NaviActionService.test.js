@@ -1,3 +1,4 @@
+import components from '../../src/UI/ComponentRegistry.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 const state = vi.hoisted(() => ({ end: null, showMap: vi.fn(), showMonster: vi.fn() }));
 vi.mock('UI/Platform.js',()=>({default:{isMobile:false}}));
@@ -8,7 +9,7 @@ import { activateNavi, handleNaviClick, prepareNaviLinks } from '../../src/UI/Co
 import { abandonNavigationVisit } from '../../src/UI/Game/NavigationVisit.js';
 const approved=Object.entries(manifest.entries).find(([,entry])=>entry.kind==='coordinate');
 beforeEach(()=>{vi.clearAllMocks();state.end();vi.stubGlobal('fetch',vi.fn());});
-afterEach(()=>{state.end();document.body.replaceChildren();vi.unstubAllGlobals();});
+afterEach(()=>{state.end();document.body.replaceChildren();delete components.ItemInfo;vi.unstubAllGlobals();});
 function source(key=approved[0]) {
  const host=document.body.appendChild(document.createElement('div'));host.id='ItemInfo';
  const root=host.attachShadow({mode:'open'});root.innerHTML='<div class="description"><span data-navi-info><span>目标</span></span></div>';
@@ -24,7 +25,8 @@ it('opens the ordinary marked map, hides its source, and restores the same DOM o
  state.showMap.mock.calls[0][1]();expect(host.style.display).toBe('');expect(root.querySelector('.description')).toBe(detail);expect(detail.scrollTop).toBe(87);
 });
 it('does not restore the source after travel begins',async()=>{
- const {host,link}=source();await activateNavi(approved[0],'目标',link);abandonNavigationVisit();state.showMap.mock.calls[0][1]();expect(host.style.display).toBe('none');
+ const {host,link}=source();const remove=vi.fn(()=>host.remove());components.ItemInfo={_host:host,remove};
+ await activateNavi(approved[0],'目标',link);abandonNavigationVisit();state.showMap.mock.calls[0][1]();expect(remove).toHaveBeenCalledOnce();expect(host.isConnected).toBe(false);
 });
 it('opens monster catalog from a keyboard link and restores on close',async()=>{
  const [key,entry]=Object.entries(manifest.entries).find(([,entry])=>entry.kind==='monster');const {host,link}=source(key);

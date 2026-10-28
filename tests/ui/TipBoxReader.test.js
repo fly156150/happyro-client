@@ -73,3 +73,12 @@ it.each(['click','Escape','cancel'])('does not leak %s when onClose destroys the
   expect(closed).toHaveBeenCalledOnce();expect(q('dialog')).toBeNull();expect(leaked).not.toHaveBeenCalled();
  }finally{for(const target of [host,document,window])for(const type of ['click','keydown','cancel'])target.removeEventListener(type,leaked);}
 });
+
+it('activates navigation supplied by the host without leaking the source click',()=>{
+ const activateNavi=vi.fn();
+ mount({entries:{'6016':{title:'导航帮助',pages:['<NAVI>地图<INFO>prontera,1,2</INFO></NAVI>'],image:''}},activateNavi});
+ const link=q('.navi-link');expect(link).not.toBeNull();
+ link.click();expect(activateNavi).toHaveBeenLastCalledWith('prontera,1,2','地图',link);
+ link.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,cancelable:true}));
+ expect(activateNavi).toHaveBeenCalledTimes(2);
+});

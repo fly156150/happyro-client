@@ -8,6 +8,7 @@
  * @author Vincent Thibault
  */
 
+import components from './ComponentRegistry.js';
 import { bindTipBoxLinks } from 'UI/Components/TipBox/TipBoxService.js';
 import Platform from 'UI/Platform.js';
 import { showMobileDialog, removeMobileDialogs } from 'UI/Mobile/MessageDialog.js';
@@ -128,7 +129,7 @@ class UIManager {
 	 * Components cache
 	 * @var {array} Components List
 	 */
-	static components = {};
+	static components = components;
 
 	/**
 	 * Store a component in the manager

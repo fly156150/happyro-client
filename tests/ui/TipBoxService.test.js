@@ -1,3 +1,5 @@
+import { acquireInputFreeze, releaseInputFreeze } from '../../src/UI/InputFreeze.js';
+const npcOwner = {};
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
 vi.mock('Core/Client.js',()=>({default:{loadFile:vi.fn((_path,_done,fail)=>fail())}}));
 vi.mock('DB/DBManager.js',()=>({default:{INTERFACE_PATH:'data/texture/interface/'}}));
@@ -13,7 +15,7 @@ beforeEach(()=>{
  source=document.body.appendChild(document.createElement('div'));root=source.attachShadow({mode:'open'});
  root.innerHTML=formatRagnarokMarkup('<TIPBOX>[Episode13.2]<INFO>6016</INFO></TIPBOX>');
 });
-afterEach(()=>{closeTipBox();document.body.replaceChildren();vi.restoreAllMocks();});
+afterEach(()=>{releaseInputFreeze(npcOwner);closeTipBox();document.body.replaceChildren();vi.restoreAllMocks();});
 const help=()=>document.getElementById('TipBoxReader')?.shadowRoot;
 it('opens from shadow content before source click handlers and restores exact source and focus',()=>{
  const clicked=vi.fn();root.addEventListener('click',clicked);const link=root.querySelector('.tipbox-link');source.scrollTop=180;link.click();
@@ -21,7 +23,7 @@ it('opens from shadow content before source click handlers and restores exact so
  help().querySelector('[data-tipbox-close]').click();expect(help()).toBeUndefined();expect(Session.FreezeUI).toBe(false);expect(root.querySelector('.tipbox-link')).toBe(link);expect(root.activeElement).toBe(link);expect(source.scrollTop).toBe(180);
 });
 it('allows internal history navigation without resetting the reader and restores previous freeze state',()=>{
- Session.FreezeUI=true;root.querySelector('.tipbox-link').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,composed:true}));
+ acquireInputFreeze(npcOwner);root.querySelector('.tipbox-link').dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true,composed:true}));
  const dialog=help().querySelector('dialog');help().querySelector('[data-tipbox-id="6018"]').click();expect(help().querySelector('dialog')).toBe(dialog);
  help().querySelector('[data-tipbox-back]').click();expect(help().querySelector('h2').textContent).toContain('13.2');closeTipBox();expect(Session.FreezeUI).toBe(true);
 });

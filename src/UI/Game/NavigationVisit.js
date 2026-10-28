@@ -1,4 +1,4 @@
-import UIManager from 'UI/UIManager.js';
+import components from 'UI/ComponentRegistry.js';
 
 /** One source window may wait for a map/catalog visit; travel permanently releases it. */
 let active = null;
@@ -71,7 +71,7 @@ export function suspendNavigationSource(node) {
 				const stillSuspended = entry.element.style.display === 'none';
 				entry.release();
 				if (!stillSuspended) continue;
-				const component = UIManager.components[entry.element.id];
+				const component = components[entry.element.id];
 				if (component?._host === entry.element) component.remove();
 			}
 		}

@@ -95,6 +95,13 @@ export function createTipBoxReader(root, { entries, initialId, onClose, loadImag
 			}
 		}
 		prepareLinks?.(article);
+		if (!activateNavi) {
+			for (const link of article.querySelectorAll('[data-navi-info]')) {
+				link.classList.remove('navi-link');
+				link.removeAttribute('role');
+				link.removeAttribute('tabindex');
+			}
+		}
 		for (const link of article.querySelectorAll('[data-item-id]')) {
 			if (!resolveItem?.(link.dataset.itemId)) {
 				link.classList.remove('item-link');
