@@ -48,7 +48,11 @@
 
 #NpcMenu .content div {
 	width: auto;
-	height: 17px;
+	min-height: 20px;
+	height: auto;
+	box-sizing: border-box;
+	line-height: 17px;
+	overflow-wrap: anywhere;
 	display: block;
 	padding-top: 3px;
 	padding-left: 5px;

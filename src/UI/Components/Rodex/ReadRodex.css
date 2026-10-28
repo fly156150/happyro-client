@@ -73,6 +73,12 @@
 	left: 10px;
 	width: 280px;
 	height: 220px;
+	box-sizing: border-box;
+	padding: 4px;
+	overflow-y: auto;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	line-height: 1.5;
 }
 
 #ReadRodex .body .items {
